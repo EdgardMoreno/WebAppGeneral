@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 28/10/2017 06:46:23 PM by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+  <class name="com.general.hibernate.entity.Sic1general" schema="SICDBA" table="SIC1GENERAL">
+    <comment>Contiene los datos generales que son utilizados para describir a un codigo particular por ejemplo: tipologias, clasificaciones, etc.</comment>
+    <id name="idGeneral" type="big_decimal">
+      <column name="ID_GENERAL" precision="22" scale="0"/>
+      <generator class="assigned"/>
+    </id>
+    <property name="desGeneral" type="string">
+      <column length="500" name="DES_GENERAL">
+        <comment>Descripci?n del codigo general</comment>
+      </column>
+    </property>
+    <property name="codValortipogeneral" type="string">
+      <column length="500" name="COD_VALORTIPOGENERAL">
+        <comment>Codigo que facilita la busqueda de un tipo general</comment>
+      </column>
+    </property>
+    <property name="codValorgeneral" type="string">
+      <column length="50" name="COD_VALORGENERAL">
+        <comment>Codigo que facilita la busqueda de un valor general</comment>
+      </column>
+    </property>
+    <property name="idGeneralrel" type="big_decimal">
+      <column name="ID_GENERALREL" precision="22" scale="0">
+        <comment>Identificador de un tipo general relacionado (relacion principal)</comment>
+      </column>
+    </property>
+    <property name="codValordefecto" type="big_decimal">
+      <column name="COD_VALORDEFECTO" precision="22" scale="0">
+        <comment>Codigo que identifica el valor por default</comment>
+      </column>
+    </property>
+    <property name="codValortipoentidad" type="string">
+      <column length="50" name="COD_VALORTIPOENTIDAD">
+        <comment>Codigo que identifica el tipo de entidad</comment>
+      </column>
+    </property>
+    <property name="idGeneralrelsec" type="big_decimal">
+      <column name="ID_GENERALRELSEC" precision="22" scale="0">
+        <comment>Identificador de un tipo general relacionado (relacion secundaria)</comment>
+      </column>
+    </property>
+    <property name="numValor" type="big_decimal">
+      <column name="NUM_VALOR" precision="22" scale="0">
+        <comment>Valor relacionado a este codigo general</comment>
+      </column>
+    </property>
+    <property name="desValor" type="string">
+      <column length="250" name="DES_VALOR">
+        <comment>Texto relacionado a este codigo general</comment>
+      </column>
+    </property>
+    <property name="fecValor" type="date">
+      <column length="7" name="FEC_VALOR">
+        <comment>Fecha relacionado a este codigo general</comment>
+      </column>
+    </property>
+    <property name="desValor1" type="string">
+      <column length="250" name="DES_VALOR1">
+        <comment>Texto 1 relacionado a este codigo general</comment>
+      </column>
+    </property>
+    <set fetch="select" inverse="true" lazy="true" name="sic1docus" table="SIC1DOCU">
+      <key>
+        <column name="ID_TROLPERS" precision="22" scale="0">
+          <comment>Contiene el identificador del tipo de rol de una persona que cre? el documento, el resto de relaciones se encuentra en relDocumentoPersona.</comment>
+        </column>
+      </key>
+      <one-to-many class="com.general.hibernate.entity.Sic1docu"/>
+    </set>
+  </class>
+</hibernate-mapping>

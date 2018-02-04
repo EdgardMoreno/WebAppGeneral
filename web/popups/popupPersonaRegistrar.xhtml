@@ -1,0 +1,330 @@
+<?xml version='1.0' encoding='UTF-8' ?> 
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html 
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:h="http://xmlns.jcp.org/jsf/html"
+    xmlns:f="http://xmlns.jcp.org/jsf/core"
+    xmlns:p="http://primefaces.org/ui" >
+
+    <f:metadata>
+        <f:viewParam name="paramExternalPage" value="#{personController.paramPageFlgActivo}"/>
+        <f:viewParam name="paramCodIden" value="#{personController.sic1idenpersId.codIden}"/>
+    </f:metadata>
+
+    <h:head>
+        <title>Registrar Persona</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <meta charset="utf-8"/>
+
+        <!--CSS STYLE -->
+        <h:outputStylesheet name="/datepicker/css/datepicker.css"/><!--DatePicker -->
+        <h:outputStylesheet name="/css/bootstrap.min.css"/>
+        <h:outputStylesheet name="/css/customizer.css"/>
+        <link rel="stylesheet" href="#{request.contextPath}/faces/resources/css/bootstrap-theme.min.css"/>        
+
+        <!--JQUERY-->
+        <script src="#{request.contextPath}/faces/resources/js/jquery-3.2.1.min.js"></script>
+        <script src="#{request.contextPath}/faces/resources/js/customizerJS.js"></script>
+        <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js" />
+
+        <script src="#{request.contextPath}/faces/resources/datepicker/js/bootstrap-datepicker.js"></script>
+        <script src="#{request.contextPath}/faces/resources/datepicker/js/formatDatePicker.js"></script>        
+
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+
+        <script>
+
+                function changeTab(option) {
+
+                    if (option == 1) {
+                        $('[href="#menu1"]').tab('show');
+                    } else if (option == 2) {
+                        $('[href="#menu2"]').tab('show');
+                    }
+
+                    return false;
+
+                };
+
+                function fnOcultarTipoPers(valor) {
+                         
+                    var resultado = fnGetPersType(String(valor));
+                    var arrMensajes = [];
+
+                    //alert("Resultado: " + String(valor) + " Longitud: " + String(valor).length + "RESULTADO:" + resultado);
+
+                    if (resultado == "PJ"){
+
+                        document.getElementById("form:gridPN").style.display = "none";
+                        document.getElementById("form:gridPJ").style.display = "";
+
+                    }else{
+
+                        document.getElementById("form:gridPN").style.display = "";
+                        document.getElementById("form:gridPJ").style.display = "none";
+                    }
+
+                    if (resultado == "ERROR"){
+                       arrMensajes.push("El formato del Documento de Identidad es inválido.");
+                       fnShowMessageValidation(arrMensajes);
+                    }else{
+                    fnHideMessageValidation();
+                }
+            };
+
+            function fnValidateForm() {
+
+                //obteniendo el valor que se puso en campo text del formulario
+                var docuIden = document.getElementById("form:numDocuIden").value;
+                var primerNombre = document.getElementById("form:primerNombre").value;
+                var apeMaterno = document.getElementById("form:apeMaterno").value;
+                var apePaterno = document.getElementById("form:apePaterno").value;
+                var razonSocial = document.getElementById("form:razonSocial").value;
+                var flgError = false;
+                var mensaje;
+                var arrMessages = [];
+                var genero = -1;
+
+                /*if (document.forms['form']['form:cboTipoPersona'][0].checked == true) {
+                 valorTipoPersona = document.forms['form']['form:cboTipoPersona'][0].value;
+                 } else if (document.forms['form']['form:cboTipoPersona'][1].checked == true) {
+                 valorTipoPersona = document.forms['form']['form:cboTipoPersona'][1].value;
+                 }*/
+
+                if (document.forms['form']['form:sorGenero'][0].checked == true) {
+                    genero = document.forms['form']['form:sorGenero'][0].value;
+                } else if (document.forms['form']['form:sorGenero'][1].checked == true) {
+                    genero = document.forms['form']['form:sorGenero'][1].value;
+                }
+
+
+                if (docuIden.length == 0) {
+                    arrMessages.push("Debe ingresar el Documento de Identidad.");
+                    flgError = true;
+                } else {
+
+                    mensaje = fnGetPersType(docuIden);
+
+                    if (mensaje == "PJ") {
+                        if (razonSocial.length == 0) {
+                            arrMessages.push("Se debe ingresar la Razón Social.");
+                            flgError = true;
+                        }
+                    } else if (mensaje == "PN") {
+
+                        if (primerNombre.length == 0) {
+                            arrMessages.push("Se debe ingresar el Primer Nombre");
+                            flgError = true;
+                        }
+
+                        if (apePaterno.length == 0) {
+                            arrMessages.push("Se debe ingresar el Apellido Paterno.");
+                            flgError = true;
+                        }
+
+                        if (apeMaterno.length == 0) {
+                            arrMessages.push("Se debe ingresar el Apellido Materno.");
+                            flgError = true;
+                        }
+
+                        if (genero == -1) {
+                            arrMessages.push("Se debe especificar el género.");
+                            flgError = true;
+                        }
+                    }
+                }
+
+                //IMPRIMIR RESULTADO
+                if (flgError == true) {
+                    fnShowMessageValidation(arrMessages);
+                    return false;
+                } else {
+                    fnHideMessageValidation();
+                    return true;
+                }
+
+                return true;
+            };
+
+        </script>
+
+    </h:head>
+    <h:body>         
+
+        <div class="container">
+                
+                <div id="divResultadoValidacion"></div>                
+
+                <h:form id="form">
+
+
+                    <p:growl id="message" showDetail="true" />
+
+                    <ul class="nav nav-tabs" onclick="fnHideMessageValidation()" >
+                        <li id="tab_lstProduct" class="active"><a data-toggle="tab" href="#menu1">Listar Personas</a></li>
+                        <li id="tab_regProduct"><a data-toggle="tab" href="#menu2">Registrar Persona</a></li>
+                    </ul>
+
+                    <div class="tab-content">
+                        <div id="menu1" class="tab-pane fade in active">
+
+                            <br/>
+                            <h:panelGrid columns="7" style="width:100%"
+                                         columnClasses="td-label-1, td-content-1, td-label-1, td-content-1, td-label-1, td-content-1, td-content-1" >
+
+                                <h:outputLabel value="Docu Identidad:"/>
+                                <h:inputText styleClass="form-control" value="#{personController.viSicpers.codIden}" />
+                                <h:outputLabel value="Nombre/Razón Social:"/>
+                                <h:inputText styleClass="form-control" value="#{personController.viSicpers.desPers}" />
+                                <h:outputLabel value="Tipo Documento:"/>
+                                <h:selectOneMenu value="#{personController.viSicpers.idTipoiden}" styleClass="form-control" >
+                                    <f:selectItem itemLabel="-- Seleccione --" itemValue="-1" />
+                                    <f:selectItems value="#{personController.itemsTipoIden}" />
+                                </h:selectOneMenu>
+
+                                <h:panelGroup>
+                                    <div class="form-inline header-format">
+                                        <h:commandLink actionListener="#{personController.filterPersons()}" styleClass="btn btn-default">
+                                            <span class="glyphicon glyphicon-search"></span> Buscar
+                                        </h:commandLink>
+                                        <p:commandLink actionListener="#{personController.newPerson()}" oncomplete="changeTab(2)" styleClass="btn btn-default" update="form">
+                                            <span class="glyphicon glyphicon-new-window"></span> Nuevo
+                                        </p:commandLink>
+                                    </div>
+                                </h:panelGroup>
+
+                                <h:outputLabel value="Tipo Persona:"/>
+                                <h:selectOneMenu value="#{personController.viSicpers.idTipopers}" styleClass="form-control" >
+                                    <f:selectItem itemLabel="-- Seleccione --" itemValue="-1" />
+                                    <f:selectItems value="#{personController.itemsTipoPers}" />
+                                </h:selectOneMenu>
+
+                            </h:panelGrid>
+                            <br/>
+                            <h:dataTable id="tblPersons" var="item" value="#{personController.lstPersonas}" rendered="#{not empty personController.lstPersonas}"
+                                         styleClass="table table-striped table-bordered table-list"
+                                         columnClasses="table_header2,table_header10,table_header3,table_header2,table_header3,table_header6,table_header5"
+                                         >
+
+                                <h:column>
+                                    <f:facet name="header">No.</f:facet>1
+                                </h:column>
+
+                                <h:column>
+                                    <f:facet name="header">Nombre</f:facet>#{item.desPers}
+                                </h:column>
+
+                                <h:column>
+                                    <f:facet name="header">Documento Identidad</f:facet>#{item.codIden}
+                                </h:column>
+
+                                <h:column>
+                                    <f:facet name="header">Tipo Documento</f:facet>#{item.desTipoiden}
+                                </h:column>
+
+                                <h:column>
+                                    <f:facet name="header">Tipo de persona</f:facet>#{item.desTipopers}
+                                </h:column>
+
+                                <h:column>
+                                    <f:facet name="header">Rol</f:facet>#{item.desTrolpers}
+                                </h:column>
+
+                                <h:column>
+                                    <p:commandButton icon="ui-icon-search"
+                                                     actionListener="#{personController.selectFromDialog(item)}"
+                                                     rendered="#{personController.paramPageFlgActivo}"/>
+                                    &nbsp;
+                                    <p:commandLink action="#{personController.deleteAction(item)}"  update="form" >
+                                        <span class="glyphicon glyphicon-trash"></span>
+                                        <p:confirm header="Confirmation" message="¿Está seguro de continuar?" icon="ui-icon-alert"  />
+                                    </p:commandLink>
+                                    &nbsp;
+                                    <p:commandLink action="#{personController.editAction(item)}" oncomplete="changeTab(2); fnOcultarTipoPers(#{item.codIden});" update="form">
+                                        <span class="glyphicon glyphicon-pencil"></span>
+                                    </p:commandLink>
+
+                                </h:column>
+                            </h:dataTable>
+                        </div>
+
+                        <div id="menu2" class="tab-pane fade">
+
+                            <br/>
+                            <h:panelGrid columns="4" border="1"
+                                         style="width:90%"
+                                         columnClasses="td-label-1, text_panelGrid_4c , td-label-1 , text_panelGrid_4c">
+
+                                <h:outputLabel value="Documento Identidad:"/>
+                                <h:inputText id="numDocuIden"
+                                             class="form-control"
+                                             style="width:70%"
+                                             onchange="fnOcultarTipoPers(this.value)"
+                                             onkeypress="return allowOnlyNumbers(event)"
+                                             value="#{personController.sic1idenpersId.codIden}">
+                                </h:inputText>
+                                <h:outputLabel value="" />
+                                <h:outputLabel value="" />
+
+                                <h:outputLabel value="Razón Social:"/>
+                                <h:inputText styleClass="form-control left" id="razonSocial" value="#{personController.sic1persorga.desPersorga}" />
+                                <h:outputLabel value="" />
+                                <h:outputLabel value="" />                            
+                                
+                                <h:outputLabel value="Nombre:"/>
+                                <h:inputText  styleClass="form-control" id="primerNombre" value="#{personController.sic1persindi.desPrimnomb }" />
+
+                                <h:outputLabel value=""/>
+                                <h:outputLabel value=""/>
+
+                                <h:outputLabel value="Apellido Paterno:"/>
+                                <h:inputText  styleClass="form-control" id="apePaterno" value="#{personController.sic1persindi.desApelpate}" />
+
+                                <h:outputLabel value="Apellido Materno:"/>
+                                <h:inputText  styleClass="form-control" id="apeMaterno" value="#{personController.sic1persindi.desApelmate}" />
+
+                                <h:outputLabel value="Genero:"/>
+                                <h:selectOneRadio id="sorGenero" value="#{personController.sic1persindi.idGenero}">
+                                    <f:selectItems value="#{personController.itemsGeneroPers}" />
+                                </h:selectOneRadio>
+
+                                <h:outputLabel value="Fecha Nacimiento:"/>
+                                <h:inputText value="#{personController.desFecNaci}" styleClass="form-control datepicker" />
+
+                                <h:outputLabel value="Distrito:"/>
+                                <h:inputText styleClass="form-control" value="#{personController.sic1lugar.desLugar}" />
+
+                                <!--<h:outputLabel value="Teléfono:"/>
+                                <h:inputText styleClass="form-control" >#{personController.sic1pers.desPers}</h:inputText>
+
+                                <h:outputLabel value="E-mail"/>
+                                <h:inputText styleClass="form-control" >#{personController.sic1pers.desPers}</h:inputText>-->
+
+                            </h:panelGrid>
+                            <br/>
+                            <div class="offset-sm-2 col-sm-10">
+                                <p:commandLink value="Grabar" onstart="return fnValidateForm()"
+                                               actionListener="#{personController.savePerson()}"
+                                               update="message form"
+                                               styleClass="btn btn-primary">
+                                    <p:confirm header="Confirmation" message="¿Está seguro de continuar?" icon="ui-icon-alert" />
+                                </p:commandLink>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <p:confirmDialog global="true" showEffect="fade" hideEffect="fade" header="Confirmar">
+
+                        <p:commandButton value="Yes" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+                        <p:commandButton value="No"  type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+                    </p:confirmDialog>
+
+                </h:form>
+
+            </div>
+    </h:body>
+</html>
+

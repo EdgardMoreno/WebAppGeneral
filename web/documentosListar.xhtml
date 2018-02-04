@@ -1,0 +1,120 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:a="http://xmlns.jcp.org/jsf/passthrough"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"  >
+    
+    <ui:composition template="./templates/templatePrincipal.xhtml">
+        
+        <ui:define name="header">
+            
+            <script>
+                
+                
+            </script>
+                   
+        </ui:define>
+        
+        <ui:define name="content">
+            <div class="container" id="resultadoValidacion"></div>
+            
+            <h:form id="form"> 
+                
+                <div class="container">
+                    
+                    <div class="page-header" >
+                        <h3>Listar Documentos</h3>
+                    </div>
+
+                    <h:panelGrid columns="6" style="width:85%" 
+                                 columnClasses="td-label-1, td-content-1, td-label-1, td-content-1, td-label-1, td-content-1">
+
+                        <h:outputLabel value="Tipo Documento:"/>
+                        <h:selectOneMenu id="somTipoDocu" value="#{documentController.viSicdocu.idStipodocu}" style="width:100%" >
+                            <f:selectItem itemLabel="-- Seleccione --" itemValue="-1" />
+                            <f:selectItems value="#{documentController.itemSTipoDocu}" />
+                        </h:selectOneMenu>
+                        <h:outputLabel value="Cod. Serie:"/>
+                        <h:inputText styleClass="form-control" value="#{documentController.viSicdocu.codSerie}"  />
+                        <h:outputLabel value="Creador:"/>
+                        <h:inputText styleClass="form-control" value="#{documentController.viSicdocu.desPersCreador}"  style="width:150%"/>
+                        
+                        
+                        <h:outputLabel value="Estado:"/>
+                        <h:selectOneMenu value="#{documentController.viSicdocu.idStipodocu}" style="width:100%" >
+                            <f:selectItem itemLabel="-- Seleccione --" itemValue="-1" />    
+                            <f:selectItems value="#{documentController.itemsEstaRol}" var="c" itemValue="#{c.idEsta}" itemLabel="#{c.desEsta}" />
+                        </h:selectOneMenu>                        
+                        <h:outputLabel value="Num. Docu:"/>
+                        <h:inputText styleClass="form-control" value="#{documentController.viSicdocu.numDocu}"  />
+                        <h:outputLabel value="Cliente/Proveedor:"/>
+                        <h:inputText styleClass="form-control" value="#{documentController.viSicdocu.desPersClieprov}" style="width:150%" />
+
+                        <h:outputLabel value="Fecha Desde:"/>
+                        <h:inputText value="#{documentController.desFecDesde}" styleClass="form-control datepicker" />
+                        <h:outputLabel value="Fecha Hasta:"/>
+                        <h:inputText value="#{documentController.desFecHasta}" styleClass="form-control datepicker" />
+                        
+                        <h:commandLink actionListener="#{documentController.filterDocuments()}" styleClass="btn btn-default">
+                            <span class="glyphicon glyphicon-search"></span> Buscar
+                        </h:commandLink>
+                        <p:commandLink actionListener="#{documentController.newDocument()}" styleClass="btn btn-default" update="form">
+                            <span class="glyphicon glyphicon-new-window"></span> Nuevo
+                        </p:commandLink>
+
+                    </h:panelGrid>
+                    <br/>
+                    <h:dataTable id="tblDocuments" var="item" value="#{documentController.lstViSicdocus}" rendered="#{not empty documentController.lstViSicdocus}"
+                                 styleClass="table table-striped table-bordered table-list"
+                                 columnClasses="table_header1,table_header2,table_header3,table_header4,table_header5,table_header6,table_header7">
+
+                        <h:column>
+                            <f:facet name="header">No.</f:facet>1
+                        </h:column>
+
+                        <h:column>
+                            <f:facet name="header">idProd</f:facet>#{item.idDocu}
+                        </h:column>
+
+                        <h:column>
+                            <f:facet name="header">Cliente/Proveedor</f:facet>#{item.desPersClieprov}
+                        </h:column>
+
+                        <h:column>
+                            <f:facet name="header">Serie</f:facet>#{item.codSerie}
+                        </h:column>
+
+                        <h:column>
+                            <f:facet name="header">Num. Docu.</f:facet>#{item.numDocu}
+                        </h:column>
+
+
+                        <h:column>
+                            
+                            <p:commandLink action="#{documentController.deleteAction(item)}"  update="form" >
+                                <span class="glyphicon glyphicon-trash"></span>
+                                <p:confirm header="Confirmation" message="¿Está seguro de continuar?" icon="ui-icon-alert"  />
+                            </p:commandLink>	                                    
+                            &nbsp;                                    
+                            <p:commandLink action="#{documentController.editAction(item)}" oncomplete="changeTab(2)" update="form">
+                                <span class="glyphicon glyphicon-pencil"></span>                            
+                            </p:commandLink>
+
+                        </h:column>
+
+                    </h:dataTable>
+                </div>
+                
+                <p:confirmDialog global="true" showEffect="fade" hideEffect="fade" header="Confirmar">
+                    <p:commandButton value="Yes" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+                    <p:commandButton value="No"  type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+                </p:confirmDialog>
+                                
+            </h:form>
+            
+        </ui:define>
+    </ui:composition>
+</html>

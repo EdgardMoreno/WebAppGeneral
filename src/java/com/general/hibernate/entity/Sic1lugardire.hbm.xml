@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 28/10/2017 06:46:23 PM by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+  <class name="com.general.hibernate.entity.Sic1lugardire" optimistic-lock="version" schema="SICDBA" table="SIC1LUGARDIRE">
+    <comment>Contiene las direcciones exactas de un punto de localizaci?n en el planeta. Por ejemplo: Av. Chincha Norte 18895 - Dpto 495 Urb. Rosales Distrito de San Isidro.
+        MODEL: POINT_LOCATOR</comment>
+    <id name="idLugardire" type="big_decimal">
+      <column name="ID_LUGARDIRE" precision="22" scale="0"/>
+      <generator class="foreign">
+        <param name="property">sic1lugarByIdLugar</param>
+      </generator>
+    </id>
+    <one-to-one class="com.general.hibernate.entity.Sic1lugar" constrained="true" name="sic1lugarByIdLugar"/>
+    <many-to-one class="com.general.hibernate.entity.Sic1lugar" fetch="select" name="sic1lugarByIdDistrito">
+      <column name="ID_DISTRITO" precision="22" scale="0">
+        <comment>Identificador dle distrito</comment>
+      </column>
+    </many-to-one>
+    <many-to-one class="com.general.hibernate.entity.Sic1general" fetch="select" name="sic1generalByIdTipozona">
+      <column name="ID_TIPOZONA" precision="22" scale="0">
+        <comment>Identificador dle tipo de zona</comment>
+      </column>
+    </many-to-one>
+    <many-to-one class="com.general.hibernate.entity.Sic1general" fetch="select" name="sic1generalByIdTipovia">
+      <column name="ID_TIPOVIA" precision="22" scale="0">
+        <comment>Identificador del tipo de via</comment>
+      </column>
+    </many-to-one>
+    <property name="numLatitud" type="string">
+      <column length="15" name="NUM_LATITUD">
+        <comment>Numero de latitud.</comment>
+      </column>
+    </property>
+    <property name="numLongitud" type="string">
+      <column length="15" name="NUM_LONGITUD">
+        <comment>Numero de longitud.</comment>
+      </column>
+    </property>
+    <property name="numAltitud" type="big_decimal">
+      <column name="NUM_ALTITUD" precision="22" scale="0">
+        <comment>Numero de altitud.</comment>
+      </column>
+    </property>
+    <property name="desVia" type="string">
+      <column length="250" name="DES_VIA" not-null="true">
+        <comment>Contiene la via</comment>
+      </column>
+    </property>
+    <property name="desZona" type="string">
+      <column length="250" name="DES_ZONA" not-null="true">
+        <comment>Contiene la zona</comment>
+      </column>
+    </property>
+    <property name="numDire" type="string">
+      <column length="250" name="NUM_DIRE" not-null="true">
+        <comment>Contiene la descripcion de la ubicacion externa</comment>
+      </column>
+    </property>
+    <property name="numInterior" type="string">
+      <column length="250" name="NUM_INTERIOR">
+        <comment>Contiene la descripcion de la ubicacion interna</comment>
+      </column>
+    </property>
+    <property name="codNumdire" type="string">
+      <column length="5" name="COD_NUMDIRE">
+        <comment>Contiene el codigo del tipo de ubicacion externa</comment>
+      </column>
+    </property>
+    <property name="codNuminterior" type="string">
+      <column length="5" name="COD_NUMINTERIOR">
+        <comment>Contiene el codigo del tipo de ubicacion interna</comment>
+      </column>
+    </property>
+  </class>
+</hibernate-mapping>

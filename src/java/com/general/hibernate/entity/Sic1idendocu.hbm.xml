@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 17/12/2017 10:07:44 PM by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+  <class name="com.general.hibernate.entity.Sic1idendocu" schema="SICDBA" table="SIC1IDENDOCU">
+    <comment>Contiene los identificadores a un documento, los cuales pueden ser FILE ID, ID SISTEMA, NOMBRE DEL ARCHIVO.MODEL: DOCUMENT_IDENTIFICATION</comment>
+    <composite-id class="com.general.hibernate.entity.Sic1idendocuId" name="id">
+      <key-property name="codIden" type="string">
+        <column length="250" name="COD_IDEN"/>
+      </key-property>
+      <key-property name="idTipoiden" type="big_decimal">
+        <column name="ID_TIPOIDEN" precision="22" scale="0"/>
+      </key-property>
+    </composite-id>
+    <property name="fecDesde" type="date">
+      <column length="7" name="FEC_DESDE">
+        <comment>Fecha de inicio del identificador del documento.</comment>
+      </column>
+    </property>
+    <property name="fecHasta" type="date">
+      <column length="7" name="FEC_HASTA">
+        <comment>Fecha de t?rmino de la vigencia del identificador del documento.</comment>
+      </column>
+    </property>
+    <!--<property name="idDocu" type="big_decimal">
+            <column name="ID_DOCU" not-null="true" precision="22" scale="0">
+                <comment>Contiene el identificador del documento.</comment>
+            </column>
+        </property>-->
+    <many-to-one class="com.general.hibernate.entity.Sic1docu" fetch="join" name="sic1docu">
+      <column name="ID_DOCU" precision="22" scale="0"/>
+    </many-to-one>
+  </class>
+</hibernate-mapping>

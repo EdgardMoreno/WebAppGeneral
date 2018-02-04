@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 28/10/2017 06:46:23 PM by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+  <class name="com.general.hibernate.entity.Sic1lugar" optimistic-lock="version" schema="SICDBA" table="SIC1LUGAR">
+    <comment>Contiene las descripciones de los diferentes puntos geogr?ficos Por ejemplo: Si es Area Geografica: Lima, San Isidro, Lince, LI 18, etc. Si es Direcci?n: Av.
+        Cantuarias 370 0f. 5907 San Isidro Lima 18 Si es Virtual: www.peru.com, juanperez@miempresa.com Si es Telefono: 378858567, 98849958, 0155366745 MODEL: POINT_LOCATOR,
+        LOCATOR, GEOGRAPHICAL_AREA, TELEPHONE, VIRTUAL_LOCATOR.</comment>
+    <id name="idLugar" type="big_decimal">
+      <column name="ID_LUGAR" precision="22" scale="0"/>
+      <generator class="assigned"/>
+    </id>
+    <property name="desLugar" type="string">
+      <column length="4000" name="DES_LUGAR">
+        <comment>Descripcion del lugar.</comment>
+      </column>
+    </property>
+    <property name="idTipolugar" type="big_decimal">
+      <column name="ID_TIPOLUGAR" not-null="true" precision="22" scale="0">
+        <comment>Contiene el tipo de identificador que permite localizar un elemento dentro de una entidad.</comment>
+      </column>
+    </property>
+    <property name="codCodiauto" type="string">
+      <column length="50" name="COD_CODIAUTO">
+        <comment>Contiene el codigo de Autorizacion (Solo disponible en el caso de Salas)</comment>
+      </column>
+    </property>
+    <property name="desDireccion" type="string">
+      <column length="4000" name="DES_DIRECCION">
+        <comment>Descripcion de la Direccion sin codigo HTML (Solo Aplica para las Salas)</comment>
+      </column>
+    </property>
+    <one-to-one class="com.general.hibernate.entity.Sic1lugardire" name="sic1lugardireByIdLugar"/>
+    <set fetch="select" inverse="true" lazy="true" name="sic3lugarperses" table="SIC3LUGARPERS">
+      <key>
+        <column name="ID_LUGAR" not-null="true" precision="22" scale="0">
+          <comment>Contiene el identificador del area geografica.</comment>
+        </column>
+      </key>
+      <one-to-many class="com.general.hibernate.relaentity.Sic3lugarpers"/>
+    </set>
+    <set fetch="select" inverse="true" lazy="true" name="sic1lugardiresForIdDistrito" table="SIC1LUGARDIRE">
+      <key>
+        <column name="ID_DISTRITO" precision="22" scale="0">
+          <comment>Identificador dle distrito</comment>
+        </column>
+      </key>
+      <one-to-many class="com.general.hibernate.entity.Sic1lugardire"/>
+    </set>
+  </class>
+</hibernate-mapping>

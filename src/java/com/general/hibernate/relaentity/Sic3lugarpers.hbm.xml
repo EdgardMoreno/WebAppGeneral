@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 28/10/2017 06:46:23 PM by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+  <class name="com.general.hibernate.relaentity.Sic3lugarpers" optimistic-lock="version" schema="SICDBA" table="SIC3LUGARPERS">
+    <comment>Contiene los Valores de Las Persona Relacionadas A un Lugar (Socios,etc)</comment>
+    <composite-id class="com.general.hibernate.relaentity.Sic3lugarpersId" name="id">
+      <key-property name="idLugar" type="big_decimal">
+        <column name="ID_LUGAR" precision="22" scale="0"/>
+      </key-property>
+      <key-property name="idTrelalugar" type="big_decimal">
+        <column name="ID_TRELALUGAR" precision="22" scale="0"/>
+      </key-property>
+      <key-property name="idPers" type="big_decimal">
+        <column name="ID_PERS" precision="22" scale="0"/>
+      </key-property>
+      <key-property name="idTrolpers" type="big_decimal">
+        <column name="ID_TROLPERS" precision="22" scale="0"/>
+      </key-property>
+      <key-property name="fecDesde" type="date">
+        <column length="7" name="FEC_DESDE"/>
+      </key-property>
+    </composite-id>
+    <many-to-one class="com.general.hibernate.entity.Sic1pers" fetch="select" insert="false" name="sic1pers" update="false">
+      <column name="ID_PERS" not-null="true" precision="22" scale="0">
+        <comment>Contiene el identificador de la persona</comment>
+      </column>
+    </many-to-one>
+    <many-to-one class="com.general.hibernate.entity.Sic1lugar" fetch="select" insert="false" name="sic1lugar" update="false">
+      <column name="ID_LUGAR" not-null="true" precision="22" scale="0">
+        <comment>Contiene el identificador del area geografica.</comment>
+      </column>
+    </many-to-one>
+    <many-to-one class="com.general.hibernate.entity.Sic8trela" fetch="select" insert="false" name="sic8trela" update="false">
+      <column name="ID_TRELALUGAR" not-null="true" precision="22" scale="0">
+        <comment>Contiene el Tipo de Relacion del Lugar con la Persona</comment>
+      </column>
+    </many-to-one>
+    <property name="fecHasta" type="date">
+      <column length="7" name="FEC_HASTA">
+        <comment>Fecha defin de la relacion de la persona.con el lugar.</comment>
+      </column>
+    </property>
+    <property name="desNotas" type="string">
+      <column length="4000" name="DES_NOTAS">
+        <comment>Contiene las notas relacionadas a la relacion de la la persona con la localizacion fisica.</comment>
+      </column>
+    </property>
+  </class>
+</hibernate-mapping>

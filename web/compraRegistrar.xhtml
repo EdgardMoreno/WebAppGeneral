@@ -1,0 +1,340 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:a="http://xmlns.jcp.org/jsf/passthrough"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets" >
+
+    <ui:composition template="./templates/templatePrincipal.xhtml">
+
+        <ui:define name="header">
+
+            <script>
+
+                function fnValiteAddProduct() {
+                    //obteniendo el valor que se puso en campo text del formulario
+                    var CodigoProducto = document.getElementById("form:codigoProducto").value;
+                    var NombreProducto = document.getElementById("form:descProducto").value;
+                    var CostoUnitario = document.getElementById("form:costoUnitario").value;
+                    var Cantidad = document.getElementById("form:cantidad").value;
+                    var FlgError = false;
+                    var arrMessages = [];
+
+                    if (CodigoProducto.length == 0) {
+                        arrMessages.push("Debe ingresar el Código del Producto");
+                        FlgError = true;
+                    }
+
+                    if (NombreProducto.length == 0) {
+                        arrMessages.push("Debe ingresar el Nombre del Producto.");
+                        FlgError = true;
+                    }
+
+                    if (CostoUnitario.length == 0) {
+                        arrMessages.push("Debe ingresar el Costo del Producto.");
+                        FlgError = true;
+                    }
+
+                    if (Cantidad.length == 0) {
+                        arrMessages.push("Debe ingresar la Cantidad Comprada.");
+                        FlgError = true;
+                    }
+
+                    //IMPRIMIR RESULTADO
+                    if (FlgError == true) {
+                        fnShowMessageValidation(arrMessages);
+                        return false;
+                    } else {
+                        fnHideMessageValidation();
+                        return true;
+                    }
+                };
+
+                function fnValidateForm() {
+
+                    varCodSerie = document.getElementById("form:codSerie").value;
+                    varNumDocumento = document.getElementById("form:numDocumento").value;
+                    varFecRegistro = document.getElementById("form:fecRegistro").value;
+                    varIdenDocum = document.getElementById("form:numDocuIden").value;
+
+
+                };
+
+            </script>
+        </ui:define>
+
+        <ui:define name="content">
+
+            <div class="container">
+
+                <div id="divResultadoValidacion"></div>
+
+                <h:form id="form">
+
+                    <p:growl id="message" showDetail="true" />
+
+                    <div class="page-header" >
+                        <div class="form-inline header-format">
+                            <!--REGISTRAR COMPRA:-->
+
+                            <h:selectOneMenu id="somTipoDocu" value="#{orderController.sic1docu.idStipodocu}" style="font-size: 22px;">
+                                <f:selectItems value="#{orderController.itemSTipoDocu}" />
+                            </h:selectOneMenu>
+                            &nbsp;
+                            <h:outputLabel value="NRO:"/>
+                            <h:inputText id="codSerie" style="width:4em;text-align: center;font-size: 22px;" value="#{orderController.sic1docu.codSerie}"  />
+                            <h:outputLabel value="-"/>
+                            <h:inputText id="numDocumento" style="width:7em;text-align: center;font-size: 22px;" value="#{orderController.sic1docu.numDocu }"  />
+                        </div>
+                    </div>
+
+                    <h:panelGrid columns="6" style="width:95%"
+                                 columnClasses="compra_panelGrid_1, compra_panelGrid_2, compra_panelGrid_3, compra_panelGrid_4, compra_panelGrid_5, compra_panelGrid_6">
+
+                        <h:outputLabel value="Fecha:"/>
+                        <h:inputText id="fecRegistro" size="10" value="#{orderController.desFecRegistro}"
+                                     styleClass="form-control datepicker"
+                                     style="font-size:14px;font-weight:bold;"/>
+                        <h:outputLabel value=""/>
+                        <h:outputLabel value=""/>
+                        <h:outputLabel value=""/>
+                        <h:outputLabel value=""/>
+
+                        <h:outputLabel value="Nro. Documento:"/>
+                        <h:inputText id="numDocuIden"
+                                     value="#{orderController.sic1idenpersId.codIden}" styleClass="form-control"/>
+                        <p:commandLink actionListener="#{orderController.searchPerson()}"
+                                       onstart="return fnValidateDocuIden(document.getElementById('form:numDocuIden').value)"
+                                       styleClass="btn btn-default" update="razonSocial">
+                            <span class="glyphicon glyphicon-new-window"></span>Buscar
+                            <p:ajax event="dialogReturn"
+                                    listener="#{orderController.onProductChosen}" update="numDocuIden,razonSocial"/>
+                        </p:commandLink>
+
+                        <h:outputLabel value="Razón Social:"/>
+                        <h:inputText id="razonSocial"
+                                     readonly="true"
+                                     value="#{orderController.sic1pers.desPers}" styleClass="form-control"/>
+                        <h:outputLabel value=""/>
+
+                        <h:panelGroup>
+                            <div class="detalle-compra">
+                                <h:outputLabel value="INGRESAR PRODUCTOS"/>
+                            </div>
+                        </h:panelGroup>
+                        <h:outputLabel value=""/>
+                        <h:outputLabel value=""/>
+                        <h:outputLabel value=""/>
+                        <h:outputLabel value=""/>
+                        <h:outputLabel value=""/>
+
+                        <h:outputLabel value="Código Producto:"/>
+                        <h:inputText id="codigoProducto" styleClass="form-control" value="#{orderController.sic1prod.codProd}"/>
+                        <p:commandLink actionListener="#{orderController.searchProduct()}"
+                                       styleClass="btn btn-default" update="descProducto">
+                            <span class="glyphicon glyphicon-search"></span>Buscar
+                            <p:ajax event="dialogReturn"
+                                    listener="#{orderController.onProductChosen}" update="codigoProducto,descProducto"/>
+                        </p:commandLink>
+                        <h:outputLabel value="Descripción:"/>
+                        <h:inputText id="descProducto" disabled="true" styleClass="form-control" value="#{orderController.sic1prod.desProd }"  />
+                        <h:outputLabel value=""/>
+
+                        <h:outputLabel value="Costo Unitario:"/>
+                        <h:panelGroup>
+                            <div class="input-group mb-2 mb-sm-0">
+                                <div class="input-group-addon">S/.</div>
+                                <h:inputText id="costoUnitario" styleClass="form-control"
+                                             value="#{orderController.sic3proddocu.numValor }"
+                                             onkeypress="return allowOnlyNumbers(event)"
+                                             onblur="formatDecimal_2(this)"/>
+                            </div>
+                        </h:panelGroup>
+                        <h:outputLabel value=""/>
+                        <h:outputLabel value=""/>
+                        <h:outputLabel value=""/>
+                        <h:outputLabel value=""/>
+
+                        <h:outputLabel value="Cantidad:"/>
+                        <h:panelGroup>
+                            <div class="input-group mb-2 mb-sm-0">
+                                <div class="input-group-addon">#&nbsp;&nbsp;</div>
+                                <h:inputText id="cantidad" styleClass="form-control"  value="#{orderController.sic3proddocu.numCantidad }" onkeypress="return allowOnlyNumbers(event)"/>
+                            </div>
+                        </h:panelGroup>
+                        <p:commandLink actionListener="#{orderController.addItem()}"
+                                       onstart="return fnValiteAddProduct()"
+                                       styleClass="btn btn-default"
+                                       update="form:pnDetCompra,codigoProducto,descProducto,costoUnitario,cantidad,form:pnTotals" >
+                            <span class="glyphicon glyphicon-plus"></span>Agregar
+                        </p:commandLink>
+                        <h:outputLabel value=""/>
+                        <h:outputLabel value=""/>
+                        <h:outputLabel value=""/>
+
+                        <h:outputLabel value="" />
+
+                    </h:panelGrid>
+
+
+
+                    <h:panelGrid id="pnDetCompra" columns="1" width="72%" styleClass="table-one" >
+
+                        <h:dataTable value="#{orderController.lstSic3proddocu}" var="item"
+                                     styleClass="table table-striped table-bordered table-list"
+                                     columnClasses="table_header1,table_header2,table_header3,table_header4,table_header5,table_header6,table_header7" >
+
+                            <h:column>
+                                <f:facet name="header">No.</f:facet>#{item.numIndex}
+                            </h:column>
+                            <h:column>
+                                <f:facet name="header">idProd</f:facet>#{item.sic1prod.idProd}
+                            </h:column>
+                            <h:column>
+                                <f:facet name="header">CODIGO</f:facet>#{item.sic1prod.codProd}
+                            </h:column>
+                            <h:column>
+                                <f:facet name="header">DESCRIPCION</f:facet>#{item.sic1prod.desProd}
+                            </h:column>
+                            <h:column>
+                                <div class="input-group mb-2 mb-sm-0">
+                                    <h:outputLabel value="S/." />
+                                    <f:facet name="header">PRECIO</f:facet>#{item.numValor}
+                                </div>
+                            </h:column>
+                            <h:column>
+                                <f:facet name="header">CANTIDAD</f:facet>#{item.numCantidad}
+                            </h:column>
+                            <h:column>
+                                <f:facet name="header">ACCION</f:facet>
+                                <h:commandLink action="#{orderController.deleteAction(item)}">
+                                    <span class="glyphicon glyphicon-trash"></span>
+                                </h:commandLink>
+                                &nbsp;
+                                <h:commandLink action="#{orderController.editAction(item)}">
+                                    <span class="glyphicon glyphicon-pencil"></span>
+                                </h:commandLink>
+                            </h:column>
+                        </h:dataTable>
+
+                    </h:panelGrid>
+
+                    <h:panelGrid columns="2"  style="width:28%" styleClass="table-two">
+                        <h:panelGrid columns="2"  border="1"
+                                     columnClasses="compra_totales_label, compra_totales_text">
+
+                            <h:outputLabel value="Forma de Pago:" />
+                            <h:selectOneMenu value="#{orderController.sic1docu.idModapago}" styleClass="form-control"
+                                             onchange="submit()"
+                                             valueChangeListener="#{orderController.payModeValueChange}">
+                                <f:selectItems value="#{orderController.itemsPayMode}" var="c" itemValue="#{c.idGeneral}" itemLabel="#{c.desGeneral}"/>
+                            </h:selectOneMenu>
+
+                            <h:outputLabel value="Tipo Tarjeta:" rendered="#{not empty orderController.itemsTypeCard}" />
+                            <h:selectOneMenu value="#{orderController.sic1docu.idTipotarjeta}"
+                                             styleClass="form-control"
+                                             rendered="#{not empty orderController.itemsTypeCard}">
+                                <f:selectItem itemLabel="-- Seleccione --" itemValue="-1" />
+                                <f:selectItems value="#{orderController.itemsTypeCard}" />
+                            </h:selectOneMenu>
+
+                            <h:outputLabel value="Mto. Tarjeta:"/>
+                            <h:panelGroup>
+                                <div class="input-group mb-1 mb-sm-0">
+                                    <div class="input-group-addon">S/.</div>
+                                    <h:inputText
+                                        styleClass="form-control"
+                                        value="#{orderController.sic1docu.numMtotarjeta}"
+                                        onkeypress="return allowOnlyNumbers(event)"
+                                        onblur="formatDecimal_2(this)"/>
+                                </div>
+                            </h:panelGroup>
+
+                            <h:outputLabel value="Efectivo?:"/>
+                            <h:panelGroup>
+                                <div class="input-group mb-1 mb-sm-0">
+                                    <div class="input-group-addon">S/.</div>
+                                    <h:inputText
+                                        styleClass="form-control"
+                                        value="#{orderController.sic1docu.numMtoefectivo}"
+                                        onkeypress="return allowOnlyNumbers(event)"
+                                        onblur="formatDecimal_2(this)"/>
+                                </div>
+                            </h:panelGroup>
+
+                        </h:panelGrid>
+
+                        <br/><br/><br/>
+
+                        <h:panelGrid id="pnTotals" columns="2"  border="1"
+                                     columnClasses="compra_totales_label, compra_totales_text">
+
+                            <h:outputLabel value="Descuento:"/>
+                            <h:panelGroup>
+                                <div class="input-group mb-1 mb-sm-0">
+                                    <div class="input-group-addon">S/.</div>
+                                    <h:inputText id="numDescuento"
+                                                 styleClass="form-control"
+                                                 value="#{orderController.sic1docu.numMtodscto}"
+                                                 onkeypress="return allowOnlyNumbers(event)"
+                                                 onblur="formatDecimal_2(this)"/>
+                                </div>
+                            </h:panelGroup>
+
+                            <h:outputLabel styleClass="total" value="SUB. TOTAL:" />
+                            <h:panelGroup styleClass="total">
+                                <h:outputLabel value="S/." />
+                                <h:outputLabel value="#{orderController.sic1docu.numSubtotal}" />
+                            </h:panelGroup>
+
+                            <h:outputLabel styleClass="total" value="IGV(18%):" />
+                            <h:panelGroup styleClass="total">
+                                <h:outputLabel value="S/." />
+                                <h:outputLabel value="#{orderController.sic1docu.numIgv}" />
+                            </h:panelGroup>
+
+                            <h:outputLabel  styleClass="total" value="TOTAL" />
+                            <h:panelGroup styleClass="total">
+                                <h:outputLabel value="S/." />
+                                <h:outputLabel value="#{orderController.sic1docu.numMtoTotal}" />
+                            </h:panelGroup>
+
+                            <h:outputLabel value="Vuelto:" />
+                            <h:panelGroup>
+                                <h:outputLabel value="S/." />
+                                <h:outputLabel value="#{orderController.sic1docu.numMtoTotal}" />
+                            </h:panelGroup>
+
+                        </h:panelGrid>
+                    </h:panelGrid>
+
+                    <br/>
+
+                    <div class="offset-sm-2 col-sm-10">
+                        <p:commandLink value="Grabar" styleClass="btn btn-primary"
+                                       onstart="return fnValidateForm()"
+                                       action="#{orderController.saveOrder()}"
+                                       update="message" >
+
+                        </p:commandLink>
+                        &nbsp;
+                        <h:selectBooleanCheckbox value="asdas"></h:selectBooleanCheckbox>
+                        <h:outputLabel value="PENDIENTE DE RECOJO:" />
+
+                    </div>
+
+                    <p:confirmDialog global="true" showEffect="fade" hideEffect="fade" header="Confirmar">
+
+                        <p:commandButton value="Yes" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+                        <p:commandButton value="No"  type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+                    </p:confirmDialog>
+
+                </h:form>
+
+            </div>
+
+        </ui:define>
+    </ui:composition>
+</html>

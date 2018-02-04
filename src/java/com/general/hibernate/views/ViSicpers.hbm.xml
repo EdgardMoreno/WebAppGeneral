@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 06/01/2018 10:05:32 AM by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+  <class name="com.general.hibernate.views.ViSicpers" optimistic-lock="version" schema="SICDBA" table="VI_SICPERS">
+    <id name="idPers" type="big_decimal">
+      <column name="ID_PERS" precision="22" scale="0"/>
+      <generator class="assigned"/>
+    </id>
+    <property name="desPers" type="string">
+      <column length="250" name="DES_PERS"/>
+    </property>
+    <property name="fecDesde" type="date">
+      <column length="7" name="FEC_DESDE"/>
+    </property>
+    <property name="fecHasta" type="date">
+      <column length="7" name="FEC_HASTA"/>
+    </property>
+    <property name="fecCreacion" type="date">
+      <column length="7" name="FEC_CREACION"/>
+    </property>
+    <property name="idTipoiden" type="big_decimal">
+      <column name="ID_TIPOIDEN" precision="22" scale="0"/>
+    </property>
+    <property name="codIden" type="string">
+      <column length="250" name="COD_IDEN"/>
+    </property>
+    <property name="desTipoiden" type="string">
+      <column length="500" name="DES_TIPOIDEN"/>
+    </property>
+    <property name="desPrimnomb" type="string">
+      <column length="250" name="DES_PRIMNOMB"/>
+    </property>
+    <property name="desSegunomb" type="string">
+      <column length="250" name="DES_SEGUNOMB"/>
+    </property>
+    <property name="desApelpate" type="string">
+      <column length="250" name="DES_APELPATE"/>
+    </property>
+    <property name="desApelmate" type="string">
+      <column length="250" name="DES_APELMATE"/>
+    </property>
+    <property name="desPersorga" type="string">
+      <column length="250" name="DES_PERSORGA"/>
+    </property>
+    <property name="idTrolpers" type="big_decimal">
+      <column name="ID_TROLPERS" precision="22" scale="0"/>
+    </property>
+    <property name="desTrolpers" type="string">
+      <column length="500" name="DES_TROLPERS"/>
+    </property>
+    <property name="idEstapers" type="big_decimal">
+      <column name="ID_ESTAPERS" precision="22" scale="0"/>
+    </property>
+    <property name="desEstapers" type="string">
+      <column length="500" name="DES_ESTAPERS"/>
+    </property>
+    <property name="fecDesdeesta" type="date">
+      <column length="7" name="FEC_DESDEESTA"/>
+    </property>
+    <property name="desUbigeo" type="string">
+      <column length="250" name="DES_UBIGEO"/>
+    </property>
+    <property name="idTipopers" type="big_decimal">
+      <column name="ID_TIPOPERS" precision="22" scale="0"/>
+    </property>
+    <property name="desTipopers" type="string">
+      <column length="500" name="DES_TIPOPERS"/>
+    </property>
+    <property name="fecNaci" type="date">
+      <column length="7" name="FEC_NACI"/>
+    </property>
+    <property name="idEstacivil" type="big_decimal">
+      <column name="ID_ESTACIVIL" precision="22" scale="0"/>
+    </property>
+    <property name="desEstacivil" type="string">
+      <column length="500" name="DES_ESTACIVIL"/>
+    </property>
+    <property name="desGrupempr" type="string">
+      <column length="250" name="DES_GRUPEMPR"/>
+    </property>
+    <property name="mail" type="string">
+      <column length="4000" name="MAIL"/>
+    </property>
+    <property name="telecelular" type="string">
+      <column length="4000" name="TELECELULAR"/>
+    </property>
+    <property name="telefijo" type="string">
+      <column length="4000" name="TELEFIJO"/>
+    </property>
+    <property name="desDireccion" type="string">
+      <column length="1003" name="DES_DIRECCION"/>
+    </property>
+    <property name="idTipovia" type="big_decimal">
+      <column name="ID_TIPOVIA" precision="22" scale="0"/>
+    </property>
+    <property name="desTipovia" type="string">
+      <column length="500" name="DES_TIPOVIA"/>
+    </property>
+    <property name="desVia" type="string">
+      <column length="250" name="DES_VIA"/>
+    </property>
+    <property name="idTipozona" type="big_decimal">
+      <column name="ID_TIPOZONA" precision="22" scale="0"/>
+    </property>
+    <property name="desTipozona" type="string">
+      <column length="500" name="DES_TIPOZONA"/>
+    </property>
+    <property name="desZona" type="string">
+      <column length="250" name="DES_ZONA"/>
+    </property>
+    <property name="numDire" type="string">
+      <column length="250" name="NUM_DIRE"/>
+    </property>
+    <property name="numInterior" type="string">
+      <column length="250" name="NUM_INTERIOR"/>
+    </property>
+    <property name="desDistrito" type="string">
+      <column length="4000" name="DES_DISTRITO"/>
+    </property>
+    <property name="desProvincia" type="string">
+      <column length="4000" name="DES_PROVINCIA"/>
+    </property>
+    <property name="desDepartamento" type="string">
+      <column length="4000" name="DES_DEPARTAMENTO"/>
+    </property>
+    <property name="idCreador" type="big_decimal">
+      <column name="ID_CREADOR" precision="22" scale="0"/>
+    </property>
+    <property name="desCreador" type="string">
+      <column length="250" name="DES_CREADOR"/>
+    </property>
+    <property name="idTrolcreador" type="big_decimal">
+      <column name="ID_TROLCREADOR" precision="22" scale="0"/>
+    </property>
+    <property name="desTrolcreador" type="string">
+      <column length="500" name="DES_TROLCREADOR"/>
+    </property>
+    <property name="codNumdire" type="string">
+      <column length="5" name="COD_NUMDIRE"/>
+    </property>
+    <property name="codNuminterior" type="string">
+      <column length="5" name="COD_NUMINTERIOR"/>
+    </property>
+  </class>
+</hibernate-mapping>

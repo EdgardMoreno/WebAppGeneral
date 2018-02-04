@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 21/12/2017 04:19:01 PM by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+  <class name="com.general.hibernate.relaentity.Sic3docudocu" optimistic-lock="version" schema="SICDBA" table="SIC3DOCUDOCU">
+    <comment>Contiene la relaci?n entre 2 documentos, por ejemplo: Documento de requisito del documento de solicitud. MODEL: DOCUMENT_RELATIONSHIP</comment>
+    <composite-id class="com.general.hibernate.relaentity.Sic3docudocuId" name="id">
+      <key-property name="idTreladocu" type="big_decimal">
+        <column name="ID_TRELADOCU" precision="22" scale="0"/>
+      </key-property>
+      <key-property name="idDocu" type="big_decimal">
+        <column name="ID_DOCU" precision="22" scale="0"/>
+      </key-property>
+      <key-property name="idDocurel" type="big_decimal">
+        <column name="ID_DOCUREL" precision="22" scale="0"/>
+      </key-property>
+      <key-property name="fecDesde" type="date">
+        <column length="7" name="FEC_DESDE"/>
+      </key-property>
+    </composite-id>
+    <property name="fecHasta" type="date">
+      <column length="7" name="FEC_HASTA">
+        <comment>Fecha en que termina el estado de un documento.</comment>
+      </column>
+    </property>
+    <property name="desNotas" type="string">
+      <column length="4000" name="DES_NOTAS">
+        <comment>Notas asociadas al cambio de estado de un documento.</comment>
+      </column>
+    </property>
+  </class>
+</hibernate-mapping>

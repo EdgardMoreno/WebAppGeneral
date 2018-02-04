@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 19/12/2017 09:58:09 PM by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+  <class name="com.general.hibernate.entity.Sic1docu" optimistic-lock="version" schema="SICDBA" table="SIC1DOCU">
+    <comment>Contiene los diferentes Documentos electr?nicos que se crear?n en mincetur como parte de la resoluci?n de un expediente. MODEL: DOCUMENT</comment>
+    <id name="idDocu" type="big_decimal">
+      <column name="ID_DOCU" precision="22" scale="0"/>
+      <generator class="assigned"/>
+    </id>
+    <property name="desNotas" type="string">
+      <column length="4000" name="DES_NOTAS">
+        <comment>Contiene las notas que describen el contenido del documento.</comment>
+      </column>
+    </property>
+    <property name="fecCreacion" type="date">
+      <column length="7" name="FEC_CREACION">
+        <comment>fecha de creacion del documento.</comment>
+      </column>
+    </property>
+    <property name="desDocu" type="string">
+      <column length="4000" name="DES_DOCU">
+        <comment>Contiene la descripcion del documento.</comment>
+      </column>
+    </property>
+    <property name="idTrolpers" type="big_decimal">
+      <column name="ID_TROLPERS" precision="22" scale="0">
+        <comment>Contiene el identificador del tipo de rol de una persona que cre? el documento, el resto de relaciones se encuentra en relDocumentoPersona.</comment>
+      </column>
+    </property>
+    <property name="idStipodocu" type="big_decimal">
+      <column name="ID_STIPODOCU" precision="22" scale="0">
+        <comment>Contiene el identificador de la clase de documento, los cuales pueden ser clasificados por: Requisitos Fotocopia de poder vigente del representante legal
+                inscrito en RRPP Copia Literal vigente de partida registral donde se encuentra inscrita la sociedad, expedida por RRPP Copia de pago por concepto de derecho de
+                tr?mite.</comment>
+      </column>
+    </property>
+    <property name="fecDesde" type="date">
+      <column length="7" name="FEC_DESDE">
+        <comment>Fecha de inicio de vigencia del documento.</comment>
+      </column>
+    </property>
+    <property name="fecHasta" type="date">
+      <column length="7" name="FEC_HASTA">
+        <comment>Fecha de termino de vigencia del documento.</comment>
+      </column>
+    </property>
+    <property name="idPers" type="big_decimal">
+      <column name="ID_PERS" precision="22" scale="0">
+        <comment>Contiene el identificador de la persona que creo el documento.</comment>
+      </column>
+    </property>
+    <property name="idModapago" type="big_decimal">
+      <column name="ID_MODAPAGO" precision="22" scale="0"/>
+    </property>
+    <property name="idTipotarjeta" type="big_decimal">
+      <column name="ID_TIPOTARJETA" precision="22" scale="0"/>
+    </property>
+    <property name="numMtotarjeta" type="big_decimal">
+      <column name="NUM_MTOTARJETA" precision="9" scale="3"/>
+    </property>
+    <property name="numMtocomi" type="big_decimal">
+      <column name="NUM_MTOCOMI" precision="5" scale="3"/>
+    </property>
+    <property name="numMtoefectivo" type="big_decimal">
+      <column name="NUM_MTOEFECTIVO" precision="9" scale="3"/>
+    </property>
+    <property name="codSerie" type="string">
+      <column length="10" name="COD_SERIE"/>
+    </property>
+    <property name="numDocu" type="big_decimal">
+      <column name="NUM_DOCU" precision="22" scale="0"/>
+    </property>
+    <property name="numMtodscto" type="big_decimal">
+      <column name="NUM_MTODSCTO" precision="5" scale="3"/>
+    </property>
+    <property name="numSubtotal" type="big_decimal">
+      <column name="NUM_SUBTOTAL" precision="9" scale="3"/>
+    </property>
+    <property name="numIgv" type="big_decimal">
+      <column name="NUM_IGV" precision="7" scale="3"/>
+    </property>
+  </class>
+</hibernate-mapping>

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 28/11/2017 03:53:56 PM by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+  <class name="com.general.hibernate.entity.Sic1idenprod" optimistic-lock="version" schema="SICDBA" table="SIC1IDENPROD">
+    <comment>Contiene los diferentes identificadores de los productos, un producto se refiere a una m?quina tragamoneda, juegos de casinos, memorias de solo lectura, sistema
+        progresivo, etc.</comment>
+    <composite-id class="com.general.hibernate.entity.Sic1idenprodId" name="id">
+      <key-property name="idTipoiden" type="big_decimal">
+        <column name="ID_TIPOIDEN" precision="22" scale="0"/>
+      </key-property>
+      <key-property name="codIden" type="string">
+        <column length="250" name="COD_IDEN"/>
+      </key-property>
+    </composite-id>
+    <property name="fecDesde" type="date">
+      <column length="7" name="FEC_DESDE">
+        <comment>Fecha desde</comment>
+      </column>
+    </property>
+    <property name="fecHasta" type="date">
+      <column length="7" name="FEC_HASTA">
+        <comment>Fecha hasta</comment>
+      </column>
+    </property>
+    <property name="idProd" type="big_decimal">
+      <column name="ID_PROD" not-null="true" precision="22" scale="0">
+        <comment>ID del producto</comment>
+      </column>
+    </property>
+  </class>
+</hibernate-mapping>

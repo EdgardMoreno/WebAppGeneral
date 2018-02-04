@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 28/10/2017 06:46:23 PM by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+  <class name="com.general.hibernate.entity.Sic1persorga" optimistic-lock="version" schema="SICDBA" table="SIC1PERSORGA">
+    <comment>Contiene los datos de las PERSONAS que son organizaciones (personas jur?dicas). MODEL: PARTY.ORGANIZATION</comment>
+    <id name="idPersorga" type="big_decimal">
+      <column name="ID_PERSORGA" precision="22" scale="0"/>
+      <generator class="foreign">
+        <param name="property">sic1pers</param>
+      </generator>
+    </id>
+    <one-to-one class="com.general.hibernate.entity.Sic1pers" constrained="true" name="sic1pers"/>
+    <property name="desPersorga" type="string">
+      <column length="250" name="DES_PERSORGA">
+        <comment>Contiene la descripcion de la persona (Razon Social)</comment>
+      </column>
+    </property>
+    <property name="desNombcome" type="string">
+      <column length="250" name="DES_NOMBCOME">
+        <comment>Contiene el nombre comercial de la organizacion.</comment>
+      </column>
+    </property>
+    <property name="desGrupempr" type="string">
+      <column length="250" name="DES_GRUPEMPR">
+        <comment>Contiene la descripcion del grupo empresarial al que pertenece</comment>
+      </column>
+    </property>
+    <property name="idTipoempr" type="big_decimal">
+      <column name="ID_TIPOEMPR" precision="22" scale="0">
+        <comment>Contiene el identificador del elemento general</comment>
+      </column>
+    </property>
+    <property name="idTipoorga" type="big_decimal">
+      <column name="ID_TIPOORGA" precision="22" scale="0">
+        <comment>Contiene el identificador del elemento general</comment>
+      </column>
+    </property>
+  </class>
+</hibernate-mapping>

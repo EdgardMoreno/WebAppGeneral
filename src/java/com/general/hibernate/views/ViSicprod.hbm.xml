@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 19/01/2018 05:18:09 PM by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+  <class name="com.general.hibernate.views.ViSicprod" optimistic-lock="version" schema="SICDBA" table="VI_SICPROD">
+    
+      <id name="idProd" type="big_decimal">
+        <column name="ID_PROD" precision="22" scale="0"/>
+      </id>
+      <property name="codIden" type="string">
+        <column length="250" name="COD_IDEN"/>
+      </property>
+      <property name="codProd" type="string">
+        <column length="250" name="COD_PROD"/>
+      </property>
+      <property name="desProd" type="string">
+        <column length="4000" name="DES_PROD"/>
+      </property>
+      <property name="desProdcome" type="string">
+        <column length="4000" name="DES_PRODCOME"/>
+      </property>
+      <property name="idStipoprod" type="big_decimal">
+        <column name="ID_STIPOPROD" precision="22" scale="0"/>
+      </property>
+      <property name="codStipoprod" type="string">
+        <column length="50" name="COD_STIPOPROD"/>
+      </property>
+      <property name="desStipoprod" type="string">
+        <column length="500" name="DES_STIPOPROD"/>
+      </property>
+      <property name="codTipoprod" type="string">
+        <column length="50" name="COD_TIPOPROD"/>
+      </property>
+      <property name="desTipoprod" type="string">
+        <column length="500" name="DES_TIPOPROD"/>
+      </property>
+      <property name="fecDesde" type="date">
+        <column length="7" name="FEC_DESDE"/>
+      </property>
+      <property name="fecHasta" type="date">
+        <column length="7" name="FEC_HASTA"/>
+      </property>
+      <property name="numPrecio" type="big_decimal">
+        <column name="NUM_PRECIO" precision="22" scale="0"/>
+      </property>
+      <property name="numCantidad" type="big_decimal">
+        <column name="NUM_CANTIDAD" precision="22" scale="0"/>
+      </property>
+
+  </class>
+</hibernate-mapping>

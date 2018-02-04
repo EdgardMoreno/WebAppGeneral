@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 28/11/2017 03:53:56 PM by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+  <class name="com.general.hibernate.entity.Sic1prod" optimistic-lock="version" schema="SICDBA" table="SIC1PROD">
+    <comment>Contiene los tipos de Item, las marcas homologadas de cada tipo de producto. MODEL: PRODUCT_TYPE</comment>
+    <id name="idProd" type="big_decimal">
+      <column name="ID_PROD" precision="22" scale="0"/>
+      <generator class="assigned"/>
+    </id>
+    <property name="desProd" type="string">
+      <column length="4000" name="DES_PROD">
+        <comment>Contiene la descripci?n del producto</comment>
+      </column>
+    </property>
+    <property name="codProd" type="string">
+      <column length="250" name="COD_PROD" not-null="true" unique="true">
+        <comment>Contiene un valor constante que permite localizar a un producto(Codigo de Autorizacion).</comment>
+      </column>
+    </property>
+    <property name="desProdcome" type="string">
+      <column length="4000" name="DES_PRODCOME">
+        <comment>Contiene la descripci?n comercial del producto.</comment>
+      </column>
+    </property>
+    <property name="idStipoprod" type="big_decimal">
+      <column name="ID_STIPOPROD" precision="22" scale="0">
+        <comment>Contiene el identificador de sub tipo de producto</comment>
+      </column>
+    </property>
+    <property name="codIden" type="string">
+      <column length="250" name="COD_IDEN">
+        <comment>Codigo de identificacion de la entidad (Generada Automaticamente o ingresada por la pagina del administrado)</comment>
+      </column>
+    </property>
+    <property name="fecDesde" type="date">
+      <column length="7" name="FEC_DESDE">
+        <comment>Fecha de inicio</comment>
+      </column>
+    </property>
+    <property name="fecHasta" type="date">
+      <column length="7" name="FEC_HASTA">
+        <comment>Fecha para versionamiento</comment>
+      </column>
+    </property>
+    <property name="numPrecio" type="big_decimal">
+      <column name="NUM_PRECIO" precision="10" scale="4"/>
+    </property>
+    <set fetch="select" inverse="true" lazy="true" name="sic3proddocus" table="SIC3PRODDOCU">
+      <key>
+        <column name="ID_PROD" not-null="true" precision="22" scale="0">
+          <comment>ID del producto</comment>
+        </column>
+      </key>
+      <one-to-many class="com.general.hibernate.relaentity.Sic3proddocu"/>
+    </set>
+  </class>
+</hibernate-mapping>

@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 28/10/2017 06:46:23 PM by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+  <class name="com.general.hibernate.entity.Sic8trela" optimistic-lock="version" schema="SICDBA" table="SIC8TRELA">
+    <comment>Contiene los tipos de relaciones entre entidades. MODEL: RELATIONSHIP_TYPE</comment>
+    <id name="idTrela" type="big_decimal">
+      <column name="ID_TRELA" precision="22" scale="0"/>
+      <generator class="assigned"/>
+    </id>
+    <property name="desTrela" type="string">
+      <column length="250" name="DES_TRELA">
+        <comment>Contiene la descripci?n del tipo de relaci?n</comment>
+      </column>
+    </property>
+    <property name="codTrela" type="string">
+      <column length="250" name="COD_TRELA" not-null="true" unique="true">
+        <comment>Contiene un valor constante que permite localizar a un tipo de relaci?n.</comment>
+      </column>
+    </property>
+    <property name="idClaserela" type="big_decimal">
+      <column name="ID_CLASERELA" not-null="true" precision="22" scale="0">
+        <comment>Contiene el identificador de la clase de relaci?n.</comment>
+      </column>
+    </property>
+    <property name="flgModocarga" type="big_decimal">
+      <column name="FLG_MODOCARGA" not-null="true" precision="22" scale="0">
+        <comment>Indica el modo de carga en la "tabla Rel" utilizada, si es 1: Indica que es de modo apertura/cierre de registro y si es modo 2: indica que es solo
+                registro de ocurrencias y no debe cerrar vigencia de registros anteriores.</comment>
+      </column>
+    </property>
+    <property name="flgCreaeven" type="big_decimal">
+      <column name="FLG_CREAEVEN" not-null="true" precision="22" scale="0">
+        <comment>Indica si se crea o no un evento 1: Si 0: No</comment>
+      </column>
+    </property>
+    <property name="idClaserelavers" type="big_decimal">
+      <column name="ID_CLASERELAVERS" precision="22" scale="0">
+        <comment>Contiene el identificador de la clase relacionada</comment>
+      </column>
+    </property>
+    <property name="flgEliminado" type="big_decimal">
+      <column name="FLG_ELIMINADO" precision="22" scale="0">
+        <comment>Indica si esta eliminano o no (1: Si 0: No)</comment>
+      </column>
+    </property>
+    <set fetch="select" inverse="true" lazy="true" name="sic3lugarperses" table="SIC3LUGARPERS">
+      <key>
+        <column name="ID_TRELALUGAR" not-null="true" precision="22" scale="0">
+          <comment>Contiene el Tipo de Relacion del Lugar con la Persona</comment>
+        </column>
+      </key>
+      <one-to-many class="com.general.hibernate.relaentity.Sic3lugarpers"/>
+    </set>
+  </class>
+</hibernate-mapping>

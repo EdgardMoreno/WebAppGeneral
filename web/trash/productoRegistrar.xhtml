@@ -1,0 +1,213 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:a="http://xmlns.jcp.org/jsf/passthrough"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"  >
+    
+    <ui:composition template="./templates/templatePrincipal.xhtml">
+        
+        <ui:define name="header">
+            
+            <script>
+                
+                function changeTab(option){
+                    
+                    if (option==1){
+                        $('[href="#menu1"]').tab('show');                        
+                    }else if(option==2){
+                        $('[href="#menu2"]').tab('show');
+                    }
+                    
+                   return false;
+                    
+                };
+                
+                function validar() {
+                    //obteniendo el valor que se puso en campo text del formulario                    
+                    varCodigoProducto   = document.getElementById("form:codigoProducto").value;
+                    varNombreProducto   = document.getElementById("form:nombreProducto").value;
+                    varTipoProducto     = document.getElementById("form:tipoProducto").value;
+                    varPrecioVenta      = document.getElementById("form:precioVenta").value;
+                    varFlgError         = false;
+                    varMensaje          = ' ';
+                    
+                    
+                    if (varCodigoProducto.length == 0) {
+                        varMensaje += '<LI>Se debe ingresar el Código del Producto</LI>';
+                        varFlgError = true;
+                    }
+
+                    if (varNombreProducto.length == 0) {                        
+                        varMensaje += '<LI>Se debe ingresar el Nombre del Producto</LI>';
+                        varFlgError = true;
+                    }
+
+                    if (varPrecioVenta.length == 0) {
+                        varMensaje += '<LI>Se debe ingresar el Precio de Venta</LI>';
+                        varFlgError = true;
+                    }                    
+                    
+                    //IMPRIMIR RESULTADO
+                    if (varFlgError == true){
+                        document.getElementById('resultadoValidacion').innerHTML = '<UL type = "square">' + varMensaje + '</UL>';
+                        return false;
+                    }else{
+                        document.getElementById('resultadoValidacion').innerHTML = '';
+                        return true;
+                    }                    
+                    
+                };
+                
+                function cleaValiMessages(){
+                  document.getElementById('resultadoValidacion').innerHTML = '';  
+                }
+            </script>
+                   
+        </ui:define>
+        
+        <ui:define name="content">
+            <div class="container" id="resultadoValidacion"></div>
+            
+            <h:form id="form"> 
+                
+                <div class="container">
+                    
+                    <p:growl id="message" showDetail="true" />
+                    
+                    <ul class="nav nav-tabs" onclick="cleaValiMessages()" >
+                        <li id="tab_lstProduct" class="active"><a data-toggle="tab" href="#menu1">Listar Productos</a></li>
+                        <li id="tab_regProduct"><a data-toggle="tab" href="#menu2">Registrar Producto</a></li>
+                    </ul>                    
+
+                    <div class="tab-content">
+                        <div id="menu1" class="tab-pane fade in active">                            
+                            
+                            <br/>
+                            <h:panelGrid columns="6" style="width:70%"
+                                columnClasses="td-label-1, td-content-1, td-label-1, td-content-1, td-controls-1, td-controls-1">
+
+                                <h:outputLabel value="Cód. Producto:"/>
+                                <h:inputText id="codProd" styleClass="form-control" value="#{productController.strCodProd}"  />
+
+                                <h:outputLabel value="Descripción:"/>
+                                <h:inputText id="descProd" styleClass="form-control" value="#{productController.strDesProd}"  />
+                                <h:commandLink actionListener="#{productController.filterProducts()}" styleClass="btn btn-default">
+                                    <span class="glyphicon glyphicon-search"></span> Buscar
+                                </h:commandLink>
+                                <p:commandLink actionListener="#{productController.newProduct()}" oncomplete="changeTab(2)" styleClass="btn btn-default" update="form">
+                                    <span class="glyphicon glyphicon-new-window"></span> Nuevo
+                                </p:commandLink>
+
+                            </h:panelGrid>
+                            <br/>
+                            <h:dataTable id="tblProducts" var="item" value="#{productController.lstSic1prod}" rendered="#{not empty productController.lstSic1prod}"
+                                         styleClass="table table-striped table-bordered table-list"
+                                         columnClasses="table_header1,table_header2,table_header3,table_header4,table_header5,table_header6,table_header7"
+                                         >
+                                
+                                <h:column>
+                                    <f:facet name="header">No.</f:facet>1
+                                </h:column>
+
+                                <h:column>
+                                    <f:facet name="header">idProd</f:facet>#{item.idProd}
+                                </h:column>
+
+                                <h:column>
+                                    <f:facet name="header">Código</f:facet>#{item.codProd}
+                                </h:column>
+
+                                <h:column>
+                                    <f:facet name="header">Descripción</f:facet>#{item.desProd}
+                                </h:column>
+
+                                <h:column>
+                                    <f:facet name="header">Cantidad</f:facet>#{item.numCantidad}
+                                </h:column>
+
+                                <h:column>
+                                    <f:facet name="header">Proveedor</f:facet>#{item.sic1pers.desPers}                        
+                                </h:column>                   
+
+                                <h:column>
+                                    <p:commandButton icon="ui-icon-search" actionListener="#{productController.selectProductFromDialog(item)}" />
+                                    &nbsp;
+                                    <p:commandLink action="#{productController.deleteAction(item)}"  update="form" >
+                                        <span class="glyphicon glyphicon-trash"></span>
+                                        <p:confirm header="Confirmation" message="¿Está seguro de continuar?" icon="ui-icon-alert"  />
+                                    </p:commandLink>	                                    
+                                    &nbsp;                                    
+                                    <p:commandLink action="#{productController.editAction(item)}" oncomplete="changeTab(2)" update="form">
+                                      <span class="glyphicon glyphicon-pencil"></span>                            
+                                    </p:commandLink>
+                                    
+                                </h:column>
+                                
+                            </h:dataTable>
+                        </div>
+
+                        <div id="menu2" class="tab-pane fade">
+                            
+                            <br/>
+                            <h:panelGrid id="pgRegProduct" columns="2" style="width:80%" columnClasses="label_panelGrid_2c, text_panelGrid_2c">
+                        
+                                <h:outputLabel value="Código Producto:"/>
+                                <h:inputText id="codigoProducto"
+                                             styleClass="form-control left"
+                                             style="width:30%"
+                                             value="#{productController.sic1prod.codProd}"/>
+
+                                <h:outputLabel value="Nombre Producto:"/>
+                                <h:inputText id="nombreProducto"
+                                             styleClass="form-control left"
+                                             style="width:60%"
+                                             value="#{productController.sic1prod.desProd}"/>
+
+                                <h:outputLabel value="Tipo Producto:" />
+                                <h:selectOneMenu id="tipoProducto" style="width:30%" value="#{productController.sic1prod.idStipoprod}" styleClass="form-control">
+                                    <f:selectItem itemLabel="-- Seleccione --" itemValue="-1" noSelectionOption="true"/>
+                                    <f:selectItems value="#{productController.items}" />
+                                </h:selectOneMenu>
+
+                                <h:outputLabel value="Precio Venta:"/>                                
+                                <h:panelGroup>                            
+                                    <div class="input-group mb-2 mb-sm-0">
+                                        <div class="input-group-addon">S/.</div>
+                                        <h:inputText id="precioVenta" styleClass="form-control" 
+                                                     style="width:25%" 
+                                                     value="#{productController.sic1prod.numPrecio}"  
+                                                     onkeypress="return allowOnlyNumbers(event)"
+                                                     onblur="formatDecimal_2(this)"/>
+                                    </div>
+                                </h:panelGroup> 
+
+                            </h:panelGrid>
+
+                            <div class="offset-sm-2 col-sm-10">
+                                <p:commandLink value="Grabar" 
+                                               onstart="return validar()" 
+                                               styleClass="btn btn-primary" 
+                                               action="#{productController.saveProduct()}" 
+                                               update="message form:pgRegProduct" 
+                                               oncomplete="changeTab(2)">
+                                    <p:confirm header="Confirmation" message="¿Está seguro de continuar?" icon="ui-icon-alert" />
+                                </p:commandLink>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <p:confirmDialog global="true" showEffect="fade" hideEffect="fade" header="Confirmar">
+                    <p:commandButton value="Yes" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+                    <p:commandButton value="No"  type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+                </p:confirmDialog>
+                
+            </h:form>             
+             
+            
+        </ui:define>
+    </ui:composition>
+</html>

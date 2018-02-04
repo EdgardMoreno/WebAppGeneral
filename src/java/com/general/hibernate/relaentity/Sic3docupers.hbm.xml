@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 12/01/2018 03:57:42 PM by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+    <class name="com.general.hibernate.relaentity.Sic3docupers" table="SIC3DOCUPERS" schema="SICDBA" optimistic-lock="version">
+        <comment>Contiene a las personas relacionadas con un documento ejemplo: Personas que firman el documento MODEL: DOCUMENT_PARTY_CONTENT</comment>
+        <composite-id name="id" class="com.general.hibernate.relaentity.Sic3docupersId">
+            <key-property name="idTreladocu" type="big_decimal">
+                <column name="ID_TRELADOCU" precision="22" scale="0" />
+            </key-property>
+            <key-property name="idDocu" type="big_decimal">
+                <column name="ID_DOCU" precision="22" scale="0" />
+            </key-property>
+            <key-property name="idTrolpers" type="big_decimal">
+                <column name="ID_TROLPERS" precision="22" scale="0" />
+            </key-property>
+            <key-property name="idPers" type="big_decimal">
+                <column name="ID_PERS" precision="22" scale="0" />
+            </key-property>
+            <key-property name="fecDesde" type="date">
+                <column name="FEC_DESDE" length="7" />
+            </key-property>
+        </composite-id>
+        <property name="fecHasta" type="date">
+            <column name="FEC_HASTA" length="7">
+                <comment>Contiene la fecha de termino de la relaci?n de la persona con un documento.</comment>
+            </column>
+        </property>
+        <property name="desNotas" type="string">
+            <column name="DES_NOTAS" length="4000">
+                <comment>Contiene las notas relacionadas a la relaci?n de las personas asociadas a un documento.</comment>
+            </column>
+        </property>
+    </class>
+</hibernate-mapping>

@@ -1,0 +1,47 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 04/01/2018 06:43:53 PM by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+    <class name="com.general.hibernate1.Sic7estarol" table="SIC7ESTAROL" schema="SICDBA" optimistic-lock="version">
+        <comment>Contiene los diferentes roles que tienen los estados en un momento del tiempo. MODEL: STATUS_ROLE</comment>
+        <composite-id name="id" class="com.general.hibernate1.Sic7estarolId">
+            <key-property name="idTrolesta" type="big_decimal">
+                <column name="ID_TROLESTA" precision="22" scale="0" />
+            </key-property>
+            <key-property name="idEsta" type="big_decimal">
+                <column name="ID_ESTA" precision="22" scale="0" />
+            </key-property>
+        </composite-id>
+        <property name="fecDesde" type="date">
+            <column name="FEC_DESDE" length="7">
+                <comment>Fecha de inicio de una persona tiene un rol determinado.</comment>
+            </column>
+        </property>
+        <property name="fecHasta" type="date">
+            <column name="FEC_HASTA" length="7">
+                <comment>Fecha de termino de una persona tiene un rol determinado.</comment>
+            </column>
+        </property>
+        <property name="desNotas" type="string">
+            <column name="DES_NOTAS" length="4000">
+                <comment>Notas ingresadas cuando una persona tiene un rol determinado.</comment>
+            </column>
+        </property>
+        <property name="desInicio" type="string">
+            <column name="DES_INICIO" length="4000">
+                <comment>Descripcion de inicio.</comment>
+            </column>
+        </property>
+        <property name="desFinal" type="string">
+            <column name="DES_FINAL" length="4000">
+                <comment>Descripcion final.</comment>
+            </column>
+        </property>
+        <property name="desSignifica" type="string">
+            <column name="DES_SIGNIFICA" length="4000">
+                <comment>Descripcion significativa.</comment>
+            </column>
+        </property>
+    </class>
+</hibernate-mapping>

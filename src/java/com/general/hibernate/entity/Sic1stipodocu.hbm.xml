@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 19/12/2017 10:13:14 PM by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+  <class name="com.general.hibernate.entity.Sic1stipodocu" optimistic-lock="version" schema="SICDBA" table="SIC1STIPODOCU">
+    <comment>Contiene las sun tipos de documentos, los cuales pueden ser tipificados por: Por ejemplo: Requisitos ========= Lista de requisitos para inicio de solicitudes.
+        Generado en Tr?mite ================= Resoluciones Actas Oficios de Observaciones Respuestas de Observaciones Informe T?cnico Informe de Inspecci?n Informee Financiero
+        Informe Legal Oficio solicitando garantia Oficio de solicitud de publicaci?n de autorizaci?n en diario oficial. Solciitud de reconsideraci?n. Solicitud de correcci?n
+        material Solicitud de apelaci?n Evidencias ========= Evidencia de reclamo Evidencia de denuncia Evidencia de Queja Descargo de un proceso de fiscalizaci?n. Sustentos
+        ======== Sustento de correcci?n material Sustento de Reconsideraci?n Sustento de Apelaci?n Sustento de levantamiento de observaciones MODEL: DOCUMENT_TYPE</comment>
+    <id name="idStipodocu" type="big_decimal">
+      <column name="ID_STIPODOCU" precision="22" scale="0"/>
+      <generator class="assigned"/>
+    </id>
+    <property name="desStipodocu" type="string">
+      <column length="4000" name="DES_STIPODOCU">
+        <comment>Contiene la descripci?n del sub tipo de documento.</comment>
+      </column>
+    </property>
+    <property name="codStipodocu" type="string">
+      <column length="250" name="COD_STIPODOCU" not-null="true" unique="true">
+        <comment>Contiene el valor constante de la clase de documento.</comment>
+      </column>
+    </property>
+    <property name="idTipodocu" type="big_decimal">
+      <column name="ID_TIPODOCU" precision="22" scale="0">
+        <comment>Contiene el identificador del tipo de documento.</comment>
+      </column>
+    </property>
+    <property name="flgVigencia" type="big_decimal">
+      <column name="FLG_VIGENCIA" precision="22" scale="0">
+        <comment>Flag que indica que el tipo de documento tiene fecha de vigencia. 0: No tiene 1: Si tiene</comment>
+      </column>
+    </property>
+    <property name="idTrolesta" type="big_decimal">
+      <column name="ID_TROLESTA" precision="22" scale="0">
+        <comment>Identificador del esquema de estados que utilizara el documento de este tipo</comment>
+      </column>
+    </property>
+  </class>
+</hibernate-mapping>

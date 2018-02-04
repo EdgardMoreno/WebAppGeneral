@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 28/10/2017 06:46:23 PM by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+  <class name="com.general.hibernate.entity.Sic1persindi" optimistic-lock="version" schema="SICDBA" table="SIC1PERSINDI">
+    <comment>Contiene los datos de las personas, que son personas naturales. MODEL: PARTY.PERSON</comment>
+    <id name="idPersindi" type="big_decimal">
+      <column name="ID_PERSINDI" precision="22" scale="0"/>
+      <generator class="foreign">
+        <param name="property">sic1pers</param>
+      </generator>
+    </id>
+    <one-to-one class="com.general.hibernate.entity.Sic1pers" constrained="true" name="sic1pers"/>
+    <property name="desPrimnomb" type="string">
+      <column length="250" name="DES_PRIMNOMB">
+        <comment>Contiene la descripci?n del primer nombre de la persona.</comment>
+      </column>
+    </property>
+    <property name="desApelmate" type="string">
+      <column length="250" name="DES_APELMATE">
+        <comment>Contiene la descripci?n del apellido materno de la persona.</comment>
+      </column>
+    </property>
+    <property name="desApelpate" type="string">
+      <column length="250" name="DES_APELPATE">
+        <comment>Contiene la descripci?n del apellido paterno de la persona.</comment>
+      </column>
+    </property>
+    <property name="idGenero" type="big_decimal">
+      <column name="ID_GENERO" precision="22" scale="0">
+        <comment>Contiene el identificador del elemento general</comment>
+      </column>
+    </property>
+    <property name="desSegunomb" type="string">
+      <column length="250" name="DES_SEGUNOMB">
+        <comment>Contiene la descripci?n del segundo nombre de la persona.</comment>
+      </column>
+    </property>
+    <property name="fecNaci" type="date">
+      <column length="7" name="FEC_NACI">
+        <comment>Contiene la fecha de nacimiento de la persona.</comment>
+      </column>
+    </property>
+  </class>
+</hibernate-mapping>

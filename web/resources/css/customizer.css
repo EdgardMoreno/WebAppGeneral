@@ -1,0 +1,226 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/*
+    Created on : 19/10/2017, 11:13:00 PM
+    Author     : Edgard
+*/
+
+.label_panelGrid_2c {
+     width: 20%;
+     text-align: right;
+     padding: 3px;
+
+}
+
+.text_panelGrid_2c {
+     width: 60%;
+}
+
+.label_panelGrid_4c {
+     width: 20%;
+     text-align: right;
+     padding: 3px;
+}
+
+.text_panelGrid_4c {
+     width: 20%;
+     padding: 2px;
+}
+
+.top-alignment {
+     vertical-align: top;
+}
+
+.radio_Button{
+    padding: 5px;
+
+}
+
+#Comentarios{
+  display: none;
+  border: .1em red solid;
+  margin-bottom: 1em;
+  color: navy;
+  width: 20em;
+  border: .1em red solid;
+}
+
+.falta{
+  border: .1em red solid;
+}
+
+/**************************************/
+/*PANEL GRID PARA LA PAGINA DE COMPRA*/
+/**************************************/
+.compra_panelGrid_1 {
+     width: 18%;
+     text-align: right;
+     padding-right:3px;
+}
+
+.compra_panelGrid_2 {
+     width: 17%;
+     text-align: left;
+     padding: 1px;
+}
+
+.compra_panelGrid_3 {
+     width: 6%;
+     text-align: center;
+}
+
+.compra_panelGrid_4 {
+     width: 12%;
+     text-align: right;
+     padding-right:3px;
+}
+
+.compra_panelGrid_5 {
+     width: 25%;
+     text-align: left;
+}
+
+.compra_panelGrid_6 {
+     width: 6%;
+     text-align: center;
+
+}
+
+.td-label-1 {
+    width: 15%;
+    text-align: right;
+    padding-right:3px;
+}
+
+.td-content-1{
+    width: 17%;
+    text-align: left;
+    padding: 1px;
+}
+
+.td-controls-1 {
+    width: 6%;
+    text-align: center;
+}
+
+/*PAGINA COMPRAS*/
+    table_compra_panelGrid_1{
+
+         text-align: center;
+         padding: 3px;
+    }
+    table_compra_panelGrid_2{
+
+         text-align: center;
+         padding: 3px;
+         vertical-align: top;
+    }
+
+    /*TOTALES*/
+    .compra_totales_label {
+         width: 45%;
+         text-align: right;
+         padding: 3px;
+         font-size:15px;
+    }
+    .compra_totales_text {
+         width: 55%;
+         text-align: right;
+         padding: 3px;
+         font-size:15px;
+    }
+
+    .total{
+        font-size: 15px;
+        color: red;
+    }
+
+.table_header1 { width: 1%; text-align: center;}
+.table_header2 { width: 2%; text-align: center;}
+.table_header3 { width: 3%; text-align: center;}
+.table_header4 { width: 4%; text-align: center;}
+.table_header5 { width: 5%; text-align: center;}
+.table_header6 { width: 6%; text-align: center;}
+.table_header7 { width: 7%; text-align: center;}
+.table_header8 { width: 8%; text-align: center;}
+.table_header10 { width: 10%; text-align: center;}
+.table_header12 { width: 12%; text-align: center;}
+.table_header14 { width: 14%; text-align: center;}
+.table_header16 { width: 16%; text-align: center;}
+.table_header30 { width: 30%; text-align: left;}
+
+.button_style {
+    box-shadow: rgb(151, 196, 254) 0px 1px 0px 0px inset;
+    background: linear-gradient(rgb(61, 148, 246) 5%, rgb(30, 98, 208) 100%) rgb(61, 148, 246);
+    border-radius: 6px;
+    border: 1px solid rgb(51, 127, 237);
+    display: inline-block;
+    cursor: pointer;
+    color: rgb(255, 255, 255);
+    font-family: Arial;
+    font-size: 12px;
+    font-weight: bold;
+    padding: 6px 24px;
+    text-decoration: none;
+    text-shadow: rgb(21, 112, 205) 0px 1px 0px;
+}
+
+.header-format{
+    font-size: 17px;
+    text-align: left;
+    font-weight: bold;
+}
+
+.detalle-compra{
+    font-weight: bold;
+    padding-top: 10px;
+}
+
+/******************* MENSAJE DE VALIDACION *****************************/
+.messageValidation{
+  top: 50%;
+	left: 50%;
+	height: 50%;
+	width: 50%;
+  border: 1px solid rgb(224, 61, 58);
+  background-color: rgb(219, 186, 186);
+  width: auto;
+}
+
+/*****************************************************************************/
+/*CODIGO DE PRUEBA*/
+ fieldset
+	{
+		border: 1px solid #ddd !important;
+		margin: 0;
+		xmin-width: 0;
+		padding: 10px;
+		position: relative;
+		border-radius:2px;
+
+	}
+
+legend
+{
+        font-size:14px;
+        font-weight:bold;
+        margin-bottom: 0px;
+        width: auto;
+        border: 0px solid #ddd;
+        border-radius: 4px;
+        padding: 5px 5px 5px 10px;
+        background-color: #ffffff;
+}
+
+.table-one {
+  position:relative;
+  float:left;
+}
+
+.table-two {
+  position:relative;
+  float:right;
+}

@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 27/12/2017 03:16:28 PM by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+  <class name="com.general.hibernate.views.ViSicdocu" optimistic-lock="version" schema="SICDBA" table="VI_SICDOCU">
+    <id name="idDocu" type="big_decimal">
+      <column name="ID_DOCU" precision="22" scale="0"/>
+      <generator class="assigned"/>
+    </id>
+    <property name="codIden" type="string">
+      <column length="250" name="COD_IDEN"/>
+    </property>
+    <property name="desDocu" type="string">
+      <column length="4000" name="DES_DOCU"/>
+    </property>
+    <property name="fecCreacion" type="date">
+      <column length="7" name="FEC_CREACION"/>
+    </property>
+    <property name="idPersClieprov" type="big_decimal">
+      <column name="ID_PERS_CLIEPROV" precision="22" scale="0"/>
+    </property>
+    <property name="desPersClieprov" type="string">
+      <column length="250" name="DES_PERS_CLIEPROV"/>
+    </property>
+    <property name="idTrolpersClieprov" type="big_decimal">
+      <column name="ID_TROLPERS_CLIEPROV" precision="22" scale="0"/>
+    </property>
+    <property name="desTrolpersClieprov" type="string">
+      <column length="500" name="DES_TROLPERS_CLIEPROV"/>
+    </property>
+    <property name="idStipodocu" type="big_decimal">
+      <column name="ID_STIPODOCU" precision="22" scale="0"/>
+    </property>
+    <property name="desStipodocu" type="string">
+      <column length="4000" name="DES_STIPODOCU"/>
+    </property>
+    <property name="codStipodocu" type="string">
+      <column length="250" name="COD_STIPODOCU"/>
+    </property>
+    <property name="codSerie" type="string">
+      <column length="10" name="COD_SERIE"/>
+    </property>
+    <property name="numDocu" type="big_decimal">
+      <column name="NUM_DOCU" precision="22" scale="0"/>
+    </property>
+    <property name="desNotas" type="string">
+      <column length="4000" name="DES_NOTAS"/>
+    </property>
+    <property name="fecDesde" type="date">
+      <column length="7" name="FEC_DESDE"/>
+    </property>
+    <property name="fecHasta" type="date">
+      <column length="7" name="FEC_HASTA"/>
+    </property>
+    <property name="numSubtotal" type="big_decimal">
+      <column name="NUM_SUBTOTAL" precision="9" scale="3"/>
+    </property>
+    <property name="numIgv" type="big_decimal">
+      <column name="NUM_IGV" precision="7" scale="3"/>
+    </property>
+    <property name="numTotal" type="big_decimal">
+      <column name="NUM_TOTAL" precision="22" scale="0"/>
+    </property>
+    <property name="idTipodocu" type="big_decimal">
+      <column name="ID_TIPODOCU" precision="22" scale="0"/>
+    </property>
+    <property name="desTipodocu" type="string">
+      <column length="500" name="DES_TIPODOCU"/>
+    </property>
+    <property name="codTipodocu" type="string">
+      <column length="50" name="COD_TIPODOCU"/>
+    </property>
+    <property name="idEstadocu" type="big_decimal">
+      <column name="ID_ESTADOCU" precision="22" scale="0"/>
+    </property>
+    <property name="codEsta" type="string">
+      <column length="50" name="COD_ESTA"/>
+    </property>
+    <property name="desEstadocu" type="string">
+      <column length="500" name="DES_ESTADOCU"/>
+    </property>
+    <property name="fecDesdeesta" type="date">
+      <column length="7" name="FEC_DESDEESTA"/>
+    </property>
+    <property name="fecHastaesta" type="date">
+      <column length="7" name="FEC_HASTAESTA"/>
+    </property>
+    <property name="idPersCreador" type="big_decimal">
+      <column name="ID_PERS_CREADOR" precision="22" scale="0"/>
+    </property>
+    <property name="desPersCreador" type="string">
+      <column length="250" name="DES_PERS_CREADOR"/>
+    </property>
+    <property name="idTrolpersCreador" type="big_decimal">
+      <column name="ID_TROLPERS_CREADOR" precision="22" scale="0"/>
+    </property>
+    <property name="desTrolpersCreador" type="string">
+      <column length="500" name="DES_TROLPERS_CREADOR"/>
+    </property>
+  </class>
+</hibernate-mapping>

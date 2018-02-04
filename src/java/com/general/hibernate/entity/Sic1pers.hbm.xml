@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 28/10/2017 06:46:23 PM by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+  <class name="com.general.hibernate.entity.Sic1pers" schema="SICDBA" table="SIC1PERS">
+    <comment>Contiene la estructura de las entidades de persona (Party) que estan relacionadas con Mincetur, existen diferentes tipos por ejemplo: Empleados Entidades de
+        Gobierno Funcionarios Representantes Administrados: Comercializadores Importadores Explotadores Artesanos MODEL: PARTY</comment>
+    <id name="idPers" type="big_decimal">
+      <column name="ID_PERS" precision="22" scale="0"/>
+      <generator class="assigned"/>
+    </id>
+    <property name="desPers" type="string">
+      <column length="250" name="DES_PERS">
+        <comment>Contiene la descripcion de la persona.</comment>
+      </column>
+    </property>
+    <property name="idTipopers" type="big_decimal">
+      <column name="ID_TIPOPERS" precision="22" scale="0">
+        <comment>Contiene el identificador del tipo de persona (individual y organizaciones).</comment>
+      </column>
+    </property>
+    <property name="idTipodomi" type="big_decimal">
+      <column name="ID_TIPODOMI" precision="22" scale="0">
+        <comment>Contiene el identificador de domiciliario.</comment>
+      </column>
+    </property>
+    <property name="idPaisresi" type="big_decimal">
+      <column name="ID_PAISRESI" precision="22" scale="0">
+        <comment>Contiene el identificador del pais de residencia</comment>
+      </column>
+    </property>
+    <property name="desCargoRep" type="string">
+      <column length="200" name="DES_CARGO_REP">
+        <comment>El cargo que desempe?a la persona cuando tenga el rol de Representante</comment>
+      </column>
+    </property>
+    <set fetch="select" inverse="true" lazy="true" name="sic1docus" table="SIC1DOCU">
+      <key>
+        <column name="ID_PERS" precision="22" scale="0">
+          <comment>Contiene el identificador de la persona que creo el documento.</comment>
+        </column>
+      </key>
+      <one-to-many class="com.general.hibernate.entity.Sic1docu"/>
+    </set>
+    <set cascade="save-update" fetch="select" inverse="true" lazy="true" name="sic1idenpers" table="SIC1IDENPERS">
+      <key>
+        <column name="ID_PERS" not-null="true" precision="22" scale="0">
+          <comment>Contiene los identificadores de la persona.</comment>
+        </column>
+      </key>
+      <one-to-many class="com.general.hibernate.entity.Sic1idenpers"/>
+    </set>
+    <one-to-one class="com.general.hibernate.entity.Sic1persindi" constrained="false" fetch="join" lazy="no-proxy" name="sic1persindi"/>
+    <one-to-one class="com.general.hibernate.entity.Sic1persorga" constrained="false" fetch="join" lazy="no-proxy" name="sic1persorga"/>
+  </class>
+</hibernate-mapping>
