@@ -16,6 +16,8 @@
         <h:outputStylesheet name="/datepicker/css/datepicker.css"/><!--DatePicker -->
         <h:outputStylesheet name="/css/bootstrap.min.css"/>
         <h:outputStylesheet name="/css/customizer.css"/>
+        <h:outputStylesheet name="/css/jquery-confirm-3.3.css"/>
+        <h:outputStylesheet name="/css/jquery.fancybox-2.1.7.css"/>
         <link rel="stylesheet" href="#{request.contextPath}/faces/resources/css/bootstrap-theme.min.css"/>        
         
         <!--JAVASCRIPT-->
@@ -24,9 +26,9 @@
         <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js" />
         
         <script src="#{request.contextPath}/faces/resources/datepicker/js/bootstrap-datepicker.js"></script>
-        <script src="#{request.contextPath}/faces/resources/datepicker/js/formatDatePicker.js"></script>
-        
+        <script src="#{request.contextPath}/faces/resources/datepicker/js/formatDatePicker.js"></script>        
         <script src="#{request.contextPath}/faces/resources/js/bootstrap.min.js"></script>
+        <script src="#{request.contextPath}/faces/resources/js/jquery.fancybox-2.1.7.js"></script>
                                 
         <title>Facelets Template</title>
         
@@ -51,17 +53,24 @@
                             <li><a href="#">Actualizar Precios</a></li>                            
                         </ul>
                     </li>
-                    <li><a href="#{request.contextPath}/faces/personaRegistrar.xhtml">Clientes</a></li>
+                    
+                    <li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="#">Clientes<span class="caret"></span></a>
+                        <ul class="dropdown-menu">
+                            <li><a href="#{request.contextPath}/faces/personaRegistrar.xhtml">Registrar Cliente</a></li>
+                            <li><a href="#{request.contextPath}/faces/personaListar.xhtml">Buscar Clientes</a></li>
+                        </ul>
+                    </li>
+                            
                     <li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="#">Compras<span class="caret"></span></a>
                         <ul class="dropdown-menu">
-                            <li><a href="#{request.contextPath}/faces/compraRegistrar.xhtml?CODSTIPODODU=COMPRA">Ingreso de Mercadería</a></li>
+                            <li><a href="#{request.contextPath}/faces/compraRegistrar.xhtml?titulo=Registrar Compra&amp;codstipodocu=COMPRA">Ingreso de Mercadería</a></li>
                             <li><a href="#{request.contextPath}/faces/documentosListar.xhtml">Reporte de Compras</a></li>                            
                         </ul>
                     </li>
                     <li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="#">Ventas<span class="caret"></span></a>
                         <ul class="dropdown-menu">
-                            <li><a href="#{request.contextPath}/faces/compraRegistrar.xhtml?CODSTIPODODU=VENTA">Realizar Venta</a></li>
-                            <li><a href="#">Reporte de Ventas</a></li>
+                            <li><a href="#{request.contextPath}/faces/compraRegistrar.xhtml?titulo=Registrar Venta&amp;codstipodocu=VENTA">Realizar Venta</a></li>                            
+                            <li><a href="#{request.contextPath}/faces/documentosListar.xhtml">Reporte de Ventas</a></li>   
                         </ul>
                     </li>
                 </ul>

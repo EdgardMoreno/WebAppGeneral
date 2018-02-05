@@ -57,7 +57,7 @@ public class PersonController implements Serializable{
     private List<SelectItem> itemsGeneroPers = new ArrayList();
     
     /*Almacenada los datos que son enviados desde otra pagina*/
-    private boolean paramPageFlgActivo = false;
+    private int paramPageFlgActivo = 0;
     private String paramPageCodIden;
     
     public PersonController(){
@@ -100,7 +100,7 @@ public class PersonController implements Serializable{
             /*CARGAR GENERO*/
             itemsGeneroPers = sic1generalServiceImpl.getCataGender();
             
-            if(this.paramPageFlgActivo == true)
+            if(this.paramPageFlgActivo == 1)
                 sic1idenpersId.setCodIden(this.paramPageCodIden);
             
         
@@ -205,11 +205,11 @@ public class PersonController implements Serializable{
         this.paramPageCodIden = paramPageCodIden;
     }
 
-    public boolean isParamPageFlgActivo() {
+    public int getParamPageFlgActivo() {
         return paramPageFlgActivo;
     }
 
-    public void setParamPageFlgActivo(boolean paramPageFlgActivo) {
+    public void setParamPageFlgActivo(int paramPageFlgActivo) {
         this.paramPageFlgActivo = paramPageFlgActivo;
     }
 
@@ -282,9 +282,8 @@ public class PersonController implements Serializable{
     public void savePerson() throws CustomizerException{
         
         String strResul = "";
-        try {
+        try {            
             
-            //System.out.println("Valor:" + sic1pers.getIdTipopers());
             System.out.println("Persona:" + sic1pers.getDesPers());
             System.out.println("Fecha Nacimiento:" + this.desFecNaci);
             
@@ -310,13 +309,7 @@ public class PersonController implements Serializable{
                 
                 sic1pers.setCodTipoiden(Constantes.CONS_COD_TIPOIDEN_OTROS_NAT);
                 sic1pers.setCodTipopers(Constantes.CONS_COD_TIPOPERS_NATURAL);
-            }
-            
-
-//            Set<Sic1idenpers> lstSic1idenpers = new HashSet<>();
-//            this.sic1idenpers.setId(this.sic1idenpersId);
-//            lstSic1idenpers.add(this.sic1idenpers);
-//            this.sic1pers.setSic1idenpers(lstSic1idenpers);
+            }            
 
             /*PERSONA NATURAL*/
             if(desFecNaci != null && !desFecNaci.isEmpty())
@@ -335,22 +328,21 @@ public class PersonController implements Serializable{
             
             System.out.println("Resultado:" + strResul);
             
-            sic1pers = new Sic1pers();
-            sic1idenpers = new Sic1idenpers();
-            sic1idenpersId = new Sic1idenpersId();
-            sic1persindi = new Sic1persindi();
-            sic1persorga = new Sic1persorga();
-            sic1lugar = new Sic1lugar();
+            sic1pers        = new Sic1pers();
+            sic1idenpers    = new Sic1idenpers();
+            sic1idenpersId  = new Sic1idenpersId();
+            sic1persindi    = new Sic1persindi();
+            sic1persorga    = new Sic1persorga();
+            sic1lugar       = new Sic1lugar();
             
-            if(this.paramPageFlgActivo == true)
-                RequestContext.getCurrentInstance().closeDialog(sic1idenpers);
-           
+            //keep the field ID_PERS in a hidden inputText
+            sic1pers.setIdPers(new BigDecimal(strResul));
             
             UtilClass.addInfoMessage(Constantes.CONS_SUCCESS_MESSAGE);       
                     
         } catch (Exception e) {
           throw new CustomizerException(e.getMessage());
-        } 
+        }
     }
     
     public void eliminarPersona(Sic1pers sic1pers){

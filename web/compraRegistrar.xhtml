@@ -7,11 +7,36 @@
       xmlns:p="http://primefaces.org/ui"
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets" >
 
+    <f:metadata>        
+        <f:viewParam name="titulo" value="#{orderController.desTituloPagina}"/>
+    </f:metadata>
+    
     <ui:composition template="./templates/templatePrincipal.xhtml">
 
         <ui:define name="header">
 
             <script>
+                
+                $(document).ready(function () {
+                
+                    $(".iframe").fancybox({
+
+                          type              :   "iframe",
+                          modal             :   "true",
+                          enableEscapeButton:   "false",
+                          autoDimensions    :   "false",
+                          width             :   800,
+                          height            :   400,                          
+                          autoSize          :   false,
+                          overlayColor      :   "#797379",
+                          titleShow         :   true,
+                          titlePosition     :   "outside",
+                          overlayOpacity    :   0.6,
+                          transitionIn      :   "elastic",
+                          transitionOut     :   "elastic"
+
+                      });
+                  });
 
                 function fnValiteAddProduct() {
                     //obteniendo el valor que se puso en campo text del formulario
@@ -54,12 +79,37 @@
 
                 function fnValidateForm() {
 
-                    varCodSerie = document.getElementById("form:codSerie").value;
-                    varNumDocumento = document.getElementById("form:numDocumento").value;
-                    varFecRegistro = document.getElementById("form:fecRegistro").value;
-                    varIdenDocum = document.getElementById("form:numDocuIden").value;
+                    var codSerie = document.getElementById("form:codSerie").value;
+                    var numDocumento = document.getElementById("form:numDocumento").value;
+                    var fecRegistro = document.getElementById("form:fecRegistro").value;
+                    var idenDocum = document.getElementById("form:numDocuIden").value;
 
-
+                };
+                
+                /*Función que se ejecuta durante el ciclo de vida de la llamada AJAX.
+                * Evalua si el DNI/RUC ingresado existe, en caso no, muestra la pagina de REGISTRAR PERSONA*/
+                function fnAjaxListenPersonSearch(data){
+                    
+                    switch(data.status){                        
+                        case "begin":
+                            break;
+                        case "complete":
+                            break;
+                        case "success":
+                            var value = document.getElementById("form:razonSocial").value;
+                            if (value.length == 0){
+                                var numDocuIden = document.getElementById("form:numDocuIden").value;
+                                //Se sobreescribe la propiedad HREF
+                                $("#linkDialog").attr("href","faces/popups/popupPersonaRegistrar.xhtml?paramCodIden=" + numDocuIden + "&amp;paramExternalPage=1");
+                                $("#linkDialog").click(); //Origina que llame a la función de FancyBOX y que muestre la URL especificada.
+                                return false;
+                            }
+                            break;
+                    }
+                };
+                
+                function fnCerrarIFrame(){
+                    $("#form\\:btnSearchPerson").click();
                 };
 
             </script>
@@ -75,19 +125,8 @@
 
                     <p:growl id="message" showDetail="true" />
 
-                    <div class="page-header" >
-                        <div class="form-inline header-format">
-                            <!--REGISTRAR COMPRA:-->
-
-                            <h:selectOneMenu id="somTipoDocu" value="#{orderController.sic1docu.idStipodocu}" style="font-size: 22px;">
-                                <f:selectItems value="#{orderController.itemSTipoDocu}" />
-                            </h:selectOneMenu>
-                            &nbsp;
-                            <h:outputLabel value="NRO:"/>
-                            <h:inputText id="codSerie" style="width:4em;text-align: center;font-size: 22px;" value="#{orderController.sic1docu.codSerie}"  />
-                            <h:outputLabel value="-"/>
-                            <h:inputText id="numDocumento" style="width:7em;text-align: center;font-size: 22px;" value="#{orderController.sic1docu.numDocu }"  />
-                        </div>
+                   <div class="page-header" >
+                            <h3>${orderController.desTituloPagina}</h3>  
                     </div>
 
                     <h:panelGrid columns="6" style="width:95%"
@@ -115,15 +154,14 @@
 
                         <h:outputLabel value="Nro. Documento:"/>
                         <h:inputText id="numDocuIden"
-                                     value="#{orderController.sic1idenpersId.codIden}" styleClass="form-control"/>
-                        <p:commandLink actionListener="#{orderController.searchPerson()}"
-                                       onstart="return fnValidateDocuIden(document.getElementById('form:numDocuIden').value)"
-                                       styleClass="btn btn-default" update="razonSocial">
+                                     value="#{orderController.sic1idenpersId.codIden}" styleClass="form-control"/>                        
+                        <h:commandLink  id="btnSearchPerson" 
+                                        styleClass="btn btn-default"                                          
+                                        onclick="return fnValidateDocuIden(document.getElementById('form:numDocuIden').value)"> 
                             <span class="glyphicon glyphicon-new-window"></span>Buscar
-                            <p:ajax event="dialogReturn"
-                                    listener="#{orderController.onProductChosen}" update="numDocuIden,razonSocial"/>
-                        </p:commandLink>
-
+                            <f:ajax execute="numDocuIden" render="razonSocial" listener="#{orderController.searchPerson()}" onevent="fnAjaxListenPersonSearch" />
+                        </h:commandLink>
+                        
                         <h:outputLabel value="Razón Social:"/>
                         <h:inputText id="razonSocial"
                                      readonly="true"
@@ -341,8 +379,29 @@
                         <p:commandButton value="Yes" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
                         <p:commandButton value="No"  type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
                     </p:confirmDialog>
+                    
+                    
+                    <div class="form-inline header-format" style="display: none">
+                         
+                        <!--REGISTRAR COMPRA: DIV QUE SE MOSTRAR CUANDO SE HAGA CLICK EN GUARDAR-->
+
+                        <h:selectOneMenu id="somTipoDocu" value="#{orderController.sic1docu.idStipodocu}" style="font-size: 22px;">
+                            <f:selectItems value="#{orderController.itemSTipoDocu}" />
+                        </h:selectOneMenu>
+                        &nbsp;
+                        <h:outputLabel value="NRO:"/>
+                        <h:inputText id="codSerie" style="width:4em;text-align: center;font-size: 22px;" value="#{orderController.sic1docu.codSerie}"  />
+                        <h:outputLabel value="-"/>
+                        <h:inputText id="numDocumento" style="width:7em;text-align: center;font-size: 22px;" value="#{orderController.sic1docu.numDocu }"  />
+                    </div>
+                    
+                    
 
                 </h:form>
+                
+                <a id="linkDialog" href="#" class="iframe"  style="display:none"/>
+                
+                
 
             </div>
 

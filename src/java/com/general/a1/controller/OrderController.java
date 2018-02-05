@@ -19,7 +19,6 @@ import com.general.hibernate.entity.HibernateUtil;
 import com.general.hibernate.entity.Sic1idendocu;
 import com.general.hibernate.entity.Sic1idenpers;
 import com.general.hibernate.entity.Sic1idenpersId;
-import com.general.interfac.dao.DaoProduct;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -74,6 +73,7 @@ public class OrderController implements Serializable{
     
     private String desFecRegistro;
     private Integer indexTabla;
+    private String desTituloPagina;
     
     public OrderController(){
     }
@@ -240,6 +240,15 @@ public class OrderController implements Serializable{
         this.sic1idenpersId = sic1idenpersId;
     }
 
+    public String getDesTituloPagina() {
+        return desTituloPagina;
+    }
+
+    public void setDesTituloPagina(String desTituloPagina) {
+        this.desTituloPagina = desTituloPagina;
+    }
+    
+    
     /******************************************************************************/
     /****** METODOS ***************************************************************/
     /******************************************************************************/
@@ -365,6 +374,8 @@ public class OrderController implements Serializable{
         System.out.println("DOCUMENTO DE IDENTIDAD:" + this.sic1idenpersId.getCodIden());
         try {
             
+            this.sic1pers.setDesPers("");
+            
             String strCodiden = this.sic1idenpersId.getCodIden();
             PersonServiceImpl personServiceImpl = new PersonServiceImpl();
             sic1idenpersSelected = personServiceImpl.getByCodiden(strCodiden);
@@ -375,35 +386,9 @@ public class OrderController implements Serializable{
                 sic1pers = sic1idenpersSelected.getSic1pers();
                 System.out.println("Persona: " + sic1pers);
 
-            } else {
-
-                Map<String, Object> options = new HashMap<>();
-                options.put("modal", true);
-                options.put("resizable", true);
-                options.put("draggable", true);
-                options.put("position", "center");
-                options.put("contentWidth", 1000);
-                options.put("contentHeight", 400);
-                options.put("includeViewParams", true);
-
-                Map<String, List<String>> params = new HashMap<>();
-                List<String> values = new ArrayList<>();
-                values.add("true");
-                params.put("paramExternalPage", values);
-                values = new ArrayList<>();
-
-                if (strCodiden != null && strCodiden.trim().length() > 0) {
-
-                    values.add(strCodiden.trim());
-                    params.put("paramCodIden", values);
-
-                } else {
-                    values.add("");
-                    params.put("paramCodIden", values);
-                }
-
-                RequestContext.getCurrentInstance().openDialog("popups/popupPersonaRegistrar", options, params);
             }
+            
+            
 
         } catch (CustomizerException ex) {
             throw new CustomizerException(ex.getMessage());

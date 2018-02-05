@@ -1,0 +1,124 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      >
+
+    <ui:composition template="./templates/templatePrincipal.xhtml">
+
+        <ui:define name="header">
+
+            <script>
+
+            </script>
+
+        </ui:define>
+
+        <ui:define name="content">
+            
+            <div class="container" id="resultadoValidacion"></div>
+            
+            <div class="container">
+
+                <div class="page-header" >
+                    <h3>Buscar Personas</h3>
+                </div>
+
+                <h:form id="form">
+
+                    <p:growl id="message" showDetail="true" />
+                    
+                    <br/>
+                    <h:panelGrid columns="7" style="width:100%"
+                                 columnClasses="td-label-1, td-content-1, td-label-1, td-content-1, td-label-1, td-content-1, td-content-1" >
+
+                        <h:outputLabel value="Docu Identidad:"/>
+                        <h:inputText styleClass="form-control" value="#{personController.viSicpers.codIden}" />
+                        <h:outputLabel value="Nombre/Razón Social:"/>
+                        <h:inputText styleClass="form-control" value="#{personController.viSicpers.desPers}" />
+                        <h:outputLabel value="Tipo Documento:"/>
+                        <h:selectOneMenu value="#{personController.viSicpers.idTipoiden}" styleClass="form-control" >
+                            <f:selectItem itemLabel="-- Seleccione --" itemValue="-1" />
+                            <f:selectItems value="#{personController.itemsTipoIden}" />
+                        </h:selectOneMenu>
+
+                        <h:panelGroup>
+                            <div class="form-inline header-format">
+                                <h:commandLink actionListener="#{personController.filterPersons()}" styleClass="btn btn-default">
+                                    <span class="glyphicon glyphicon-search"></span> Buscar
+                                </h:commandLink>
+                                <p:commandLink actionListener="#{personController.newPerson()}" oncomplete="fnChangeTab(2)" styleClass="btn btn-default" update="form">
+                                    <span class="glyphicon glyphicon-new-window"></span> Nuevo
+                                </p:commandLink>
+                            </div>
+                        </h:panelGroup>
+
+                        <h:outputLabel value="Tipo Persona:"/>
+                        <h:selectOneMenu value="#{personController.viSicpers.idTipopers}" styleClass="form-control" >
+                            <f:selectItem itemLabel="-- Seleccione --" itemValue="-1" />
+                            <f:selectItems value="#{personController.itemsTipoPers}" />
+                        </h:selectOneMenu>
+
+                    </h:panelGrid>
+                    <br/>
+                    <h:dataTable id="tblPersons" var="item" value="#{personController.lstPersonas}" rendered="#{not empty personController.lstPersonas}"
+                                 styleClass="table table-striped table-bordered table-list"
+                                 columnClasses="table_header2,table_header10,table_header3,table_header2,table_header3,table_header6,table_header5"
+                                 >
+
+                        <h:column>
+                            <f:facet name="header">No.</f:facet>1
+                        </h:column>
+
+                        <h:column>
+                            <f:facet name="header">Nombre</f:facet>#{item.desPers}
+                        </h:column>
+
+                        <h:column>
+                            <f:facet name="header">Documento Identidad</f:facet>#{item.codIden}
+                        </h:column>
+
+                        <h:column>
+                            <f:facet name="header">Tipo Documento</f:facet>#{item.desTipoiden}
+                        </h:column>
+
+                        <h:column>
+                            <f:facet name="header">Tipo de persona</f:facet>#{item.desTipopers}
+                        </h:column>
+
+                        <h:column>
+                            <f:facet name="header">Rol</f:facet>#{item.desTrolpers}
+                        </h:column>
+
+                        <h:column>
+                            <p:commandButton icon="ui-icon-search"
+                                             actionListener="#{personController.selectFromDialog(item)}"
+                                             rendered="#{personController.paramPageFlgActivo==1?true:false}"/>
+                            &nbsp;
+                            <p:commandLink action="#{personController.deleteAction(item)}"  update="form" >
+                                <span class="glyphicon glyphicon-trash"></span>
+                                <p:confirm header="Confirmation" message="¿Está seguro de continuar?" icon="ui-icon-alert"  />
+                            </p:commandLink>
+                            &nbsp;
+                            <p:commandLink action="#{personController.editAction(item)}" oncomplete="fnChangeTab(2); fnOcultarTipoPers(#{item.codIden});" update="form">
+                                <span class="glyphicon glyphicon-pencil"></span>
+                            </p:commandLink>
+
+                        </h:column>
+                    </h:dataTable>
+
+                    <p:confirmDialog global="true" showEffect="fade" hideEffect="fade" header="Confirmar">
+                        <p:commandButton value="Yes" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+                        <p:commandButton value="No"  type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+                    </p:confirmDialog>
+
+                </h:form>
+
+            </div>
+
+        </ui:define>
+    </ui:composition>
+</html>

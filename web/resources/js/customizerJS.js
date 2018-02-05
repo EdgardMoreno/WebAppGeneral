@@ -69,11 +69,10 @@ function fnGetPersType(valor){
 
 /*Funcion que valida el documento de identidad ingresado*/
 function fnValidateDocuIden(val){
-
-    alert("Valor: " + val);
+    
     var arrMessages = [];
 
-    if (val.trim.length == 0 ){
+    if (val.length == 0 ){
 
       arrMessages.push("Debe ingresar el Documento de Identidad.");
       fnShowMessageValidation(arrMessages);
@@ -84,7 +83,7 @@ function fnValidateDocuIden(val){
         var resultado = fnGetPersType(val);
 
         if ( resultado == "ERROR" ){
-            arrMessages.push("El formato del Documento de Identidad es inválido.");
+            arrMessages.push("El formato del Documento de Identidad es inv&aacutelido.");
             fnShowMessageValidation(arrMessages);
             return false;
         } else {

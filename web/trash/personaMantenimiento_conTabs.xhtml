@@ -13,6 +13,11 @@
 
             <script>
 
+                $(document).ready(function(){
+                var obj = document.getElementById("form:pgFields");
+                obj.rows[1].style.display = "none";
+              });
+
                 function fnChangeTab(option) {
 
                     if (option == 1) {
@@ -30,17 +35,27 @@
                     var resultado = fnGetPersType(String(valor));
                     var arrMensajes = [];
 
-                    //alert("Resultado: " + String(valor) + " Longitud: " + String(valor).length + "RESULTADO:" + resultado);
+                    var obj = document.getElementById("form:pgFields");
 
                     if (resultado == "PJ"){
+                       /*Mostrar Fila Persona Juridica*/
+                       obj.rows[1].style.display = "";
 
-                        document.getElementById("form:gridPN").style.display = "none";
-                        document.getElementById("form:gridPJ").style.display = "";
+                       /*Oculatar Filas Persona Natural*/
+                       obj.rows[2].style.display = "none";
+                       obj.rows[3].style.display = "none";
+                       obj.rows[4].style.display = "none";
+                       obj.rows[5].style.display = "none";
 
                     }else{
+                       /*Mostrar Filas Persona Natural*/
+                       obj.rows[2].style.display = "";
+                       obj.rows[3].style.display = "";
+                       obj.rows[4].style.display = "";
+                       obj.rows[5].style.display = "";
 
-                        document.getElementById("form:gridPN").style.display = "";
-                        document.getElementById("form:gridPJ").style.display = "none";
+                       /*Ocultar Filas Persona Juridica*/
+                       obj.rows[1].style.display = "none";
                     }
 
                     if (resultado == "ERROR"){
@@ -153,7 +168,7 @@
                         <div id="menu1" class="tab-pane fade in active">
 
                             <br/>
-                            <h:panelGrid columns="7" style="width:85%"
+                            <h:panelGrid columns="7" style="width:100%"
                                          columnClasses="td-label-1, td-content-1, td-label-1, td-content-1, td-label-1, td-content-1, td-content-1" >
 
                                 <h:outputLabel value="Docu Identidad:"/>
@@ -217,7 +232,7 @@
                                 <h:column>
                                     <p:commandButton icon="ui-icon-search"
                                                      actionListener="#{personController.selectFromDialog(item)}"
-                                                     rendered="#{personController.paramPageFlgActivo}"/>
+                                                     rendered="#{personController.paramPageFlgActivo==1?true:false}"/>
                                     &nbsp;
                                     <p:commandLink action="#{personController.deleteAction(item)}"  update="form" >
                                         <span class="glyphicon glyphicon-trash"></span>
@@ -235,12 +250,11 @@
                         <div id="menu2" class="tab-pane fade">
 
                             <br/>
-                            <h:panelGrid columns="4"
-                                         style="width:80%"
+                            <h:panelGrid id="pgFields" columns="4" 
+                                         style="width:90%"
                                          columnClasses="td-label-1, text_panelGrid_4c , td-label-1 , text_panelGrid_4c">
 
-
-                                <h:outputLabel value="Nro. Docu. Identidad:"/>
+                                <h:outputLabel value="Documento Identidad:"/>
                                 <h:inputText id="numDocuIden"
                                              class="form-control"
                                              style="width:70%"
@@ -251,33 +265,10 @@
                                 <h:outputLabel value="" />
                                 <h:outputLabel value="" />
 
-                                <!--<h:outputLabel value="Tipo de Persona:"/>
-                                <h:selectOneRadio id="cboTipoPersona"
-                                                  value="#{personController.sic1pers.idTipopers}"
-                                                  styleClass="btn-group radio_Button"
-                                                  onchange="fnOcultarTipoPers(this.value)">
-
-                                    <f:selectItems value="#{personController.itemsTipoPers}" />
-                                </h:selectOneRadio>
-                                <h:outputLabel value="" />
-                                <h:outputLabel value="" />-->
-
-                            </h:panelGrid>
-
-                            <h:panelGrid id="gridPJ" columns="4"
-                                         style="width:80%;display:none"
-                                         columnClasses="td-label-1, text_panelGrid_4c , td-label-1 , text_panelGrid_4c" >
-
                                 <h:outputLabel value="Razón Social:"/>
                                 <h:inputText styleClass="form-control left" id="razonSocial" value="#{personController.sic1persorga.desPersorga}" />
                                 <h:outputLabel value="" />
                                 <h:outputLabel value="" />
-                            </h:panelGrid>
-
-                            <h:panelGrid id="gridPN"
-                                         columns="4"
-                                         style="width:80%"
-                                         columnClasses="td-label-1, text_panelGrid_4c , td-label-1 , text_panelGrid_4c" >
 
                                 <h:outputLabel value="Nombre:"/>
                                 <h:inputText  styleClass="form-control" id="primerNombre" value="#{personController.sic1persindi.desPrimnomb }" />
