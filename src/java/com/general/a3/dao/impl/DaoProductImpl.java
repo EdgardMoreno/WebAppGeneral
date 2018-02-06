@@ -9,6 +9,7 @@ import com.general.util.dao.DaoFuncionesUtil;
 import com.general.hibernate.entity.Sic1prod;
 import com.general.hibernate.relaentity.Sic3proddocu;
 import com.general.hibernate.views.ViSicprod;
+import com.general.util.beans.Constantes;
 import conexionbd.InParameter;
 import conexionbd.OutParameter;
 import conexionbd.StoredProcedure;
@@ -233,8 +234,28 @@ public class DaoProductImpl implements Serializable{
             lstResult = criteria.list();  
         }
         
-        return lstResult;
+        return lstResult;       
+    }
+    
+    public List<Sic1prod> getAutocompleteByCodProd(Session session, String codProd) throws SQLException, Exception{        
+
+        List<Sic1prod> lstResult = new ArrayList();
+        int flgFilter = 0;
+        
+        Criteria criteria = session.createCriteria(Sic1prod.class);
        
+        if(codProd != null && codProd.trim().length() > 0 ){
+            criteria.add(Restrictions.like("codProd", codProd.toUpperCase() + "%"));
+            flgFilter = 1;
+        }
+        
+        if(flgFilter == 1){
+            criteria.addOrder(Order.asc("codProd"));
+            criteria.setMaxResults(Constantes.CONS_VALUE_AUTOCOMPLETE_NUMROWS);
+            lstResult = criteria.list();
+        }
+        
+        return lstResult;       
     }
     
     public Sic1prod getByCod(Session session, String cod) {

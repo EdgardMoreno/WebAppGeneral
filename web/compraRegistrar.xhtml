@@ -14,6 +14,22 @@
     <ui:composition template="./templates/templatePrincipal.xhtml">
 
         <ui:define name="header">
+            
+            <style>
+                .autocomplete{
+                    position: absolute;
+                    background-color: white;
+                    /*border: 1px solid black;*/
+                    z-index: 10;/*Indica la posicion en el eje Z, en nuestro caso con el valor 10 
+                                el elemento se muestra delante del resto de elementos, probablemente alguna 
+                                clase tiene el valor z-index mayor a 0*/
+                    padding: 0px;                    
+                }
+                /*table td{
+                    padding: 0px; 
+                    border: 1px solid black;
+                }*/
+            </style>
 
             <script>
                 
@@ -36,6 +52,8 @@
                           transitionOut     :   "elastic"
 
                       });
+                      
+                      
                   });
 
                 function fnValiteAddProduct() {
@@ -52,18 +70,13 @@
                         FlgError = true;
                     }
 
-                    if (NombreProducto.length == 0) {
-                        arrMessages.push("Debe ingresar el Nombre del Producto.");
-                        FlgError = true;
-                    }
-
                     if (CostoUnitario.length == 0) {
                         arrMessages.push("Debe ingresar el Costo del Producto.");
                         FlgError = true;
                     }
 
                     if (Cantidad.length == 0) {
-                        arrMessages.push("Debe ingresar la Cantidad Comprada.");
+                        arrMessages.push("Debe ingresar la Cantidad.");
                         FlgError = true;
                     }
 
@@ -111,6 +124,34 @@
                 function fnCerrarIFrame(){
                     $("#form\\:btnSearchPerson").click();
                 };
+                
+                /*AUTOCOMPLETE ajax*/
+                function fnShowAutocompleteResult(data){
+                    
+                    switch(data.status){
+                        case "success":                        
+                            
+                            var h = $("#form\\:codigoProducto").css("height");
+                            var element = document.getElementById("form:codigoProducto");
+                            var rect = element.getBoundingClientRect(); //Obtiene la posicion absoluta del elemento
+                            console.log(rect.top, rect.right, rect.bottom, rect.left);                            
+                            var top = Number(rect.top) + Number(h.replace("px",""));                            
+                            
+                            $("#idDivAutocomplete").css({"display":"","position":"absolute"});                            
+                            $("#idDivAutocomplete").css("top",top + "px");
+                            $("#idDivAutocomplete").css("left",rect.left + "px");
+                            break;
+                    }
+                };
+                
+                function fnDestroyAutocompleteResult(){
+                    /*var idelemet = "";
+                    idelemet = $("#idDivAutocomplete").click();
+                    alert("Elemento:" + typeof(idelemet));*/
+                    //$("#idDivAutocomplete").css("display","none");                    
+                }
+                
+                
 
             </script>
         </ui:define>
@@ -129,7 +170,7 @@
                             <h3>${orderController.desTituloPagina}</h3>  
                     </div>
 
-                    <h:panelGrid columns="6" style="width:95%"
+                    <h:panelGrid columns="6" style="width:95%"                                 
                                  columnClasses="compra_panelGrid_1, compra_panelGrid_2, compra_panelGrid_3, compra_panelGrid_4, compra_panelGrid_5, compra_panelGrid_6">
 
                         <h:outputLabel value="Fecha:"/>
@@ -153,7 +194,7 @@
                         <h:outputLabel value=""/>                        
 
                         <h:outputLabel value="Nro. Documento:"/>
-                        <h:inputText id="numDocuIden"
+                        <h:inputText id="numDocuIden" autocomplete="off"
                                      value="#{orderController.sic1idenpersId.codIden}" styleClass="form-control"/>                        
                         <h:commandLink  id="btnSearchPerson" 
                                         styleClass="btn btn-default"                                          
@@ -180,13 +221,10 @@
                         <h:outputLabel value=""/>
 
                         <h:outputLabel value="Código Producto:"/>
-                        <h:inputText id="codigoProducto" styleClass="form-control" value="#{orderController.sic1prod.codProd}"/>
-                        <p:commandLink actionListener="#{orderController.searchProduct()}"
-                                       styleClass="btn btn-default" update="descProducto">
-                            <span class="glyphicon glyphicon-search"></span>Buscar
-                            <p:ajax event="dialogReturn"
-                                    listener="#{orderController.onProductChosen}" update="codigoProducto,descProducto"/>
-                        </p:commandLink>
+                        <h:inputText id="codigoProducto"  autocomplete="off" styleClass="form-control" value="#{orderController.sic1prod.codProd}" onblur="fnDestroyAutocompleteResult()">
+                            <f:ajax execute="codigoProducto" render="descProducto pnAutocomplete" event="keyup" listener="#{orderController.searchProduct()}"  onevent="fnShowAutocompleteResult" />
+                        </h:inputText>
+                        <h:outputLabel value=""/>
                         <h:outputLabel value="Descripción:"/>
                         <h:inputText id="descProducto" disabled="true" styleClass="form-control" value="#{orderController.sic1prod.desProd }"  />
                         <h:outputLabel value=""/>
@@ -196,6 +234,7 @@
                             <div class="input-group mb-2 mb-sm-0">
                                 <div class="input-group-addon">S/.</div>
                                 <h:inputText id="costoUnitario" styleClass="form-control"
+                                             autocomplete="off"
                                              value="#{orderController.sic3proddocu.numValor }"
                                              onkeypress="return allowOnlyNumbers(event)"
                                              onblur="formatDecimal_2(this)"/>
@@ -210,7 +249,10 @@
                         <h:panelGroup>
                             <div class="input-group mb-2 mb-sm-0">
                                 <div class="input-group-addon">#&nbsp;&nbsp;</div>
-                                <h:inputText id="cantidad" styleClass="form-control"  value="#{orderController.sic3proddocu.numCantidad }" onkeypress="return allowOnlyNumbers(event)"/>
+                                <h:inputText id="cantidad" styleClass="form-control"  
+                                             autocomplete="off"
+                                             onkeypress="return allowOnlyNumbers(event)"
+                                             value="#{orderController.sic3proddocu.numCantidad }" />
                             </div>
                         </h:panelGroup>
                         <p:commandLink actionListener="#{orderController.addItem()}"
@@ -227,36 +269,34 @@
 
                     </h:panelGrid>
 
-
-
                     <h:panelGrid id="pnDetCompra" columns="1" width="72%" styleClass="table-one" >
 
                         <h:dataTable value="#{orderController.lstSic3proddocu}" var="item"
-                                     styleClass="table table-striped table-bordered table-list"
-                                     columnClasses="table_header1,table_header2,table_header3,table_header4,table_header5,table_header6,table_header7" >
+                                     styleClass = "table-bordered"                                     
+                                     columnClasses = "table_style_id,table_style_id,table_style_code,table_style_description,table_style_price,table_style_amount,table_style_action">
 
-                            <h:column>
+                            <h:column headerClass="table_style_id">
                                 <f:facet name="header">No.</f:facet>#{item.numIndex}
                             </h:column>
-                            <h:column>
-                                <f:facet name="header">idProd</f:facet>#{item.sic1prod.idProd}
+                            <h:column headerClass="table_style_id" >
+                                <f:facet name="header">IDPROD</f:facet>#{item.sic1prod.idProd}
                             </h:column>
-                            <h:column>
+                            <h:column headerClass="table_style_code">
                                 <f:facet name="header">CODIGO</f:facet>#{item.sic1prod.codProd}
                             </h:column>
-                            <h:column>
+                            <h:column headerClass="table_style_description">
                                 <f:facet name="header">DESCRIPCION</f:facet>#{item.sic1prod.desProd}
                             </h:column>
-                            <h:column>
-                                <div class="input-group mb-2 mb-sm-0">
+                            <h:column headerClass="table_style_price">
+                                <div >
                                     <h:outputLabel value="S/." />
                                     <f:facet name="header">PRECIO</f:facet>#{item.numValor}
                                 </div>
                             </h:column>
-                            <h:column>
+                            <h:column headerClass="table_style_amount">
                                 <f:facet name="header">CANTIDAD</f:facet>#{item.numCantidad}
                             </h:column>
-                            <h:column>
+                            <h:column headerClass="table_style_action">
                                 <f:facet name="header">ACCION</f:facet>
                                 <h:commandLink action="#{orderController.deleteAction(item)}">
                                     <span class="glyphicon glyphicon-trash"></span>
@@ -395,15 +435,30 @@
                         <h:inputText id="numDocumento" style="width:7em;text-align: center;font-size: 22px;" value="#{orderController.sic1docu.numDocu }"  />
                     </div>
                     
-                    
+                    <div id="idDivAutocomplete" class="autocomplete" >
+                        <h:panelGroup id="pnAutocomplete" layout="block">
+                            <table id="tableIdAutocomplete" class="table table-striped table-bordered bootstrap-datatable datatable">
+                                <tbody>
+                                    <ui:repeat var="e" value="#{orderController.lstProducts}" varStatus="status">
+                                        <tr>
+                                            <td><h:commandLink value="#{e.getCodProd()}"  >
+                                                    <f:ajax execute="@this" render="@form" listener="#{orderController.selectAutocompleteProduct(e)}"/>
+                                                </h:commandLink></td>
+                                            <td>#{e.getDesProd()}</td>                                        
+                                        </tr>
+                                    </ui:repeat>
+                                </tbody>
+                            </table>
+                        </h:panelGroup>
+                    </div>   
 
                 </h:form>
                 
                 <a id="linkDialog" href="#" class="iframe"  style="display:none"/>
-                
-                
 
             </div>
+            
+            
 
         </ui:define>
     </ui:composition>

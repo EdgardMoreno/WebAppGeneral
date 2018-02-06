@@ -68,14 +68,28 @@ public class ProductServiceImpl implements Serializable{
     public String relateProdDocu(List<Sic3proddocu> list) throws Exception {
         return daoProductImpl.relateProdDocu(this.session, list);
     }
-
     
-    public List<Sic1prod> get(Sic1prod obj) throws CustomizerException{
+    public List<Sic1prod> getAll(Sic1prod obj) throws CustomizerException{
         session = HibernateUtil.getSessionFactory().openSession();
         List<Sic1prod> list;  
         try{
-            list = daoProductImpl.getAll(session, obj);        
-        
+            
+            list = daoProductImpl.getAll(session, obj);
+            
+        }catch(Exception ex){
+            throw new CustomizerException(ex.getMessage());
+        }finally{
+            if(session != null)
+                session.close();
+        }
+        return list;         
+    }
+    
+    public List<Sic1prod> getAutocompleteByCodProd(String codProd) throws CustomizerException{
+        session = HibernateUtil.getSessionFactory().openSession();
+        List<Sic1prod> list;  
+        try{            
+            list = daoProductImpl.getAutocompleteByCodProd(session, codProd);            
         }catch(Exception ex){
             throw new CustomizerException(ex.getMessage());
         }finally{

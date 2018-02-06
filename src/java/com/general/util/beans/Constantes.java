@@ -18,6 +18,7 @@ public class Constantes {
     
     public static Integer CONS_VALUE_TIPOPERS_RUC = 11;
     public static Integer CONS_VALUE_TIPOPERS_DNI = 8;
+    public static Integer CONS_VALUE_AUTOCOMPLETE_NUMROWS = 8;
     
     public static double CONS_VALUE_IGV = 0.18;
     

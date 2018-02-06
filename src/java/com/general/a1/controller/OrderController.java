@@ -30,9 +30,6 @@ import javax.inject.Named;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import java.math.BigDecimal;
-import java.util.HashMap;
-import java.util.Map;
-import org.primefaces.context.RequestContext;
 import org.primefaces.event.SelectEvent;
 import com.general.util.beans.Constantes;
 import com.general.util.beans.UtilClass;
@@ -48,8 +45,6 @@ import javax.faces.event.ValueChangeEvent;
 public class OrderController implements Serializable{
  
     private final static Logger log = LoggerFactory.getLogger(OrderController.class);    
-    
-    
     
     private DocuOrderServiceImpl orderServiceImpl;
     private Sic1generalServiceImpl sic1generalServiceImpl;    
@@ -75,6 +70,8 @@ public class OrderController implements Serializable{
     private Integer indexTabla;
     private String desTituloPagina;
     
+    private List<Sic1prod> lstProducts;
+    
     public OrderController(){
     }
     
@@ -82,7 +79,7 @@ public class OrderController implements Serializable{
     public void init() {
         
         try{
-            
+            lstProducts = new ArrayList();
             sic1generalServiceImpl = new Sic1generalServiceImpl();
             orderServiceImpl = new DocuOrderServiceImpl();
            
@@ -247,6 +244,14 @@ public class OrderController implements Serializable{
     public void setDesTituloPagina(String desTituloPagina) {
         this.desTituloPagina = desTituloPagina;
     }
+
+    public List<Sic1prod> getLstProducts() {
+        return lstProducts;
+    }
+
+    public void setLstProducts(List<Sic1prod> lstProducts) {
+        this.lstProducts = lstProducts;
+    }
     
     
     /******************************************************************************/
@@ -321,53 +326,37 @@ public class OrderController implements Serializable{
         
     }
     
+    /**** AUTOCOMPLETE ******/
     public void searchProduct() throws CustomizerException{
         
         /*Limpiando producto*/
         this.sic3proddocu = new Sic3proddocu();
         this.indexTabla = -1;
+        this.lstProducts.clear();        
         /**/
         
-        ProductServiceImpl productServiceImpl = new ProductServiceImpl();
-        Sic1prod objProd = productServiceImpl.getByCod(this.sic1prod.getCodProd());
-        
-        if (objProd != null){
-            this.sic1prod = objProd;
+        System.out.println("Producto:" + this.sic1prod.getCodProd());        
+        String strCodProd = this.sic1prod.getCodProd();        
+        //
+        if (strCodProd != null && strCodProd.trim().length() >= 3 ){
+            this.sic1prod.setIdProd(null);
+            this.sic1prod.setDesProd(null);
+            ProductServiceImpl productServiceImpl = new ProductServiceImpl();
+            this.lstProducts = productServiceImpl.getAutocompleteByCodProd(strCodProd);
+        }else{
+            this.sic1prod.setIdProd(null);
+            this.sic1prod.setDesProd(null);
         }
-        else {
-            
-            Map<String, Object> options = new HashMap<>();
-            options.put("modal", true);
-            options.put("resizable", true);
-            options.put("draggable", true);
-            options.put("position", "center");
-            options.put("contentWidth", 1000);
-            options.put("contentHeight", 400);
-            options.put("includeViewParams", true);
-
-            Map<String, List<String>> params = new HashMap<>();
-            List<String> values = new ArrayList<>();
-            values.add("true");
-            params.put("paramExternalPage", values);
-
-            values = new ArrayList<>();
-
-            if (sic1prod.getCodProd() != null && sic1prod.getCodProd().trim().length() > 0) {
-                values.add(sic1prod.getCodProd());
-                params.put("paramCodProd", values);
-            } else {
-                values.add("");
-                params.put("paramCodProd", values);
-            }
-
-            RequestContext.getCurrentInstance().openDialog("popups/popupProductoRegistrar", options, params);
-        }
+        System.out.println("Lista:" + lstProducts.size());
     }
     
-    public void onProductChosen(SelectEvent event) {
-        
-        this.sic1prod = (Sic1prod)event.getObject();
+    public void selectAutocompleteProduct(Sic1prod obj){
+        System.out.println("Producto:" + obj.getCodProd());
+        this.sic1prod = obj;
+        this.lstProducts.clear();
     }
+    /**/
+    
     
     public void searchPerson() throws CustomizerException{
         
@@ -396,9 +385,9 @@ public class OrderController implements Serializable{
         }
     }
     /*Metodo que se ejecuta despues que se registra a la persona desde el POPUP*/
-    public void onPersonChosen(SelectEvent event) {        
-        this.sic1idenpersSelected = (Sic1idenpers) event.getObject();
-    }
+//    public void onPersonChosen(SelectEvent event) {        
+//        this.sic1idenpersSelected = (Sic1idenpers) event.getObject();
+//    }
     
     public void recalculateTotals(){
         
