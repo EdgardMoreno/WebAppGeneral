@@ -1,10 +1,35 @@
 
 /*Función para que solo permita ingresar números*/
-function allowOnlyNumbers(e){
+function fnAllowOnlyNumbers(e){
     tecla = (document.all) ? e.keyCode : e.which;
+
+    //alert("tecla:" + tecla);
 
     //Tecla de retroceso para borrar, siempre la permite
     if (tecla==8){
+        return true;
+    }
+
+    // Patron de entrada, en este caso solo acepta numeros
+    patron =/[0-9]/;
+    tecla_final = String.fromCharCode(tecla);
+    return patron.test(tecla_final);
+};
+
+
+/*Función para que solo permita ingresar números decimales*/
+function fnAllowOnlyDecimalNumbers(e){
+    tecla = (document.all) ? e.keyCode : e.which;
+
+    //alert("tecla:" + tecla);
+
+    //Tecla de retroceso para borrar, siempre la permite
+    if (tecla==8){
+        return true;
+    }
+
+    //Tecla de punto(.) para numeros decimales, siempre la permite
+    if (tecla==46){
         return true;
     }
 
@@ -24,6 +49,15 @@ function formatDecimal_2(obj){
         return true;
     }
 
+};
+
+function fnFormatDecimal(val){
+
+    if (val.length > 0){
+        var nro = val;
+        var result = Number(Math.round( nro + 'e2') + 'e-2').toFixed(2);        
+        return Number(result);
+    }
 };
 
 /***********************************************************************/

@@ -33,6 +33,8 @@ public class Sic1docu  implements java.io.Serializable {
      private BigDecimal numSubtotal;
      private BigDecimal numMtoTotal;
      private BigDecimal numIgv;
+     private BigDecimal flgPorrecoger;
+     private BigDecimal numMtovuelto;
      
      /*Agregado*/
      private Sic1idendocu sic1idendocu;
@@ -49,7 +51,7 @@ public class Sic1docu  implements java.io.Serializable {
     public Sic1docu(BigDecimal idDocu) {
         this.idDocu = idDocu;
     }
-    public Sic1docu(BigDecimal idDocu, String desNotas, Date fecCreacion, String desDocu, BigDecimal idTrolpers, BigDecimal idStipodocu, Date fecDesde, Date fecHasta, BigDecimal idPers, BigDecimal idModapago, BigDecimal idTipotarjeta, BigDecimal numMtotarjeta, BigDecimal numMtocomi, BigDecimal numMtoefectivo, String codSerie, BigDecimal numDocu, BigDecimal numMtodscto, BigDecimal numSubtotal, BigDecimal numIgv) {
+    public Sic1docu(BigDecimal idDocu, String desNotas, Date fecCreacion, String desDocu, BigDecimal idTrolpers, BigDecimal idStipodocu, Date fecDesde, Date fecHasta, BigDecimal idPers, BigDecimal idModapago, BigDecimal idTipotarjeta, BigDecimal numMtotarjeta, BigDecimal numMtocomi, BigDecimal numMtoefectivo, String codSerie, BigDecimal numDocu, BigDecimal numMtodscto, BigDecimal numSubtotal, BigDecimal numIgv, BigDecimal flgPorrecoger, BigDecimal numMtovuelto ) {
        this.idDocu = idDocu;
        this.desNotas = desNotas;
        this.fecCreacion = fecCreacion;
@@ -70,6 +72,8 @@ public class Sic1docu  implements java.io.Serializable {
        this.numSubtotal = numSubtotal;
        
        this.numIgv = numIgv;
+       this.flgPorrecoger = flgPorrecoger;
+       this.numMtovuelto = numMtovuelto;
     }
    
     public BigDecimal getIdDocu() {
@@ -205,6 +209,24 @@ public class Sic1docu  implements java.io.Serializable {
     public void setNumIgv(BigDecimal numIgv) {
         this.numIgv = numIgv;
     }
+
+    public BigDecimal getFlgPorrecoger() {
+        return flgPorrecoger;
+    }
+
+    public void setFlgPorrecoger(BigDecimal flgPorrecoger) {
+        this.flgPorrecoger = flgPorrecoger;
+    }
+
+    public BigDecimal getNumMtovuelto() {
+        return numMtovuelto;
+    }
+
+    public void setNumMtovuelto(BigDecimal numMtovuelto) {
+        this.numMtovuelto = numMtovuelto;
+    }
+    
+    
 
     /**
      * @return the sic1idendocu

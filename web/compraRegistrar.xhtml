@@ -10,11 +10,11 @@
     <f:metadata>        
         <f:viewParam name="titulo" value="#{orderController.desTituloPagina}"/>
     </f:metadata>
-    
+
     <ui:composition template="./templates/templatePrincipal.xhtml">
 
         <ui:define name="header">
-            
+
             <style>
                 .autocomplete{
                     position: absolute;
@@ -25,41 +25,112 @@
                                 clase tiene el valor z-index mayor a 0*/
                     padding: 0px;                    
                 }
-                /*table td{
-                    padding: 0px; 
-                    border: 1px solid black;
-                }*/
+
+                .panelIngresoDatosOrden {
+                  position:relative;
+                  float:left;
+                  /*border: 1px solid black;*/
+                  width: 71%;
+                }
+
+                .panelResumenOrden {
+                  position:relative;
+                  float:right;
+                  width: 28%;
+                  border: 1px inset #FFF;
+                  background-color: #167F92;
+                }
+                
+                .calcularVuelto{
+                    border: 2px outset #FFF;
+                    text-align: center;
+                    height: 35px;
+                    padding: 5px;
+                    /*vertical-align: middle;*/                    
+                }
+                
+                .calcularVuelto:hover{
+                    background-color: #13004d;
+                    font-size: 15px;
+                    padding: 5px;
+                }
+
             </style>
 
             <script>
-                
+
                 $(document).ready(function () {
-                
+
                     $(".iframe").fancybox({
 
-                          type              :   "iframe",
-                          modal             :   "true",
-                          enableEscapeButton:   "false",
-                          autoDimensions    :   "false",
-                          width             :   800,
-                          height            :   400,                          
-                          autoSize          :   false,
-                          overlayColor      :   "#797379",
-                          titleShow         :   true,
-                          titlePosition     :   "outside",
-                          overlayOpacity    :   0.6,
-                          transitionIn      :   "elastic",
-                          transitionOut     :   "elastic"
+                        type: "iframe",
+                        modal: "true",
+                        enableEscapeButton: "false",
+                        autoDimensions: "false",
+                        width: 800,
+                        height: 400,
+                        autoSize: false,
+                        overlayColor: "#797379",
+                        titleShow: true,
+                        titlePosition: "outside",
+                        overlayOpacity: 0.6,
+                        transitionIn: "elastic",
+                        transitionOut: "elastic"
 
-                      });
-                      
-                      
-                  });
+                    });
 
+                });
+
+                /*Funcion que permite calcular el vuelto*/
+                function fnCalcularVuelto(){
+                    
+                    var mtoTarjeta   = $("#form\\:numMtotarjeta").val();
+                    var mtoEfectivo  = $("#form\\:numMtoefectivo").val();
+                    var mtoDescuento = $("#form\\:numMtodscto").val();
+                    var mtoTotal     = $("#form\\:numMtoTotal").text();
+                    
+                    var totalFavor = (  Number(mtoTarjeta==""?0:mtoTarjeta) + 
+                                        Number(mtoEfectivo==""?0:mtoEfectivo) + 
+                                        Number(mtoDescuento==""?0:mtoDescuento));
+                                                    
+                    var totalVuelto = totalFavor - Number(mtoTotal);                    
+                    totalVuelto = totalVuelto>0?totalVuelto:0;
+                    totalVuelto = fnFormatDecimal(String(totalVuelto));
+                    
+                    
+                    //alert("mtoTotal: " + mtoTotal + " total:" + totalVuelto);
+                    
+                    $.confirm({
+                        columnClass: 'col-md-4 col-md-offset-4', //Tamano de la ventana
+                        title: 'Información',
+                        content: "Vuelto Calculado: S/." + totalVuelto,
+                        type: 'blue',
+                        typeAnimated: true,
+                        draggable: true, //Animacion para que vibre
+                        animation: 'scaleX',
+                        closeAnimation: 'scaleX',
+                        theme: 'supervan',
+                        backgroundDismissAnimation: 'glow',
+                        buttons: {                            
+                            Cerrar: {
+                                text: 'Cerrar',
+                                btnClass: 'btn-primary'
+                            }
+                        }
+                    });
+                    
+                }
+
+                /*Funcion que muestra la cantidad de digitos ingresados del DNI/RUC*/
+                function fnCountDigitsCodIden(val){
+                    
+                    $("#idCantDigitosDocIden").text(val.value.length);
+                }                
+
+                /*Funcion valida los campos antes de agregar un producto*/
                 function fnValiteAddProduct() {
                     //obteniendo el valor que se puso en campo text del formulario
-                    var CodigoProducto = document.getElementById("form:codigoProducto").value;
-                    var NombreProducto = document.getElementById("form:descProducto").value;
+                    var CodigoProducto = document.getElementById("form:codigoProducto").value;                    
                     var CostoUnitario = document.getElementById("form:costoUnitario").value;
                     var Cantidad = document.getElementById("form:cantidad").value;
                     var FlgError = false;
@@ -88,7 +159,8 @@
                         fnHideMessageValidation();
                         return true;
                     }
-                };
+                }
+                ;
 
                 function fnValidateForm() {
 
@@ -97,61 +169,64 @@
                     var fecRegistro = document.getElementById("form:fecRegistro").value;
                     var idenDocum = document.getElementById("form:numDocuIden").value;
 
-                };
-                
+                }
+                ;
+
                 /*Función que se ejecuta durante el ciclo de vida de la llamada AJAX.
-                * Evalua si el DNI/RUC ingresado existe, en caso no, muestra la pagina de REGISTRAR PERSONA*/
-                function fnAjaxListenPersonSearch(data){
-                    
-                    switch(data.status){                        
+                 * Evalua si el DNI/RUC ingresado existe, en caso no, muestra la pagina de REGISTRAR PERSONA*/
+                function fnAjaxListenPersonSearch(data) {
+
+                    switch (data.status) {
                         case "begin":
                             break;
                         case "complete":
                             break;
                         case "success":
                             var value = document.getElementById("form:razonSocial").value;
-                            if (value.length == 0){
+                            if (value.length == 0) {
                                 var numDocuIden = document.getElementById("form:numDocuIden").value;
                                 //Se sobreescribe la propiedad HREF
-                                $("#linkDialog").attr("href","faces/popups/popupPersonaRegistrar.xhtml?paramCodIden=" + numDocuIden + "&amp;paramExternalPage=1");
+                                $("#linkDialog").attr("href", "faces/popups/popupPersonaRegistrar.xhtml?paramCodIden=" + numDocuIden + "&amp;paramExternalPage=1");
                                 $("#linkDialog").click(); //Origina que llame a la función de FancyBOX y que muestre la URL especificada.
                                 return false;
                             }
                             break;
                     }
-                };
-                
-                function fnCerrarIFrame(){
+                }
+                ;
+
+                function fnCerrarIFrame() {
                     $("#form\\:btnSearchPerson").click();
-                };
-                
+                }
+                ;
+
                 /*AUTOCOMPLETE ajax*/
-                function fnShowAutocompleteResult(data){
-                    
-                    switch(data.status){
-                        case "success":                        
-                            
+                function fnShowAutocompleteResult(data) {
+
+                    switch (data.status) {
+                        case "success":
+
                             var h = $("#form\\:codigoProducto").css("height");
                             var element = document.getElementById("form:codigoProducto");
                             var rect = element.getBoundingClientRect(); //Obtiene la posicion absoluta del elemento
-                            console.log(rect.top, rect.right, rect.bottom, rect.left);                            
-                            var top = Number(rect.top) + Number(h.replace("px",""));                            
-                            
-                            $("#idDivAutocomplete").css({"display":"","position":"absolute"});                            
-                            $("#idDivAutocomplete").css("top",top + "px");
-                            $("#idDivAutocomplete").css("left",rect.left + "px");
+                            //console.log(rect.top, rect.right, rect.bottom, rect.left);
+                            var top = Number(rect.top) + Number(h.replace("px", ""));
+
+                            $("#idDivAutocomplete").css({"display": "", "position": "absolute"});
+                            $("#idDivAutocomplete").css("top", top + "px");
+                            $("#idDivAutocomplete").css("left", rect.left + "px");
                             break;
                     }
                 };
-                
-                function fnDestroyAutocompleteResult(){
+
+                function fnDestroyAutocompleteResult() {
                     /*var idelemet = "";
-                    idelemet = $("#idDivAutocomplete").click();
-                    alert("Elemento:" + typeof(idelemet));*/
+                     idelemet = $("#idDivAutocomplete").click();
+                     alert("Elemento:" + typeof(idelemet));*/
                     //$("#idDivAutocomplete").css("display","none");                    
                 }
-                
-                
+
+
 
             </script>
         </ui:define>
@@ -166,263 +241,321 @@
 
                     <p:growl id="message" showDetail="true" />
 
-                   <div class="page-header" >
-                            <h3>${orderController.desTituloPagina}</h3>  
+                    <div class="page-header" >
+                        <h3>${orderController.desTituloPagina}</h3>  
                     </div>
 
-                    <h:panelGrid columns="6" style="width:95%"                                 
-                                 columnClasses="compra_panelGrid_1, compra_panelGrid_2, compra_panelGrid_3, compra_panelGrid_4, compra_panelGrid_5, compra_panelGrid_6">
+                    <!-- ****************************************************************************** -->
+                    <!-- PANEL PARA INGRESO DE DATOS DE LA ORDEN -->
+                    <!-- ****************************************************************************** -->
 
-                        <h:outputLabel value="Fecha:"/>
-                        <h:inputText id="fecRegistro" size="10" value="#{orderController.desFecRegistro}"
-                                     styleClass="form-control datepicker"
-                                     style="font-size:14px;font-weight:bold;"/>
-                        <h:outputLabel value=""/>
-                        <h:outputLabel value=""/>
-                        <h:outputLabel value=""/>
-                        <h:outputLabel value=""/>
-                        
-                        <h:panelGroup>
-                            <div class="detalle-compra">
-                                <h:outputLabel value="INGRESAR DATOS CLIENTE"/>
-                            </div>
-                        </h:panelGroup>
-                        <h:outputLabel value=""/>
-                        <h:outputLabel value=""/>
-                        <h:outputLabel value=""/>
-                        <h:outputLabel value=""/>
-                        <h:outputLabel value=""/>                        
+                    <div class="panelIngresoDatosOrden">
+                        <table id="idTableFormOrder">
+                            <tr>
+                                <td class="compra_panelGrid_1">
+                                    <h:outputLabel value="Fecha:"/></td>
+                                <td class="compra_panelGrid_2">
+                                    <h:inputText id="fecRegistro" size="10" 
+                                                 value="#{orderController.desFecRegistro}"
+                                                 styleClass="form-control datepicker"
+                                                 style="font-size:14px;font-weight:bold;"/></td>
+                            </tr>
+                            <tr >
+                                <td colspan="2" style="padding: 6px"><h:outputLabel value="INGRESAR DATOS CLIENTE"/></td>                            
+                            </tr>
+                            <tr>
+                                <td class="compra_panelGrid_1">
+                                    <h:outputLabel value="Nro. Documento:"/></td>
+                                <td class="compra_panelGrid_2">
+                                    <div class="input-group mb-2 mb-sm-0">
+                                        <div id="idCantDigitosDocIden" class="input-group-addon">0</div>
+                                        <h:inputText id="numDocuIden" autocomplete="off"
+                                                 onkeypress="return fnAllowOnlyNumbers(event)"
+                                                 onkeyup="fnCountDigitsCodIden(this)"
+                                                 value="#{orderController.sic1idenpersId.codIden}" styleClass="form-control"/>
+                                    </div>
+                                </td>
+                                <td class="compra_panelGrid_3" >
+                                    <h:commandLink  id="btnSearchPerson" 
+                                                    styleClass="btn btn-default"                                          
+                                                    onclick="return fnValidateDocuIden(document.getElementById('form:numDocuIden').value)"> 
+                                        <span class="glyphicon glyphicon-new-window"></span>Buscar
+                                        <f:ajax execute="numDocuIden" render="razonSocial" listener="#{orderController.searchPerson()}" onevent="fnAjaxListenPersonSearch" />
+                                    </h:commandLink></td>
+                                <td class="compra_panelGrid_1">
+                                    <h:outputLabel value="Razón Social:"/></td>
+                                <td class="compra_panelGrid_2">
+                                    <h:inputText id="razonSocial"
+                                                 readonly="true"
+                                                 value="#{orderController.sic1pers.desPers}" styleClass="form-control"/></td>
+                            </tr>
+                            <tr>
+                                <td colspan="2" style="padding: 6px"><h:outputLabel value="INGRESAR PRODUCTOS"/></td>                            
+                            </tr>
+                            <tr>
+                                <td class="compra_panelGrid_1">
+                                    <h:outputLabel value="Código Producto:"/>
+                                </td>
+                                <td class="compra_panelGrid_2">
+                                    <h:inputText id="codigoProducto"  autocomplete="off" styleClass="form-control" value="#{orderController.sic1prod.codProd}" onblur="fnDestroyAutocompleteResult()">
+                                        <f:ajax execute="codigoProducto" render="descProducto pnAutocomplete" event="keyup" listener="#{orderController.searchProduct()}"  onevent="fnShowAutocompleteResult" />
+                                    </h:inputText>
+                                </td>
+                                <td class="compra_panelGrid_3"></td>
+                                <td class="compra_panelGrid_1">
+                                    <h:outputLabel value="Descripción:"/>
+                                </td>
+                                <td class="compra_panelGrid_2">
+                                    <h:inputText id="descProducto" disabled="true" styleClass="form-control" value="#{orderController.sic1prod.desProd }" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="compra_panelGrid_1">
+                                    <h:outputLabel value="Costo Unitario:"/>
+                                </td>
+                                <td class="compra_panelGrid_2">
+                                    <div class="input-group mb-2 mb-sm-0">
+                                        <div class="input-group-addon">S/.</div>
+                                        <h:inputText id="costoUnitario" styleClass="form-control"
+                                                     autocomplete="off"
+                                                     value="#{orderController.sic3proddocu.numValor }"
+                                                     onkeypress="return fnAllowOnlyDecimalNumbers(event)"
+                                                     onblur="formatDecimal_2(this)"/>
+                                    </div>
+                                </td>                           
+                            </tr>
+                            <tr>
+                                <td class="compra_panelGrid_1"><h:outputLabel value="Cantidad:"/></td>
+                                <td class="compra_panelGrid_2">
+                                    <div class="input-group mb-2 mb-sm-0">
+                                        <div class="input-group-addon">#&nbsp;&nbsp;</div>
+                                        <h:inputText id="cantidad" styleClass="form-control"  
+                                                     autocomplete="off"
+                                                     onkeypress="return fnAllowOnlyNumbers(event)"
+                                                     value="#{orderController.sic3proddocu.numCantidad }" />
+                                    </div>
+                                </td>
+                                <td class="compra_panelGrid_3">
+                                    <p:commandLink actionListener="#{orderController.addItem()}"
+                                                   onstart="return fnValiteAddProduct()"
+                                                   styleClass="btn btn-default"
+                                                   update="form:pnDetCompra,codigoProducto,descProducto,costoUnitario,cantidad,form:pnTotals" >
+                                        <span class="glyphicon glyphicon-plus"></span>Agregar
+                                    </p:commandLink>
+                                </td>
+                            </tr>                        
+                        </table>
 
-                        <h:outputLabel value="Nro. Documento:"/>
-                        <h:inputText id="numDocuIden" autocomplete="off"
-                                     value="#{orderController.sic1idenpersId.codIden}" styleClass="form-control"/>                        
-                        <h:commandLink  id="btnSearchPerson" 
-                                        styleClass="btn btn-default"                                          
-                                        onclick="return fnValidateDocuIden(document.getElementById('form:numDocuIden').value)"> 
-                            <span class="glyphicon glyphicon-new-window"></span>Buscar
-                            <f:ajax execute="numDocuIden" render="razonSocial" listener="#{orderController.searchPerson()}" onevent="fnAjaxListenPersonSearch" />
-                        </h:commandLink>
-                        
-                        <h:outputLabel value="Razón Social:"/>
-                        <h:inputText id="razonSocial"
-                                     readonly="true"
-                                     value="#{orderController.sic1pers.desPers}" styleClass="form-control"/>
-                        <h:outputLabel value=""/>
+                        <br/>
 
-                        <h:panelGroup>
-                            <div class="detalle-compra">
-                                <h:outputLabel value="INGRESAR PRODUCTOS"/>
-                            </div>
-                        </h:panelGroup>
-                        <h:outputLabel value=""/>
-                        <h:outputLabel value=""/>
-                        <h:outputLabel value=""/>
-                        <h:outputLabel value=""/>
-                        <h:outputLabel value=""/>
+                        <h:panelGrid id="pnDetCompra" columns="1" width="100%" >
 
-                        <h:outputLabel value="Código Producto:"/>
-                        <h:inputText id="codigoProducto"  autocomplete="off" styleClass="form-control" value="#{orderController.sic1prod.codProd}" onblur="fnDestroyAutocompleteResult()">
-                            <f:ajax execute="codigoProducto" render="descProducto pnAutocomplete" event="keyup" listener="#{orderController.searchProduct()}"  onevent="fnShowAutocompleteResult" />
-                        </h:inputText>
-                        <h:outputLabel value=""/>
-                        <h:outputLabel value="Descripción:"/>
-                        <h:inputText id="descProducto" disabled="true" styleClass="form-control" value="#{orderController.sic1prod.desProd }"  />
-                        <h:outputLabel value=""/>
+                            <h:dataTable value="#{orderController.lstSic3proddocu}" var="item"
+                                         styleClass = "table-bordered"                                     
+                                         columnClasses = "table_style_id,table_style_id,table_style_code,table_style_description,table_style_price,table_style_amount,table_style_action">
 
-                        <h:outputLabel value="Costo Unitario:"/>
-                        <h:panelGroup>
-                            <div class="input-group mb-2 mb-sm-0">
-                                <div class="input-group-addon">S/.</div>
-                                <h:inputText id="costoUnitario" styleClass="form-control"
-                                             autocomplete="off"
-                                             value="#{orderController.sic3proddocu.numValor }"
-                                             onkeypress="return allowOnlyNumbers(event)"
-                                             onblur="formatDecimal_2(this)"/>
-                            </div>
-                        </h:panelGroup>
-                        <h:outputLabel value=""/>
-                        <h:outputLabel value=""/>
-                        <h:outputLabel value=""/>
-                        <h:outputLabel value=""/>
-
-                        <h:outputLabel value="Cantidad:"/>
-                        <h:panelGroup>
-                            <div class="input-group mb-2 mb-sm-0">
-                                <div class="input-group-addon">#&nbsp;&nbsp;</div>
-                                <h:inputText id="cantidad" styleClass="form-control"  
-                                             autocomplete="off"
-                                             onkeypress="return allowOnlyNumbers(event)"
-                                             value="#{orderController.sic3proddocu.numCantidad }" />
-                            </div>
-                        </h:panelGroup>
-                        <p:commandLink actionListener="#{orderController.addItem()}"
-                                       onstart="return fnValiteAddProduct()"
-                                       styleClass="btn btn-default"
-                                       update="form:pnDetCompra,codigoProducto,descProducto,costoUnitario,cantidad,form:pnTotals" >
-                            <span class="glyphicon glyphicon-plus"></span>Agregar
-                        </p:commandLink>
-                        <h:outputLabel value=""/>
-                        <h:outputLabel value=""/>
-                        <h:outputLabel value=""/>
-
-                        <h:outputLabel value="" />
-
-                    </h:panelGrid>
-
-                    <h:panelGrid id="pnDetCompra" columns="1" width="72%" styleClass="table-one" >
-
-                        <h:dataTable value="#{orderController.lstSic3proddocu}" var="item"
-                                     styleClass = "table-bordered"                                     
-                                     columnClasses = "table_style_id,table_style_id,table_style_code,table_style_description,table_style_price,table_style_amount,table_style_action">
-
-                            <h:column headerClass="table_style_id">
-                                <f:facet name="header">No.</f:facet>#{item.numIndex}
-                            </h:column>
-                            <h:column headerClass="table_style_id" >
-                                <f:facet name="header">IDPROD</f:facet>#{item.sic1prod.idProd}
-                            </h:column>
-                            <h:column headerClass="table_style_code">
-                                <f:facet name="header">CODIGO</f:facet>#{item.sic1prod.codProd}
-                            </h:column>
-                            <h:column headerClass="table_style_description">
-                                <f:facet name="header">DESCRIPCION</f:facet>#{item.sic1prod.desProd}
-                            </h:column>
-                            <h:column headerClass="table_style_price">
-                                <div >
-                                    <h:outputLabel value="S/." />
-                                    <f:facet name="header">PRECIO</f:facet>#{item.numValor}
-                                </div>
-                            </h:column>
-                            <h:column headerClass="table_style_amount">
-                                <f:facet name="header">CANTIDAD</f:facet>#{item.numCantidad}
-                            </h:column>
-                            <h:column headerClass="table_style_action">
-                                <f:facet name="header">ACCION</f:facet>
-                                <h:commandLink action="#{orderController.deleteAction(item)}">
-                                    <span class="glyphicon glyphicon-trash"></span>
-                                </h:commandLink>
-                                &nbsp;
-                                <h:commandLink action="#{orderController.editAction(item)}">
-                                    <span class="glyphicon glyphicon-pencil"></span>
-                                </h:commandLink>
-                            </h:column>
-                        </h:dataTable>
-
-                    </h:panelGrid>
-
-                    <h:panelGrid columns="2"  style="width:28%" styleClass="table-two">
-                        <h:panelGrid columns="2"  border="1"
-                                     columnClasses="compra_totales_label, compra_totales_text">
-
-                            <h:outputLabel value="Forma de Pago:" />
-                            <h:selectOneMenu value="#{orderController.sic1docu.idModapago}" styleClass="form-control"
-                                             onchange="submit()"
-                                             valueChangeListener="#{orderController.payModeValueChange}">
-                                <f:selectItems value="#{orderController.itemsPayMode}" var="c" itemValue="#{c.idGeneral}" itemLabel="#{c.desGeneral}"/>
-                            </h:selectOneMenu>
-
-                            <h:outputLabel value="Tipo Tarjeta:" rendered="#{not empty orderController.itemsTypeCard}" />
-                            <h:selectOneMenu value="#{orderController.sic1docu.idTipotarjeta}"
-                                             styleClass="form-control"
-                                             rendered="#{not empty orderController.itemsTypeCard}">
-                                <f:selectItem itemLabel="-- Seleccione --" itemValue="-1" />
-                                <f:selectItems value="#{orderController.itemsTypeCard}" />
-                            </h:selectOneMenu>
-
-                            <h:outputLabel value="Mto. Tarjeta:"/>
-                            <h:panelGroup>
-                                <div class="input-group mb-1 mb-sm-0">
-                                    <div class="input-group-addon">S/.</div>
-                                    <h:inputText
-                                        styleClass="form-control"
-                                        value="#{orderController.sic1docu.numMtotarjeta}"
-                                        onkeypress="return allowOnlyNumbers(event)"
-                                        onblur="formatDecimal_2(this)"/>
-                                </div>
-                            </h:panelGroup>
-
-                            <h:outputLabel value="Efectivo?:"/>
-                            <h:panelGroup>
-                                <div class="input-group mb-1 mb-sm-0">
-                                    <div class="input-group-addon">S/.</div>
-                                    <h:inputText
-                                        styleClass="form-control"
-                                        value="#{orderController.sic1docu.numMtoefectivo}"
-                                        onkeypress="return allowOnlyNumbers(event)"
-                                        onblur="formatDecimal_2(this)"/>
-                                </div>
-                            </h:panelGroup>
+                                <h:column headerClass="table_style_id">
+                                    <f:facet name="header">No.</f:facet>#{item.numIndex}
+                                </h:column>
+                                <h:column headerClass="table_style_id" >
+                                    <f:facet name="header">IDPROD</f:facet>#{item.sic1prod.idProd}
+                                </h:column>
+                                <h:column headerClass="table_style_code">
+                                    <f:facet name="header">CODIGO</f:facet>#{item.sic1prod.codProd}
+                                </h:column>
+                                <h:column headerClass="table_style_description">
+                                    <f:facet name="header">DESCRIPCION</f:facet>#{item.sic1prod.desProd}
+                                </h:column>
+                                <h:column headerClass="table_style_price">
+                                    <div >
+                                        <h:outputLabel value="S/." />
+                                        <f:facet name="header">PRECIO</f:facet>#{item.numValor}
+                                    </div>
+                                </h:column>
+                                <h:column headerClass="table_style_amount">
+                                    <f:facet name="header">CANTIDAD</f:facet>#{item.numCantidad}
+                                </h:column>
+                                <h:column headerClass="table_style_action">
+                                    <f:facet name="header">ACCION</f:facet>
+                                    <h:commandLink action="#{orderController.deleteAction(item)}">
+                                        <span class="glyphicon glyphicon-trash"></span>
+                                    </h:commandLink>
+                                    &nbsp;
+                                    <h:commandLink action="#{orderController.editAction(item)}">
+                                        <span class="glyphicon glyphicon-pencil"></span>
+                                    </h:commandLink>
+                                </h:column>
+                            </h:dataTable>
 
                         </h:panelGrid>
+                    </div>
 
-                        <br/><br/><br/>
 
-                        <h:panelGrid id="pnTotals" columns="2"  border="1"
-                                     columnClasses="compra_totales_label, compra_totales_text">
+                    <!-- ****************************************************************************** -->
+                    <!-- PANEL DEL RESUMEN DE LA ORDEN -->
+                    <!-- ****************************************************************************** -->
 
-                            <h:outputLabel value="Descuento:"/>
-                            <h:panelGroup>
-                                <div class="input-group mb-1 mb-sm-0">
-                                    <div class="input-group-addon">S/.</div>
-                                    <h:inputText id="numDescuento"
+                    <div class="panelResumenOrden">
+
+                        <table width="100%" >
+                            <tr>
+                                <td colspan="2" style="color: white; padding: 20px 5px 10px; border-bottom: 2px inset #2C3259">
+                                    <strong><h4> RESUMEN DE LA ORDEN</h4></strong>
+                                </td>
+                            </tr>   
+                            <tr>
+                                <td><h:outputLabel value="" /></td>
+                            </tr>
+                            <tr>
+                                <td class="compra_totales_label">
+                                    <h:outputLabel value="Forma de Pago:" />
+                                </td>
+                                <td class="compra_totales_text">                                    
+                                    <h:selectOneMenu value="#{orderController.sic1docu.idModapago}" styleClass="form-control"
+                                                 onchange="submit()"
+                                                 valueChangeListener="#{orderController.payModeValueChange}">
+                                    <f:selectItems value="#{orderController.itemsPayMode}" var="c" itemValue="#{c.idGeneral}"               itemLabel="#{c.desGeneral}"/>
+                                    </h:selectOneMenu>
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td class="compra_totales_label">
+                                    <h:outputLabel value="Tipo Tarjeta:" rendered="#{not empty orderController.itemsTypeCard}" />
+                                </td>
+                                <td class="compra_totales_text">
+                                    <h:selectOneMenu value="#{orderController.sic1docu.idTipotarjeta}"
                                                  styleClass="form-control"
-                                                 value="#{orderController.sic1docu.numMtodscto}"
-                                                 onkeypress="return allowOnlyNumbers(event)"
-                                                 onblur="formatDecimal_2(this)"/>
-                                </div>
-                            </h:panelGroup>
+                                                 rendered="#{not empty orderController.itemsTypeCard}">
+                                        <f:selectItem itemLabel="-- Seleccione --" itemValue="-1" />
+                                        <f:selectItems value="#{orderController.itemsTypeCard}" />
+                                    </h:selectOneMenu>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="compra_totales_label">
+                                    <h:outputLabel value="Mto. Tarjeta:"/>
+                                </td>
+                                <td class="compra_totales_text">
+                                     <div class="input-group mb-1 mb-sm-0">
+                                        <div class="input-group-addon">S/.</div>
+                                        <h:inputText
+                                            id="numMtotarjeta"
+                                            styleClass="form-control"
+                                            value="#{orderController.sic1docu.numMtotarjeta}"
+                                            onkeypress="return fnAllowOnlyDecimalNumbers(event)"
+                                            onblur="formatDecimal_2(this)"
+                                            />
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="compra_totales_label">
+                                    <h:outputLabel value="Efectivo?:"/>
+                                </td>
+                                <td class="compra_totales_text">
+                                     <div class="input-group mb-1 mb-sm-0">
+                                        <div class="input-group-addon">S/.</div>
+                                        <h:inputText
+                                            id="numMtoefectivo"
+                                            styleClass="form-control"
+                                            value="#{orderController.sic1docu.numMtoefectivo}"
+                                            onkeypress="return fnAllowOnlyDecimalNumbers(event)"
+                                            onblur="formatDecimal_2(this)">
+                                        </h:inputText>
+                                    </div>
+                                </td>
+                            </tr>
 
-                            <h:outputLabel styleClass="total" value="SUB. TOTAL:" />
-                            <h:panelGroup styleClass="total">
-                                <h:outputLabel value="S/." />
-                                <h:outputLabel value="#{orderController.sic1docu.numSubtotal}" />
-                            </h:panelGroup>
+                            <tr>
+                                <td class="compra_totales_label">
+                                    <h:outputLabel value="Descuento:"/>
+                                </td>
+                                <td class="compra_totales_text">
+                                    <div class="input-group mb-1 mb-sm-0">
+                                        <div class="input-group-addon">S/.</div>
+                                        <h:inputText id="numMtodscto"
+                                                     styleClass="form-control"
+                                                     value="#{orderController.sic1docu.numMtodscto}"
+                                                     onkeypress="return fnAllowOnlyDecimalNumbers(event)"
+                                                     onblur="formatDecimal_2(this)"/>
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
 
-                            <h:outputLabel styleClass="total" value="IGV(18%):" />
-                            <h:panelGroup styleClass="total">
-                                <h:outputLabel value="S/." />
-                                <h:outputLabel value="#{orderController.sic1docu.numIgv}" />
-                            </h:panelGroup>
+                        <br/>
 
-                            <h:outputLabel  styleClass="total" value="TOTAL" />
-                            <h:panelGroup styleClass="total">
-                                <h:outputLabel value="S/." />
-                                <h:outputLabel value="#{orderController.sic1docu.numMtoTotal}" />
-                            </h:panelGroup>
+                        <h:panelGroup id="pnTotals">
 
-                            <h:outputLabel value="Vuelto:" />
-                            <h:panelGroup>
-                                <h:outputLabel value="S/." />
-                                <h:outputLabel value="#{orderController.sic1docu.numMtoTotal}" />
-                            </h:panelGroup>
+                            <table style="width: 100%">
+                                <tr style="color: white; border-top: 1px inset #2C3259 ; font-size: 15px">
+                                    <td class="compra_totales_label">
+                                        <h:outputLabel  value="SUB. TOTAL:" />
+                                    </td>
+                                    <td class="compra_totales_text">
+                                        <h:outputLabel value="S/." />
+                                        <h:outputLabel value="#{orderController.sic1docu.numSubtotal}" />
+                                    </td>
+                                </tr>
 
-                        </h:panelGrid>
-                    </h:panelGrid>
+                                <tr style="color: white; border-top: 1px inset #2C3259; font-size: 15px">
+                                    <td class="compra_totales_label">
+                                        <h:outputLabel  value="IGV(18%):" />
+                                    </td>
+                                    <td class="compra_totales_text">
+                                        <h:outputLabel value="S/." />
+                                        <h:outputLabel value="#{orderController.sic1docu.numIgv}" />
+                                    </td>
+                                </tr>   
+
+                                <tr style="color: white; border-top: 1px inset #2C3259; font-size: 21px ">
+                                    <td class="compra_totales_label" >
+                                        <h:outputLabel  value="TOTAL:" />
+                                    </td>
+                                    <td class="compra_totales_text">
+                                        <h:outputLabel value="S/." />
+                                        <h:outputLabel id="numMtoTotal" value="#{orderController.sic1docu.numMtoTotal}" />
+                                    </td>
+                                </tr>
+
+                                 <tr style="color: white; border-top: 1px inset #2C3259; text-align: center">
+                                    <td colspan="2">
+                                        <div class="calcularVuelto" onclick="fnCalcularVuelto()">CALCULAR VUELTO</div>
+                                        <input type="text" style="display:none" id="numMtovuelto" value="${orderController.sic1docu.numMtovuelto}" />
+                                    </td>
+                                </tr>
+
+                            </table>
+                        </h:panelGroup>                       
+
+                    </div>
+
+
+                    <!-- ****************************************************************************** -->
+                    <!-- GRABAR -->
+                    <!-- ****************************************************************************** -->
 
                     <br/>
 
                     <div class="offset-sm-2 col-sm-10">
-                        <p:commandLink value="Grabar" styleClass="btn btn-primary"
+                        <p:commandLink value="Grabar" 
+                                       styleClass="btn btn-primary"
                                        onstart="return fnValidateForm()"
                                        action="#{orderController.saveOrder()}"
                                        update="message" >
-
                         </p:commandLink>
                         &nbsp;
-                        <h:selectBooleanCheckbox value="asdas"></h:selectBooleanCheckbox>
+                        <h:selectBooleanCheckbox value="sfs"></h:selectBooleanCheckbox>
                         <h:outputLabel value="PENDIENTE DE RECOJO:" />
 
                     </div>
-
-                    <p:confirmDialog global="true" showEffect="fade" hideEffect="fade" header="Confirmar">
-
-                        <p:commandButton value="Yes" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
-                        <p:commandButton value="No"  type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
-                    </p:confirmDialog>
                     
-                    
+                    <!-- ****************************************************************************** -->
+                    <!-- ELEMENTOS OCULTOS -->
+                    <!-- ****************************************************************************** -->
                     <div class="form-inline header-format" style="display: none">
-                         
+
                         <!--REGISTRAR COMPRA: DIV QUE SE MOSTRAR CUANDO SE HAGA CLICK EN GUARDAR-->
 
                         <h:selectOneMenu id="somTipoDocu" value="#{orderController.sic1docu.idStipodocu}" style="font-size: 22px;">
@@ -434,7 +567,7 @@
                         <h:outputLabel value="-"/>
                         <h:inputText id="numDocumento" style="width:7em;text-align: center;font-size: 22px;" value="#{orderController.sic1docu.numDocu }"  />
                     </div>
-                    
+
                     <div id="idDivAutocomplete" class="autocomplete" >
                         <h:panelGroup id="pnAutocomplete" layout="block">
                             <table id="tableIdAutocomplete" class="table table-striped table-bordered bootstrap-datatable datatable">
@@ -453,12 +586,12 @@
                     </div>   
 
                 </h:form>
-                
+
                 <a id="linkDialog" href="#" class="iframe"  style="display:none"/>
 
             </div>
-            
-            
+
+
 
         </ui:define>
     </ui:composition>

@@ -99,22 +99,25 @@ public class OrderController implements Serializable{
             sic1docu         = new Sic1docu();
             sic1docu.setNumSubtotal(new BigDecimal("0.00"));
             sic1docu.setNumIgv(new BigDecimal("0.00"));
+            sic1docu.setNumMtoTotal(new BigDecimal("10.00"));
+            sic1docu.setNumMtovuelto(new BigDecimal("0.00"));
+            
             
             /*Data*/
             lstSic3proddocu  = new ArrayList();
             
             //eliminar
-            Sic1prod sic1prod = new Sic1prod();
-            sic1prod.setCodProd("asdasd");
-            sic1prod.setDesProd("fsfsdf");
-            sic1prod.setNumPrecio(new BigDecimal(30.21).setScale(2, BigDecimal.ROUND_HALF_UP));
-            
-            Sic3proddocu sic3proddocu = new Sic3proddocu();
-            sic3proddocu.setSic1prod(sic1prod);
-            sic3proddocu.setNumValor(sic1prod.getNumPrecio());
-            sic3proddocu.setNumCantidad(new BigDecimal(20));
-            
-            this.lstSic3proddocu.add(sic3proddocu);
+//            Sic1prod sic1prod = new Sic1prod();
+//            sic1prod.setCodProd("asdasd");
+//            sic1prod.setDesProd("fsfsdf");
+//            sic1prod.setNumPrecio(new BigDecimal(30.21).setScale(2, BigDecimal.ROUND_HALF_UP));
+//            
+//            Sic3proddocu sic3proddocu = new Sic3proddocu();
+//            sic3proddocu.setSic1prod(sic1prod);
+//            sic3proddocu.setNumValor(sic1prod.getNumPrecio());
+//            sic3proddocu.setNumCantidad(new BigDecimal(20));
+//            
+//            this.lstSic3proddocu.add(sic3proddocu);
             //
             
             /*Variable que el valor será enviado como parametro dependiendo de los que se quiera realizar: COMPRA O VENTA*/
@@ -298,7 +301,8 @@ public class OrderController implements Serializable{
    
     public void addItem(){
         
-        /*ID*/       
+        System.out.println("Agregar Item");
+        /*ID*/
         Sic3proddocuId id = new Sic3proddocuId();
         id.setIdProd(this.sic1prod.getIdProd());
         
@@ -441,6 +445,17 @@ public class OrderController implements Serializable{
         }
     }
     
+//    public void calcularVuelto(){
+//        
+//        System.out.println("MtoTotal: " + this.sic1docu.getNumMtoTotal());
+//        System.out.println("Mtotarjeta: " + this.sic1docu.getNumMtotarjeta().doubleValue());
+//        System.out.println("Mtoefectivo: " + this.sic1docu.getNumMtoefectivo().doubleValue());
+//        System.out.println("Mtodscto: " + this.sic1docu.getNumMtodscto().doubleValue());
+//        
+//        double num = this.sic1docu.getNumMtoTotal().doubleValue() - (this.sic1docu.getNumMtoefectivo().doubleValue() + this.sic1docu.getNumMtoefectivo().doubleValue());
+//        
+//        System.out.println("num:" + num);
+//    }
     
     
     public void saveOrder() throws CustomizerException, ParseException{

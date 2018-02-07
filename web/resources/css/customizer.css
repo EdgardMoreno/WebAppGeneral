@@ -56,7 +56,7 @@ and open the template in the editor.
 /*PANEL GRID PARA LA PAGINA DE COMPRA*/
 /**************************************/
 .compra_panelGrid_1 {
-     width: 18%;
+     width: 12%;
      text-align: right;
      padding-right:3px;
 }
@@ -68,7 +68,7 @@ and open the template in the editor.
 }
 
 .compra_panelGrid_3 {
-     width: 6%;
+     width: 2%;
      text-align: center;
 }
 
@@ -121,10 +121,11 @@ and open the template in the editor.
 
     /*TOTALES*/
     .compra_totales_label {
-         width: 45%;
+         width: 35%;
          text-align: right;
-         padding: 3px;
-         font-size:15px;
+         padding: 3px;         
+         color: white;
+         font-family: Arial;
     }
     .compra_totales_text {
          width: 55%;
@@ -133,10 +134,10 @@ and open the template in the editor.
          font-size:15px;
     }
 
-    .total{
+    /*.total{
         font-size: 15px;
         color: red;
-    }
+    }*/
 
 .table_header1 { width: 1%; text-align: center;}
 .table_header2 { width: 2%; text-align: center;}
@@ -222,12 +223,4 @@ legend
         background-color: #ffffff;
 }
 
-.table-one {
-  position:relative;
-  float:left;
-}
 
-.table-two {
-  position:relative;
-  float:right;
-}

@@ -80,5 +80,11 @@
     <property name="numIgv" type="big_decimal">
       <column name="NUM_IGV" precision="7" scale="3"/>
     </property>
+    <property name="flgPorrecoger" type="big_decimal">
+      <column name="FLG_PORRECOGER" precision="22" scale="0"/>
+    </property>
+    <property name="numMtovuelto" type="big_decimal">
+      <column name="NUM_MTOVUELTO" precision="5" scale="2"/>
+    </property>
   </class>
 </hibernate-mapping>
