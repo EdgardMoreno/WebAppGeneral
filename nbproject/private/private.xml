@@ -1,14 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project-private xmlns="http://www.netbeans.org/ns/project-private/1">
-    <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="13">
-        <file>
-            <url>src/java/com/general/a1/controller/PersonController.java</url>
-            <bookmark id="11">
-                <name/>
-                <line>290</line>
-                <key/>
-            </bookmark>
-        </file>
+    <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="15">
         <file>
             <url>src/java/com/general/a3/dao/impl/DaoDocumentImpl.java</url>
             <bookmark id="9">
@@ -44,10 +36,28 @@
             </bookmark>
         </file>
         <file>
+            <url>src/java/com/general/a1/controller/PersonController.java</url>
+            <bookmark id="11">
+                <name/>
+                <line>290</line>
+                <key/>
+            </bookmark>
+        </file>
+        <file>
             <url>web/compraRegistrar.xhtml</url>
             <bookmark id="2">
                 <name/>
                 <line>0</line>
+                <key/>
+            </bookmark>
+            <bookmark id="15">
+                <name/>
+                <line>253</line>
+                <key/>
+            </bookmark>
+            <bookmark id="14">
+                <name/>
+                <line>318</line>
                 <key/>
             </bookmark>
         </file>

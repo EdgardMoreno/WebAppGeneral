@@ -41,6 +41,15 @@
                   background-color: #167F92;
                 }
                 
+                #idDivFinal{
+                    
+                    position:relative;
+                    float   :left;
+                    border  : 1px solid black;
+                    width   : 350px;
+                    /*display : none;*/
+                }
+                
                 .calcularVuelto{
                     border: 2px outset #FFF;
                     text-align: center;
@@ -58,9 +67,10 @@
             </style>
 
             <script>
-
+                
                 $(document).ready(function () {
 
+                    //Se utiliza para llamar a URL externa
                     $(".iframe").fancybox({
 
                         type: "iframe",
@@ -78,47 +88,47 @@
                         transitionOut: "elastic"
 
                     });
+                    
+                    //Se utiliza para llamar a DIV
+                     $("#idLink").fancybox({
+                            type            :"inline",
+                            modal           : "true",
+                            enableEscapeButton: "false",
+                            autoDimensions  : "false",
+                            overlayColor    : "#797379",
+                            titleShow       : true,
+                            titlePosition   : "outside",
+                            overlayOpacity  : 0.6,
+                            transitionIn    : "elastic",
+                            transitionOut   : "elastic"
+                    });
 
                 });
+                
+                /*Cerrar Iframe */
+                function fnCerrarFancy(){
+                    parent.$.fancybox.close;
+                    return true;
+                    
+                }
 
                 /*Funcion que permite calcular el vuelto*/
                 function fnCalcularVuelto(){
                     
                     var mtoTarjeta   = $("#form\\:numMtotarjeta").val();
-                    var mtoEfectivo  = $("#form\\:numMtoefectivo").val();
-                    var mtoDescuento = $("#form\\:numMtodscto").val();
+                    var mtoEfectivo  = $("#form\\:numMtoefectivo").val();                    
                     var mtoTotal     = $("#form\\:numMtoTotal").text();
                     
                     var totalFavor = (  Number(mtoTarjeta==""?0:mtoTarjeta) + 
-                                        Number(mtoEfectivo==""?0:mtoEfectivo) + 
-                                        Number(mtoDescuento==""?0:mtoDescuento));
+                                        Number(mtoEfectivo==""?0:mtoEfectivo) );
                                                     
                     var totalVuelto = totalFavor - Number(mtoTotal);                    
                     totalVuelto = totalVuelto>0?totalVuelto:0;
                     totalVuelto = fnFormatDecimal(String(totalVuelto));
                     
-                    
                     //alert("mtoTotal: " + mtoTotal + " total:" + totalVuelto);
                     
-                    $.confirm({
-                        columnClass: 'col-md-4 col-md-offset-4', //Tamano de la ventana
-                        title: 'Información',
-                        content: "Vuelto Calculado: S/." + totalVuelto,
-                        type: 'blue',
-                        typeAnimated: true,
-                        draggable: true, //Animacion para que vibre
-                        animation: 'scaleX',
-                        closeAnimation: 'scaleX',
-                        theme: 'supervan',
-                        backgroundDismissAnimation: 'glow',
-                        buttons: {                            
-                            Cerrar: {
-                                text: 'Cerrar',
-                                btnClass: 'btn-primary'
-                            }
-                        }
-                    });
-                    
+                    fnShowInfoMessage( "Vuelto Calculado: S/." + totalVuelto);
                 }
 
                 /*Funcion que muestra la cantidad de digitos ingresados del DNI/RUC*/
@@ -164,10 +174,46 @@
 
                 function fnValidateForm() {
 
-                    var codSerie = document.getElementById("form:codSerie").value;
-                    var numDocumento = document.getElementById("form:numDocumento").value;
+                    //var codSerie = document.getElementById("form:codSerie").value;
+                    //var numDocumento = document.getElementById("form:numDocumento").value;
                     var fecRegistro = document.getElementById("form:fecRegistro").value;
-                    var idenDocum = document.getElementById("form:numDocuIden").value;
+                    //var idenDocum = document.getElementById("form:numDocuIden").value;
+                    var razonSocial = document.getElementById("form:razonSocial").value;
+                    //var detItems    = document.getElementById("form:idTableDetOrder").rows.length;
+                    var numMtoTotal = $("#form\\:numMtoTotal").text();
+                    
+                    numMtoTotal = Number(numMtoTotal);                    
+                    
+                    var FlgError = false;
+                    var arrMessages = [];
+                    
+                    if (fecRegistro.length == 0) {
+                      arrMessages.push("Debe ingresar la fecha de la operación.");
+                      FlgError = true;
+                    }
+                    
+                    if (razonSocial.length == 0) {
+                      arrMessages.push("Debe ingresar el Cliente o Proveedor relacionado a la operación.");
+                      FlgError = true;
+                    }
+                    
+                    if (numMtoTotal == 0) {
+                      arrMessages.push("Falta ingresar productos a la orden.");
+                      FlgError = true;
+                    }
+                    
+                    FlgError = false;
+                     //IMPRIMIR RESULTADO
+                    if (FlgError == true) {
+                        fnShowMessageValidation(arrMessages);
+                        return false;
+                    } else {
+                        fnHideMessageValidation();
+                        
+                         $("#idLink").attr("href", "#idDivFinal");
+                         $("#idLink").click(); //Origina que llame a la función de FancyBOX y que muestre la URL especificada.
+                         return false;
+                    }
 
                 }
                 ;
@@ -339,7 +385,7 @@
                                     <p:commandLink actionListener="#{orderController.addItem()}"
                                                    onstart="return fnValiteAddProduct()"
                                                    styleClass="btn btn-default"
-                                                   update="form:pnDetCompra,codigoProducto,descProducto,costoUnitario,cantidad,form:pnTotals" >
+                                                   update="form:pnDetOrder,codigoProducto,descProducto,costoUnitario,cantidad,form:pnTotals" >
                                         <span class="glyphicon glyphicon-plus"></span>Agregar
                                     </p:commandLink>
                                 </td>
@@ -348,10 +394,12 @@
 
                         <br/>
 
-                        <h:panelGrid id="pnDetCompra" columns="1" width="100%" >
+                        <h:panelGrid id="pnDetOrder" columns="1" width="100%" >
 
-                            <h:dataTable value="#{orderController.lstSic3proddocu}" var="item"
-                                         styleClass = "table-bordered"                                     
+                            <h:dataTable value="#{orderController.lstSic3proddocu}" 
+                                         var="item"
+                                         id="idTableDetOrder"
+                                         styleClass = "table-bordered"                                         
                                          columnClasses = "table_style_id,table_style_id,table_style_code,table_style_description,table_style_price,table_style_amount,table_style_action">
 
                                 <h:column headerClass="table_style_id">
@@ -411,26 +459,31 @@
                                     <h:outputLabel value="Forma de Pago:" />
                                 </td>
                                 <td class="compra_totales_text">                                    
-                                    <h:selectOneMenu value="#{orderController.sic1docu.idModapago}" styleClass="form-control"
-                                                 onchange="submit()"
-                                                 valueChangeListener="#{orderController.payModeValueChange}">
-                                    <f:selectItems value="#{orderController.itemsPayMode}" var="c" itemValue="#{c.idGeneral}"               itemLabel="#{c.desGeneral}"/>
+                                    <h:selectOneMenu id="idPayMode" value="#{orderController.sic1docu.idModapago}" styleClass="form-control">
+                                    <f:selectItems value="#{orderController.itemsPayMode}" var="c" itemValue="#{c.idGeneral}" itemLabel="#{c.desGeneral}"/>
+                                    <f:ajax execute="idPayMode" render="idLabelTipotarjeta idTextTipotarjeta" event="change" listener="#{orderController.payModeValueChange}" />
                                     </h:selectOneMenu>
                                 </td>
                             </tr>
 
                             <tr>
+                                
                                 <td class="compra_totales_label">
-                                    <h:outputLabel value="Tipo Tarjeta:" rendered="#{not empty orderController.itemsTypeCard}" />
+                                    <h:panelGroup id="idLabelTipotarjeta">
+                                        <h:outputLabel value="Tipo Tarjeta:" rendered="#{not empty orderController.itemsTypeCard}" />
+                                    </h:panelGroup>
                                 </td>
                                 <td class="compra_totales_text">
-                                    <h:selectOneMenu value="#{orderController.sic1docu.idTipotarjeta}"
-                                                 styleClass="form-control"
-                                                 rendered="#{not empty orderController.itemsTypeCard}">
-                                        <f:selectItem itemLabel="-- Seleccione --" itemValue="-1" />
-                                        <f:selectItems value="#{orderController.itemsTypeCard}" />
-                                    </h:selectOneMenu>
+                                    <h:panelGroup id="idTextTipotarjeta">
+                                        <h:selectOneMenu  value="#{orderController.sic1docu.idTipotarjeta}"
+                                                     styleClass="form-control"
+                                                     rendered="#{not empty orderController.itemsTypeCard}">
+                                            <f:selectItem itemLabel="-- Seleccione --" itemValue="-1" />
+                                            <f:selectItems value="#{orderController.itemsTypeCard}" />
+                                        </h:selectOneMenu>
+                                    </h:panelGroup>
                                 </td>
+                                
                             </tr>
                             <tr>
                                 <td class="compra_totales_label">
@@ -478,7 +531,9 @@
                                                      styleClass="form-control"
                                                      value="#{orderController.sic1docu.numMtodscto}"
                                                      onkeypress="return fnAllowOnlyDecimalNumbers(event)"
-                                                     onblur="formatDecimal_2(this)"/>
+                                                     onblur="return fnValidarDescuento(this) ">
+                                            <f:ajax execute="@this" event="blur" render="pnTotals" listener="#{orderController.recalculateTotals()}" />
+                                        </h:inputText>
                                     </div>
                                 </td>
                             </tr>
@@ -554,20 +609,51 @@
                     <!-- ****************************************************************************** -->
                     <!-- ELEMENTOS OCULTOS -->
                     <!-- ****************************************************************************** -->
-                    <div class="form-inline header-format" style="display: none">
-
-                        <!--REGISTRAR COMPRA: DIV QUE SE MOSTRAR CUANDO SE HAGA CLICK EN GUARDAR-->
-
-                        <h:selectOneMenu id="somTipoDocu" value="#{orderController.sic1docu.idStipodocu}" style="font-size: 22px;">
-                            <f:selectItems value="#{orderController.itemSTipoDocu}" />
-                        </h:selectOneMenu>
+                    
+                    <!--REGISTRAR COMPRA: DIV QUE SE MOSTRAR CUANDO SE HAGA CLICK EN GUARDAR-->
+                    <div id="idDivFinal" >
+                        <table border="1">
+                            <tr>
+                                <td class="compra_panelGrid_1"><h:outputLabel value="Tipo Comprobante:"/></td>
+                                <td class="compra_panelGrid_2">
+                                    <h:selectOneMenu id="somTipoDocu" 
+                                                     styleClass="form-control"
+                                                     value="#{orderController.sic1docu.idStipodocu}" >                                                     
+                                        <f:selectItems value="#{orderController.itemSTipoDocu}" />
+                                    </h:selectOneMenu>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="compra_panelGrid_1"><h:outputLabel value="Nro. Serie:"/></td>
+                                <td class="compra_panelGrid_2">
+                                    <h:inputText id="codSerie" 
+                                                 styleClass="form-control"                                                 
+                                                 value="#{orderController.sic1docu.codSerie}"  />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="compra_panelGrid_1"><h:outputLabel value="Correlativo:"/></td>
+                                <td class="compra_panelGrid_2">
+                                    <h:inputText id="numDocumento"
+                                                 styleClass="form-control"
+                                                 value="#{orderController.sic1docu.numDocu }"  />
+                                </td>
+                            </tr>
+                        </table>
+                        
+                        <h:commandLink value="Aceptar" 
+                                       styleClass="btn btn-primary"                           
+                                       action="#{orderController.saveOrder()}"
+                                        >
+                        </h:commandLink>
                         &nbsp;
-                        <h:outputLabel value="NRO:"/>
-                        <h:inputText id="codSerie" style="width:4em;text-align: center;font-size: 22px;" value="#{orderController.sic1docu.codSerie}"  />
-                        <h:outputLabel value="-"/>
-                        <h:inputText id="numDocumento" style="width:7em;text-align: center;font-size: 22px;" value="#{orderController.sic1docu.numDocu }"  />
+                        <input type="submit" value="Cancelar"  class="btn btn-primary" onclick="return fnCerrarFancy()" />
+                        
                     </div>
 
+                     <!-- ********************************** -->
+                    <!-- AUTOCOMPLETE -->
+                    <!-- *********************************** -->
                     <div id="idDivAutocomplete" class="autocomplete" >
                         <h:panelGroup id="pnAutocomplete" layout="block">
                             <table id="tableIdAutocomplete" class="table table-striped table-bordered bootstrap-datatable datatable">
@@ -585,13 +671,14 @@
                         </h:panelGroup>
                     </div>   
 
+                     <a id="linkDialog" href="#" class="iframe"  style="display:none"/>
+                <a id="idLink" href="#"  style="display:none"/>
+                    
                 </h:form>
 
-                <a id="linkDialog" href="#" class="iframe"  style="display:none"/>
+               
 
             </div>
-
-
 
         </ui:define>
     </ui:composition>

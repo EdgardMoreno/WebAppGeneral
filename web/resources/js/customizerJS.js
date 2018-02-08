@@ -126,3 +126,75 @@ function fnValidateDocuIden(val){
         }
     }
 };
+
+/************************************************************************/
+/********************** MESSAGES ****************************************/
+/*Funcion que devuelve el tipo de persona en base al DoCUMENTO DE IDENTIDAD*/
+
+function fnShowInfoMessage(message){
+
+    $.confirm({
+        columnClass: 'col-md-4 col-md-offset-4', //Tamano de la ventana
+        title: 'Informaci&oacuten',
+        content: ''  + message,
+        type: 'blue',
+        typeAnimated: true,
+        draggable: true, //Animacion para que vibre
+        animation: 'scaleX',
+        closeAnimation: 'scaleX',
+        theme: 'supervan',
+        backgroundDismissAnimation: 'glow',
+        buttons: {                            
+            Cerrar: {
+                text: 'Cerrar',
+                btnClass: 'btn-primary'
+            }
+        }
+    });
+}
+
+function fnShowErrorMessage(message){
+
+    $.confirm({
+        columnClass: 'col-md-4 col-md-offset-4', //Tamano de la ventana
+        title: 'Error',
+        content: ''  + message,
+        type: 'red',
+        typeAnimated: true,
+        draggable: true, //Animacion para que vibre
+        animation: 'scaleX',
+        closeAnimation: 'scaleX',
+             
+        buttons: {                            
+            Cerrar: {
+                text: 'Cerrar',
+                btnClass: 'btn-primary'
+            }
+        }
+    });
+}
+
+
+/*******************************************************************************************************************/
+/********************** VALIDACIONES PANTALLA: COMPRAREGISTRAR.XHTML ****************************************/
+/*Funcion pque valida en ingreso del monto de descuento*/
+
+function fnValidarDescuento(obj){
+                    
+    var mtoDescuento = fnFormatDecimal(obj.value); 
+    var message;
+    
+    if (mtoDescuento != undefined){
+        var mtoTotal     = $("#form\\:numMtoTotal").text();
+        if (mtoDescuento >= Number(mtoTotal)){
+            message = "El descuento no puede ser mayor al importe Total.";
+            fnShowErrorMessage(message);
+            obj.value = "";
+            return false;
+        }else{
+            obj.value = mtoDescuento;
+        }
+    }else{
+        return false;
+    }
+}

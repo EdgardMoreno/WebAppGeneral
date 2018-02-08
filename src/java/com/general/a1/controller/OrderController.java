@@ -99,7 +99,7 @@ public class OrderController implements Serializable{
             sic1docu         = new Sic1docu();
             sic1docu.setNumSubtotal(new BigDecimal("0.00"));
             sic1docu.setNumIgv(new BigDecimal("0.00"));
-            sic1docu.setNumMtoTotal(new BigDecimal("10.00"));
+            sic1docu.setNumMtoTotal(new BigDecimal("0.00"));
             sic1docu.setNumMtovuelto(new BigDecimal("0.00"));
             
             
@@ -278,7 +278,7 @@ public class OrderController implements Serializable{
     }
     
     
-    public String deleteAction(Sic3proddocu obj) {
+    public String deleteAction(Sic3proddocu obj) throws CustomizerException {
       
         lstSic3proddocu.remove(obj);
         /*Recalculando el numero de la fila*/
@@ -299,7 +299,7 @@ public class OrderController implements Serializable{
         return null;
     }
    
-    public void addItem(){
+    public void addItem() throws CustomizerException{
         
         System.out.println("Agregar Item");
         /*ID*/
@@ -393,33 +393,49 @@ public class OrderController implements Serializable{
 //        this.sic1idenpersSelected = (Sic1idenpers) event.getObject();
 //    }
     
-    public void recalculateTotals(){
+    public void recalculateTotals() throws CustomizerException{
         
-        double varPrecio = 0;
-        for(Sic3proddocu obj : this.lstSic3proddocu){
-            varPrecio += obj.getNumValor().doubleValue();
+        try{
+            
+            double numTotalPrice = 0;
+            BigDecimal numDescuento = this.sic1docu.getNumMtodscto();
+
+            for(Sic3proddocu obj : this.lstSic3proddocu){
+                numTotalPrice += obj.getNumValor().doubleValue();
+            }
+
+            /*En caso haya descuento se resta del importe total*/
+            if (numDescuento!= null && numDescuento.doubleValue() > numTotalPrice)
+                numTotalPrice = numTotalPrice - numDescuento.doubleValue();
+            else
+                this.sic1docu.setNumMtodscto(BigDecimal.ZERO);//Se setea a 0 cuando el monto a descontar es mayor al importe total.
+
+            this.sic1docu.setNumMtoTotal(new BigDecimal(numTotalPrice).setScale(2, BigDecimal.ROUND_HALF_UP));        
+            this.sic1docu.setNumSubtotal(new BigDecimal(numTotalPrice / (1 + Constantes.CONS_VALUE_IGV)).setScale(2, BigDecimal.ROUND_HALF_UP));        
+            this.sic1docu.setNumIgv(new BigDecimal(this.sic1docu.getNumSubtotal().doubleValue() * Constantes.CONS_VALUE_IGV).setScale(2, BigDecimal.ROUND_HALF_UP));        
+            
+        }catch(Exception e){
+            throw new CustomizerException(e.getMessage());
         }
-        
-        this.sic1docu.setNumMtoTotal(new BigDecimal(varPrecio).setScale(2, BigDecimal.ROUND_HALF_UP));        
-        this.sic1docu.setNumSubtotal(new BigDecimal(varPrecio / (1 + Constantes.CONS_VALUE_IGV)).setScale(2, BigDecimal.ROUND_HALF_UP));        
-        this.sic1docu.setNumIgv(new BigDecimal(this.sic1docu.getNumSubtotal().doubleValue() * Constantes.CONS_VALUE_IGV).setScale(2, BigDecimal.ROUND_HALF_UP));
-        
     }
     
-    public void payModeValueChange(ValueChangeEvent e) throws Exception {
+    public void payModeValueChange() throws Exception {
         
         /*Cargar Catalogo ANIDADO: TIPO DE TARJETA*/
         try {
             this.itemsTypeCard.clear();
             int idRelSec = -1;
+            
+            System.out.println("Modo Pago:" + sic1docu.getIdModapago());
 
             /*Cargar el id del catalogo secundario o anidado*/
-            for(Sic1general obj : this.itemsPayMode){                
-                if(obj.getIdGeneral().toString().equals(e.getNewValue().toString()) && obj.getIdGeneralrelsec() != null ){
+            for(Sic1general obj : this.itemsPayMode){
+                if(obj.getIdGeneral().toString().equals(sic1docu.getIdModapago().toString()) && obj.getIdGeneralrelsec() != null ){
                     idRelSec = obj.getIdGeneralrelsec().intValue();
                     break;
                 }
             }
+            
             System.out.println("idRelSec:" + idRelSec);
             /*Si tiene un catalogo anidado se procede a obtenerlo*/
             if (idRelSec > 0){
@@ -444,24 +460,25 @@ public class OrderController implements Serializable{
             throw new Exception(ex.getMessage());
         }
     }
-    
-//    public void calcularVuelto(){
-//        
-//        System.out.println("MtoTotal: " + this.sic1docu.getNumMtoTotal());
-//        System.out.println("Mtotarjeta: " + this.sic1docu.getNumMtotarjeta().doubleValue());
-//        System.out.println("Mtoefectivo: " + this.sic1docu.getNumMtoefectivo().doubleValue());
-//        System.out.println("Mtodscto: " + this.sic1docu.getNumMtodscto().doubleValue());
-//        
-//        double num = this.sic1docu.getNumMtoTotal().doubleValue() - (this.sic1docu.getNumMtoefectivo().doubleValue() + this.sic1docu.getNumMtoefectivo().doubleValue());
-//        
-//        System.out.println("num:" + num);
-//    }
-    
+   
     
     public void saveOrder() throws CustomizerException, ParseException{
         
         String strResult;
-        try {            
+        String strMessage = null;
+        try {
+            
+            BigDecimal idPers = this.sic1idenpersSelected.getSic1pers().getIdPers();
+            int numItems      = this.lstSic3proddocu.size();
+            
+            if (idPers == null || idPers.intValue() <= 0  ){
+                strMessage = "Falta ingresar el Cliente o Proveedor relacionado a la orden.";
+                UtilClass.addErrorMessage(strMessage);
+            }
+            if (numItems == 0  ){
+                strMessage = "Falta ingresar productos a la orden.";
+                UtilClass.addErrorMessage(strMessage);
+            }
             
             System.out.println("ID_DOCU: " + this.sic1docu.getIdDocu());
             System.out.println("COD_SERIE: " + this.sic1docu.getCodSerie());
@@ -478,36 +495,43 @@ public class OrderController implements Serializable{
             System.out.println("SUB TOTAL: " + this.sic1docu.getNumSubtotal());
             
             
-            /**************** Guardar Documento ************************/
-            //Codiden
-            String strCodigo = this.sic1docu.getCodSerie() + "-" + this.sic1docu.getNumDocu();
-            Sic1idendocu sic1idendocu = new Sic1idendocu();
-            sic1idendocu.setCodIden(strCodigo);
-            //this.sic1docu.setSic1idendocu(sic1idendocu);
+            if (strMessage == null) {
+            
+                /**************** Guardar Documento ************************/
+                //Codiden
+                String strCodigo = this.sic1docu.getCodSerie() + "-" + this.sic1docu.getNumDocu();
+                Sic1idendocu sic1idendocu = new Sic1idendocu();
+                sic1idendocu.setCodIden(strCodigo);
+                //this.sic1docu.setSic1idendocu(sic1idendocu);
 
-            this.sic1docu.setDesDocu("Compra Nro. " + strCodigo);
-            this.sic1docu.setIdPers(this.sic1idenpersSelected.getSic1pers().getIdPers());
-            this.sic1docu.setFecDesde(UtilClass.convertStringToDate(this.desFecRegistro));
+                this.sic1docu.setDesDocu("Compra Nro. " + strCodigo);
+                this.sic1docu.setIdPers(this.sic1idenpersSelected.getSic1pers().getIdPers());
+                this.sic1docu.setFecDesde(UtilClass.convertStringToDate(this.desFecRegistro));
+
+                /*Agregando lista de productos*/
+                this.sic1docu.setLstSic3proddocu(lstSic3proddocu);
+
+                sic1docu.setCodSerie("1");
+                sic1docu.setNumDocu(new BigDecimal(20));
+
+                /*Guardar Orden*/
+                System.out.println("Guardando Orden");
+                //orderServiceImpl = new DocuOrderServiceImpl();
+                sic1idendocu.setSic1docu(sic1docu);
+                strResult = orderServiceImpl.insert(sic1idendocu);
+                System.out.println("Documento:" + strResult);
+
+                UtilClass.addInfoMessage(Constantes.CONS_SUCCESS_MESSAGE);
+
+                /*Limpiar Objetos*/
+                this.sic1docu = new Sic1docu();
+                this.lstSic3proddocu.clear();
+                this.sic3proddocu = new Sic3proddocu();
+                this.sic1prod = new Sic1prod();
+                this.sic1idenpersSelected = new Sic1idenpers();
+                this.desFecRegistro = UtilClass.getCurrentDay();
             
-            /*Agregando lista de productos*/
-            this.sic1docu.setLstSic3proddocu(lstSic3proddocu);
-            
-            /*Guardar Orden*/
-            System.out.println("Guardando Orden");
-            //orderServiceImpl = new DocuOrderServiceImpl();
-            sic1idendocu.setSic1docu(sic1docu);
-            strResult = orderServiceImpl.insert(sic1idendocu);
-            System.out.println("Documento:" + strResult);
-                       
-            UtilClass.addInfoMessage(Constantes.CONS_SUCCESS_MESSAGE);
-            
-            /*Limpiar Objetos*/
-            this.sic1docu = new Sic1docu();
-            this.lstSic3proddocu.clear();
-            this.sic3proddocu = new Sic3proddocu();
-            this.sic1prod = new Sic1prod();
-            this.sic1idenpersSelected = new Sic1idenpers();
-            this.desFecRegistro = UtilClass.getCurrentDay();        
+            }
 
         } catch (ValidationException ex){
             UtilClass.addErrorMessage(ex.getMessage());
