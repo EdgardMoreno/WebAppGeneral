@@ -5,44 +5,56 @@
  */
 package com.general.a1.controller;
 
-import com.general.interfac.service.UserService;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.servlet.ModelAndView;
-//import jbr.springmvc.model.Login;
-//import jbr.springmvc.model.User;
-//import jbr.springmvc.service.UserService;
+import com.general.a2.service.impl.LoginServiceImpl;
+import com.general.a2.service.impl.UserServiceImpl;
+import com.general.hibernate1.Sic1usuario;
+import com.general.util.exceptions.CustomizerException;
+import java.io.Serializable;
+import javax.annotation.PostConstruct;
+import javax.faces.bean.ManagedBean;
+import javax.faces.bean.SessionScoped;
 
-@Controller
-public class LoginController {
-  
-  
-  UserService userService;
-  
-  @RequestMapping(value = "/login", method = RequestMethod.GET)
-  public ModelAndView showLogin(HttpServletRequest request, HttpServletResponse response) {
-    ModelAndView mav = new ModelAndView("login");
-    mav.addObject("login", new Login());
-    return mav;
-  }
-  
-  @RequestMapping(value = "/loginProcess", method = RequestMethod.POST)
-  public ModelAndView loginProcess(HttpServletRequest request, HttpServletResponse response,
-  @ModelAttribute("login") Login login) {
-    ModelAndView mav = null;
-    User user = userService.validateUser(login);
-    if (null != user) {
-    mav = new ModelAndView("welcome");
-    mav.addObject("firstname", user.getFirstname());
-    } else {
-    mav = new ModelAndView("login");
-    mav.addObject("message", "Username or Password is wrong!!");
+/**
+ *
+ * @author emoreno
+ */
+
+@ManagedBean
+@SessionScoped
+public class LoginController implements Serializable{
+    
+    private Sic1usuario usuario;
+    
+    public LoginController(){
+        
     }
-    return mav;
-  }
+    
+    @PostConstruct
+    public void init(){
+        usuario = new Sic1usuario();
+    }
+    
+    /*ATRIBUTOS*/
+    public Sic1usuario getUsuario() {
+        return usuario;
+    }
+
+    public void setUsuario(Sic1usuario usuario) {
+        this.usuario = usuario;
+    }    
+    
+    
+    /*METODOS*/            
+    public String validateUsernamePassword() throws CustomizerException{        
+        
+        System.out.println("Validate Usuario:");
+        System.out.println("Usuario: " + this.usuario.getCodUsuario());
+        System.out.println("PWD: " + this.usuario.getCodPwd());
+        
+        LoginServiceImpl loginServiceImpl = new LoginServiceImpl();
+        this.usuario = loginServiceImpl.validateUsernamePassword(this.usuario);
+        
+        return "";
+    }
+    
 }

@@ -2,10 +2,31 @@
 <project-private xmlns="http://www.netbeans.org/ns/project-private/1">
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="15">
         <file>
-            <url>src/java/com/general/a1/controller/PersonController.java</url>
-            <bookmark id="11">
+            <url>web/personaMantenimiento.xhtml</url>
+            <bookmark id="13">
                 <name/>
-                <line>290</line>
+                <line>15</line>
+                <key/>
+            </bookmark>
+            <bookmark id="12">
+                <name/>
+                <line>161</line>
+                <key/>
+            </bookmark>
+        </file>
+        <file>
+            <url>src/java/com/general/a1/controller/CompraController.java</url>
+            <bookmark id="10">
+                <name/>
+                <line>373</line>
+                <key/>
+            </bookmark>
+        </file>
+        <file>
+            <url>web/productoRegistrar.xhtml</url>
+            <bookmark id="1">
+                <name/>
+                <line>142</line>
                 <key/>
             </bookmark>
         </file>
@@ -23,15 +44,10 @@
             </bookmark>
         </file>
         <file>
-            <url>web/personaMantenimiento.xhtml</url>
-            <bookmark id="13">
+            <url>src/java/com/general/a1/controller/PersonController.java</url>
+            <bookmark id="11">
                 <name/>
-                <line>15</line>
-                <key/>
-            </bookmark>
-            <bookmark id="12">
-                <name/>
-                <line>161</line>
+                <line>290</line>
                 <key/>
             </bookmark>
         </file>
@@ -50,22 +66,6 @@
             <bookmark id="14">
                 <name/>
                 <line>319</line>
-                <key/>
-            </bookmark>
-        </file>
-        <file>
-            <url>src/java/com/general/a1/controller/CompraController.java</url>
-            <bookmark id="10">
-                <name/>
-                <line>373</line>
-                <key/>
-            </bookmark>
-        </file>
-        <file>
-            <url>web/productoRegistrar.xhtml</url>
-            <bookmark id="1">
-                <name/>
-                <line>142</line>
                 <key/>
             </bookmark>
         </file>

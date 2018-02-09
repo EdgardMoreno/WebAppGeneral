@@ -38,6 +38,7 @@
     <mapping resource="com/general/hibernate/views/ViSicpers.hbm.xml"/>
     <mapping resource="com/general/hibernate/relaentity/Sic3persdocu.hbm.xml"/>
     <mapping resource="com/general/hibernate/relaentity/Sic3docupers.hbm.xml"/>
-    <mapping resource="com/general/hibernate/views/ViSicprod.hbm.xml"/>    
+    <mapping resource="com/general/hibernate/views/ViSicprod.hbm.xml"/>     
+    <mapping resource="com/general/hibernate1/Sic1usuario.hbm.xml"/>
   </session-factory>
 </hibernate-configuration>

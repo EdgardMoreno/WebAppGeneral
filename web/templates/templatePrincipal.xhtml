@@ -11,88 +11,90 @@
         <meta name="description" content=""/>
         <meta name="author" content=""/>
         <link rel="icon" href="#{request.contextPath}/faces/resources/img/favicon.ico"></link>
-        
+
         <!--CSS STYLE -->
         <h:outputStylesheet name="/datepicker/css/datepicker.css"/><!--DatePicker -->
         <h:outputStylesheet name="/css/bootstrap.min.css"/>
         <h:outputStylesheet name="/css/customizer.css"/>
         <h:outputStylesheet name="/css/jquery-confirm-3.3.css"/>
         <h:outputStylesheet name="/css/jquery.fancybox-2.1.7.css"/>
-        
-        <!--<link rel="stylesheet" href="#{request.contextPath}/faces/resources/css/bootstrap-theme.min.css"/>-->        
-        
+
+<!--<link rel="stylesheet" href="#{request.contextPath}/faces/resources/css/bootstrap-theme.min.css"/>-->        
+
         <!--JAVASCRIPT-->        
         <script src="#{request.contextPath}/faces/resources/js/jquery-3.2.1.min.js"></script>
         <script src="#{request.contextPath}/faces/resources/js/bootstrap.min.js"></script>
         <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js" />
-        
+
         <script src="#{request.contextPath}/faces/resources/datepicker/js/bootstrap-datepicker.js"></script>
         <script src="#{request.contextPath}/faces/resources/datepicker/js/formatDatePicker.js"></script>
         <script src="#{request.contextPath}/faces/resources/js/jquery.fancybox-2.1.7.js"></script>
         <script src="#{request.contextPath}/faces/resources/js/jquery-confirm-3.3.js"></script>
-        
+
         <script src="#{request.contextPath}/faces/resources/js/customizerJS.js"></script>
-                                
+
         <title>Facelets Template</title>
-        
+
         <div id="header">
             <ui:insert name="header"></ui:insert>
         </div>
-        
+
     </h:head>
 
     <h:body>
-        
-        <nav class="navbar navbar-inverse">
-            <div class="container-fluid">
-                <div class="navbar-header">
-                    <a class="navbar-brand" href="#">WebSiteName</a>
+
+        <h:form>
+
+            <nav class="navbar navbar-inverse">
+                <div class="container-fluid">
+                    <div class="navbar-header">
+                        <a class="navbar-brand" href="#">WebSiteName</a>
+                    </div>
+                    <ul class="nav navbar-nav">
+                        <li class="active"><a href="#">Home</a></li>
+                        <li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="#">Articulos<span class="caret"></span></a>
+                            <ul class="dropdown-menu">
+                                <li><a href="#{request.contextPath}/faces/productoMantenimiento.xhtml?flgExternalPage=true">Agregar / Modificar</a></li>
+                                <li><a href="#">Actualizar Precios</a></li>                            
+                            </ul>
+                        </li>
+
+                        <li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="#">Clientes<span class="caret"></span></a>
+                            <ul class="dropdown-menu">
+                                <li><a href="#{request.contextPath}/faces/personaRegistrar.xhtml">Registrar Cliente</a></li>
+                                <li><a href="#{request.contextPath}/faces/personaListar.xhtml">Buscar Clientes</a></li>
+                            </ul>
+                        </li>
+
+                        <li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="#">Compras<span class="caret"></span></a>
+                            <ul class="dropdown-menu">
+                                <li><a href="#{request.contextPath}/faces/compraRegistrar.xhtml?titulo=Registrar Compra&amp;codstipodocu=COMPRA">Ingreso de Mercadería</a></li>
+                                <li><a href="#{request.contextPath}/faces/documentosListar.xhtml">Reporte de Compras</a></li>                            
+                            </ul>
+                        </li>
+                        <li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="#">Ventas<span class="caret"></span></a>
+                            <ul class="dropdown-menu">
+                                <li><a href="#{request.contextPath}/faces/compraRegistrar.xhtml?titulo=Registrar Venta&amp;codstipodocu=VENTA">Realizar Venta</a></li>                            
+                                <li><a href="#{request.contextPath}/faces/documentosListar.xhtml">Reporte de Ventas</a></li>   
+                            </ul>
+                        </li>
+                    </ul>
+                    <ul class="nav navbar-nav navbar-right">
+                        <li><a href="#"><span class="glyphicon glyphicon-user"></span> Salir</a></li>
+                        <li><a href="#"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
+                    </ul>
                 </div>
-                <ul class="nav navbar-nav">
-                    <li class="active"><a href="#">Home</a></li>
-                    <li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="#">Articulos<span class="caret"></span></a>
-                        <ul class="dropdown-menu">
-                            <li><a href="#{request.contextPath}/faces/productoMantenimiento.xhtml?flgExternalPage=true">Agregar / Modificar</a></li>
-                            <li><a href="#">Actualizar Precios</a></li>                            
-                        </ul>
-                    </li>
-                    
-                    <li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="#">Clientes<span class="caret"></span></a>
-                        <ul class="dropdown-menu">
-                            <li><a href="#{request.contextPath}/faces/personaRegistrar.xhtml">Registrar Cliente</a></li>
-                            <li><a href="#{request.contextPath}/faces/personaListar.xhtml">Buscar Clientes</a></li>
-                        </ul>
-                    </li>
-                            
-                    <li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="#">Compras<span class="caret"></span></a>
-                        <ul class="dropdown-menu">
-                            <li><a href="#{request.contextPath}/faces/compraRegistrar.xhtml?titulo=Registrar Compra&amp;codstipodocu=COMPRA">Ingreso de Mercadería</a></li>
-                            <li><a href="#{request.contextPath}/faces/documentosListar.xhtml">Reporte de Compras</a></li>                            
-                        </ul>
-                    </li>
-                    <li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="#">Ventas<span class="caret"></span></a>
-                        <ul class="dropdown-menu">
-                            <li><a href="#{request.contextPath}/faces/compraRegistrar.xhtml?titulo=Registrar Venta&amp;codstipodocu=VENTA">Realizar Venta</a></li>                            
-                            <li><a href="#{request.contextPath}/faces/documentosListar.xhtml">Reporte de Ventas</a></li>   
-                        </ul>
-                    </li>
-                </ul>
-                <ul class="nav navbar-nav navbar-right">
-                    <li><a href="#"><span class="glyphicon glyphicon-user"></span> Sign Up</a></li>
-                    <li><a href="#"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
-                </ul>
+            </nav>
+
+            <div id="content">
+                <ui:insert name="content"></ui:insert>
             </div>
-        </nav>
 
-        
+            <div id="footer">
 
-        <div id="content">
-            <ui:insert name="content"></ui:insert>
-        </div>
-        
-        <div id="footer">
-            
-        </div>
-        
+            </div>
+
+        </h:form>
+
     </h:body>
 </html>

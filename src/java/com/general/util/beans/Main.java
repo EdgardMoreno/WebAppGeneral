@@ -21,6 +21,8 @@ import com.general.a2.service.impl.PersonServiceImpl;
 import com.general.a2.service.impl.ProductServiceImpl;
 import com.general.a2.service.impl.Sic1generalServiceImpl;
 import com.general.a3.dao.impl.DaoDocumentImpl;
+import com.general.a3.dao.impl.DaoLoginImpl;
+import com.general.a3.dao.impl.DaoUserImpl;
 import com.general.hibernate.entity.Sic1idendocu;
 import com.general.hibernate.entity.Sic1persindi;
 import com.general.hibernate.entity.Sic1persorga;
@@ -29,6 +31,7 @@ import com.general.hibernate.views.ViSicdocu;
 import com.general.hibernate.views.ViSicestageneral;
 import com.general.hibernate.views.ViSicpers;
 import com.general.hibernate.views.ViSicprod;
+import com.general.hibernate1.Sic1usuario;
 import com.general.util.dao.DaoFuncionesUtil;
 import java.io.File;
 import java.math.BigDecimal;
@@ -86,6 +89,15 @@ public class Main {
 //         
 //         /**/
 
+        /*VALIDAR USUARIO*/        
+        if (true) {
+            DaoLoginImpl daoObj = new DaoLoginImpl();
+            Sic1usuario obj = new Sic1usuario();
+            obj.setCodUsuario("emoreno");
+            obj.setCodPwd("123");
+            obj = daoObj.validateUsernamePassword(session,obj);
+        }
+
         /////---- CATALOGO DE ESTADOS
         if (false) {
             DaoSic1generalImp daoSic1generalImp = new DaoSic1generalImp();
@@ -104,7 +116,7 @@ public class Main {
             }
         }
         
-        if(true){
+        if(false){
             DaoProductImpl service = new DaoProductImpl();
             ViSicprod obj = new ViSicprod();
             obj.setIdProd(new BigDecimal(1));

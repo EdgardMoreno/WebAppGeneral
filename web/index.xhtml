@@ -1,36 +1,23 @@
 <?xml version='1.0' encoding='UTF-8' ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:h="http://xmlns.jcp.org/jsf/html">
-    <h:head>
-        
-        
-        <h:outputStylesheet name="/css/bootstrap.min.css"/>
-        <h:outputStylesheet name="/css/bootstrap-dialog.min.css"/>
-        
-        <script src="#{request.contextPath}/faces/resources/js/jquery-3.2.1.min.js"></script>
-        
-        <script src="#{request.contextPath}/faces/resources/js/bootstrap.min.js"></script>
-        <script src="#{request.contextPath}/faces/resources/js/bootstrap-dialog.min.js"></script>
-        
-    </h:head>
-    <h:body>
-        <h:form>
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:a="http://xmlns.jcp.org/jsf/passthrough"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets" >    
+    
+    <ui:composition template="./templates/templatePrincipal.xhtml">
+
+        <ui:define name="header">
             
-            <input type="button" id="but" value="button1" class="btn btn-info" onclick="showmes()"></input>
-            <input type="button"  value="button1" class="btn btn-info" onclick="return BootstrapDialog.confirmation('Data unsaved', 'Are you sure you want to continue')"></input>
-            <h:commandButton value="show_2" onclick="showmes()" class="btn btn-info"/>
-            
-            
-            
-        </h:form>
+        </ui:define>
+
         
-        <script>
-            function showmes() {
-                
-                BootstrapDialog.alert('I want banana!');
-            }
-        </script>
-    </h:body>
+        <ui:define name="content">            
+            
+        </ui:define>
+          
+    </ui:composition>
 </html>
 
