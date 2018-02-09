@@ -45,10 +45,14 @@
                     
                     position:relative;
                     float   :left;
-                    border  : 1px solid black;
-                    width   : 350px;
+                    /*border  : 1px solid black;*/
+                    width   : 400px;
+                    text-align: center;
                     /*display : none;*/
-                }
+                    background-color: white;
+                    padding: 10px;
+                }                
+               
                 
                 .calcularVuelto{
                     border: 2px outset #FFF;
@@ -91,7 +95,7 @@
                     
                     //Se utiliza para llamar a DIV
                      $("#idLink").fancybox({
-                            type            :"inline",
+                           
                             modal           : "true",
                             enableEscapeButton: "false",
                             autoDimensions  : "false",
@@ -105,11 +109,10 @@
 
                 });
                 
+                
                 /*Cerrar Iframe */
-                function fnCerrarFancy(){
+                function fnCerrarFancy(){                    
                     parent.$.fancybox.close;
-                    return true;
-                    
                 }
 
                 /*Funcion que permite calcular el vuelto*/
@@ -132,8 +135,7 @@
                 }
 
                 /*Funcion que muestra la cantidad de digitos ingresados del DNI/RUC*/
-                function fnCountDigitsCodIden(val){
-                    
+                function fnCountDigitsCodIden(val){                    
                     $("#idCantDigitosDocIden").text(val.value.length);
                 }                
 
@@ -174,6 +176,7 @@
 
                 function fnValidateForm() {
 
+                    
                     //var codSerie = document.getElementById("form:codSerie").value;
                     //var numDocumento = document.getElementById("form:numDocumento").value;
                     var fecRegistro = document.getElementById("form:fecRegistro").value;
@@ -200,19 +203,18 @@
                     if (numMtoTotal == 0) {
                       arrMessages.push("Falta ingresar productos a la orden.");
                       FlgError = true;
-                    }
+                    }                    
                     
-                    FlgError = false;
                      //IMPRIMIR RESULTADO
                     if (FlgError == true) {
                         fnShowMessageValidation(arrMessages);
                         return false;
                     } else {
-                        fnHideMessageValidation();
-                        
-                         $("#idLink").attr("href", "#idDivFinal");
-                         $("#idLink").click(); //Origina que llame a la función de FancyBOX y que muestre la URL especificada.
-                         return false;
+                        fnHideMessageValidation();                        
+                       
+                        $("#idLink").attr("href", "#idDivFinal");
+                        $("#idLink").click(); //Origina que llame a la función de FancyBOX y que muestre la URL especificada.
+                        return false;
                     }
 
                 }
@@ -265,11 +267,57 @@
                     }
                 };
 
-                function fnDestroyAutocompleteResult() {
-                    /*var idelemet = "";
-                     idelemet = $("#idDivAutocomplete").click();
-                     alert("Elemento:" + typeof(idelemet));*/
-                    //$("#idDivAutocomplete").css("display","none");                    
+                /*Funcion que permite validar en ingreso del nro de serie y correlativo*/
+                function fnValiteVoucherHeader(){
+                    
+                    var codSerie = document.getElementById("form:codSerie").value;
+                    var numDocumento = document.getElementById("form:numDocumento").value;
+                    var somTipoDocu = document.getElementById("form:somTipoDocu").selectedIndex;                    
+                    
+                    console.log("codSerie:" + codSerie);
+                    //console.log("numDocumento:" + numDocumento + " sdf:" + somTipoDocu.selectedIndex);
+                    
+                    var FlgError = false;
+                    var arrMessages = [];
+                    
+                    if (codSerie.trim().length == 0){
+                        arrMessages.push("Debe ingresar el Nro. de Serie.");
+                        FlgError = true;
+                    }
+                    
+                    if (numDocumento.length == 0){
+                        arrMessages.push("Debe ingresar el Correlativo.");
+                        FlgError = true;
+                    }
+                    
+                    if (somTipoDocu == 0){
+                        arrMessages.push("Seleccione el Tipo de Documento de la Orden.");
+                        FlgError = true;
+                    }
+                    
+                    var divResu = $("#idDivValidation");
+                    
+                    
+                    
+                    if (FlgError){
+                    
+                        var resultado = '<UL type = "square">';
+                        for ( var i in arrMessages ){
+                            resultado += '<LI>' + arrMessages[i] + '</LI>';
+                        }
+                        resultado += '</UL>';                        
+                      
+                        console.log("resultado:" + resultado);
+                      
+                        divResu.html(resultado);
+                        divResu.css("display","inline-block");
+                        
+                        return false;
+                        
+                    }else{
+                        divResu.html("");
+                        return true;
+                    }
                 }
 
 
@@ -594,12 +642,10 @@
                     <br/>
 
                     <div class="offset-sm-2 col-sm-10">
-                        <p:commandLink value="Grabar" 
+                        <h:commandLink value="Grabar" 
                                        styleClass="btn btn-primary"
-                                       onstart="return fnValidateForm()"
-                                       action="#{orderController.saveOrder()}"
-                                       update="message" >
-                        </p:commandLink>
+                                       onclick="return fnValidateForm()" >
+                        </h:commandLink>
                         &nbsp;
                         <h:selectBooleanCheckbox value="sfs"></h:selectBooleanCheckbox>
                         <h:outputLabel value="PENDIENTE DE RECOJO:" />
@@ -610,15 +656,21 @@
                     <!-- ELEMENTOS OCULTOS -->
                     <!-- ****************************************************************************** -->
                     
-                    <!--REGISTRAR COMPRA: DIV QUE SE MOSTRAR CUANDO SE HAGA CLICK EN GUARDAR-->
-                    <div id="idDivFinal" >
-                        <table border="1">
+                    <!-- ********************************** -->
+                    <!-- INGRESO COMPROBANTE DE PAGO -->
+                    <!-- *********************************** -->
+                    
+                    <div id="idDivFinal" style="display: none" >
+                        <div id="idDivValidation" class="messageValidation"></div>
+                        <br/>
+                        <table>
                             <tr>
                                 <td class="compra_panelGrid_1"><h:outputLabel value="Tipo Comprobante:"/></td>
-                                <td class="compra_panelGrid_2">
-                                    <h:selectOneMenu id="somTipoDocu" 
+                                <td>
+                                    <h:selectOneMenu id="somTipoDocu"
                                                      styleClass="form-control"
-                                                     value="#{orderController.sic1docu.idStipodocu}" >                                                     
+                                                     value="#{orderController.sic1docu.idStipodocu}" >
+                                        <f:selectItem itemValue="-1" itemLabel="-- Seleccionar --" />
                                         <f:selectItems value="#{orderController.itemSTipoDocu}" />
                                     </h:selectOneMenu>
                                 </td>
@@ -636,22 +688,32 @@
                                 <td class="compra_panelGrid_2">
                                     <h:inputText id="numDocumento"
                                                  styleClass="form-control"
+                                                 onkeypress="return fnAllowOnlyNumbers(event)"
                                                  value="#{orderController.sic1docu.numDocu }"  />
                                 </td>
                             </tr>
                         </table>
-                        
+                        <br/>
                         <h:commandLink value="Aceptar" 
-                                       styleClass="btn btn-primary"                           
-                                       action="#{orderController.saveOrder()}"
-                                        >
+                                       styleClass="btn btn-primary"
+                                       onclick="return fnValiteVoucherHeader()"
+                                       actionListener="#{orderController.saveOrder()}">
                         </h:commandLink>
-                        &nbsp;
-                        <input type="submit" value="Cancelar"  class="btn btn-primary" onclick="return fnCerrarFancy()" />
+                        &nbsp;                        
+                        <h:commandLink value="Cancelar" 
+                                       styleClass="btn btn-primary"
+                                       onclick="fnCerrarFancy()">
+                        </h:commandLink>
+                        
+                        &nbsp;                        
+                        <input type="button" value="Cancelar" 
+                                       styleClass="btn btn-primary"
+                                       onclick="parent.$.fancybox.close;">
+                        </input>
                         
                     </div>
 
-                     <!-- ********************************** -->
+                    <!-- ********************************** -->
                     <!-- AUTOCOMPLETE -->
                     <!-- *********************************** -->
                     <div id="idDivAutocomplete" class="autocomplete" >
@@ -661,7 +723,7 @@
                                     <ui:repeat var="e" value="#{orderController.lstProducts}" varStatus="status">
                                         <tr>
                                             <td><h:commandLink value="#{e.getCodProd()}"  >
-                                                    <f:ajax execute="@this" render="@form" listener="#{orderController.selectAutocompleteProduct(e)}"/>
+                                                    <f:ajax execute="pnAutocomplete"  render="form:codigoProducto form:descProducto form:pnAutocomplete" listener="#{orderController.selectAutocompleteProduct(e)}"  />
                                                 </h:commandLink></td>
                                             <td>#{e.getDesProd()}</td>                                        
                                         </tr>
@@ -671,8 +733,8 @@
                         </h:panelGroup>
                     </div>   
 
-                     <a id="linkDialog" href="#" class="iframe"  style="display:none"/>
-                <a id="idLink" href="#"  style="display:none"/>
+                    <a id="linkDialog" href="#" class="iframe"  style="display:none"/>
+                    <a id="idLink" href="#"  style="display:none"/>
                     
                 </h:form>
 

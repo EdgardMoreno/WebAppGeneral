@@ -69,20 +69,24 @@ function fnShowMessageValidation(arrMessage){
     for ( var i in  arrMessage ){
         resultado += '<LI>' + arrMessage[i] + '</LI>';
     }
-
+    
     resultado += '</UL>';
 
-    var panel = document.getElementById("divResultadoValidacion");
+    var panel = document.getElementById("divResultadoValidacion");          
+    //console.log("obj:" + panel);
     panel.className = "messageValidation";
-    panel.innerHTML = resultado;
-
+    panel.style.display = "inline-block";
+    panel.innerHTML = resultado;        
+   
 };
 
 /*Funcion que oculta el error*/
 function fnHideMessageValidation(){
+    
     var panel = document.getElementById("divResultadoValidacion");
     panel.className = "";
-    panel.innerHTML = "";
+    panel.innerHTML = "";  
+    
 };
 
 /***********************************************************************/

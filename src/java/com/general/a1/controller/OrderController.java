@@ -335,7 +335,7 @@ public class OrderController implements Serializable{
         
         /*Limpiando producto*/
         this.sic3proddocu = new Sic3proddocu();
-        this.indexTabla = -1;
+        //this.indexTabla = -1;
         this.lstProducts.clear();        
         /**/
         
@@ -354,10 +354,16 @@ public class OrderController implements Serializable{
         System.out.println("Lista:" + lstProducts.size());
     }
     
-    public void selectAutocompleteProduct(Sic1prod obj){
-        System.out.println("Producto:" + obj.getCodProd());
-        this.sic1prod = obj;
-        this.lstProducts.clear();
+    public void selectAutocompleteProduct(Sic1prod obj) throws CustomizerException{
+        
+        try{
+            System.out.println("Producto:" + obj.getCodProd());
+            this.sic1prod = obj;
+            this.lstProducts.clear();
+        }catch(Exception ex){
+            throw new CustomizerException(ex.getMessage());
+        }
+        
     }
     /**/
     
@@ -401,11 +407,11 @@ public class OrderController implements Serializable{
             BigDecimal numDescuento = this.sic1docu.getNumMtodscto();
 
             for(Sic3proddocu obj : this.lstSic3proddocu){
-                numTotalPrice += obj.getNumValor().doubleValue();
+                numTotalPrice += obj.getNumValor().doubleValue() * obj.getNumCantidad().doubleValue();
             }
 
             /*En caso haya descuento se resta del importe total*/
-            if (numDescuento!= null && numDescuento.doubleValue() > numTotalPrice)
+            if (numDescuento!= null && numDescuento.doubleValue() < numTotalPrice)
                 numTotalPrice = numTotalPrice - numDescuento.doubleValue();
             else
                 this.sic1docu.setNumMtodscto(BigDecimal.ZERO);//Se setea a 0 cuando el monto a descontar es mayor al importe total.
@@ -510,9 +516,6 @@ public class OrderController implements Serializable{
 
                 /*Agregando lista de productos*/
                 this.sic1docu.setLstSic3proddocu(lstSic3proddocu);
-
-                sic1docu.setCodSerie("1");
-                sic1docu.setNumDocu(new BigDecimal(20));
 
                 /*Guardar Orden*/
                 System.out.println("Guardando Orden");
