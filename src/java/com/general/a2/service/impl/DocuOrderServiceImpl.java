@@ -62,7 +62,7 @@ public class DocuOrderServiceImpl implements Serializable, DocumentService{
                 throw new ValidationException("Número de serie inválido");
             
             if ( sic1docu.getNumDocu() == null || sic1docu.getNumDocu().intValue() <= 0) 
-                throw new ValidationException("Número del Documento inválido");                    
+                throw new ValidationException("Número del Documento inválido");
                 
             session = HibernateUtil.getSessionFactory().openSession();
 
@@ -117,18 +117,18 @@ public class DocuOrderServiceImpl implements Serializable, DocumentService{
                 daoProductImpl.relateProdDocu(session, lstSic3proddocu);
             
             /*GUARDAR RELACION DEL DOCUMENTO CON LA PERSONA(Vendedor)*/
-                BigDecimal idTipoRela = DaoFuncionesUtil.FNC_SICOBTIDGEN(((SessionImpl)session).connection(), Constantes.CONS_COD_TIPORELA, Constantes.CONS_COD_RELADOCUPERS);
-                BigDecimal idTipoRol = DaoFuncionesUtil.FNC_SICOBTIDGEN(((SessionImpl)session).connection(), Constantes.CONS_COD_TIPOROLPERS, Constantes.CONS_COD_VENDEDOR);
-                Sic3docupers sic3docupers = new Sic3docupers();
-                Sic3docupersId id = new Sic3docupersId();
-                id.setIdDocu(new BigDecimal(strIdDocuResult));
-                id.setIdPers(new BigDecimal(1)); /*Cambiar por el ID de vendedor que inicio sesion en el sistema*/
-                id.setIdTreladocu(idTipoRela);
-                id.setIdTrolpers(idTipoRol);
-                sic3docupers.setId(id);
-                List<Sic3docupers> lstSic3docupers = new ArrayList();
-                lstSic3docupers.add(sic3docupers);
-                daoDocumentImpl.relateDocuPers(session, lstSic3docupers);
+//                BigDecimal idTipoRela = DaoFuncionesUtil.FNC_SICOBTIDGEN(((SessionImpl)session).connection(), Constantes.CONS_COD_TIPORELA, Constantes.CONS_COD_RELADOCUPERS);
+//                BigDecimal idTipoRol = DaoFuncionesUtil.FNC_SICOBTIDGEN(((SessionImpl)session).connection(), Constantes.CONS_COD_TIPOROLPERS, Constantes.CONS_COD_VENDEDOR);
+//                Sic3docupers sic3docupers = new Sic3docupers();
+//                Sic3docupersId id = new Sic3docupersId();
+//                id.setIdDocu(new BigDecimal(strIdDocuResult));
+//                id.setIdPers(new BigDecimal(1)); /*Cambiar por el ID de vendedor que inicio sesion en el sistema*/
+//                id.setIdTreladocu(idTipoRela);
+//                id.setIdTrolpers(idTipoRol);
+//                sic3docupers.setId(id);
+//                List<Sic3docupers> lstSic3docupers = new ArrayList();
+//                lstSic3docupers.add(sic3docupers);
+//                daoDocumentImpl.relateDocuPers(session, lstSic3docupers);
             
             
             tx.commit();
@@ -139,7 +139,8 @@ public class DocuOrderServiceImpl implements Serializable, DocumentService{
                 tx.rollback();            
             throw new CustomizerException(ex.getMessage());
         }finally{
-            session.close();
+            if (session != null)
+                session.close();
         }
         
         return strIdDocuResult;

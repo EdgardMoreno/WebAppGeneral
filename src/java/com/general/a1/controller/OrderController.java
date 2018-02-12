@@ -72,6 +72,8 @@ public class OrderController implements Serializable{
     
     private List<Sic1prod> lstProducts;
     
+    private String msjValidation;
+    
     public OrderController(){
     }
     
@@ -79,24 +81,25 @@ public class OrderController implements Serializable{
     public void init() {
         
         try{
-            lstProducts = new ArrayList();
-            sic1generalServiceImpl = new Sic1generalServiceImpl();
-            orderServiceImpl = new DocuOrderServiceImpl();
+            msjValidation           = "";
+            lstProducts             = new ArrayList();
+            sic1generalServiceImpl  = new Sic1generalServiceImpl();
+            orderServiceImpl        = new DocuOrderServiceImpl();
            
-            desFecRegistro   = UtilClass.getCurrentDay();
-            indexTabla       = -1;            
+            desFecRegistro          = UtilClass.getCurrentDay();
+            indexTabla              = -1;            
             
             /*Persona*/
-            sic1idenpersSelected = new Sic1idenpers();
-            sic1pers             = new Sic1pers();
-            sic1idenpersId       = new Sic1idenpersId();
+            sic1idenpersSelected    = new Sic1idenpers();
+            sic1pers                = new Sic1pers();
+            sic1idenpersId          = new Sic1idenpersId();
             
             /*Producto*/
-            sic1prod         = new Sic1prod();
-            sic3proddocu     = new Sic3proddocu();
+            sic1prod                = new Sic1prod();
+            sic3proddocu            = new Sic3proddocu();
             sic3proddocu.setSic1prod(sic1prod);
             
-            sic1docu         = new Sic1docu();
+            sic1docu                = new Sic1docu();
             sic1docu.setNumSubtotal(new BigDecimal("0.00"));
             sic1docu.setNumIgv(new BigDecimal("0.00"));
             sic1docu.setNumMtoTotal(new BigDecimal("0.00"));
@@ -255,6 +258,10 @@ public class OrderController implements Serializable{
     public void setLstProducts(List<Sic1prod> lstProducts) {
         this.lstProducts = lstProducts;
     }
+
+    public String getMsjValidation() {
+        return msjValidation;
+    }
     
     
     /******************************************************************************/
@@ -391,7 +398,6 @@ public class OrderController implements Serializable{
 
         } catch (CustomizerException ex) {
             throw new CustomizerException(ex.getMessage());
-
         }
     }
     /*Metodo que se ejecuta despues que se registra a la persona desde el POPUP*/
@@ -472,68 +478,91 @@ public class OrderController implements Serializable{
         
         String strResult;
         String strMessage = null;
+        this.msjValidation = "";
         try {
             
-            BigDecimal idPers = this.sic1idenpersSelected.getSic1pers().getIdPers();
-            int numItems      = this.lstSic3proddocu.size();
-            
-            if (idPers == null || idPers.intValue() <= 0  ){
-                strMessage = "Falta ingresar el Cliente o Proveedor relacionado a la orden.";
-                UtilClass.addErrorMessage(strMessage);
-            }
-            if (numItems == 0  ){
-                strMessage = "Falta ingresar productos a la orden.";
-                UtilClass.addErrorMessage(strMessage);
-            }
-            
-            System.out.println("ID_DOCU: " + this.sic1docu.getIdDocu());
             System.out.println("COD_SERIE: " + this.sic1docu.getCodSerie());
             System.out.println("NUM_DOCU: " + this.sic1docu.getNumDocu());
-            System.out.println("ID_STIPODOCU: " + this.sic1docu.getIdStipodocu());
-            System.out.println("ID_MODAPAGO: " + this.sic1docu.getIdModapago());
-            System.out.println("ID_TIPOTARJETA: " + this.sic1docu.getIdTipotarjeta());
-            System.out.println("ID_PERS: " + this.sic1idenpersSelected.getSic1pers().getIdPers());
-            System.out.println("COD_IDEN: " + this.sic1idenpersSelected.getId().getCodIden());
-            System.out.println("FECHA: " + this.desFecRegistro);
-            
-            System.out.println("MONTO DESCUENTO: " + this.sic1docu.getNumMtodscto());
-            System.out.println("IGV: " + this.sic1docu.getNumIgv());
-            System.out.println("SUB TOTAL: " + this.sic1docu.getNumSubtotal());
             
             
-            if (strMessage == null) {
+            /*if ( sic1docu.getCodSerie() == null || sic1docu.getCodSerie().isEmpty()) 
+                strMessage ="Número de serie inválido";
             
-                /**************** Guardar Documento ************************/
-                //Codiden
-                String strCodigo = this.sic1docu.getCodSerie() + "-" + this.sic1docu.getNumDocu();
-                Sic1idendocu sic1idendocu = new Sic1idendocu();
-                sic1idendocu.setCodIden(strCodigo);
-                //this.sic1docu.setSic1idendocu(sic1idendocu);
-
-                this.sic1docu.setDesDocu("Compra Nro. " + strCodigo);
-                this.sic1docu.setIdPers(this.sic1idenpersSelected.getSic1pers().getIdPers());
-                this.sic1docu.setFecDesde(UtilClass.convertStringToDate(this.desFecRegistro));
-
-                /*Agregando lista de productos*/
-                this.sic1docu.setLstSic3proddocu(lstSic3proddocu);
-
-                /*Guardar Orden*/
-                System.out.println("Guardando Orden");
-                //orderServiceImpl = new DocuOrderServiceImpl();
-                sic1idendocu.setSic1docu(sic1docu);
-                strResult = orderServiceImpl.insert(sic1idendocu);
-                System.out.println("Documento:" + strResult);
-
-                UtilClass.addInfoMessage(Constantes.CONS_SUCCESS_MESSAGE);
-
-                /*Limpiar Objetos*/
-                this.sic1docu = new Sic1docu();
-                this.lstSic3proddocu.clear();
-                this.sic3proddocu = new Sic3proddocu();
-                this.sic1prod = new Sic1prod();
-                this.sic1idenpersSelected = new Sic1idenpers();
-                this.desFecRegistro = UtilClass.getCurrentDay();
+            if ( sic1docu.getNumDocu() == null || sic1docu.getNumDocu().intValue() <= 0) 
+                strMessage = "Número del Documento inválido";*/
             
+            if (false){
+                this.msjValidation = "<UL type = 'square'><LI>" + strMessage + "</LI></UL>";
+                System.out.println("ERRROR: " + this.msjValidation);
+                 UtilClass.addErrorMessage("holaaa");
+            }
+            else {
+            
+                BigDecimal idPers = this.sic1idenpersSelected.getSic1pers() !=null ?this.sic1idenpersSelected.getSic1pers().getIdPers():new BigDecimal(0);
+                int numItems      = this.lstSic3proddocu.size();
+
+                if ( idPers.intValue() <= 0  ){
+                    strMessage = "Falta ingresar el Cliente o Proveedor relacionado a la orden.";
+                    //UtilClass.addErrorMessage(strMessage);
+                    throw new ValidationException(strMessage);
+                }
+                if (numItems == 0  ){
+                    strMessage = "Falta ingresar productos a la orden.";
+                    //UtilClass.addErrorMessage(strMessage);
+                    throw new ValidationException(strMessage);
+                }
+
+                System.out.println("ID_DOCU: " + this.sic1docu.getIdDocu());
+                System.out.println("COD_SERIE: " + this.sic1docu.getCodSerie());
+                System.out.println("NUM_DOCU: " + this.sic1docu.getNumDocu());
+                System.out.println("ID_STIPODOCU: " + this.sic1docu.getIdStipodocu());
+                System.out.println("ID_MODAPAGO: " + this.sic1docu.getIdModapago());
+                System.out.println("ID_TIPOTARJETA: " + this.sic1docu.getIdTipotarjeta());
+                System.out.println("ID_PERS: " + idPers);
+                System.out.println("COD_IDEN: " + this.sic1idenpersSelected.getId().getCodIden());
+                System.out.println("FECHA: " + this.desFecRegistro);
+
+                System.out.println("MONTO DESCUENTO: " + this.sic1docu.getNumMtodscto());
+                System.out.println("IGV: " + this.sic1docu.getNumIgv());
+                System.out.println("SUB TOTAL: " + this.sic1docu.getNumSubtotal());
+
+
+                if (strMessage == null) {
+
+                    /**************** Guardar Documento ************************/
+                    //Codiden
+                    String strCodigo = this.sic1docu.getCodSerie() + "-" + this.sic1docu.getNumDocu();
+                    Sic1idendocu sic1idendocu = new Sic1idendocu();
+                    sic1idendocu.setCodIden(strCodigo);
+                    //this.sic1docu.setSic1idendocu(sic1idendocu);
+
+                    this.sic1docu.setDesDocu("Compra Nro. " + strCodigo);
+                    this.sic1docu.setIdPers(idPers);
+                    this.sic1docu.setFecDesde(UtilClass.convertStringToDate(this.desFecRegistro));
+
+                    /*Agregando lista de productos*/
+                    this.sic1docu.setLstSic3proddocu(lstSic3proddocu);
+
+                    /*Guardar Orden*/
+                    System.out.println("Guardando Orden");
+                    //orderServiceImpl = new DocuOrderServiceImpl();
+                    sic1idendocu.setSic1docu(sic1docu);
+                    strResult = orderServiceImpl.insert(sic1idendocu);
+                    System.out.println("Documento:" + strResult);
+
+                    UtilClass.addInfoMessage(Constantes.CONS_SUCCESS_MESSAGE);
+
+                    /*Limpiar Objetos*/
+                    this.sic1docu = new Sic1docu();
+                    this.sic1idenpersId = new Sic1idenpersId();
+                    this.sic1pers = new Sic1pers();
+                    this.lstSic3proddocu.clear();
+                    this.sic3proddocu = new Sic3proddocu();
+                    this.sic1prod = new Sic1prod();
+                    this.sic1idenpersSelected = new Sic1idenpers();
+                    this.desFecRegistro = UtilClass.getCurrentDay();
+
+                }
             }
 
         } catch (ValidationException ex){
