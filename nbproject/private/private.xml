@@ -2,32 +2,6 @@
 <project-private xmlns="http://www.netbeans.org/ns/project-private/1">
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="23">
         <file>
-            <url>src/java/com/general/a3/dao/impl/DaoDocumentImpl.java</url>
-            <bookmark id="9">
-                <name/>
-                <line>54</line>
-                <key/>
-            </bookmark>
-            <bookmark id="6">
-                <name/>
-                <line>160</line>
-                <key/>
-            </bookmark>
-        </file>
-        <file>
-            <url>src/java/com/general/a1/controller/OrderController.java</url>
-            <bookmark id="22">
-                <name/>
-                <line>394</line>
-                <key/>
-            </bookmark>
-            <bookmark id="18">
-                <name/>
-                <line>496</line>
-                <key/>
-            </bookmark>
-        </file>
-        <file>
             <url>web/personaMantenimiento.xhtml</url>
             <bookmark id="13">
                 <name/>
@@ -45,6 +19,40 @@
             <bookmark id="10">
                 <name/>
                 <line>373</line>
+                <key/>
+            </bookmark>
+        </file>
+        <file>
+            <url>web/productoRegistrar.xhtml</url>
+            <bookmark id="1">
+                <name/>
+                <line>142</line>
+                <key/>
+            </bookmark>
+        </file>
+        <file>
+            <url>src/java/com/general/a3/dao/impl/DaoDocumentImpl.java</url>
+            <bookmark id="9">
+                <name/>
+                <line>55</line>
+                <key/>
+            </bookmark>
+            <bookmark id="6">
+                <name/>
+                <line>161</line>
+                <key/>
+            </bookmark>
+        </file>
+        <file>
+            <url>src/java/com/general/a1/controller/OrderController.java</url>
+            <bookmark id="22">
+                <name/>
+                <line>403</line>
+                <key/>
+            </bookmark>
+            <bookmark id="18">
+                <name/>
+                <line>505</line>
                 <key/>
             </bookmark>
         </file>
@@ -99,23 +107,8 @@
                 <key/>
             </bookmark>
         </file>
-        <file>
-            <url>web/productoRegistrar.xhtml</url>
-            <bookmark id="1">
-                <name/>
-                <line>142</line>
-                <key/>
-            </bookmark>
-        </file>
     </editor-bookmarks>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
-        <group>
-            <file>file:/C:/ARCHIVOS/PRE_PRODUCCION/PROYECTOS_DESARROLLO_SOFTWARE/APLICACIONES/WEBAPPGENERAL/WebAppGeneral/web/templates/templatePrincipal.xhtml</file>
-            <file>file:/C:/ARCHIVOS/PRE_PRODUCCION/PROYECTOS_DESARROLLO_SOFTWARE/APLICACIONES/WEBAPPGENERAL/WebAppGeneral/web/documentosListar.xhtml</file>
-            <file>file:/C:/ARCHIVOS/PRE_PRODUCCION/PROYECTOS_DESARROLLO_SOFTWARE/APLICACIONES/WEBAPPGENERAL/WebAppGeneral/src/java/com/general/a1/controller/OrderController.java</file>
-            <file>file:/C:/ARCHIVOS/PRE_PRODUCCION/PROYECTOS_DESARROLLO_SOFTWARE/APLICACIONES/WEBAPPGENERAL/WebAppGeneral/web/compraRegistrar.xhtml</file>
-            <file>file:/C:/ARCHIVOS/PRE_PRODUCCION/PROYECTOS_DESARROLLO_SOFTWARE/APLICACIONES/WEBAPPGENERAL/WebAppGeneral/src/java/com/general/a1/controller/MasterPageController.java</file>
-            <file>file:/C:/ARCHIVOS/PRE_PRODUCCION/PROYECTOS_DESARROLLO_SOFTWARE/APLICACIONES/WEBAPPGENERAL/WebAppGeneral/src/java/com/general/a1/controller/DocumentController.java</file>
-        </group>
+        <group/>
     </open-files>
 </project-private>

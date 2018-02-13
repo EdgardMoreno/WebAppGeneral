@@ -4,6 +4,7 @@ package com.general.hibernate.entity;
 
 import com.general.hibernate.relaentity.Sic3docuesta;
 import com.general.hibernate.relaentity.Sic3proddocu;
+import com.general.hibernate1.Sic3docuprod;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
@@ -39,12 +40,12 @@ public class Sic1docu  implements java.io.Serializable {
      /*Agregado*/
      private Sic1idendocu sic1idendocu;
      private Sic3docuesta sic3docuesta;
-     private List<Sic3proddocu> lstSic3proddocu;
+     private List<Sic3docuprod> lstSic3docuprod;
      private String codSerie;
      private BigDecimal numDocu;
 
     public Sic1docu() {        
-        lstSic3proddocu = new ArrayList<Sic3proddocu>();
+        lstSic3docuprod = new ArrayList<Sic3docuprod>();
     }
 
 	
@@ -225,6 +226,14 @@ public class Sic1docu  implements java.io.Serializable {
     public void setNumMtovuelto(BigDecimal numMtovuelto) {
         this.numMtovuelto = numMtovuelto;
     }
+
+    public List<Sic3docuprod> getLstSic3docuprod() {
+        return lstSic3docuprod;
+    }
+
+    public void setLstSic3docuprod(List<Sic3docuprod> lstSic3docuprod) {
+        this.lstSic3docuprod = lstSic3docuprod;
+    }
     
     
 
@@ -256,13 +265,7 @@ public class Sic1docu  implements java.io.Serializable {
         this.numMtoTotal = numMtoTotal;
     }
 
-    public List<Sic3proddocu> getLstSic3proddocu() {
-        return lstSic3proddocu;
-    }
-
-    public void setLstSic3proddocu(List<Sic3proddocu> lstSic3proddocu) {
-        this.lstSic3proddocu = lstSic3proddocu;
-    }
+  
 
     public Sic3docuesta getSic3docuesta() {
         return sic3docuesta;

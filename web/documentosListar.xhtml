@@ -107,21 +107,11 @@
                                 <span class="glyphicon glyphicon-trash"></span>
                                 <f:param name="day" value="monday"/>
                             </h:commandLink>
-                            &nbsp;
-                            <h:commandLink action="compraRegistrar?faces-redirect=true&amp;includeViewParams=true" >
+                            &nbsp;                           
+                            <h:commandLink action="#{documentController.editAction(item)}">
                                 <span class="glyphicon glyphicon-pencil"></span>
-                                <f:param name="titulo" value="monday"/>                                
-                            </h:commandLink>
-                            &nbsp;
-                            <h:commandLink action="#{documentController.editAction(obj)}">
-                                <span class="glyphicon glyphicon-pencil"></span>                                
-                                <f:param name="titulo" value="monday"/>
-                            </h:commandLink>
-                            <h:link value="Link with parameter" outcome="compraRegistrar" includeViewParams="true">
-                                <f:param name="titulo" value="helloWorldMessage"/>
-                            </h:link>
+                            </h:commandLink>                           
                         </h:column>
-
                     </h:dataTable>
                 </div>
             

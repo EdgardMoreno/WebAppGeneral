@@ -7,7 +7,7 @@ package com.general.a2.service.impl;
 
 import com.general.a3.dao.impl.DaoUserImpl;
 import com.general.hibernate.entity.HibernateUtil;
-import com.general.hibernate1.Sic1usuario;
+import com.general.hibernate.entity.Sic1usuario;
 import com.general.util.exceptions.CustomizerException;
 import org.hibernate.Session;
 

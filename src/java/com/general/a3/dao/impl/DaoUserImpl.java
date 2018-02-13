@@ -6,7 +6,7 @@
 package com.general.a3.dao.impl;
 
 import com.general.hibernate.entity.Sic1idenpers;
-import com.general.hibernate1.Sic1usuario;
+import com.general.hibernate.entity.Sic1usuario;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import org.hibernate.Criteria;

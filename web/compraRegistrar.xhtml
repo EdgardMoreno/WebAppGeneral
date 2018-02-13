@@ -419,7 +419,7 @@
                                     <div class="input-group-addon">S/.</div>
                                     <h:inputText id="costoUnitario" styleClass="form-control"
                                                  autocomplete="off"
-                                                 value="#{orderController.sic3proddocu.numValor }"
+                                                 value="#{orderController.sic3docuprod.numValor }"
                                                  onkeypress="return fnAllowOnlyDecimalNumbers(event)"
                                                  onblur="formatDecimal_2(this)"/>
                                 </div>
@@ -433,7 +433,7 @@
                                     <h:inputText id="cantidad" styleClass="form-control"  
                                                  autocomplete="off"
                                                  onkeypress="return fnAllowOnlyNumbers(event)"
-                                                 value="#{orderController.sic3proddocu.numCantidad }" />
+                                                 value="#{orderController.sic3docuprod.numCantidad }" />
                                 </div>
                             </td>
                             <td class="compra_panelGrid_3">
@@ -451,7 +451,7 @@
 
                     <h:panelGrid id="pnDetOrder" columns="1" width="100%" >
 
-                        <h:dataTable value="#{orderController.lstSic3proddocu}" 
+                        <h:dataTable value="#{orderController.lstSic3docuprod}"
                                      var="item"
                                      id="idTableDetOrder"
                                      styleClass = "table-bordered"                                         
@@ -548,7 +548,7 @@
                                 <div class="input-group mb-1 mb-sm-0">
                                     <div class="input-group-addon">S/.</div>
                                     <h:inputText
-                                        id="numMtotarjeta"
+                                        id="numMtotarjeta" autocomplete="off"
                                         styleClass="form-control"
                                         value="#{orderController.sic1docu.numMtotarjeta}"
                                         onkeypress="return fnAllowOnlyDecimalNumbers(event)"
@@ -565,7 +565,7 @@
                                 <div class="input-group mb-1 mb-sm-0">
                                     <div class="input-group-addon">S/.</div>
                                     <h:inputText
-                                        id="numMtoefectivo"
+                                        id="numMtoefectivo" autocomplete="off"
                                         styleClass="form-control"
                                         value="#{orderController.sic1docu.numMtoefectivo}"
                                         onkeypress="return fnAllowOnlyDecimalNumbers(event)"
@@ -582,7 +582,7 @@
                             <td class="compra_totales_text">
                                 <div class="input-group mb-1 mb-sm-0">
                                     <div class="input-group-addon">S/.</div>
-                                    <h:inputText id="numMtodscto"
+                                    <h:inputText id="numMtodscto" autocomplete="off"
                                                  styleClass="form-control"
                                                  value="#{orderController.sic1docu.numMtodscto}"
                                                  onkeypress="return fnAllowOnlyDecimalNumbers(event)"

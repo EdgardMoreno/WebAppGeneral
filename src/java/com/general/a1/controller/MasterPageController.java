@@ -21,15 +21,15 @@ public class MasterPageController {
     public String redirect(){
         
         /*Se obtiene los parametros vinculados a los links*/
-        String tituloPagina = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("tituloPagina");
-        String nombrePagina = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("nombrePagina");
+        String tituloPagina = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("paramTituloPagina");
+        String nombrePagina = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("paramNombrePagina");
         
         System.out.println("tituloPagina+ " + tituloPagina);
         System.out.println("nombrePagina+ " + nombrePagina);
         
         /*Se guarda los valores en JSF Flash Scope*/
         Flash flash = FacesContext.getCurrentInstance().getExternalContext().getFlash();
-        flash.put("tituloPagina", tituloPagina);        
+        flash.put("paramTituloPagina", tituloPagina);        
         flash.setKeepMessages(true);
         
         return  nombrePagina + "?faces-redirect=true";

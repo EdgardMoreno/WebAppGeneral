@@ -7,7 +7,7 @@ package com.general.a1.controller;
 
 import com.general.a2.service.impl.LoginServiceImpl;
 import com.general.a2.service.impl.UserServiceImpl;
-import com.general.hibernate1.Sic1usuario;
+import com.general.hibernate.entity.Sic1usuario;
 import com.general.util.exceptions.CustomizerException;
 import java.io.Serializable;
 import javax.annotation.PostConstruct;

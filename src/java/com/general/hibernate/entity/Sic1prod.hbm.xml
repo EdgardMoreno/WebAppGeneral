@@ -46,13 +46,13 @@
     <property name="numPrecio" type="big_decimal">
       <column name="NUM_PRECIO" precision="10" scale="4"/>
     </property>
-    <set fetch="select" inverse="true" lazy="true" name="sic3proddocus" table="SIC3PRODDOCU">
+    <set fetch="select" inverse="true" lazy="true" name="sic3proddocus" table="SIC3DOCUPROD">
       <key>
         <column name="ID_PROD" not-null="true" precision="22" scale="0">
           <comment>ID del producto</comment>
         </column>
       </key>
-      <one-to-many class="com.general.hibernate.relaentity.Sic3proddocu"/>
+      <one-to-many class="com.general.hibernate1.Sic3docuprod"/>
     </set>
   </class>
 </hibernate-mapping>

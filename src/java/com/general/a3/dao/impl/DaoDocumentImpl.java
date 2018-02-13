@@ -12,6 +12,7 @@ import com.general.hibernate.relaentity.Sic3docudocu;
 import com.general.hibernate.relaentity.Sic3docuesta;
 import com.general.hibernate.relaentity.Sic3docupers;
 import com.general.hibernate.views.ViSicdocu;
+import com.general.hibernate1.Sic3docuprod;
 import conexionbd.InParameter;
 import conexionbd.OutParameter;
 import conexionbd.StoredProcedure;
@@ -305,6 +306,70 @@ public class DaoDocumentImpl implements Serializable{
         return null;
     }
     
+    public String relateDocuProd(Session session, List<Sic3docuprod> lstSic3docuprod) throws Exception {
+              
+        try {           
+            
+            session.doWork(new Work() {
+                @Override
+                public void execute(Connection cnctn) throws SQLException {                   
+                    
+                    String strFecDesde = null; 
+                    String strFecHasta = null; 
+                    BigDecimal intIdTreladocu;                    
+                    
+                    try {
+                        intIdTreladocu = DaoFuncionesUtil.FNC_SICOBTIDGEN(cnctn, "VI_SICTRELA", "NOAPLICA");
+
+                        for(Sic3docuprod sic3docuprod : lstSic3docuprod){
+
+                            /*CONVERSION DE FECHAS*/
+                            if (sic3docuprod.getId().getFecDesde()!= null){
+                                strFecDesde = UtilClass.convertDateToString(sic3docuprod.getId().getFecDesde());
+                            }
+                            if (sic3docuprod.getFecHasta()!= null){
+                                strFecHasta = UtilClass.convertDateToString(sic3docuprod.getFecHasta());
+                            }
+                            /**/
+
+                            StoredProcedure sp = new StoredProcedure("PKG_SICMANTDOCU.PRC_SICRELADOCUPROD");
+
+                            sp.addParameter(new InParameter("X_ID_DOCU",        Types.INTEGER, sic3docuprod.getId().getIdDocu()));
+                            sp.addParameter(new InParameter("X_ID_PROD",        Types.INTEGER, sic3docuprod.getId().getIdProd()));                            
+                            sp.addParameter(new InParameter("X_ID_TRELADOCU",   Types.INTEGER, intIdTreladocu));
+                            //Persona Juridica
+                            sp.addParameter(new InParameter("X_FEC_DESDE",      Types.INTEGER, strFecDesde));
+                            sp.addParameter(new InParameter("X_FEC_HASTA",      Types.VARCHAR, strFecHasta));
+                            sp.addParameter(new InParameter("X_DES_NOTAS",      Types.VARCHAR, sic3docuprod.getDesNotas()));
+                            sp.addParameter(new InParameter("X_NUM_VALOR",      Types.VARCHAR, sic3docuprod.getNumValor()));
+                            sp.addParameter(new InParameter("X_NUM_MTODSCTO",   Types.NUMERIC, sic3docuprod.getNumMtodscto()));
+                            sp.addParameter(new InParameter("X_NUM_CANTIDAD",   Types.VARCHAR, sic3docuprod.getNumCantidad()));
+
+                            sp.addParameter(new OutParameter("X_ID_ERROR",      Types.INTEGER));
+                            sp.addParameter(new OutParameter("X_DES_ERROR",     Types.VARCHAR));
+                            sp.addParameter(new OutParameter("X_FEC_ERROR",     Types.DATE));
+
+                            sp.ExecuteNonQuery(cnctn);
+
+                            if (Integer.valueOf(sp.getParameter("X_ID_ERROR").toString()) != 0 ){
+                                throw new SQLException((String)sp.getParameter("X_DES_ERROR"));
+                            }  
+                        }
+                    }catch(Exception ex){
+                        throw new HibernateException(ex.getMessage());
+                    }
+                }
+            });
+            
+            return null;
+            
+        } catch (HibernateException ex) {
+            throw new HibernateException(ex.getMessage());
+        } catch (Exception ex) {
+            throw new Exception(ex.getMessage());
+        }
+    }  
+    
     public String relateDocuPers(Session session, List<Sic3docupers> lstSic3docupers) throws Exception {
               
         try {           
@@ -384,6 +449,27 @@ public class DaoDocumentImpl implements Serializable{
 //        return (Sic1docu)criteria.uniqueResult();
 //        
 //    }
+    
+    
+    public List<Sic3docuprod> getRelDocuProdByIdDocu(Session session, BigDecimal id_docu){
+        
+        List<Sic3docuprod> list = new ArrayList();        
+        Criteria criteria = session.createCriteria(Sic3docuprod.class);        
+        
+        if(id_docu!= null){
+            
+            criteria.add(Restrictions.eq("id.idDocu",id_docu));
+            list = criteria.list();
+            
+            for (Sic3docuprod obj : list){
+                if(obj != null)
+                    Hibernate.initialize(obj.getSic1prod());
+            }
+        }
+
+        return list;
+        
+    }
     
     public Sic1idendocu get(Session session, Sic1idendocu obj) {
         

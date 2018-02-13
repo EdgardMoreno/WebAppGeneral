@@ -31,7 +31,7 @@ import com.general.hibernate.views.ViSicdocu;
 import com.general.hibernate.views.ViSicestageneral;
 import com.general.hibernate.views.ViSicpers;
 import com.general.hibernate.views.ViSicprod;
-import com.general.hibernate1.Sic1usuario;
+import com.general.hibernate.entity.Sic1usuario;
 import com.general.util.dao.DaoFuncionesUtil;
 import java.io.File;
 import java.math.BigDecimal;
@@ -90,7 +90,16 @@ public class Main {
 //         /**/
 
         /*VALIDAR USUARIO*/        
-        if (true) {
+        if (false) {
+            DaoLoginImpl daoObj = new DaoLoginImpl();
+            Sic1usuario obj = new Sic1usuario();
+            obj.setCodUsuario("emoreno");
+            obj.setCodPwd("123");
+            obj = daoObj.validateUsernamePassword(session,obj);
+        }
+        
+        /*VALIDAR USUARIO*/        
+        if (false) {
             DaoLoginImpl daoObj = new DaoLoginImpl();
             Sic1usuario obj = new Sic1usuario();
             obj.setCodUsuario("emoreno");
@@ -98,12 +107,10 @@ public class Main {
             obj = daoObj.validateUsernamePassword(session,obj);
         }
 
-        /////---- CATALOGO DE ESTADOS
-        if (false) {
-            DaoSic1generalImp daoSic1generalImp = new DaoSic1generalImp();
-            ViSicestageneral sicestageneral = new ViSicestageneral();
-            sicestageneral.setCodTrolesta("VI_SICESTADOCUINF");
-            daoSic1generalImp.getCataEstaRol(sicestageneral);
+        /////---- OBTENER LOS PRODUCTOS RELACIONADOS AL DOCUMENTO
+        if (true) {
+            DaoDocumentImpl obj = new DaoDocumentImpl();            
+            obj.getRelDocuProdByIdDocu(session , new BigDecimal(28335));
         }
         
         /*COMISION*/

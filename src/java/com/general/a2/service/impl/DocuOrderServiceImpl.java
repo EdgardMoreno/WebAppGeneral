@@ -3,17 +3,19 @@ package com.general.a2.service.impl;
 
 
 import com.general.a3.dao.impl.DaoDocumentImpl;
+import com.general.a3.dao.impl.DaoPersonImpl;
 import com.general.a3.dao.impl.DaoProductImpl;
 import com.general.hibernate.entity.HibernateUtil;
 import com.general.hibernate.entity.Sic1docu;
 import com.general.hibernate.entity.Sic1idendocu;
+import com.general.hibernate.entity.Sic1pers;
 import com.general.hibernate.relaentity.Sic3docudocu;
 import com.general.hibernate.relaentity.Sic3docuesta;
 import com.general.hibernate.relaentity.Sic3docuestaId;
 import com.general.hibernate.relaentity.Sic3docupers;
-import com.general.hibernate.relaentity.Sic3docupersId;
 import com.general.hibernate.relaentity.Sic3proddocu;
 import com.general.hibernate.views.ViSicdocu;
+import com.general.hibernate1.Sic3docuprod;
 import com.general.interfac.service.DocumentService;
 import com.general.util.beans.Constantes;
 import java.io.Serializable;
@@ -105,16 +107,16 @@ public class DocuOrderServiceImpl implements Serializable, DocumentService{
                 strIdDocuResult = daoDocumentImpl.insert(session, sic1idendocu);
                 System.out.println("id_Documento:" + strIdDocuResult);
 
-            /*GUARDAR DETALLE DE PRODUCTOS*/            
-                List<Sic3proddocu> lstSic3proddocu = sic1docu.getLstSic3proddocu();
+            /*GUARDAR DETALLE DE PRODUCTOS*/
+                List<Sic3docuprod> lstSic3docuprod = sic1docu.getLstSic3docuprod();
                 int index = 0;
                 
-                while(index < lstSic3proddocu.size()){
-                    lstSic3proddocu.get(index).getId().setIdDocu(new BigDecimal(strIdDocuResult));
+                while(index < lstSic3docuprod.size()){
+                    lstSic3docuprod.get(index).getId().setIdDocu(new BigDecimal(strIdDocuResult));
                     index++;
                 }
-                DaoProductImpl daoProductImpl = new DaoProductImpl();
-                daoProductImpl.relateProdDocu(session, lstSic3proddocu);
+                
+                daoDocumentImpl.relateDocuProd(session, lstSic3docuprod);
             
             /*GUARDAR RELACION DEL DOCUMENTO CON LA PERSONA(Vendedor)*/
 //                BigDecimal idTipoRela = DaoFuncionesUtil.FNC_SICOBTIDGEN(((SessionImpl)session).connection(), Constantes.CONS_COD_TIPORELA, Constantes.CONS_COD_RELADOCUPERS);
@@ -200,8 +202,21 @@ public class DocuOrderServiceImpl implements Serializable, DocumentService{
     }
 
     @Override
-    public Sic1idendocu getById(BigDecimal id) throws ValidationException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public Sic1idendocu getById(BigDecimal id) throws CustomizerException {
+        
+        Sic1idendocu sic1idendocu;
+        try{
+            session = HibernateUtil.getSessionFactory().openSession();
+            sic1idendocu = daoDocumentImpl.getById(session, id);
+            
+            
+            
+        }catch(Exception ex){
+            throw new CustomizerException(ex.getMessage());
+        }finally{
+            session.close();
+        }        
+        return sic1idendocu;        
     }
 
     @Override

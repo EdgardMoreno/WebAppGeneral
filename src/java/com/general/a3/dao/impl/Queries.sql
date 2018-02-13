@@ -60,6 +60,98 @@ create index IX_SIC1USUARIO01 on SIC1USUARIO (COD_USUARIO)
     maxextents unlimited
   );
 
+///////////////////////////////////////// SIC3DOCUPROD
+
+-- Create table
+create table SIC3DOCUPROD
+(
+  ID_DOCU      NUMBER,
+  ID_PROD      NUMBER, 
+  ID_TRELADOCU NUMBER,
+  FEC_DESDE    DATE not null,
+  FEC_HASTA    DATE,
+  DES_NOTAS    VARCHAR2(4000),
+  NUM_VALOR    NUMBER(9,3),
+  NUM_MTODSCTO NUMBER(9,3),
+  NUM_CANTIDAD NUMBER(6,2)
+)
+tablespace TBS_SICDBA
+  pctfree 10
+  initrans 1
+  maxtrans 255
+  storage
+  (
+    initial 64K
+    next 1M
+    minextents 1
+    maxextents unlimited
+  );
+-- Add comments to the table 
+comment on table SIC3DOCUPROD
+  is 'Contiene la relacion entre producto y documentos';
+-- Add comments to the columns 
+comment on column SIC3DOCUPROD.ID_PROD
+  is 'ID del producto';
+comment on column SIC3DOCUPROD.ID_DOCU
+  is 'Contiene el identificador del documento.';
+comment on column SIC3DOCUPROD.ID_TRELADOCU
+  is 'Contiene el identificador del tipo de relacion';
+comment on column SIC3DOCUPROD.FEC_DESDE
+  is 'Fecha de inicio';
+comment on column SIC3DOCUPROD.FEC_HASTA
+  is 'Fecha para versionamiento';
+comment on column SIC3DOCUPROD.DES_NOTAS
+  is 'Comentarios y/o observaciones';
+-- Create/Recreate primary, unique and foreign key constraints 
+alter table SIC3DOCUPROD
+  add constraint PK_SIC3DOCUPROD primary key ( ID_DOCU,ID_PROD, FEC_DESDE)
+  using index 
+  tablespace TBS_SICDB
+  pctfree 10
+  initrans 2
+  maxtrans 255
+  storage
+  (
+    initial 64K
+    next 1M
+    minextents 1
+    maxextents unlimited
+  );
+alter table SIC3DOCUPROD
+  add constraint FK_SIC3DOCUPROD_DOCU foreign key (ID_DOCU)
+  references SIC1DOCU (ID_DOCU) on delete cascade;
+alter table SIC3DOCUPROD
+  add constraint FK_SIC3DOCUPROD_PROD foreign key (ID_PROD)
+  references SIC1PROD (ID_PROD) on delete cascade;
+alter table SIC3DOCUPROD
+  add constraint FK_SIC3DOCUPROD_TRELA foreign key (ID_TRELADOCU)
+  references SIC8TRELA (ID_TRELA);
+-- Create/Recreate check constraints 
+alter table SIC3DOCUPROD
+  add constraint NN_SIC3DOCUPROD01
+  check ("ID_TRELADOCU" IS NOT NULL);
+alter table SIC3DOCUPROD
+  add constraint NN_SIC3DOCUPROD02
+  check ("ID_DOCU" IS NOT NULL);
+alter table SIC3DOCUPROD
+  add constraint NN_SIC3DOCUPROD03
+  check ("ID_PROD" IS NOT NULL);
+-- Create/Recreate indexes 
+create unique index IX_SIC3DOCUPROD on SIC3DOCUPROD (ID_PROD, ID_DOCU, ID_TRELADOCU, FEC_DESDE)
+  tablespace TBS_SICDBA_IDX
+  pctfree 10
+  initrans 2
+  maxtrans 255
+  storage
+  (
+    initial 64K
+    next 1M
+    minextents 1
+    maxextents unlimited
+  );
+
+
+
 ////////////////////////////////////////
 
 CREATE OR REPLACE PACKAGE BODY "PKG_SICMANTGENERAL" AS

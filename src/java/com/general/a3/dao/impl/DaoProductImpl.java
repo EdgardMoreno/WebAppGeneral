@@ -145,68 +145,69 @@ public class DaoProductImpl implements Serializable{
     
     public String relateProdDocu(Session session, List<Sic3proddocu> lstSic3proddocus) throws Exception {
               
-        try {           
-            
-            session.doWork(new Work() {
-                @Override
-                public void execute(Connection cnctn) throws SQLException {                   
-                    
-                    String strFecDesde = null; 
-                    String strFecHasta = null; 
-                    BigDecimal intIdTrelaprod;                    
-                    
-                    try {
-                        intIdTrelaprod = DaoFuncionesUtil.FNC_SICOBTIDGEN(cnctn, "VI_SICTRELA", "NOAPLICA");
-
-                        System.out.println("intIdTipoIden:" + intIdTrelaprod);
-
-                        for(Sic3proddocu sic3proddocu : lstSic3proddocus){
-
-                            /*CONVERSION DE FECHAS*/
-                            if (sic3proddocu.getId().getFecDesde()!= null){
-                                strFecDesde = UtilClass.convertDateToString(sic3proddocu.getId().getFecDesde());
-                            }
-                            if (sic3proddocu.getFecHasta()!= null){
-                                strFecHasta = UtilClass.convertDateToString(sic3proddocu.getFecHasta());
-                            }
-                            /**/
-
-                            StoredProcedure sp = new StoredProcedure("PKG_SICMANTPROD.PRC_SICRELAPRODDOCU");                
-
-                            sp.addParameter(new InParameter("X_ID_PROD",        Types.INTEGER, sic3proddocu.getId().getIdProd()));
-                            sp.addParameter(new InParameter("X_ID_DOCU",        Types.INTEGER, sic3proddocu.getId().getIdDocu()));
-                            sp.addParameter(new InParameter("X_ID_TRELAPROD",   Types.INTEGER, intIdTrelaprod));
-                            //Persona Juridica
-                            sp.addParameter(new InParameter("X_FEC_DESDE",      Types.INTEGER, strFecDesde));
-                            sp.addParameter(new InParameter("X_FEC_HASTA",      Types.VARCHAR, strFecHasta));
-                            sp.addParameter(new InParameter("X_DES_NOTAS",      Types.VARCHAR, sic3proddocu.getDesNotas()));
-                            sp.addParameter(new InParameter("X_NUM_VALOR",      Types.VARCHAR, sic3proddocu.getNumValor()));
-                            sp.addParameter(new InParameter("X_NUM_MTODSCTO",   Types.NUMERIC, sic3proddocu.getNumMtodscto()));
-                            sp.addParameter(new InParameter("X_NUM_CANTIDAD",   Types.VARCHAR, sic3proddocu.getNumCantidad()));
-
-                            sp.addParameter(new OutParameter("X_ID_ERROR",      Types.INTEGER));
-                            sp.addParameter(new OutParameter("X_DES_ERROR",     Types.VARCHAR));
-                            sp.addParameter(new OutParameter("X_FEC_ERROR",     Types.DATE));
-
-                            sp.ExecuteNonQuery(cnctn);
-
-                            if (Integer.valueOf(sp.getParameter("X_ID_ERROR").toString()) != 0 ){
-                                throw new SQLException((String)sp.getParameter("X_DES_ERROR"));
-                            }  
-                        }
-                    }catch(Exception ex){
-                        throw new HibernateException(ex.getMessage());
-                    }
-                }
-            });
-            
-            return null;
-            
-        } catch (HibernateException ex) {
-            throw new HibernateException(ex.getMessage());
-        } catch (Exception ex) {
-            throw new Exception(ex.getMessage());
-        }
+//        try {           
+//            
+//            session.doWork(new Work() {
+//                @Override
+//                public void execute(Connection cnctn) throws SQLException {                   
+//                    
+//                    String strFecDesde = null; 
+//                    String strFecHasta = null; 
+//                    BigDecimal intIdTrelaprod;                    
+//                    
+//                    try {
+//                        intIdTrelaprod = DaoFuncionesUtil.FNC_SICOBTIDGEN(cnctn, "VI_SICTRELA", "NOAPLICA");
+//
+//                        System.out.println("intIdTipoIden:" + intIdTrelaprod);
+//
+//                        for(Sic3proddocu sic3proddocu : lstSic3proddocus){
+//
+//                            /*CONVERSION DE FECHAS*/
+//                            if (sic3proddocu.getId().getFecDesde()!= null){
+//                                strFecDesde = UtilClass.convertDateToString(sic3proddocu.getId().getFecDesde());
+//                            }
+//                            if (sic3proddocu.getFecHasta()!= null){
+//                                strFecHasta = UtilClass.convertDateToString(sic3proddocu.getFecHasta());
+//                            }
+//                            /**/
+//
+//                            StoredProcedure sp = new StoredProcedure("PKG_SICMANTPROD.PRC_SICRELAPRODDOCU");                
+//
+//                            sp.addParameter(new InParameter("X_ID_PROD",        Types.INTEGER, sic3proddocu.getId().getIdProd()));
+//                            sp.addParameter(new InParameter("X_ID_DOCU",        Types.INTEGER, sic3proddocu.getId().getIdDocu()));
+//                            sp.addParameter(new InParameter("X_ID_TRELAPROD",   Types.INTEGER, intIdTrelaprod));
+//                            //Persona Juridica
+//                            sp.addParameter(new InParameter("X_FEC_DESDE",      Types.INTEGER, strFecDesde));
+//                            sp.addParameter(new InParameter("X_FEC_HASTA",      Types.VARCHAR, strFecHasta));
+//                            sp.addParameter(new InParameter("X_DES_NOTAS",      Types.VARCHAR, sic3proddocu.getDesNotas()));
+//                            sp.addParameter(new InParameter("X_NUM_VALOR",      Types.VARCHAR, sic3proddocu.getNumValor()));
+//                            sp.addParameter(new InParameter("X_NUM_MTODSCTO",   Types.NUMERIC, sic3proddocu.getNumMtodscto()));
+//                            sp.addParameter(new InParameter("X_NUM_CANTIDAD",   Types.VARCHAR, sic3proddocu.getNumCantidad()));
+//
+//                            sp.addParameter(new OutParameter("X_ID_ERROR",      Types.INTEGER));
+//                            sp.addParameter(new OutParameter("X_DES_ERROR",     Types.VARCHAR));
+//                            sp.addParameter(new OutParameter("X_FEC_ERROR",     Types.DATE));
+//
+//                            sp.ExecuteNonQuery(cnctn);
+//
+//                            if (Integer.valueOf(sp.getParameter("X_ID_ERROR").toString()) != 0 ){
+//                                throw new SQLException((String)sp.getParameter("X_DES_ERROR"));
+//                            }  
+//                        }
+//                    }catch(Exception ex){
+//                        throw new HibernateException(ex.getMessage());
+//                    }
+//                }
+//            });
+//            
+//            return null;
+//            
+//        } catch (HibernateException ex) {
+//            throw new HibernateException(ex.getMessage());
+//        } catch (Exception ex) {
+//            throw new Exception(ex.getMessage());
+//        }
+        return  "";
     }    
     
     public List<Sic1prod> getAll(Session session, Sic1prod obj) throws SQLException, Exception{        

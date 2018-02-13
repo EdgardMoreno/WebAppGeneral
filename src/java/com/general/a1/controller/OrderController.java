@@ -15,10 +15,13 @@ import com.general.hibernate.relaentity.Sic3proddocuId;
 import com.general.a2.service.impl.PersonServiceImpl;
 import com.general.a2.service.impl.ProductServiceImpl;
 import com.general.a2.service.impl.Sic1generalServiceImpl;
+import com.general.a3.dao.impl.DaoPersonImpl;
 import com.general.hibernate.entity.HibernateUtil;
 import com.general.hibernate.entity.Sic1idendocu;
 import com.general.hibernate.entity.Sic1idenpers;
 import com.general.hibernate.entity.Sic1idenpersId;
+import com.general.hibernate1.Sic3docuprod;
+import com.general.hibernate1.Sic3docuprodId;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -30,7 +33,6 @@ import javax.inject.Named;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import java.math.BigDecimal;
-import org.primefaces.event.SelectEvent;
 import com.general.util.beans.Constantes;
 import com.general.util.beans.UtilClass;
 import com.general.util.exceptions.CustomizerException;
@@ -39,7 +41,6 @@ import java.text.ParseException;
 import javax.faces.context.FacesContext;
 import javax.faces.context.Flash;
 import javax.faces.event.ComponentSystemEvent;
-import javax.faces.event.ValueChangeEvent;
 
 
 @Named
@@ -62,8 +63,8 @@ public class OrderController implements Serializable{
     private Sic1idenpersId sic1idenpersId;
     /**/
     
-    private Sic3proddocu sic3proddocu;
-    private List<Sic3proddocu> lstSic3proddocu;        
+    private Sic3docuprod sic3docuprod;
+    private List<Sic3docuprod> lstSic3docuprod;        
     
     private List<SelectItem> itemSTipoDocu  = new ArrayList();
     private List<Sic1general> itemsPayMode   = new ArrayList();
@@ -104,8 +105,8 @@ public class OrderController implements Serializable{
             
             /*Producto*/
             sic1prod                = new Sic1prod();
-            sic3proddocu            = new Sic3proddocu();
-            sic3proddocu.setSic1prod(sic1prod);
+            sic3docuprod            = new Sic3docuprod();
+            sic3docuprod.setSic1prod(sic1prod);
             
             sic1docu                = new Sic1docu();
             sic1docu.setNumSubtotal(new BigDecimal("0.00"));
@@ -115,7 +116,7 @@ public class OrderController implements Serializable{
             
             
             /*Data*/
-            lstSic3proddocu  = new ArrayList();
+            lstSic3docuprod  = new ArrayList();
             
             //eliminar
 //            Sic1prod sic1prod = new Sic1prod();
@@ -175,9 +176,7 @@ public class OrderController implements Serializable{
         this.sic1prod = sic1prod;
     }
 
-    public List<Sic3proddocu> getLstSic3proddocu() {
-        return lstSic3proddocu;
-    }
+    
 
     public Sic1docu getSic1docu() {
         return sic1docu;
@@ -195,12 +194,12 @@ public class OrderController implements Serializable{
         this.desFecRegistro = desFecRegistro;
     }
 
-    public Sic3proddocu getSic3proddocu() {
-        return sic3proddocu;
+    public Sic3docuprod getSic3docuprod() {
+        return sic3docuprod;
     }
 
-    public void setSic3proddocu(Sic3proddocu sic3proddocu) {
-        this.sic3proddocu = sic3proddocu;
+    public void setSic3docuprod(Sic3docuprod sic3docuprod) {
+        this.sic3docuprod = sic3docuprod;
     }
 
     public Integer getIndexTabla() {
@@ -270,6 +269,16 @@ public class OrderController implements Serializable{
     public String getMsjValidation() {
         return msjValidation;
     }
+
+    public List<Sic3docuprod> getLstSic3docuprod() {
+        return lstSic3docuprod;
+    }
+
+    public void setLstSic3docuprod(List<Sic3docuprod> lstSic3docuprod) {
+        this.lstSic3docuprod = lstSic3docuprod;
+    }
+    
+    
     
     
     /******************************************************************************/
@@ -295,10 +304,10 @@ public class OrderController implements Serializable{
     
     public String deleteAction(Sic3proddocu obj) throws CustomizerException {
       
-        lstSic3proddocu.remove(obj);
+        lstSic3docuprod.remove(obj);
         /*Recalculando el numero de la fila*/
-        for(int i=0 ; i < lstSic3proddocu.size() ; i++){
-            lstSic3proddocu.get(i).setNumIndex(i+1);
+        for(int i=0 ; i < lstSic3docuprod.size() ; i++){
+            lstSic3docuprod.get(i).setNumIndex(i+1);
         }
         
         this.recalculateTotals();
@@ -306,11 +315,11 @@ public class OrderController implements Serializable{
         return null;
     }
     
-    public String editAction(Sic3proddocu obj) {
+    public String editAction(Sic3docuprod obj) {
       
         this.sic1prod = obj.getSic1prod();
-        this.sic3proddocu = obj;
-        this.indexTabla = lstSic3proddocu.indexOf(obj);
+        this.sic3docuprod = obj;
+        this.indexTabla = lstSic3docuprod.indexOf(obj);
         return null;
     }
    
@@ -318,28 +327,28 @@ public class OrderController implements Serializable{
         
         System.out.println("Agregar Item");
         /*ID*/
-        Sic3proddocuId id = new Sic3proddocuId();
+        Sic3docuprodId id = new Sic3docuprodId();
         id.setIdProd(this.sic1prod.getIdProd());
         
-        this.sic3proddocu.setSic1prod(this.sic1prod);
-        this.sic3proddocu.setId(id);
+        this.sic3docuprod.setSic1prod(this.sic1prod);
+        this.sic3docuprod.setId(id);
         
         if(this.indexTabla>=0){
-            Sic3proddocu obj = this.lstSic3proddocu.get(this.indexTabla);
-            this.lstSic3proddocu.remove(obj);
-            this.sic3proddocu.setNumIndex(this.indexTabla + 1);
-            this.lstSic3proddocu.add(this.indexTabla, sic3proddocu);
+            Sic3docuprod obj = this.lstSic3docuprod.get(this.indexTabla);
+            this.lstSic3docuprod.remove(obj);
+            this.sic3docuprod.setNumIndex(this.indexTabla + 1);
+            this.lstSic3docuprod.add(this.indexTabla, sic3docuprod);
             
         }
         else{
-            this.sic3proddocu.setNumIndex(this.lstSic3proddocu.size()+1);
-            this.lstSic3proddocu.add(sic3proddocu);
+            this.sic3docuprod.setNumIndex(this.lstSic3docuprod.size()+1);
+            this.lstSic3docuprod.add(sic3docuprod);
         }       
        
         this.recalculateTotals();
         
         /*Limipiar objetos*/
-        this.sic3proddocu = new Sic3proddocu();
+        this.sic3docuprod = new Sic3docuprod();
         this.sic1prod     = new Sic1prod();
         this.indexTabla   = -1;
         
@@ -349,7 +358,7 @@ public class OrderController implements Serializable{
     public void searchProduct() throws CustomizerException{
         
         /*Limpiando producto*/
-        this.sic3proddocu = new Sic3proddocu();
+        this.sic3docuprod = new Sic3docuprod();
         //this.indexTabla = -1;
         this.lstProducts.clear();        
         /**/
@@ -420,7 +429,7 @@ public class OrderController implements Serializable{
             double numTotalPrice = 0;
             BigDecimal numDescuento = this.sic1docu.getNumMtodscto();
 
-            for(Sic3proddocu obj : this.lstSic3proddocu){
+            for(Sic3docuprod obj : this.lstSic3docuprod){
                 numTotalPrice += obj.getNumValor().doubleValue() * obj.getNumCantidad().doubleValue();
             }
 
@@ -493,7 +502,7 @@ public class OrderController implements Serializable{
             System.out.println("NUM_DOCU: " + this.sic1docu.getNumDocu());
             System.out.println("ID_STIPODOCU: " + this.sic1docu.getIdStipodocu());
             
-            if (true){
+            if (false){
                 this.msjValidation = "<UL type = 'square'><LI>" + strMessage + "</LI></UL>";
                 System.out.println("ERRROR: " + this.msjValidation);
                  UtilClass.addErrorMessage("holaaa");
@@ -501,7 +510,7 @@ public class OrderController implements Serializable{
             else {
             
                 BigDecimal idPers = this.sic1idenpersSelected.getSic1pers() !=null ?this.sic1idenpersSelected.getSic1pers().getIdPers():new BigDecimal(0);
-                int numItems      = this.lstSic3proddocu.size();
+                int numItems      = this.lstSic3docuprod.size();
 
                 if ( idPers.intValue() <= 0  ){
                     strMessage = "Falta ingresar el Cliente o Proveedor relacionado a la orden.";
@@ -543,7 +552,7 @@ public class OrderController implements Serializable{
                     this.sic1docu.setFecDesde(UtilClass.convertStringToDate(this.desFecRegistro));
 
                     /*Agregando lista de productos*/
-                    this.sic1docu.setLstSic3proddocu(lstSic3proddocu);
+                    this.sic1docu.setLstSic3docuprod(lstSic3docuprod);
 
                     /*Guardar Orden*/
                     System.out.println("Guardando Orden");
@@ -558,8 +567,8 @@ public class OrderController implements Serializable{
                     this.sic1docu = new Sic1docu();
                     this.sic1idenpersId = new Sic1idenpersId();
                     this.sic1pers = new Sic1pers();
-                    this.lstSic3proddocu.clear();
-                    this.sic3proddocu = new Sic3proddocu();
+                    this.lstSic3docuprod.clear();
+                    this.sic3docuprod = new Sic3docuprod();
                     this.sic1prod = new Sic1prod();
                     this.sic1idenpersSelected = new Sic1idenpers();
                     this.desFecRegistro = UtilClass.getCurrentDay();
@@ -574,14 +583,29 @@ public class OrderController implements Serializable{
         }
     }
     
-    public void getParamsExternalPage(ComponentSystemEvent event){
+    public void getParamsExternalPage(ComponentSystemEvent event) throws CustomizerException{
 
         Flash flash = FacesContext.getCurrentInstance().getExternalContext().getFlash();
         
-        System.out.println("tituloPagina:" + (String)flash.get("tituloPagina")); 
+        String tituloPagina = (String)flash.get("paramTituloPagina");
+        BigDecimal idDocu   = (BigDecimal)flash.get("paramIdDocu");
         
-        this.desTituloPagina = (String)flash.get("tituloPagina");
+        System.out.println("tituloPagina:" + tituloPagina); 
         
-    }
-    
+        if (tituloPagina != null)
+            this.desTituloPagina = tituloPagina;
+        
+        /*Se obtien los datos de la orden*/
+        if (idDocu != null && idDocu.intValue() > 0 ){
+            
+            Sic1idendocu sic1idendocu = orderServiceImpl.getById(idDocu);
+            
+            /*Se obtiene los datos del Cliente/Proveedor*/
+            PersonServiceImpl personServiceImpl = new PersonServiceImpl();
+            Sic1idenpers sic1idenpers = personServiceImpl.getById(sic1idendocu.getSic1docu().getIdPers());
+            
+            this.sic1docu = sic1idendocu.getSic1docu();
+                        
+        }        
+    }    
 }

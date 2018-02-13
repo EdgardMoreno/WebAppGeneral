@@ -1,0 +1,49 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 12/02/2018 11:32:39 PM by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+    <class name="com.general.hibernate1.Sic3docuprod" table="SIC3DOCUPROD" schema="SICDBA" optimistic-lock="version">
+        <comment>Contiene la relacion entre producto y documentos</comment>
+        <composite-id name="id" class="com.general.hibernate1.Sic3docuprodId">
+            <key-property name="idDocu" type="big_decimal">
+                <column name="ID_DOCU" precision="22" scale="0" />
+            </key-property>
+            <key-property name="idProd" type="big_decimal">
+                <column name="ID_PROD" precision="22" scale="0" />
+            </key-property>
+            <key-property name="fecDesde" type="date">
+                <column name="FEC_DESDE" length="7" />
+            </key-property>
+        </composite-id>
+        <many-to-one class="com.general.hibernate.entity.Sic1prod" fetch="join" insert="false" name="sic1prod" update="false">
+            <column name="ID_PROD" not-null="true" precision="22" scale="0">
+                <comment>ID del producto</comment>
+            </column>
+        </many-to-one>
+        <property name="idTreladocu" type="big_decimal">
+            <column name="ID_TRELADOCU" precision="22" scale="0">
+                <comment>Contiene el identificador del tipo de relacion</comment>
+            </column>
+        </property>
+        <property name="fecHasta" type="date">
+            <column name="FEC_HASTA" length="7">
+                <comment>Fecha para versionamiento</comment>
+            </column>
+        </property>
+        <property name="desNotas" type="string">
+            <column name="DES_NOTAS" length="4000">
+                <comment>Comentarios y/o observaciones</comment>
+            </column>
+        </property>
+        <property name="numValor" type="big_decimal">
+            <column name="NUM_VALOR" precision="9" scale="3" />
+        </property>
+        <property name="numMtodscto" type="big_decimal">
+            <column name="NUM_MTODSCTO" precision="9" scale="3" />
+        </property>
+        <property name="numCantidad" type="big_decimal">
+            <column name="NUM_CANTIDAD" precision="6" />
+        </property>
+    </class>
+</hibernate-mapping>

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 09/02/2018 11:20:38 AM by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+  <class name="com.general.hibernate.entity.Sic1usuario" optimistic-lock="version" schema="SICDBA" table="SIC1USUARIO">
+    <id name="idUsuario" type="big_decimal">
+      <column name="ID_USUARIO" precision="22" scale="0"/>
+      <generator class="assigned"/>
+    </id>
+    <property name="codUsuario" type="string">
+      <column length="50" name="COD_USUARIO"/>
+    </property>
+    <property name="codPwd" type="string">
+      <column length="50" name="COD_PWD"/>
+    </property>
+    <property name="fecCreacion" type="date">
+      <column length="7" name="FEC_CREACION"/>
+    </property>
+    <property name="fecDesde" type="date">
+      <column length="7" name="FEC_DESDE"/>
+    </property>
+    <property name="fecHasta" type="date">
+      <column length="7" name="FEC_HASTA"/>
+    </property>
+    <property name="desNotas" type="string">
+      <column length="4000" name="DES_NOTAS"/>
+    </property>
+    <property name="codEmail" type="string">
+      <column length="2000" name="COD_EMAIL"/>
+    </property>
+  </class>
+</hibernate-mapping>
