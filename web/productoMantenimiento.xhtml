@@ -21,7 +21,8 @@
                     }
 
                     return false;
-                };
+                }
+                ;
 
                 function fnValidateForm() {
                     //obteniendo el valor que se puso en campo text del formulario                    
@@ -39,7 +40,8 @@
                     }
 
                     if (NombreProducto.length == 0) {
-                        arrMessages.push("Se debe ingresar el Nombre del Producto");;
+                        arrMessages.push("Se debe ingresar el Nombre del Producto");
+                        ;
                         varFlgError = true;
                     }
 
@@ -56,156 +58,156 @@
                         fnHideMessageValidation();
                         return true;
                     }
-                };
-                
+                }
+                ;
+
             </script>
 
         </ui:define>
         <ui:define name="content">                
 
             <div class="container">
-                
+
                 <div id="divResultadoValidacion"/>
 
-                <h:form id="form">
 
-                    <p:growl id="message" showDetail="true" />
 
-                    <ul class="nav nav-tabs" onclick="fnHideMessageValidation()" >
-                        <li id="tab_lstProduct" class="active"><a data-toggle="tab" href="#menu1">Listar Productos</a></li>
-                        <li id="tab_regProduct"><a data-toggle="tab" href="#menu2">Registrar Producto</a></li>
-                    </ul>
+                <p:growl id="message" showDetail="true" />
 
-                    <div class="tab-content">
-                        
-                        <div id="menu1" class="tab-pane fade in active">                            
+                <ul class="nav nav-tabs" onclick="fnHideMessageValidation()" >
+                    <li id="tab_lstProduct" class="active"><a data-toggle="tab" href="#menu1">Listar Productos</a></li>
+                    <li id="tab_regProduct"><a data-toggle="tab" href="#menu2">Registrar Producto</a></li>
+                </ul>
 
-                            <br/>
-                            <h:panelGrid columns="7" style="width:90%" 
-                                         columnClasses="td-label-1, td-content-1, td-label-1, td-content-1, td-label-1, td-content-1, td-controls-1">
+                <div class="tab-content">
 
-                                <h:outputLabel value="Cód. Producto:"/>
-                                <h:inputText id="codProd" styleClass="form-control" value="#{productController.viSicprod.codProd}"  />
+                    <div id="menu1" class="tab-pane fade in active">                            
 
-                                <h:outputLabel value="Nombre:"/>
-                                <h:inputText styleClass="form-control" value="#{productController.viSicprod.desProd}"  />
+                        <br/>
+                        <h:panelGrid columns="7" style="width:90%" 
+                                     columnClasses="td-label-1, td-content-1, td-label-1, td-content-1, td-label-1, td-content-1, td-controls-1">
 
-                                <h:outputLabel value="Tipo de Producto:"/>
-                                <h:selectOneMenu styleClass="form-control" value="#{productController.viSicprod.idStipoprod}" >
-                                    <f:selectItem itemLabel="-- Todos --" itemValue="-1"/>
-                                    <f:selectItems value="#{productController.items}" />
-                                </h:selectOneMenu>
+                            <h:outputLabel value="Cód. Producto:"/>
+                            <h:inputText id="codProd" styleClass="form-control" value="#{productController.viSicprod.codProd}"  />
 
-                                <h:panelGroup>
-                                    <h:commandLink actionListener="#{productController.filterProducts()}" styleClass="btn btn-default">
-                                        <span class="glyphicon glyphicon-search"></span> Buscar
-                                    </h:commandLink>
-                                    <p:commandLink actionListener="#{productController.newProduct()}" oncomplete="fnChangeTab(2)" styleClass="btn btn-default" update="form">
-                                        <span class="glyphicon glyphicon-new-window"></span> Nuevo
-                                    </p:commandLink>
-                                </h:panelGroup>
+                            <h:outputLabel value="Nombre:"/>
+                            <h:inputText styleClass="form-control" value="#{productController.viSicprod.desProd}"  />
 
-                            </h:panelGrid>
-                            <br/>
-                            <h:dataTable id="tblProducts" var="item" value="#{productController.listProducts}" rendered="#{not empty productController.listProducts}"
-                                         styleClass="table table-striped table-bordered table-list"
-                                         columnClasses="table_header1,table_header5,table_header6,table_header4,table_header2,table_header2,table_header3"
-                                         >
+                            <h:outputLabel value="Tipo de Producto:"/>
+                            <h:selectOneMenu styleClass="form-control" value="#{productController.viSicprod.idStipoprod}" >
+                                <f:selectItem itemLabel="-- Todos --" itemValue="-1"/>
+                                <f:selectItems value="#{productController.items}" />
+                            </h:selectOneMenu>
 
-                                <h:column>
-                                    <f:facet name="header">No.</f:facet>1
-                                </h:column>
-                                
-                                <h:column>
-                                    <f:facet name="header">Código</f:facet>#{item.codProd}
-                                </h:column>
-
-                                <h:column>
-                                    <f:facet name="header">Descripción</f:facet>#{item.desProd}
-                                </h:column>
-                                
-                                <h:column>
-                                    <f:facet name="header">Tipo</f:facet>#{item.desStipoprod}
-                                </h:column>
-                                
-                                <h:column>
-                                    <f:facet name="header">Precio</f:facet>#{item.numPrecio}
-                                </h:column>
-
-                                <h:column>
-                                    <f:facet name="header">Cantidad</f:facet>#{item.numCantidad}
-                                </h:column>
-
-                                <h:column>
-                                    <p:commandButton icon="ui-icon-search"
-                                                     actionListener="#{productController.selectProductFromDialog(item)}"
-                                                     rendered="#{not empty productController.flgExternalPage}"/>
-                                    &nbsp;
-                                    <p:commandLink action="#{productController.deleteAction(item)}"  update="form" >
-                                        <span class="glyphicon glyphicon-trash"></span>
-                                        <p:confirm header="Confirmation" message="¿Está seguro de continuar?" icon="ui-icon-alert"  />
-                                    </p:commandLink>
-                                    &nbsp;
-                                    <p:commandLink action="#{productController.editAction(item)}" oncomplete="fnChangeTab(2)" update="form">
-                                        <span class="glyphicon glyphicon-pencil"></span>                            
-                                    </p:commandLink>
-
-                                </h:column>
-                            </h:dataTable>
-                        </div>
-                        
-                        <div id="menu2" class="tab-pane fade">
-
-                            <br/>
-                            <h:panelGrid id="pgRegProduct" columns="2" style="width:80%" columnClasses="label_panelGrid_2c, text_panelGrid_2c">
-
-                                <h:outputLabel value="Código Producto:"/>
-                                <h:inputText id="codigoProducto"
-                                             styleClass="form-control left"
-                                             style="width:30%"
-                                             value="#{productController.sic1prod.codProd}"/>
-
-                                <h:outputLabel value="Nombre Producto:"/>
-                                <h:inputText id="nombreProducto"
-                                             styleClass="form-control left"
-                                             style="width:60%"
-                                             value="#{productController.sic1prod.desProd}"/>
-
-                                <h:outputLabel value="Tipo Producto:" />
-                                <h:selectOneMenu id="tipoProducto" style="width:60%" value="#{productController.sic1prod.idStipoprod}" styleClass="form-control">
-                                    <f:selectItem itemLabel="-- Seleccione --" itemValue="-1" noSelectionOption="true"/>
-                                    <f:selectItems value="#{productController.items}" />
-                                </h:selectOneMenu>
-
-                                <h:outputLabel value="Precio Venta:"/>
-                                <h:panelGroup>
-                                    <div class="input-group mb-2 mb-sm-0">
-                                        <div class="input-group-addon">S/.</div>
-                                        <h:inputText id="precioVenta" styleClass="form-control"
-                                                     style="width:25%"
-                                                     value="#{productController.sic1prod.numPrecio}"
-                                                     onkeypress="return allowOnlyNumbers(event)"
-                                                     onblur="formatDecimal_2(this)"/>
-                                    </div>
-                                </h:panelGroup>                                
-
-                            </h:panelGrid>
-
-                            <div class="offset-sm-2 col-sm-10">
-                                <p:commandLink value="Grabar" onstart="return fnValidateForm()" styleClass="btn btn-primary" action="#{productController.saveProduct()}" update="message form:pgRegProduct" oncomplete="fnChangeTab(2)">
-                                    <p:confirm header="Confirmation" message="¿Está seguro de continuar?" icon="ui-icon-alert" />
+                            <h:panelGroup>
+                                <h:commandLink actionListener="#{productController.filterProducts()}" styleClass="btn btn-default">
+                                    <span class="glyphicon glyphicon-search"></span> Buscar
+                                </h:commandLink>
+                                <p:commandLink actionListener="#{productController.newProduct()}" oncomplete="fnChangeTab(2)" styleClass="btn btn-default" update="form">
+                                    <span class="glyphicon glyphicon-new-window"></span> Nuevo
                                 </p:commandLink>
-                            </div>
-                        </div>
-                        
+                            </h:panelGroup>
+
+                        </h:panelGrid>
+                        <br/>
+                        <h:dataTable id="tblProducts" var="item" value="#{productController.listProducts}" rendered="#{not empty productController.listProducts}"
+                                     styleClass="table-bordered"
+                                     columnClasses="table_header1,table_header5,table_header6,table_header4,table_header2,table_header2,table_header3"
+                                     >
+
+                            <h:column>
+                                <f:facet name="header">No.</f:facet>1
+                            </h:column>
+
+                            <h:column>
+                                <f:facet name="header">Código</f:facet>#{item.codProd}
+                            </h:column>
+
+                            <h:column>
+                                <f:facet name="header">Descripción</f:facet>#{item.desProd}
+                            </h:column>
+
+                            <h:column>
+                                <f:facet name="header">Tipo</f:facet>#{item.desStipoprod}
+                            </h:column>
+
+                            <h:column>
+                                <f:facet name="header">Precio</f:facet>#{item.numPrecio}
+                            </h:column>
+
+                            <h:column>
+                                <f:facet name="header">Cantidad</f:facet>#{item.numCantidad}
+                            </h:column>
+
+                            <h:column>
+                                <p:commandButton icon="ui-icon-search"
+                                                 actionListener="#{productController.selectProductFromDialog(item)}"
+                                                 rendered="#{not empty productController.flgExternalPage}"/>
+                                &nbsp;
+                                <p:commandLink action="#{productController.deleteAction(item)}"  update="form" >
+                                    <span class="glyphicon glyphicon-trash"></span>
+                                    <p:confirm header="Confirmation" message="¿Está seguro de continuar?" icon="ui-icon-alert"  />
+                                </p:commandLink>
+                                &nbsp;
+                                <p:commandLink action="#{productController.editAction(item)}" oncomplete="fnChangeTab(2)" update="form">
+                                    <span class="glyphicon glyphicon-pencil"></span>                            
+                                </p:commandLink>
+
+                            </h:column>
+                        </h:dataTable>
                     </div>
 
-                    <p:confirmDialog global="true" showEffect="fade" hideEffect="fade" header="Confirmar">
-                        <p:commandButton value="Yes" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
-                        <p:commandButton value="No"  type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
-                    </p:confirmDialog>
+                    <div id="menu2" class="tab-pane fade">
 
-                </h:form>
+                        <br/>
+                        <h:panelGrid id="pgRegProduct" columns="2" style="width:80%" columnClasses="label_panelGrid_2c, text_panelGrid_2c">
+
+                            <h:outputLabel value="Código Producto:"/>
+                            <h:inputText id="codigoProducto"
+                                         styleClass="form-control left"
+                                         style="width:30%"
+                                         value="#{productController.sic1prod.codProd}"/>
+
+                            <h:outputLabel value="Nombre Producto:"/>
+                            <h:inputText id="nombreProducto"
+                                         styleClass="form-control left"
+                                         style="width:60%"
+                                         value="#{productController.sic1prod.desProd}"/>
+
+                            <h:outputLabel value="Tipo Producto:" />
+                            <h:selectOneMenu id="tipoProducto" style="width:60%" value="#{productController.sic1prod.idStipoprod}" styleClass="form-control">
+                                <f:selectItem itemLabel="-- Seleccione --" itemValue="-1" noSelectionOption="true"/>
+                                <f:selectItems value="#{productController.items}" />
+                            </h:selectOneMenu>
+
+                            <h:outputLabel value="Precio Venta:"/>
+                            <h:panelGroup>
+                                <div class="input-group mb-2 mb-sm-0">
+                                    <div class="input-group-addon">S/.</div>
+                                    <h:inputText id="precioVenta" styleClass="form-control"
+                                                 style="width:25%"
+                                                 value="#{productController.sic1prod.numPrecio}"
+                                                 onkeypress="return allowOnlyNumbers(event)"
+                                                 onblur="formatDecimal_2(this)"/>
+                                </div>
+                            </h:panelGroup>                                
+
+                        </h:panelGrid>
+
+                        <div class="offset-sm-2 col-sm-10">
+                            <p:commandLink value="Grabar" onstart="return fnValidateForm()" styleClass="btn btn-primary" action="#{productController.saveProduct()}" update="message form:pgRegProduct" oncomplete="fnChangeTab(2)">
+                                <p:confirm header="Confirmation" message="¿Está seguro de continuar?" icon="ui-icon-alert" />
+                            </p:commandLink>
+                        </div>
+                    </div>
+
+                </div>
+
+                <p:confirmDialog global="true" showEffect="fade" hideEffect="fade" header="Confirmar">
+                    <p:commandButton value="Yes" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+                    <p:commandButton value="No"  type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+                </p:confirmDialog>
+
 
             </div>
 

@@ -173,17 +173,20 @@ public class DocumentController implements Serializable{
     public String editAction(ViSicdocu obj ) throws ServletException, IOException{
         
         Flash flash = FacesContext.getCurrentInstance().getExternalContext().getFlash();
+        flash.clear();
         flash.put("paramIdDocu", obj.getIdDocu());
-        flash.put("paramTituloPagina", "Editar" + obj.getDesStipodocu());
-        flash.setKeepMessages(true);
+        flash.put("paramTituloPagina", "EDITAR " + obj.getDesStipodocu() + ": " + obj.getCodIden());
+        //flash.setKeepMessages(true);
         
         return "compraRegistrar?faces-redirect=true";
     }
     
     public void getParamsExternalPage(ComponentSystemEvent event){
-        Flash flash = FacesContext.getCurrentInstance().getExternalContext().getFlash();        
-        String tituloPagina = (String)flash.get("paramTituloPagina");        
-        this.desTituloPagina = tituloPagina;        
-    }
-    
+        
+        if(!FacesContext.getCurrentInstance().isPostback()){
+            Flash flash = FacesContext.getCurrentInstance().getExternalContext().getFlash();        
+            String tituloPagina = (String)flash.get("paramTituloPagina");        
+            this.desTituloPagina = tituloPagina;        
+        }
+    }    
 }

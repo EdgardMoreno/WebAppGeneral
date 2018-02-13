@@ -204,8 +204,6 @@
                         FlgError = true;
                     }
 
-                    FlgError = false;
-
                     //IMPRIMIR RESULTADO
                     if (FlgError == true) {
                         fnShowMessageValidation(arrMessages);
@@ -366,7 +364,8 @@
                         </tr>
                         <tr>
                             <td class="compra_panelGrid_1">
-                                <h:outputLabel value="Nro. Documento:"/></td>
+                                <h:outputLabel value="Doc. Identidad:"/>
+                            </td>
                             <td class="compra_panelGrid_2">
                                 <div class="input-group mb-2 mb-sm-0">
                                     <div id="idCantDigitosDocIden" class="input-group-addon">0</div>
@@ -382,13 +381,16 @@
                                                 onclick="return fnValidateDocuIden(document.getElementById('form:numDocuIden').value)"> 
                                     <span class="glyphicon glyphicon-new-window"></span>Buscar
                                     <f:ajax execute="numDocuIden" render="razonSocial" listener="#{orderController.searchPerson()}" onevent="fnAjaxListenPersonSearch" />
-                                </h:commandLink></td>
+                                </h:commandLink>
+                            </td>
                             <td class="compra_panelGrid_1">
-                                <h:outputLabel value="Razón Social:"/></td>
+                                <h:outputLabel value="Razón Social:"/>
+                            </td>
                             <td class="compra_panelGrid_2">
                                 <h:inputText id="razonSocial"
                                              readonly="true"
-                                             value="#{orderController.sic1pers.desPers}" styleClass="form-control"/></td>
+                                             value="#{orderController.sic1pers.desPers}" styleClass="form-control"/>
+                            </td>
                         </tr>
                         <tr>
                             <td colspan="2" style="padding: 6px"><h:outputLabel value="INGRESAR PRODUCTOS"/></td>                            
@@ -448,6 +450,10 @@
                     </table>
 
                     <br/>
+                    
+                    <!-- ****************************************************************************** -->
+                    <!-- DETALLE DE PRODUCTOS -->
+                    <!-- ****************************************************************************** -->
 
                     <h:panelGrid id="pnDetOrder" columns="1" width="100%" >
 
@@ -690,7 +696,7 @@
                                                         <tr>
                                                             <td class="compra_panelGrid_1"><h:outputLabel value="Tipo Comprobante:"/></td>
                                                             <td>
-                                                                <h:selectOneMenu id="somTipoDocu" styleClass="form-control"
+                                                                <h:selectOneMenu id="somTipoDocu" styleClass="form-control"                                                                                 
                                                                                  value="#{orderController.sic1docu.idStipodocu}" >
                                                                     <f:selectItem itemValue="-1" itemLabel="-- Seleccionar --" />
                                                                     <f:selectItems value="#{orderController.itemSTipoDocu}" />
@@ -701,6 +707,7 @@
                                                             <td class="compra_panelGrid_1"><h:outputLabel value="Nro. Serie:"/></td>
                                                             <td class="compra_panelGrid_2">
                                                                 <h:inputText id="codSerie" autocomplete="off"
+                                                                             disabled="#{not empty orderController.sic1docu.idDocu}"
                                                                              class="form-control"                                                 
                                                                              value="${orderController.sic1docu.codSerie}"  />
                                                             </td>
@@ -709,6 +716,7 @@
                                                             <td class="compra_panelGrid_1"><h:outputLabel value="Correlativo:"/></td>
                                                             <td class="compra_panelGrid_2">
                                                                 <h:inputText id="numDocumento" autocomplete="off"
+                                                                             disabled="#{not empty orderController.sic1docu.idDocu}"
                                                                              styleClass="form-control" 
                                                                              onkeypress="return fnAllowOnlyNumbers(event)"
                                                                              value="#{orderController.sic1docu.numDocu }"  />

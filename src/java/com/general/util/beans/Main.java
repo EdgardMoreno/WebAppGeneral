@@ -109,8 +109,8 @@ public class Main {
 
         /////---- OBTENER LOS PRODUCTOS RELACIONADOS AL DOCUMENTO
         if (true) {
-            DaoDocumentImpl obj = new DaoDocumentImpl();            
-            obj.getRelDocuProdByIdDocu(session , new BigDecimal(28335));
+            DaoDocumentImpl obj = new DaoDocumentImpl();
+            obj.getRelaDocuProdByIdDocu(session , new BigDecimal(28331));
         }
         
         /*COMISION*/

@@ -52,7 +52,7 @@
           <comment>ID del producto</comment>
         </column>
       </key>
-      <one-to-many class="com.general.hibernate1.Sic3docuprod"/>
+      <one-to-many class="com.general.hibernate.relaentity.Sic3docuprod"/>
     </set>
   </class>
 </hibernate-mapping>

@@ -6,6 +6,7 @@
 package com.general.a1.controller;
 
 import javax.faces.bean.ManagedBean;
+import javax.faces.bean.RequestScoped;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.context.Flash;
@@ -15,7 +16,7 @@ import javax.faces.context.Flash;
  * @author emoreno
  */
 @ManagedBean
-@ViewScoped
+@RequestScoped
 public class MasterPageController {
     
     public String redirect(){
@@ -29,7 +30,8 @@ public class MasterPageController {
         
         /*Se guarda los valores en JSF Flash Scope*/
         Flash flash = FacesContext.getCurrentInstance().getExternalContext().getFlash();
-        flash.put("paramTituloPagina", tituloPagina);        
+        flash.clear();
+        flash.put("paramTituloPagina", tituloPagina);
         flash.setKeepMessages(true);
         
         return  nombrePagina + "?faces-redirect=true";

@@ -4,7 +4,7 @@ package com.general.hibernate.entity;
 
 import com.general.hibernate.relaentity.Sic3docuesta;
 import com.general.hibernate.relaentity.Sic3proddocu;
-import com.general.hibernate1.Sic3docuprod;
+import com.general.hibernate.relaentity.Sic3docuprod;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;

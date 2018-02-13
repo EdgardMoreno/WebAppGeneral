@@ -1,4 +1,4 @@
-package com.general.hibernate1;
+package com.general.hibernate.relaentity;
 // Generated 12/02/2018 11:32:38 PM by Hibernate Tools 4.3.1
 
 

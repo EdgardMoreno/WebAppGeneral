@@ -11,17 +11,15 @@ import com.general.hibernate.entity.Sic1general;
 import com.general.hibernate.entity.Sic1pers;
 import com.general.hibernate.entity.Sic1prod;
 import com.general.hibernate.relaentity.Sic3proddocu;
-import com.general.hibernate.relaentity.Sic3proddocuId;
 import com.general.a2.service.impl.PersonServiceImpl;
 import com.general.a2.service.impl.ProductServiceImpl;
 import com.general.a2.service.impl.Sic1generalServiceImpl;
-import com.general.a3.dao.impl.DaoPersonImpl;
 import com.general.hibernate.entity.HibernateUtil;
 import com.general.hibernate.entity.Sic1idendocu;
 import com.general.hibernate.entity.Sic1idenpers;
 import com.general.hibernate.entity.Sic1idenpersId;
-import com.general.hibernate1.Sic3docuprod;
-import com.general.hibernate1.Sic3docuprodId;
+import com.general.hibernate.relaentity.Sic3docuprod;
+import com.general.hibernate.relaentity.Sic3docuprodId;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -58,7 +56,7 @@ public class OrderController implements Serializable{
     private Sic1prod sic1prod;
     
     /*Persona*/
-    private Sic1idenpers sic1idenpersSelected;
+    //private Sic1idenpers sic1idenpersSelected;
     private Sic1pers sic1pers;
     private Sic1idenpersId sic1idenpersId;
     /**/
@@ -98,8 +96,7 @@ public class OrderController implements Serializable{
             desFecRegistro          = UtilClass.getCurrentDay();
             indexTabla              = -1;            
             
-            /*Persona*/
-            sic1idenpersSelected    = new Sic1idenpers();
+            /*Persona*/            
             sic1pers                = new Sic1pers();
             sic1idenpersId          = new Sic1idenpersId();
             
@@ -224,14 +221,6 @@ public class OrderController implements Serializable{
     
     public void setItemsTypeCard(List<SelectItem> itemsTypeCard) {
         this.itemsTypeCard = itemsTypeCard;
-    }
-
-    public Sic1idenpers getSic1idenpersSelected() {
-        return sic1idenpersSelected;
-    }
-
-    public void setSic1idenpersSelected(Sic1idenpers sic1idenpersSelected) {
-        this.sic1idenpersSelected = sic1idenpersSelected;
     }
 
     public Sic1pers getSic1pers() {
@@ -401,12 +390,12 @@ public class OrderController implements Serializable{
             
             String strCodiden = this.sic1idenpersId.getCodIden();
             PersonServiceImpl personServiceImpl = new PersonServiceImpl();
-            sic1idenpersSelected = personServiceImpl.getByCodiden(strCodiden);
+            Sic1idenpers sic1idenpers = personServiceImpl.getByCodiden(strCodiden);
 
-            if (sic1idenpersSelected != null) {
+            if (sic1idenpers != null) {
 
-                System.out.println("Persona:" + sic1idenpersSelected.getSic1pers().getDesPers());
-                sic1pers = sic1idenpersSelected.getSic1pers();
+                System.out.println("Persona:" + sic1idenpers.getSic1pers().getDesPers());
+                sic1pers = sic1idenpers.getSic1pers();
                 System.out.println("Persona: " + sic1pers);
 
             }
@@ -509,17 +498,15 @@ public class OrderController implements Serializable{
             }
             else {
             
-                BigDecimal idPers = this.sic1idenpersSelected.getSic1pers() !=null ?this.sic1idenpersSelected.getSic1pers().getIdPers():new BigDecimal(0);
+                BigDecimal idPers = this.sic1pers.getIdPers();
                 int numItems      = this.lstSic3docuprod.size();
 
                 if ( idPers.intValue() <= 0  ){
-                    strMessage = "Falta ingresar el Cliente o Proveedor relacionado a la orden.";
-                    //UtilClass.addErrorMessage(strMessage);
+                    strMessage = "Falta ingresar el Cliente o Proveedor relacionado a la orden.";                    
                     throw new ValidationException(strMessage);
                 }
                 if (numItems == 0  ){
-                    strMessage = "Falta ingresar productos a la orden.";
-                    //UtilClass.addErrorMessage(strMessage);
+                    strMessage = "Falta ingresar productos a la orden.";                    
                     throw new ValidationException(strMessage);
                 }
 
@@ -530,7 +517,7 @@ public class OrderController implements Serializable{
                 System.out.println("ID_MODAPAGO: " + this.sic1docu.getIdModapago());
                 System.out.println("ID_TIPOTARJETA: " + this.sic1docu.getIdTipotarjeta());
                 System.out.println("ID_PERS: " + idPers);
-                System.out.println("COD_IDEN: " + this.sic1idenpersSelected.getId().getCodIden());
+                System.out.println("COD_IDEN: " + this.sic1idenpersId.getCodIden());
                 System.out.println("FECHA: " + this.desFecRegistro);
 
                 System.out.println("MONTO DESCUENTO: " + this.sic1docu.getNumMtodscto());
@@ -569,8 +556,7 @@ public class OrderController implements Serializable{
                     this.sic1pers = new Sic1pers();
                     this.lstSic3docuprod.clear();
                     this.sic3docuprod = new Sic3docuprod();
-                    this.sic1prod = new Sic1prod();
-                    this.sic1idenpersSelected = new Sic1idenpers();
+                    this.sic1prod = new Sic1prod();                    
                     this.desFecRegistro = UtilClass.getCurrentDay();
 
                 }
@@ -585,26 +571,43 @@ public class OrderController implements Serializable{
     
     public void getParamsExternalPage(ComponentSystemEvent event) throws CustomizerException{
 
-        Flash flash = FacesContext.getCurrentInstance().getExternalContext().getFlash();
+        if(!FacesContext.getCurrentInstance().isPostback()){
         
-        String tituloPagina = (String)flash.get("paramTituloPagina");
-        BigDecimal idDocu   = (BigDecimal)flash.get("paramIdDocu");
-        
-        System.out.println("tituloPagina:" + tituloPagina); 
-        
-        if (tituloPagina != null)
-            this.desTituloPagina = tituloPagina;
-        
-        /*Se obtien los datos de la orden*/
-        if (idDocu != null && idDocu.intValue() > 0 ){
+            Flash flash = FacesContext.getCurrentInstance().getExternalContext().getFlash();
+
+            String tituloPagina = (String)flash.get("paramTituloPagina");
+            BigDecimal idDocu   = (BigDecimal)flash.get("paramIdDocu");            
             
-            Sic1idendocu sic1idendocu = orderServiceImpl.getById(idDocu);
-            
-            /*Se obtiene los datos del Cliente/Proveedor*/
-            PersonServiceImpl personServiceImpl = new PersonServiceImpl();
-            Sic1idenpers sic1idenpers = personServiceImpl.getById(sic1idendocu.getSic1docu().getIdPers());
-            
-            this.sic1docu = sic1idendocu.getSic1docu();
+
+            System.out.println("tituloPagina:" + tituloPagina); 
+
+            if (tituloPagina != null)
+                this.desTituloPagina = tituloPagina;
+
+
+            /*OBTENER LOS DATOS DE LA ORDEN*/
+            if (idDocu != null && idDocu.intValue() > 0 ){
+
+                /*Se obtiene los datos de la orden*/
+                Sic1idendocu sic1idendocu = orderServiceImpl.getOrderById(idDocu);
+
+                /*Se obtiene los datos del Cliente/Proveedor*/
+                PersonServiceImpl personServiceImpl = new PersonServiceImpl();
+                Sic1idenpers sic1idenpers           = personServiceImpl.getById(sic1idendocu.getSic1docu().getIdPers());
+
+                /*Seteando en las variables para que se visualice los datos en la pantalla*/
+                this.sic1docu           = sic1idendocu.getSic1docu();
+                this.sic1pers           = sic1idenpers.getSic1pers();
+                this.sic1idenpersId     = sic1idenpers.getId();
+                this.lstSic3docuprod    = sic1idendocu.getSic1docu().getLstSic3docuprod();
+                
+                /*Recalculando el Nro. item de la tabla detalle de productos*/
+                for(int i = 0; i < this.lstSic3docuprod.size(); i++){
+                    this.lstSic3docuprod.get(i).setNumIndex(i+1);
+                }
+
+                this.recalculateTotals();
+            }
                         
         }        
     }    

@@ -12,7 +12,7 @@ import com.general.hibernate.relaentity.Sic3docudocu;
 import com.general.hibernate.relaentity.Sic3docuesta;
 import com.general.hibernate.relaentity.Sic3docupers;
 import com.general.hibernate.views.ViSicdocu;
-import com.general.hibernate1.Sic3docuprod;
+import com.general.hibernate.relaentity.Sic3docuprod;
 import conexionbd.InParameter;
 import conexionbd.OutParameter;
 import conexionbd.StoredProcedure;
@@ -451,7 +451,7 @@ public class DaoDocumentImpl implements Serializable{
 //    }
     
     
-    public List<Sic3docuprod> getRelDocuProdByIdDocu(Session session, BigDecimal id_docu){
+    public List<Sic3docuprod> getRelaDocuProdByIdDocu(Session session, BigDecimal id_docu){
         
         List<Sic3docuprod> list = new ArrayList();        
         Criteria criteria = session.createCriteria(Sic3docuprod.class);        

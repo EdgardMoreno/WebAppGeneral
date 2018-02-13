@@ -15,7 +15,7 @@ import com.general.hibernate.relaentity.Sic3docuestaId;
 import com.general.hibernate.relaentity.Sic3docupers;
 import com.general.hibernate.relaentity.Sic3proddocu;
 import com.general.hibernate.views.ViSicdocu;
-import com.general.hibernate1.Sic3docuprod;
+import com.general.hibernate.relaentity.Sic3docuprod;
 import com.general.interfac.service.DocumentService;
 import com.general.util.beans.Constantes;
 import java.io.Serializable;
@@ -204,12 +204,26 @@ public class DocuOrderServiceImpl implements Serializable, DocumentService{
     @Override
     public Sic1idendocu getById(BigDecimal id) throws CustomizerException {
         
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Sic1idendocu getByCodIden(String cod) throws ValidationException, CustomizerException {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }    
+    
+    /**     
+     * METODO QUE DEVUELDE EL DETALLE DE LA ORDEN
+     */
+    
+    public Sic1idendocu getOrderById(BigDecimal id) throws CustomizerException {
+        
         Sic1idendocu sic1idendocu;
         try{
             session = HibernateUtil.getSessionFactory().openSession();
             sic1idendocu = daoDocumentImpl.getById(session, id);
-            
-            
+            List<Sic3docuprod> list = daoDocumentImpl.getRelaDocuProdByIdDocu(session, id);
+            sic1idendocu.getSic1docu().setLstSic3docuprod(list);
             
         }catch(Exception ex){
             throw new CustomizerException(ex.getMessage());
@@ -218,10 +232,4 @@ public class DocuOrderServiceImpl implements Serializable, DocumentService{
         }        
         return sic1idendocu;        
     }
-
-    @Override
-    public Sic1idendocu getByCodIden(String cod) throws ValidationException, CustomizerException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-    
 }
