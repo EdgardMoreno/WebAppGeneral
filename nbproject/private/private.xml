@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project-private xmlns="http://www.netbeans.org/ns/project-private/1">
-    <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="22">
+    <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="23">
         <file>
             <url>src/java/com/general/a3/dao/impl/DaoDocumentImpl.java</url>
             <bookmark id="9">
@@ -18,12 +18,12 @@
             <url>src/java/com/general/a1/controller/OrderController.java</url>
             <bookmark id="22">
                 <name/>
-                <line>386</line>
+                <line>394</line>
                 <key/>
             </bookmark>
             <bookmark id="18">
                 <name/>
-                <line>494</line>
+                <line>496</line>
                 <key/>
             </bookmark>
         </file>
@@ -63,34 +63,39 @@
                 <line>0</line>
                 <key/>
             </bookmark>
+            <bookmark id="23">
+                <name/>
+                <line>213</line>
+                <key/>
+            </bookmark>
             <bookmark id="15">
                 <name/>
-                <line>256</line>
+                <line>257</line>
                 <key/>
             </bookmark>
             <bookmark id="21">
                 <name/>
-                <line>273</line>
+                <line>274</line>
                 <key/>
             </bookmark>
             <bookmark id="16">
                 <name/>
-                <line>302</line>
+                <line>303</line>
                 <key/>
             </bookmark>
             <bookmark id="20">
                 <name/>
-                <line>668</line>
+                <line>669</line>
                 <key/>
             </bookmark>
             <bookmark id="19">
                 <name/>
-                <line>747</line>
+                <line>748</line>
                 <key/>
             </bookmark>
             <bookmark id="17">
                 <name/>
-                <line>747</line>
+                <line>748</line>
                 <key/>
             </bookmark>
         </file>
@@ -104,6 +109,13 @@
         </file>
     </editor-bookmarks>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
-        <group/>
+        <group>
+            <file>file:/C:/ARCHIVOS/PRE_PRODUCCION/PROYECTOS_DESARROLLO_SOFTWARE/APLICACIONES/WEBAPPGENERAL/WebAppGeneral/web/templates/templatePrincipal.xhtml</file>
+            <file>file:/C:/ARCHIVOS/PRE_PRODUCCION/PROYECTOS_DESARROLLO_SOFTWARE/APLICACIONES/WEBAPPGENERAL/WebAppGeneral/web/documentosListar.xhtml</file>
+            <file>file:/C:/ARCHIVOS/PRE_PRODUCCION/PROYECTOS_DESARROLLO_SOFTWARE/APLICACIONES/WEBAPPGENERAL/WebAppGeneral/src/java/com/general/a1/controller/OrderController.java</file>
+            <file>file:/C:/ARCHIVOS/PRE_PRODUCCION/PROYECTOS_DESARROLLO_SOFTWARE/APLICACIONES/WEBAPPGENERAL/WebAppGeneral/web/compraRegistrar.xhtml</file>
+            <file>file:/C:/ARCHIVOS/PRE_PRODUCCION/PROYECTOS_DESARROLLO_SOFTWARE/APLICACIONES/WEBAPPGENERAL/WebAppGeneral/src/java/com/general/a1/controller/MasterPageController.java</file>
+            <file>file:/C:/ARCHIVOS/PRE_PRODUCCION/PROYECTOS_DESARROLLO_SOFTWARE/APLICACIONES/WEBAPPGENERAL/WebAppGeneral/src/java/com/general/a1/controller/DocumentController.java</file>
+        </group>
     </open-files>
 </project-private>

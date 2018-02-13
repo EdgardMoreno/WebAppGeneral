@@ -9,6 +9,7 @@
 
     <f:metadata>        
         <f:viewParam name="titulo" value="#{orderController.desTituloPagina}"/>
+        <f:event type="preRenderView" listener="#{orderController.getParamsExternalPage}"/>        
     </f:metadata>
 
     <ui:composition template="./templates/templatePrincipal.xhtml">
@@ -342,7 +343,7 @@
                 <p:growl id="message" showDetail="true" />
 
                 <div class="page-header" >
-                    <h3>${orderController.desTituloPagina}</h3>  
+                    <h3>${orderController.desTituloPagina}</h3>
                 </div>
 
                 <!-- ****************************************************************************** -->
@@ -699,7 +700,7 @@
                                                         <tr>
                                                             <td class="compra_panelGrid_1"><h:outputLabel value="Nro. Serie:"/></td>
                                                             <td class="compra_panelGrid_2">
-                                                                <h:inputText id="codSerie" 
+                                                                <h:inputText id="codSerie" autocomplete="off"
                                                                              class="form-control"                                                 
                                                                              value="${orderController.sic1docu.codSerie}"  />
                                                             </td>
@@ -707,8 +708,8 @@
                                                         <tr>
                                                             <td class="compra_panelGrid_1"><h:outputLabel value="Correlativo:"/></td>
                                                             <td class="compra_panelGrid_2">
-                                                                <h:inputText id="numDocumento"
-                                                                             styleClass="form-control"
+                                                                <h:inputText id="numDocumento" autocomplete="off"
+                                                                             styleClass="form-control" 
                                                                              onkeypress="return fnAllowOnlyNumbers(event)"
                                                                              value="#{orderController.sic1docu.numDocu }"  />
                                                             </td>
@@ -717,7 +718,7 @@
                                                     <br/>
                                                     <h:commandLink value="Aceptar" styleClass="btn btn-primary"
                                                                    onclick="return fnValiteVoucherHeader()">
-                                                        <f:ajax execute="form:codSerie numDocumento" render="@form"
+                                                        <f:ajax execute="form:codSerie numDocumento somTipoDocu" render="@form"
                                                                 listener="#{orderController.saveOrder()}"/>
 
                                                     </h:commandLink>

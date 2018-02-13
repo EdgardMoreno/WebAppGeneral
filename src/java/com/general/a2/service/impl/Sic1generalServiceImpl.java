@@ -114,6 +114,7 @@ public class Sic1generalServiceImpl implements Serializable{
             for(Sic1stipodocu obj : lstSic1stipodocu){
                 si = new SelectItem();
                 si.setLabel(obj.getDesStipodocu());
+                System.out.println("IdStipodocu:" + obj.getIdStipodocu());
                 si.setValue(obj.getIdStipodocu());
                 lstResult.add(si);                
             }            

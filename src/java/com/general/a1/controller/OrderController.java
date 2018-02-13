@@ -36,6 +36,9 @@ import com.general.util.beans.UtilClass;
 import com.general.util.exceptions.CustomizerException;
 import com.general.util.exceptions.ValidationException;
 import java.text.ParseException;
+import javax.faces.context.FacesContext;
+import javax.faces.context.Flash;
+import javax.faces.event.ComponentSystemEvent;
 import javax.faces.event.ValueChangeEvent;
 
 
@@ -75,10 +78,15 @@ public class OrderController implements Serializable{
     private String msjValidation;
     
     public OrderController(){
+        String day = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("day");
+        System.out.println("day+ " + day);
     }
     
     @PostConstruct
     public void init() {
+        
+        String day = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("day");
+        System.out.println("day+ " + day);
         
         try{
             msjValidation           = "";
@@ -483,15 +491,9 @@ public class OrderController implements Serializable{
             
             System.out.println("COD_SERIE: " + this.sic1docu.getCodSerie());
             System.out.println("NUM_DOCU: " + this.sic1docu.getNumDocu());
+            System.out.println("ID_STIPODOCU: " + this.sic1docu.getIdStipodocu());
             
-            
-            /*if ( sic1docu.getCodSerie() == null || sic1docu.getCodSerie().isEmpty()) 
-                strMessage ="Número de serie inválido";
-            
-            if ( sic1docu.getNumDocu() == null || sic1docu.getNumDocu().intValue() <= 0) 
-                strMessage = "Número del Documento inválido";*/
-            
-            if (false){
+            if (true){
                 this.msjValidation = "<UL type = 'square'><LI>" + strMessage + "</LI></UL>";
                 System.out.println("ERRROR: " + this.msjValidation);
                  UtilClass.addErrorMessage("holaaa");
@@ -571,4 +573,15 @@ public class OrderController implements Serializable{
             throw new CustomizerException(ex.getMessage());
         }
     }
+    
+    public void getParamsExternalPage(ComponentSystemEvent event){
+
+        Flash flash = FacesContext.getCurrentInstance().getExternalContext().getFlash();
+        
+        System.out.println("tituloPagina:" + (String)flash.get("tituloPagina")); 
+        
+        this.desTituloPagina = (String)flash.get("tituloPagina");
+        
+    }
+    
 }

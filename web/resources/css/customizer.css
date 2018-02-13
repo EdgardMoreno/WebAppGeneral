@@ -157,6 +157,8 @@ and open the template in the editor.
 
 .table_style_id { width: 3em; text-align: center;}
 .table_style_code { width: 12em; text-align: center;}
+.table_style_description_small { width: 20%; text-align: left;}
+.table_style_description_medium { width: 30%; text-align: left;}
 .table_style_description { width: 40%; text-align: left;}
 .table_style_price { width: 9em; text-align: right;}
 .table_style_amount { width: 7em; text-align: center;}

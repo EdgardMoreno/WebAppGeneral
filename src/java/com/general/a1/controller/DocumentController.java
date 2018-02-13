@@ -11,6 +11,7 @@ import com.general.hibernate.entity.Sic1stipodocu;
 import com.general.hibernate.views.ViSicdocu;
 import com.general.hibernate.views.ViSicestageneral;
 import com.general.util.beans.UtilClass;
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -20,8 +21,11 @@ import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
+import javax.faces.context.Flash;
+import javax.faces.event.ComponentSystemEvent;
 import javax.faces.model.SelectItem;
 import javax.inject.Named;
+import javax.servlet.ServletException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -44,6 +48,8 @@ public class DocumentController implements Serializable{
     private String desFecDesde;
     private String desFecHasta;
     
+    private String desTituloPagina;
+    
     @PostConstruct
     public void init() {
         
@@ -65,9 +71,8 @@ public class DocumentController implements Serializable{
                 si.setValue(obj.getIdStipodocu());
                 this.itemSTipoDocu.add(si);
             }
-            
-            
-            /*Cargar Catalogo: STIPODOCU*/            
+
+            /*Cargar Catalogo: STIPODOCU*/
             this.itemsEstaRol = sic1generalServiceImpl.getCataEstaRolDocuInf();
             
             
@@ -126,6 +131,14 @@ public class DocumentController implements Serializable{
     public void setItemsEstaRol(List<ViSicestageneral> itemsEstaRol) {
         this.itemsEstaRol = itemsEstaRol;
     }
+
+    public String getDesTituloPagina() {
+        return desTituloPagina;
+    }
+
+    public void setDesTituloPagina(String desTituloPagina) {
+        this.desTituloPagina = desTituloPagina;
+    }
     
     
     /********************************************************************/
@@ -157,8 +170,22 @@ public class DocumentController implements Serializable{
         return "";
     }
     
-    public String editAction(ViSicdocu obj ){
-        return "";
+    public String editAction(ViSicdocu obj ) throws ServletException, IOException{
+        
+        
+        //HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();        
+        //request.getRequestDispatcher("compraRegistrar.xhtml?titulo=probando").forward(request, null);
+        Flash flash = FacesContext.getCurrentInstance().getExternalContext().getFlash();
+        flash.put("firstName", "Registrar Venta");
+        flash.setKeepMessages(true);
+        
+        return "compraRegistrar?faces-redirect=true";
+    }
+    
+    public void getParamsExternalPage(ComponentSystemEvent event){
+        Flash flash = FacesContext.getCurrentInstance().getExternalContext().getFlash();        
+        System.out.println("tituloPagina:" + (String)flash.get("tituloPagina"));         
+        this.desTituloPagina = (String)flash.get("tituloPagina");        
     }
     
 }

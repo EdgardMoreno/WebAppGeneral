@@ -7,6 +7,11 @@
       xmlns:p="http://primefaces.org/ui"
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets"  >
     
+    <f:metadata>        
+        <f:viewParam name="titulo" value="#{documentController.desTituloPagina}"/>
+        <f:event type="preRenderView" listener="#{documentController.getParamsExternalPage}"/>
+    </f:metadata>
+    
     <ui:composition template="./templates/templatePrincipal.xhtml">
         
         <ui:define name="header">
@@ -20,16 +25,14 @@
         
         <ui:define name="content">
             <div class="container" id="resultadoValidacion"></div>
-            
-            <h:form id="form"> 
                 
                 <div class="container">
                     
                     <div class="page-header" >
-                        <h3>Listar Documentos</h3>
+                        <h3>${documentController.desTituloPagina}</h3>
                     </div>
 
-                    <h:panelGrid columns="6" style="width:85%" 
+                    <h:panelGrid columns="6" style="width:85%"
                                  columnClasses="td-label-1, td-content-1, td-label-1, td-content-1, td-label-1, td-content-1">
 
                         <h:outputLabel value="Tipo Documento:"/>
@@ -45,7 +48,7 @@
                         
                         <h:outputLabel value="Estado:"/>
                         <h:selectOneMenu value="#{documentController.viSicdocu.idStipodocu}" style="width:100%" >
-                            <f:selectItem itemLabel="-- Seleccione --" itemValue="-1" />    
+                            <f:selectItem itemLabel="-- Seleccione --" itemValue="-1" />
                             <f:selectItems value="#{documentController.itemsEstaRol}" var="c" itemValue="#{c.idEsta}" itemLabel="#{c.desEsta}" />
                         </h:selectOneMenu>                        
                         <h:outputLabel value="Num. Docu:"/>
@@ -67,53 +70,60 @@
 
                     </h:panelGrid>
                     <br/>
-                    <h:dataTable id="tblDocuments" var="item" value="#{documentController.lstViSicdocus}" rendered="#{not empty documentController.lstViSicdocus}"
-                                 styleClass="table table-striped table-bordered table-list"
-                                 columnClasses="table_header1,table_header2,table_header3,table_header4,table_header5,table_header6,table_header7">
+                    <h:dataTable id="tblDocuments" 
+                                 var="item" 
+                                 value="#{documentController.lstViSicdocus}" 
+                                 rendered="#{not empty documentController.lstViSicdocus}"
+                                 styleClass="table-bordered"
+                                 columnClasses="table_style_id, table_style_id, table_style_code, table_style_code, table_style_code, table_style_description, table_style_action">                        
 
                         <h:column>
                             <f:facet name="header">No.</f:facet>1
-                        </h:column>
+                        </h:column>                        
 
                         <h:column>
                             <f:facet name="header">idProd</f:facet>#{item.idDocu}
                         </h:column>
+                        
+                        <h:column>
+                            <f:facet name="header">Evento</f:facet>VENTA
+                        </h:column>
+                        
+                        <h:column>
+                            <f:facet name="header">Tipo Comprobante</f:facet>#{item.desStipodocu}
+                        </h:column>
 
+                        <h:column>
+                            <f:facet name="header">Número</f:facet>#{item.codSerie} - #{item.numDocu}
+                        </h:column>
+                        
                         <h:column>
                             <f:facet name="header">Cliente/Proveedor</f:facet>#{item.desPersClieprov}
                         </h:column>
 
                         <h:column>
-                            <f:facet name="header">Serie</f:facet>#{item.codSerie}
-                        </h:column>
-
-                        <h:column>
-                            <f:facet name="header">Num. Docu.</f:facet>#{item.numDocu}
-                        </h:column>
-
-
-                        <h:column>
                             
-                            <p:commandLink action="#{documentController.deleteAction(item)}"  update="form" >
+                            <h:commandLink action="compraRegistrar.xhtml" >
                                 <span class="glyphicon glyphicon-trash"></span>
-                                <p:confirm header="Confirmation" message="¿Está seguro de continuar?" icon="ui-icon-alert"  />
-                            </p:commandLink>	                                    
-                            &nbsp;                                    
-                            <p:commandLink action="#{documentController.editAction(item)}" oncomplete="changeTab(2)" update="form">
-                                <span class="glyphicon glyphicon-pencil"></span>                            
-                            </p:commandLink>
-
+                                <f:param name="day" value="monday"/>
+                            </h:commandLink>
+                            &nbsp;
+                            <h:commandLink action="compraRegistrar?faces-redirect=true&amp;includeViewParams=true" >
+                                <span class="glyphicon glyphicon-pencil"></span>
+                                <f:param name="titulo" value="monday"/>                                
+                            </h:commandLink>
+                            &nbsp;
+                            <h:commandLink action="#{documentController.editAction(obj)}">
+                                <span class="glyphicon glyphicon-pencil"></span>                                
+                                <f:param name="titulo" value="monday"/>
+                            </h:commandLink>
+                            <h:link value="Link with parameter" outcome="compraRegistrar" includeViewParams="true">
+                                <f:param name="titulo" value="helloWorldMessage"/>
+                            </h:link>
                         </h:column>
 
                     </h:dataTable>
                 </div>
-                
-                <p:confirmDialog global="true" showEffect="fade" hideEffect="fade" header="Confirmar">
-                    <p:commandButton value="Yes" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
-                    <p:commandButton value="No"  type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
-                </p:confirmDialog>
-                                
-            </h:form>
             
         </ui:define>
     </ui:composition>

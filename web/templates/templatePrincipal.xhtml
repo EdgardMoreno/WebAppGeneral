@@ -69,18 +69,36 @@
 
                         <li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="#">Compras<span class="caret"></span></a>
                             <ul class="dropdown-menu">
-                                <li><a href="#{request.contextPath}/faces/compraRegistrar.xhtml?titulo=Registrar Compra&amp;codstipodocu=COMPRA">Ingreso de Mercadería</a></li>
-                                <li><a href="#{request.contextPath}/faces/documentosListar.xhtml">Reporte de Compras</a></li>                            
+                                <li>
+                                    <h:commandLink value="Ingreso de Mercadería" action="#{masterPageController.redirect()}" >
+                                        <f:param name="tituloPagina" value="Registrar Compra" />
+                                        <f:param name="nombrePagina" value="compraRegistrar" />
+                                    </h:commandLink>
+                                </li>                                
+                                <li>
+                                    <h:commandLink value="Reporte de Compras" action="#{masterPageController.redirect()}" >
+                                        <f:param name="tituloPagina" value="Reporte de Compras" />
+                                        <f:param name="nombrePagina" value="documentosListar" />
+                                    </h:commandLink>
+                                </li>
                             </ul>
                         </li>
+                        
                         <li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="#">Ventas<span class="caret"></span></a>
                             <ul class="dropdown-menu">
-                                <li><a href="#{request.contextPath}/faces/compraRegistrar.xhtml?titulo=Registrar Venta&amp;codstipodocu=VENTA">Realizar Venta</a></li>                            
-                                <li><a href="#{request.contextPath}/faces/documentosListar.xhtml">Reporte de Ventas</a></li>   
-                                <li><h:commandLink action="/faces/compraRegistrar.xhtml" value="Ir"/></li>                            
-                                <li><h:link  outcome="/compraRegistrar.xhtml" value="Ir Link">
-                                        <f:param  name="titulo" value="Registrar Venta"/>
-                                    </h:link></li>  
+                                <li>
+                                    <h:commandLink value="Ingreso de Mercadería" action="#{masterPageController.redirect()}" >
+                                        <f:param name="tituloPagina" value="Registrar Venta" />
+                                        <f:param name="nombrePagina" value="compraRegistrar" />
+                                    </h:commandLink>
+                                </li>
+                                <li>
+                                    <h:commandLink value="Reporte de Compras" action="#{masterPageController.redirect()}" >
+                                        <f:param name="tituloPagina" value="Reporte de Ventas" />
+                                        <f:param name="nombrePagina" value="documentosListar" />
+                                    </h:commandLink>
+                                </li>
+                                
                             </ul>
                         </li>
                     </ul>
