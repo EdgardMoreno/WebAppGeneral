@@ -461,28 +461,25 @@
                                      var="item"
                                      id="idTableDetOrder"
                                      styleClass = "table-bordered"                                         
-                                     columnClasses = "table_style_id,table_style_id,table_style_code,table_style_description,table_style_price,table_style_amount,table_style_action">
+                                     columnClasses = "table_style_id,table_style_code,table_style_description,table_style_price,table_style_amount,table_style_action">
 
                             <h:column headerClass="table_style_id">
                                 <f:facet name="header">No.</f:facet>#{item.numIndex}
-                            </h:column>
-                            <h:column headerClass="table_style_id" >
-                                <f:facet name="header">IDPROD</f:facet>#{item.sic1prod.idProd}
-                            </h:column>
+                            </h:column>                            
                             <h:column headerClass="table_style_code">
                                 <f:facet name="header">CODIGO</f:facet>#{item.sic1prod.codProd}
                             </h:column>
                             <h:column headerClass="table_style_description">
                                 <f:facet name="header">DESCRIPCION</f:facet>#{item.sic1prod.desProd}
                             </h:column>
-                            <h:column headerClass="table_style_price">
+                            <h:column id="idTablePrice" headerClass="table_style_price">
                                 <div >
                                     <h:outputLabel value="S/." />
                                     <f:facet name="header">PRECIO</f:facet>#{item.numValor}
                                 </div>
                             </h:column>
-                            <h:column headerClass="table_style_amount">
-                                <f:facet name="header">CANTIDAD</f:facet>#{item.numCantidad}
+                            <h:column id="idTableAmount" headerClass="table_style_amount">
+                                <f:facet id="eeeee" name="header">CANTIDAD</f:facet>#{item.numCantidad}
                             </h:column>
                             <h:column headerClass="table_style_action">
                                 <f:facet name="header">ACCION</f:facet>
@@ -592,7 +589,7 @@
                                                  styleClass="form-control"
                                                  value="#{orderController.sic1docu.numMtodscto}"
                                                  onkeypress="return fnAllowOnlyDecimalNumbers(event)"
-                                                 onblur="return fnValidarDescuento(this)">
+                                                 >
                                         <f:ajax execute="@this" event="blur" render="pnTotals" listener="#{orderController.recalculateTotals()}" />
                                     </h:inputText>
                                 </div>
@@ -660,7 +657,7 @@
                                    onclick="return fnValidateForm()" >
                     </h:commandLink>
                     &nbsp;
-                    <h:selectBooleanCheckbox value="sfs"></h:selectBooleanCheckbox>
+                    <h:selectBooleanCheckbox value="#{orderController.flgPorRecoger}"></h:selectBooleanCheckbox>
                     <h:outputLabel value="PENDIENTE DE RECOJO:" />
 
                 </div>
@@ -726,7 +723,7 @@
                                                     <br/>
                                                     <h:commandLink value="Aceptar" styleClass="btn btn-primary"
                                                                    onclick="return fnValiteVoucherHeader()">
-                                                        <f:ajax execute="form:codSerie numDocumento somTipoDocu" render="@form"
+                                                        <f:ajax execute="@form" render="@form"
                                                                 listener="#{orderController.saveOrder()}"/>
 
                                                     </h:commandLink>

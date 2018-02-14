@@ -183,12 +183,25 @@ function fnShowErrorMessage(message){
 /********************** VALIDACIONES PANTALLA: COMPRAREGISTRAR.XHTML ****************************************/
 /*Funcion pque valida en ingreso del monto de descuento*/
 
+/*La logica se realiza en el Controlador
 function fnValidarDescuento(obj){
                     
     var mtoDescuento = fnFormatDecimal(obj.value); 
     var message;
     
     if (mtoDescuento != undefined){
+        
+        var tableDetOrder = document.getElementById("form:idTableDetOrder");
+        var mtoTotal = 0;
+        console.log("tableDetOrder:" + tableDetOrder.rows.length);
+        
+        //Empieza en 1 por la cabecera
+        for (var i = 1; i <= tableDetOrder.rows.length - 1; i++){
+            console.log("Celda:" + tableDetOrder.rows[i].cells[4].innerHTML);
+            mtoTotal += Number(tableDetOrder.rows[i].cells[4].innerHTML) * Number(tableDetOrder.rows[i].cells[3].innerHTML);
+        }
+        console.log("mtoTotal:" + mtoTotal);
+        
         var mtoTotal     = $("#form\\:numMtoTotal").text();
         if (mtoDescuento >= Number(mtoTotal)){
             message = "El descuento no puede ser mayor al importe Total.";
@@ -201,4 +214,4 @@ function fnValidarDescuento(obj){
     }else{
         return false;
     }
-}
+}*/

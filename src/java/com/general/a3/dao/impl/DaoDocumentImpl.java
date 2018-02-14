@@ -27,10 +27,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import com.general.util.beans.UtilClass;
 import java.io.Serializable;
+import java.sql.ResultSet;
+import java.sql.Statement;
 import java.util.ArrayList;
 import org.hibernate.Criteria;
 import org.hibernate.Hibernate;
 import org.hibernate.HibernateException;
+import org.hibernate.Query;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.hibernate.jdbc.ReturningWork;
@@ -82,6 +85,7 @@ public class DaoDocumentImpl implements Serializable{
                         
                         System.out.println("intIdTipoIden:" + intIdTipoIden);
                         System.out.println("intIdTRolPers:" + sic1docu.getIdTrolpers());
+                        System.out.println("intIdEstaDocu:" + sic1docu.getSic3docuesta().getId().getIdEstadocu());
                         System.out.println("intIdTRolEsta:" + sic1docu.getSic3docuesta().getId().getIdTrolestadocu());
 
                         /*CONVERSION DE FECHAS*/            
@@ -120,6 +124,8 @@ public class DaoDocumentImpl implements Serializable{
                         sp.addParameter(new InParameter("X_NUM_MTODSCTO",       Types.NUMERIC, sic1docu.getNumMtodscto()));
                         sp.addParameter(new InParameter("X_NUM_SUBTOTAL",       Types.NUMERIC, sic1docu.getNumSubtotal()));
                         sp.addParameter(new InParameter("X_NUM_IGV",            Types.NUMERIC, sic1docu.getNumIgv()));
+                        sp.addParameter(new InParameter("X_ID_SCLASEEVEN",      Types.NUMERIC, sic1docu.getIdSclaseeven())); //Indica si es Compra o Venta
+                        sp.addParameter(new InParameter("X_ID_PERSEXTERNO",     Types.NUMERIC, sic1docu.getIdPersexterno())); //Indica el IDPers el Cliente/Proveedor
 
                         sp.addParameter(new InParameter("X_FEC_DESDE",          Types.VARCHAR, strFecDesde));
                         sp.addParameter(new InParameter("X_FEC_HASTA",          Types.VARCHAR, strFecHasta));
@@ -135,7 +141,7 @@ public class DaoDocumentImpl implements Serializable{
                         sp.addParameter(new InParameter("X_ID_LENGDOCU",        Types.INTEGER, null));
 
                         /*ESTADO DEL DOCUMENTO: Se manda null para que todo se registre por defecto*/
-                        sp.addParameter(new InParameter("X_ID_ESTAREL",         Types.INTEGER, null));
+                        sp.addParameter(new InParameter("X_ID_ESTAREL",         Types.INTEGER, sic1docu.getSic3docuesta().getId().getIdEstadocu()));
                         sp.addParameter(new InParameter("X_ID_TROLESTADOCU",    Types.INTEGER, sic1docu.getSic3docuesta().getId().getIdTrolestadocu()));
                         sp.addParameter(new InParameter("X_ID_TRELADOCUESTA",   Types.INTEGER, null));
                         sp.addParameter(new InParameter("X_DES_NOTASESTA",      Types.VARCHAR, null));            
@@ -562,4 +568,24 @@ public class DaoDocumentImpl implements Serializable{
         return lstResult;
     }
     
+    
+    public String getLastCodEstaDocu(Session session, BigDecimal id_docu){
+        
+        
+        String result = session.doReturningWork(new ReturningWork<String>() {
+            @Override
+            public String execute(Connection cnctn) throws SQLException {
+                
+                String codEstaDocu = "";
+                Statement stmt = cnctn.createStatement();
+                ResultSet rs = stmt.executeQuery("SELECT COD_ESTA FROM SIC3DOCUESTA T0 JOIN VI_SICESTA T1 ON T0.ID_ESTADOCU = T1.ID_ESTA WHERE T0.FEC_HASTA = PKG_SICCONSGENERAL.FNC_SICOBTFECINF AND T0.ID_DOCU = " + id_docu.toString());
+                while(rs.next()){
+                    codEstaDocu = rs.getString(1);
+                }
+                return codEstaDocu;
+            }            
+        });       
+        
+        return result;        
+    }
 }

@@ -74,8 +74,18 @@ public class Constantes {
     public static String CONS_COD_TIPOROLESTA       = "VI_SICTROLESTA";    
         /*CODIGOS*/
         public static String CONS_COD_ESTADOCUCOMPROBANTE      = "VI_SICESTADOCUCOMPROBANTE";
-    
-    
+        
+    /*CODIGO DE ESTADOS*/
+    public static String CONS_COD_ESTA              = "VI_SICESTA";
+        /*CODIGOS*/
+        public static String CONS_COD_ESTAFINALIZADO       = "VI_SICESTAFINALIZADO";
+        public static String CONS_COD_ESTAPORRECOGER       = "VI_SICESTAPORRECOGER";
+        
+    /*CODIGO DE SUB CLASE DE EVENTO*/
+    public static String CONS_COD_SCLASEEVEN        = "VI_SICSCLASEEVEN";
+        /*CODIGOS*/
+        public static String CONS_COD_SCLASEEVEN_VENTA      = "VI_SICSCLASEEVENVENTA";
+        public static String CONS_COD_SCLASEEVEN_COMPRA     = "VI_SICSCLASEEVENCOMPRA";
     
     /*MENSAJES*/
     public static String CONS_SUCCESS_MESSAGE = "Se grabó con éxito";

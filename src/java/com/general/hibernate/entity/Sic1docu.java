@@ -3,7 +3,6 @@ package com.general.hibernate.entity;
 
 
 import com.general.hibernate.relaentity.Sic3docuesta;
-import com.general.hibernate.relaentity.Sic3proddocu;
 import com.general.hibernate.relaentity.Sic3docuprod;
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -24,7 +23,7 @@ public class Sic1docu  implements java.io.Serializable {
      private BigDecimal idStipodocu;
      private Date fecDesde;
      private Date fecHasta;
-     private BigDecimal idPers;
+     private BigDecimal idPers; //Identificador de quien creó el documento
      private BigDecimal idModapago;
      private BigDecimal idTipotarjeta;
      private BigDecimal numMtotarjeta;
@@ -34,8 +33,9 @@ public class Sic1docu  implements java.io.Serializable {
      private BigDecimal numSubtotal;
      private BigDecimal numMtoTotal;
      private BigDecimal numIgv;
-     private BigDecimal flgPorrecoger;
      private BigDecimal numMtovuelto;
+     private BigDecimal idSclaseeven;
+     private BigDecimal idPersexterno; //identificador del Proveedor o Cliente
      
      /*Agregado*/
      private Sic1idendocu sic1idendocu;
@@ -43,6 +43,9 @@ public class Sic1docu  implements java.io.Serializable {
      private List<Sic3docuprod> lstSic3docuprod;
      private String codSerie;
      private BigDecimal numDocu;
+     private String codSclaseeven;
+     
+     private String codEstadocu;
 
     public Sic1docu() {        
         lstSic3docuprod = new ArrayList<Sic3docuprod>();
@@ -72,8 +75,7 @@ public class Sic1docu  implements java.io.Serializable {
        this.numMtodscto = numMtodscto;
        this.numSubtotal = numSubtotal;
        
-       this.numIgv = numIgv;
-       this.flgPorrecoger = flgPorrecoger;
+       this.numIgv = numIgv;       
        this.numMtovuelto = numMtovuelto;
     }
    
@@ -209,15 +211,7 @@ public class Sic1docu  implements java.io.Serializable {
     
     public void setNumIgv(BigDecimal numIgv) {
         this.numIgv = numIgv;
-    }
-
-    public BigDecimal getFlgPorrecoger() {
-        return flgPorrecoger;
-    }
-
-    public void setFlgPorrecoger(BigDecimal flgPorrecoger) {
-        this.flgPorrecoger = flgPorrecoger;
-    }
+    }  
 
     public BigDecimal getNumMtovuelto() {
         return numMtovuelto;
@@ -227,6 +221,26 @@ public class Sic1docu  implements java.io.Serializable {
         this.numMtovuelto = numMtovuelto;
     }
 
+    public BigDecimal getIdSclaseeven() {
+        return idSclaseeven;
+    }
+
+    public void setIdSclaseeven(BigDecimal idSclaseeven) {
+        this.idSclaseeven = idSclaseeven;
+    }
+
+    public BigDecimal getIdPersexterno() {
+        return idPersexterno;
+    }
+
+    public void setIdPersexterno(BigDecimal idPersexterno) {
+        this.idPersexterno = idPersexterno;
+    }
+
+   
+    
+    
+
     public List<Sic3docuprod> getLstSic3docuprod() {
         return lstSic3docuprod;
     }
@@ -234,48 +248,46 @@ public class Sic1docu  implements java.io.Serializable {
     public void setLstSic3docuprod(List<Sic3docuprod> lstSic3docuprod) {
         this.lstSic3docuprod = lstSic3docuprod;
     }
-    
-    
-
-    /**
-     * @return the sic1idendocu
-     */
+        
     public Sic1idendocu getSic1idendocu() {
         return sic1idendocu;
     }
-
-    /**
-     * @param sic1idendocu the sic1idendocu to set
-     */
+  
     public void setSic1idendocu(Sic1idendocu sic1idendocu) {
         this.sic1idendocu = sic1idendocu;
     }
-
-    /**
-     * @return the numMtoTotal
-     */
+    
     public BigDecimal getNumMtoTotal() {
         return numMtoTotal;
     }
-
-    /**
-     * @param numMtoTotal the numMtoTotal to set
-     */
+    
     public void setNumMtoTotal(BigDecimal numMtoTotal) {
         this.numMtoTotal = numMtoTotal;
     }
-
-  
-
+    
     public Sic3docuesta getSic3docuesta() {
         return sic3docuesta;
     }
 
     public void setSic3docuesta(Sic3docuesta sic3docuesta) {
         this.sic3docuesta = sic3docuesta;
+    }   
+
+    public String getCodSclaseeven() {
+        return codSclaseeven;
     }
+
+    public void setCodSclaseeven(String codSclaseeven) {
+        this.codSclaseeven = codSclaseeven;
+    }    
     
-    
+    public String getCodEstadocu() {
+        return codEstadocu;
+    }
+
+    public void setCodEstadocu(String codEstadocu) {
+        this.codEstadocu = codEstadocu;
+    }
     
     public String toString(){
        return "idDocu: " + this.idDocu + 
@@ -285,9 +297,6 @@ public class Sic1docu  implements java.io.Serializable {
               " idPers: " + this.idPers +
               " idStipodocu: " + this.idStipodocu;               
     }
-    
-    
-    
 }
 
 

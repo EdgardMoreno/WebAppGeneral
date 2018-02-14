@@ -85,21 +85,34 @@ public class DocuOrderServiceImpl implements Serializable, DocumentService{
                                                                         ,sic1docu.getIdTipotarjeta().intValue());
                     sic1idendocu.getSic1docu().setNumMtocomi(numMtoComision);
                 }
+                
+                System.out.println("CodigoEstaDocu:" + sic1docu.getCodEstadocu());
         
             /*GUARDAR PEDIDO*/
                 BigDecimal intIdTRolPers = DaoFuncionesUtil.FNC_SICOBTIDGEN(((SessionImpl) session).connection()
                                                                                 , Constantes.CONS_COD_TIPOROLPERS
                                                                                 , Constantes.CONS_COD_NOAPLICA);
                 
+                BigDecimal intIdSClaseEven = DaoFuncionesUtil.FNC_SICOBTIDGEN(((SessionImpl) session).connection()
+                                                                                , Constantes.CONS_COD_SCLASEEVEN
+                                                                                , sic1docu.getCodSclaseeven());                
+                
                 BigDecimal intIdTRolEsta  = DaoFuncionesUtil.FNC_SICOBTIDGEN(((SessionImpl) session).connection()
                                                                                 , Constantes.CONS_COD_TIPOROLESTA
                                                                                 , Constantes.CONS_COD_ESTADOCUCOMPROBANTE);
+                
+                BigDecimal intIdEsta      = DaoFuncionesUtil.FNC_SICOBTIDGEN(((SessionImpl) session).connection()
+                                                                                , Constantes.CONS_COD_ESTA
+                                                                                , sic1docu.getCodEstadocu());
+                
                 /*relacionando el ESTADO*/
                 Sic3docuestaId idEsta = new Sic3docuestaId();
                 idEsta.setIdTrolestadocu(intIdTRolEsta);
+                idEsta.setIdEstadocu(intIdEsta);
                 Sic3docuesta sic3docuesta = new Sic3docuesta();
                 sic3docuesta.setId(idEsta);
                 
+                sic1idendocu.getSic1docu().setIdSclaseeven(intIdSClaseEven);
                 sic1idendocu.getSic1docu().setIdTrolpers(intIdTRolPers);
                 sic1idendocu.getSic1docu().setSic3docuesta(sic3docuesta);
                 
@@ -222,8 +235,14 @@ public class DocuOrderServiceImpl implements Serializable, DocumentService{
         try{
             session = HibernateUtil.getSessionFactory().openSession();
             sic1idendocu = daoDocumentImpl.getById(session, id);
+            
+            /*Se obtiene los productos*/
             List<Sic3docuprod> list = daoDocumentImpl.getRelaDocuProdByIdDocu(session, id);
             sic1idendocu.getSic1docu().setLstSic3docuprod(list);
+            
+            /*Se obtiene el codigo del estado vigente*/
+            String codEstaDocu = daoDocumentImpl.getLastCodEstaDocu(session, id);
+            sic1idendocu.getSic1docu().setCodEstadocu(codEstaDocu);
             
         }catch(Exception ex){
             throw new CustomizerException(ex.getMessage());

@@ -108,9 +108,15 @@ public class Main {
         }
 
         /////---- OBTENER LOS PRODUCTOS RELACIONADOS AL DOCUMENTO
-        if (true) {
+        if (false) {
             DaoDocumentImpl obj = new DaoDocumentImpl();
             obj.getRelaDocuProdByIdDocu(session , new BigDecimal(28331));
+        }
+        
+        /////---- OBTENER EL CODIGO DEL ULTIMO ESTADO DEL DOCUMENTO
+        if (true) {
+            DaoDocumentImpl obj = new DaoDocumentImpl();
+            obj.getLastCodEstaDocu(session , new BigDecimal(28335));
         }
         
         /*COMISION*/

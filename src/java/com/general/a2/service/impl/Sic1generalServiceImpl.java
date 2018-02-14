@@ -10,6 +10,7 @@ import com.general.hibernate.entity.Sic1general;
 import com.general.hibernate.entity.Sic1stipodocu;
 import com.general.hibernate.views.ViSicestageneral;
 import com.general.util.beans.Constantes;
+import com.general.util.exceptions.CustomizerException;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.sql.SQLException;
@@ -31,18 +32,18 @@ public class Sic1generalServiceImpl implements Serializable{
     }
 
     /*SE OBTIENE EL CATALOGO MEDIANTE EL CODIGO DE LA VISTA QUE LO CONTIENE*/
-    public List<Sic1general> listByCod_ValorTipoGeneral_Sic1general(List<String> list) throws Exception {
+    public List<Sic1general> listByCod_ValorTipoGeneral_Sic1general(List<String> list) throws CustomizerException {
         
         List<Sic1general> lstResult;
         try{    
             lstResult = daoSic1generalImp.listByCod_ValorTipoGeneral(list);
         } catch(Exception ex){
-            throw new Exception(ex.getMessage());
+            throw new CustomizerException(ex.getMessage());
         }     
         return lstResult;        
     }
     
-    public List<SelectItem> listByCod_ValorTipoGeneral_SelectItem(List<String> list) throws Exception {
+    public List<SelectItem> listByCod_ValorTipoGeneral_SelectItem(List<String> list) throws CustomizerException {
         
         List<SelectItem> lstResult = new ArrayList();        
         try{            
@@ -56,24 +57,24 @@ public class Sic1generalServiceImpl implements Serializable{
                 lstResult.add(si);                
             }            
         } catch(Exception ex){
-            throw new Exception(ex.getMessage());
+            throw new CustomizerException(ex.getMessage());
         }        
         return lstResult;        
     }
     
     /*SE OBTIENE EL CATALOGO MEDIANTE EL CODIGO DEL ITEM*/
-    public List<Sic1general> listByCod_ValorGeneral_Sic1general(List<String> list) throws Exception {        
+    public List<Sic1general> listByCod_ValorGeneral_Sic1general(List<String> list) throws CustomizerException {        
         
         List<Sic1general> list2;
         try{
             list2 = daoSic1generalImp.listByCod_ValorGeneral(list);
         }catch(Exception ex){
-            throw new Exception(ex.getMessage());
+            throw new CustomizerException(ex.getMessage());
         }
         return list2;
     }
     
-    public List<SelectItem> listByCod_ValorGeneral_SelectItem(List<String> list) throws Exception {
+    public List<SelectItem> listByCod_ValorGeneral_SelectItem(List<String> list) throws CustomizerException {
         
         List<SelectItem> lstResult = new ArrayList();        
         try{            
@@ -87,7 +88,7 @@ public class Sic1generalServiceImpl implements Serializable{
                 lstResult.add(si);                
             }            
         } catch(Exception ex){
-            throw new Exception(ex.getMessage());
+            throw new CustomizerException(ex.getMessage());
         }
         
         return lstResult;        
@@ -104,7 +105,7 @@ public class Sic1generalServiceImpl implements Serializable{
         return listResult;
     }
     
-    public List<SelectItem> listByCod_STipoDocu_SelectItem(List<String> list) throws Exception {
+    public List<SelectItem> listByCod_STipoDocu_SelectItem(List<String> list) throws CustomizerException {
         
         List<SelectItem> lstResult = new ArrayList();        
         try{            
@@ -119,7 +120,7 @@ public class Sic1generalServiceImpl implements Serializable{
                 lstResult.add(si);                
             }            
         } catch(Exception ex){
-            throw new Exception(ex.getMessage());
+            throw new CustomizerException(ex.getMessage());
         }        
         return lstResult;          
     }
@@ -135,12 +136,12 @@ public class Sic1generalServiceImpl implements Serializable{
         return lstResult;
     }
     
-    public List<Sic1general> listById_GeneralRel(BigDecimal id) throws Exception {
+    public List<Sic1general> listById_GeneralRel(BigDecimal id) throws CustomizerException {
         List<Sic1general> lstResult;
         try{
             lstResult = daoSic1generalImp.listById_GeneralRel(id);
          } catch(Exception ex){
-            throw new Exception(ex.getMessage());
+            throw new CustomizerException(ex.getMessage());
         }   
         return lstResult;
     }
