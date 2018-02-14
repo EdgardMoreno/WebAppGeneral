@@ -44,6 +44,7 @@ public class ProductController implements Serializable{
     private Sic1prod sic1prod;
     private String flgExternalPage;
     private Integer indexTabla;
+    private boolean flgEditProd;
     
     @PostConstruct
     public void init() {
@@ -117,6 +118,15 @@ public class ProductController implements Serializable{
     public void setFlgExternalPage(String flgExternalPage) {
         this.flgExternalPage = flgExternalPage;
     }
+
+    public boolean isFlgEditProd() {
+        return flgEditProd;
+    }
+
+    public void setFlgEditProd(boolean flgEditProd) {
+        this.flgEditProd = flgEditProd;
+    }
+    
     
     /********************************************************************/
     /******************METODOS*******************************************/
@@ -149,6 +159,7 @@ public class ProductController implements Serializable{
         this.indexTabla = listProducts.indexOf(obj);
         ProductServiceImpl productServiceImpl = new ProductServiceImpl();
         this.sic1prod = productServiceImpl.getByCod(obj.getCodProd());
+        this.flgEditProd = true;
 
     }
     
@@ -158,8 +169,12 @@ public class ProductController implements Serializable{
         this.sic1prod.setCodProd(viSicprod.getCodProd());
         this.sic1prod.setDesProd(viSicprod.getDesProd());
         
-        //Llamar Javascript
-        //RequestContext.getCurrentInstance().execute("validar()");
+        this.flgEditProd = false;
+        
+    }
+    
+    public void clearForm(){
+        this.sic1prod = new Sic1prod();
     }
     
     public void saveProduct() throws CustomizerException{
@@ -180,6 +195,10 @@ public class ProductController implements Serializable{
         }catch(CustomizerException ex){            
             throw new CustomizerException(ex.getMessage());
         }        
+    }
+    
+    public void calc(){
+        
     }
     
 }

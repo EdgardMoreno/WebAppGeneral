@@ -11,6 +11,31 @@
         <ui:define name="header">
 
             <script>
+                
+                
+                function fnCalProfit(element){
+                    
+                    var table = document.getElementById("form:tblProducts");
+                    
+                    //A partir del InpuText se obtiene el rowIndex obteniendo su elemento padre
+                    /* element --> InputText
+                     * element.parentNode --> object HTMLTableCellElement
+                     * element.parentNode.parentNode --> object HTMLTableRowElement
+                     */
+                    var rowIndex = element.parentNode.parentNode.rowIndex;
+                    
+                    /*console.log("Cell " + element.parentNode);
+                    console.log("Row "  + element.parentNode.parentNode);
+                    console.log("Fila Seleccionada: " + table.rows[rowIndex].cells[5].innerHTML);*/
+                    
+                    var numCosto = table.rows[rowIndex].cells[5].innerHTML;
+                    var numPrecio = Number(element.value);
+                    numCosto  = (numCosto==''?Number(1):Number(numCosto));
+                    console.log("numCosto: " + numCosto + " precio: " + numPrecio);
+                    var result = ((numPrecio - numCosto) / numCosto) * 100;
+                    result = fnFormatDecimal(result);
+                    table.rows[rowIndex].cells[7].innerHTML = result + '%';
+                }
 
             </script>
 
@@ -22,13 +47,13 @@
                 <div id="divResultadoValidacion"/>
 
                 <div class="page-header" >
-                    <h3>Actualizar Precios</h3>
+                    <h3 style="display: none" >Actualizar Precios</h3>
                 </div>
 
                 <p:growl id="message" showDetail="true" />
 
                 <br/>
-                <h:panelGrid columns="7" style="width:90%" 
+                <h:panelGrid columns="7" style="width:95%" 
                              columnClasses="td-label-1, td-content-1, td-label-1, td-content-1, td-label-1, td-content-1, td-controls-1">
 
                     <h:outputLabel value="Cód. Producto:"/>
@@ -46,23 +71,21 @@
                     <h:panelGroup>
                         <h:commandLink actionListener="#{productController.filterProducts()}" styleClass="btn btn-default">
                             <span class="glyphicon glyphicon-search"></span> Buscar
-                        </h:commandLink>
-                        <p:commandLink actionListener="#{productController.newProduct()}" oncomplete="fnChangeTab(2)" styleClass="btn btn-default" update="form">
-                            <span class="glyphicon glyphicon-new-window"></span> Nuevo
-                        </p:commandLink>
+                        </h:commandLink>                        
                     </h:panelGroup>
 
                 </h:panelGrid>
                 <br/>
                 <h:dataTable id="tblProducts" var="item" value="#{productController.listProducts}" 
+                             width="100%"
                              rendered="#{not empty productController.listProducts}"
                              styleClass="table-bordered"
-                             columnClasses="table_style_id,table_style_code,table_style_description_medium,
-                             table_style_amount,table_style_code,table_style_price,table_style_price,table_style_amount,table_style_action"
-                             >
+                             columnClasses="table_style_id      ,table_style_code   ,table_style_description_medium,
+                                            table_style_amount  ,table_style_code   ,table_style_price,
+                                            table_style_price  ,table_style_amount ,table_style_action">
 
                     <h:column>
-                        <f:facet name="header">No.</f:facet>1
+                        <f:facet name="header">No.</f:facet>#{productController.listProducts.indexOf(item)}
                     </h:column>
 
                     <h:column>
@@ -82,30 +105,25 @@
                     </h:column>
 
                     <h:column>
-                        <f:facet name="header">Costo</f:facet>#{item.numPrecio}
+                        <f:facet name="header">Costo</f:facet>#{item.numUtlcostovalor}
                     </h:column>
 
                     <h:column>
                         <f:facet name="header">Precio</f:facet>
-                        <h:inputText value="#{item.numPrecio}" />
+                        <input type="text" name="precio" value="#{item.numPrecio}" onkeyup="fnCalProfit(this)" />
                     </h:column>
 
                     <h:column>
-                        <f:facet name="header">% Ganancia</f:facet>
-                        <label>${item.numPrecio}</label>
+                        <f:facet name="header">Ganancia</f:facet>
                     </h:column>
 
-                    <h:column>
-                        <p:commandButton icon="ui-icon-search"
-                                         actionListener="#{productController.selectProductFromDialog(item)}"
-                                         rendered="#{not empty productController.flgExternalPage}"/>
-                        &nbsp;
+                    <h:column>                        
                         <p:commandLink action="#{productController.deleteAction(item)}"  update="form" >
                             <span class="glyphicon glyphicon-trash"></span>
                             <p:confirm header="Confirmation" message="¿Está seguro de continuar?" icon="ui-icon-alert"  />
                         </p:commandLink>
                         &nbsp;
-                        <p:commandLink action="#{productController.editAction(item)}" oncomplete="fnChangeTab(2)" update="form">
+                        <p:commandLink action="#{productController.editAction(item)}" >
                             <span class="glyphicon glyphicon-pencil"></span>                            
                         </p:commandLink>
 

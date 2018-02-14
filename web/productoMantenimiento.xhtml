@@ -70,8 +70,6 @@
 
                 <div id="divResultadoValidacion"/>
 
-
-
                 <p:growl id="message" showDetail="true" />
 
                 <ul class="nav nav-tabs" onclick="fnHideMessageValidation()" >
@@ -84,7 +82,7 @@
                     <div id="menu1" class="tab-pane fade in active">                            
 
                         <br/>
-                        <h:panelGrid columns="7" style="width:90%" 
+                        <h:panelGrid columns="7" style="width:95%"
                                      columnClasses="td-label-1, td-content-1, td-label-1, td-content-1, td-label-1, td-content-1, td-controls-1">
 
                             <h:outputLabel value="Cód. Producto:"/>
@@ -110,13 +108,15 @@
 
                         </h:panelGrid>
                         <br/>
-                        <h:dataTable id="tblProducts" var="item" value="#{productController.listProducts}" rendered="#{not empty productController.listProducts}"
+                        <h:dataTable id="tblProducts" var="item" value="#{productController.listProducts}" 
+                                     width="100%"
                                      styleClass="table-bordered"
-                                     columnClasses="table_header1,table_header5,table_header6,table_header4,table_header2,table_header2,table_header3"
-                                     >
+                                     columnClasses="table_style_id,table_style_code,table_style_description_medium,
+                                     table_style_code,table_style_price,table_style_amount,
+                                     table_style_action" >                            
 
                             <h:column>
-                                <f:facet name="header">No.</f:facet>1
+                                <f:facet name="header">No.</f:facet>#{productController.listProducts.indexOf(item) + 1}
                             </h:column>
 
                             <h:column>
@@ -150,7 +150,7 @@
                                 </p:commandLink>
                                 &nbsp;
                                 <p:commandLink action="#{productController.editAction(item)}" oncomplete="fnChangeTab(2)" update="form">
-                                    <span class="glyphicon glyphicon-pencil"></span>                            
+                                    <span class="glyphicon glyphicon-pencil"></span>
                                 </p:commandLink>
 
                             </h:column>
@@ -160,11 +160,12 @@
                     <div id="menu2" class="tab-pane fade">
 
                         <br/>
-                        <h:panelGrid id="pgRegProduct" columns="2" style="width:80%" columnClasses="label_panelGrid_2c, text_panelGrid_2c">
+                        <h:panelGrid id="pgRegProduct" columns="2"  style="width:80%" columnClasses="label_panelGrid_2c, text_panelGrid_2c">
 
                             <h:outputLabel value="Código Producto:"/>
                             <h:inputText id="codigoProducto"
                                          styleClass="form-control left"
+                                         disabled="#{productController.flgEditProd}"
                                          style="width:30%"
                                          value="#{productController.sic1prod.codProd}"/>
 
@@ -198,6 +199,10 @@
                             <p:commandLink value="Grabar" onstart="return fnValidateForm()" styleClass="btn btn-primary" action="#{productController.saveProduct()}" update="message form:pgRegProduct" oncomplete="fnChangeTab(2)">
                                 <p:confirm header="Confirmation" message="¿Está seguro de continuar?" icon="ui-icon-alert" />
                             </p:commandLink>
+                            &nbsp;
+                            <h:commandLink value="Nuevo" styleClass="btn btn-primary" >
+                                <f:ajax render="form:pgRegProduct" listener="#{productController.clearForm()}" /> 
+                            </h:commandLink>
                         </div>
                     </div>
 

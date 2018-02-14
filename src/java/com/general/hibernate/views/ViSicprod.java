@@ -24,6 +24,10 @@ public class ViSicprod  implements java.io.Serializable {
      private Date fecHasta;
      private BigDecimal numPrecio;
      private BigDecimal numCantidad;
+     
+     /*Agregado*/
+     private BigDecimal numUtlcostoiddocu;
+     private BigDecimal numUtlcostovalor;     
 
     public ViSicprod() {
     }
@@ -149,6 +153,24 @@ public class ViSicprod  implements java.io.Serializable {
     public void setNumCantidad(BigDecimal numCantidad) {
         this.numCantidad = numCantidad;
     }
+
+    public BigDecimal getNumUtlcostoiddocu() {
+        return numUtlcostoiddocu;
+    }
+
+    public void setNumUtlcostoiddocu(BigDecimal numUtlcostoiddocu) {
+        this.numUtlcostoiddocu = numUtlcostoiddocu;
+    }
+
+    public BigDecimal getNumUtlcostovalor() {
+        return numUtlcostovalor;
+    }
+
+    public void setNumUtlcostovalor(BigDecimal numUtlcostovalor) {
+        this.numUtlcostovalor = numUtlcostovalor;
+    }
+    
+    
 
 
    public boolean equals(Object other) {

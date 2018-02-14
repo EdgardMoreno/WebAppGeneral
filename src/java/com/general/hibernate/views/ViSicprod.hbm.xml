@@ -46,6 +46,11 @@
       <property name="numCantidad" type="big_decimal">
         <column name="NUM_CANTIDAD" precision="22" scale="0"/>
       </property>
-
+      <property name="numUtlcostoiddocu" type="big_decimal">
+        <column name="NUM_ULTCOSTO_IDDOCU" precision="22" scale="0"/>      
+      </property>
+      <property name="numUtlcostovalor" type="big_decimal">
+        <column name="NUM_ULTCOSTO_VALOR" precision="22" scale="0"/>
+      </property>
   </class>
 </hibernate-mapping>

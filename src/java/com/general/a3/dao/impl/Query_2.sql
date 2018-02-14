@@ -1,132 +1,111 @@
-/* 
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-/**
- * Author:  Edgard
- * Created: 13/02/2018
- */
+CREATE OR REPLACE VIEW VI_SICPROD AS
+WITH TMP_CANTIDAD AS (
+                    SELECT  RELDOCU.ID_PROD
+                           ,PROD.COD_PROD
+                           ,SUM(CASE S2.COD_SCLASEEVEN WHEN 'VI_SICSCLASEEVENCOMPRA' /*COMPRA*/ THEN -1 * RELDOCU.NUM_CANTIDAD
+                                                       WHEN 'VI_SICSCLASEEVENVENTA' /*VENTA*/ THEN RELDOCU.NUM_CANTIDAD END)  AS NUM_CANTIDAD
+                    FROM SIC3DOCUPROD RELDOCU
+                    JOIN SIC1PROD PROD ON PROD.ID_PROD = RELDOCU.ID_PROD
+                    JOIN SIC1DOCU DOCU ON RELDOCU.ID_DOCU = DOCU.ID_DOCU
+                    JOIN SIC1SCLASEEVEN S2 ON S2.ID_SCLASEEVEN = DOCU.ID_SCLASEEVEN
+                    WHERE S2.COD_SCLASEEVEN IN ('VI_SICSCLASEEVENCOMPRA','VI_SICSCLASEEVENVENTA')
+                    GROUP  BY  RELDOCU.ID_PROD
+                               ,PROD.COD_PROD ),
 
-  -- PKG_SICMANTDOCU --> HEADER
-  PROCEDURE PRC_SICRELADOCUPROD(X_ID_DOCU      NUMBER,
-                                X_ID_PROD      NUMBER,                                
-                                X_ID_TRELADOCU NUMBER,
-                                X_FEC_DESDE    VARCHAR2,
-                                X_FEC_HASTA    VARCHAR2,
-                                X_DES_NOTAS    VARCHAR2,
-                                X_NUM_VALOR    NUMBER,
-                                X_NUM_MTODSCTO NUMBER,
-                                X_NUM_CANTIDAD NUMBER,                                                                
-                                X_ID_ERROR     OUT NUMBER,
-                                X_DES_ERROR    OUT VARCHAR2,
-                                X_FEC_ERROR    OUT DATE
-                                
-                                --------------------------------------------------------------------------------------------------------------
-                                    --DESCRIPCION:   PROCEDIMIENTO QUE RELACIONA PRODUCTOS CON EL DOCUMENTO
-                                    --PARAMETROS:
-                                    --               X_ID_DOCU (VARIABLE DE INGRESO QUE CONTIENE EL IDENTIFICADOR DEL DOCUMENTO)
-                                    --               X_ID_PROD (VARIABLE DE INGRESO QUE CONTIENE EL ESTADO DE LA RELACION)
-                                    --               X_ID_TRELADOCU (VARIABLE DE INGRESO QUE CONTIENE EL IDENTIFICADOR DE LA RELACION DEL DOCUMENTO)                                   
-                                    --               X_FEC_DESDE (VARIABLE DE INGRESO QUE CONTIENE LA FECHA INICIAL)
-                                    --               X_FEC_HASTA (VARIABLE DE INGRESO QUE CONTIENE LA FECHA FINAL)
-                                    --               X_DES_NOTAS (VARIABLE DE INGRESO QUE CONTIENE LA DESCRIPCION DE LAS NOTAS)                                    
-                                    --               X_NUM_VALOR (VARIABLE DE INGRESO QUE CONTIENE LA DESCRIPCION DE LAS NOTAS)                                    
-                                    --               X_NUM_MTODSCTO (VARIABLE DE INGRESO QUE CONTIENE LA DESCRIPCION DE LAS NOTAS)
-                                    --               X_NUM_CANTIDAD (VARIABLE DE INGRESO QUE CONTIENE LA DESCRIPCION DE LAS NOTAS)
-                                    --               X_ID_ERROR(VARIABLE DE SALIDA QUE CONTIENE EL CODIGO DEL ERROR)
-                                    --               X_DES_ERROR(VARIABLE DE SALIDA QUE CONTIENE LA DESCRIPCION DEL ERROR)
-                                    --               X_FEC_ERROR(VARIABLE DE SALIDA QUE CONTIENE LA FECHA DEL ERROR)
-                                    --------------------------------------------------------------------------------------------------------------
-                                
+     TMP_DETALLECOSTOS AS (
 
-                                );
+                   SELECT * FROM (
+                       /*@DESCRIPCION: SUBCONSULTA QUE SE UTILIZA PARA OBTENER EL DETALLE DE LOS PRECIOS POR CADA PRODUCTO, DESDE EL MAS ALTO HASTA EL MAS BAJO
+                         MUESTRA EL DETALLE DE COSTOS DE CADA PRODUCTO CON SU RESPECTIVO ID DOCU DE LA COMPRA */
+                         SELECT  ROW_NUMBER() OVER (PARTITION BY T0.ID_PROD ORDER BY T0.NUM_VALOR DESC) AS FILA
+                                ,T0.ID_PROD
+                                ,T0.ID_DOCU
+                                ,T0.NUM_VALOR
+                         FROM SIC3DOCUPROD T0
+                         JOIN SIC1DOCU DOCU ON T0.ID_DOCU = DOCU.ID_DOCU
+                         JOIN SIC1SCLASEEVEN S2 ON S2.ID_SCLASEEVEN = DOCU.ID_SCLASEEVEN
+                         WHERE S2.COD_SCLASEEVEN IN ('VI_SICSCLASEEVENCOMPRA') ) WHERE FILA = 1
+                   )
+
+SELECT
+        S1.ID_PROD
+       ,S2.COD_IDEN
+       ,S1.COD_PROD
+       ,S1.DES_PROD
+       ,S1.DES_PRODCOME
+       ,S1.ID_STIPOPROD
+       ,V2.COD_STIPOPROD
+       ,UPPER(V2.DES_STIPOPROD) AS DES_STIPOPROD
+       ,UPPER(V2.COD_VALORGENERALREL) AS COD_TIPOPROD
+       ,UPPER(V2.DES_GENERALREL) AS DES_TIPOPROD
+       ,S1.FEC_DESDE
+       ,S2.FEC_HASTA
+       ,ROUND(S1.NUM_PRECIO,2) AS NUM_PRECIO
+       ,NVL(TMP_CANT.NUM_CANTIDAD,0) AS NUM_CANTIDAD
+
+       ,TMP_COSTOS.ID_DOCU AS NUM_ULTCOSTO_IDDOCU
+       ,TMP_COSTOS.NUM_VALOR AS NUM_ULTCOSTO_VALOR
+FROM SIC1PROD S1
+INNER JOIN SIC1IDENPROD S2 ON S1.ID_PROD = S2.ID_PROD
+JOIN VI_SICSTIPOPROD V2 ON V2.ID_STIPOPROD = S1.ID_STIPOPROD
+LEFT JOIN TMP_DETALLECOSTOS TMP_COSTOS ON TMP_COSTOS.ID_PROD = S1.ID_PROD
+LEFT JOIN TMP_CANTIDAD TMP_CANT ON TMP_CANT.ID_PROD = S1.ID_PROD
+ORDER BY COD_PROD ASC
+
+/////////////////
 
 
---PKG_SICMANTDOCU --> BODY
-PROCEDURE PRC_SICRELADOCUPROD(X_ID_DOCU      NUMBER,
-                                X_ID_PROD      NUMBER,                                
-                                X_ID_TRELADOCU NUMBER,
-                                X_FEC_DESDE    VARCHAR2,
-                                X_FEC_HASTA    VARCHAR2,
-                                X_DES_NOTAS    VARCHAR2,
-                                X_NUM_VALOR    NUMBER,
-                                X_NUM_MTODSCTO NUMBER,
-                                X_NUM_CANTIDAD NUMBER,                                                                
-                                X_ID_ERROR     OUT NUMBER,
-                                X_DES_ERROR    OUT VARCHAR2,
-                                X_FEC_ERROR    OUT DATE) IS
+CREATE OR REPLACE VIEW VI_SICDOCU AS
+SELECT     S1.ID_DOCU
+          ,S8.COD_IDEN
+          ,UPPER(S7.DES_SCLASEEVEN) || ': ' || UPPER(S3.Des_Stipodocu) || ' : ' ||  S8.COD_IDEN AS DES_DOCU
+          ,S1.FEC_CREACION
 
-  L_FEC_DESDE DATE;
-  L_FEC_HASTA DATE;
+          ,S1.ID_PERS AS ID_PERS_CLIEPROV
+          ,UPPER(S4.DES_PERS) AS DES_PERS_CLIEPROV
+          ,S1.ID_TROLPERS AS ID_TROLPERS_CLIEPROV
+          ,S2.DES_TROL AS DES_TROLPERS_CLIEPROV
 
-  BEGIN
+          ,S1.ID_STIPODOCU
+          ,S3.DES_STIPODOCU
+          ,S3.COD_STIPODOCU
+          ,S1.COD_SERIE
+          ,S1.NUM_DOCU
+          ,S1.DES_NOTAS
+          ,S1.FEC_DESDE
+          ,S1.FEC_HASTA
+          ,S1.NUM_SUBTOTAL
+          ,S1.NUM_IGV
+          ,S1.NUM_SUBTOTAL + S1.NUM_IGV AS NUM_TOTAL
+          ,S3.ID_TIPODOCU
+          ,S5.DES_TIPODOCU
+          ,S5.COD_TIPODOCU
 
-    
-    X_ID_ERROR  := 0;
-    X_DES_ERROR := '';
-    BEGIN
-    
-         IF X_FEC_DESDE IS NULL THEN
-            L_FEC_DESDE := SYSDATE;
-          ELSE
-            L_FEC_DESDE := TO_DATE(X_FEC_DESDE, 'dd/mm/yyyy hh24:mi:ss');
-          END IF;
-    
-          IF X_FEC_HASTA IS NULL THEN
-            L_FEC_HASTA := PKG_SICCONSGENERAL.FNC_SICOBTFECINF;
-          ELSE
-            L_FEC_HASTA := TO_DATE(X_FEC_HASTA, 'dd/mm/yyyy hh24:mi:ss');
-          END IF;      
+          /*Estado*/
+          ,T1.ID_ESTADOCU
+          ,T3.COD_ESTA
+          ,UPPER(T3.DES_ESTA) AS DES_ESTADOCU
+          ,T1.FEC_DESDE AS FEC_DESDEESTA
+          ,T1.FEC_HASTA AS FEC_HASTAESTA
 
-          MERGE INTO SIC3DOCUPROD S1
-          USING ( SELECT  X_ID_DOCU AS ID_DOCU
-                         ,X_ID_PROD AS ID_PROD                         
-                         ,X_ID_TRELADOCU AS ID_TRELADOCU
-                         ,L_FEC_DESDE AS FEC_DESDE
-                         ,L_FEC_HASTA AS FEC_HASTA
-                         ,X_DES_NOTAS AS DES_NOTAS
-                         ,X_NUM_VALOR AS NUM_VALOR
-                         ,X_NUM_MTODSCTO AS NUM_MTODSCTO
-                         ,X_NUM_CANTIDAD AS NUM_CANTIDAD
-                   FROM DUAL ) S2 ON ( S1.ID_PROD = S2.ID_PROD
-                                       AND S1.ID_DOCU = S2.ID_DOCU )
-           WHEN MATCHED THEN
-            UPDATE
-               SET  S1.FEC_DESDE    = S2.FEC_DESDE
-                   ,S1.FEC_HASTA    = S2.FEC_HASTA
-                   ,S1.DES_NOTAS    = S2.DES_NOTAS
-                   ,S1.NUM_VALOR    = S2.NUM_VALOR
-                   ,S1.NUM_MTODSCTO = S2.NUM_MTODSCTO
-                   ,S1.NUM_CANTIDAD = S2.NUM_CANTIDAD
-                   
-          WHEN NOT MATCHED THEN
-            INSERT
-              (  ID_DOCU
-                ,ID_PROD
-                ,ID_TRELADOCU
-                ,FEC_DESDE
-                ,FEC_HASTA
-                ,DES_NOTAS
-                ,NUM_VALOR
-                ,NUM_MTODSCTO
-                ,NUM_CANTIDAD )
-            VALUES
-              (  
-                 S2.ID_DOCU
-                ,S2.ID_PROD                
-                ,S2.ID_TRELADOCU
-                ,S2.FEC_DESDE
-                ,S2.FEC_HASTA
-                ,S2.DES_NOTAS
-                ,S2.NUM_VALOR
-                ,S2.NUM_MTODSCTO
-                ,S2.NUM_CANTIDAD );
-      
-    EXCEPTION
-      WHEN OTHERS THEN
-          X_ID_ERROR  := SQLCODE;
-          X_DES_ERROR := SQLERRM;
-          X_FEC_ERROR := SYSDATE;
-    END;
-  END;
+          ,S7.ID_PERS AS ID_PERS_CREADOR
+          ,UPPER(S7.DES_PERS) AS DES_PERS_CREADOR
+          ,/*S6.ID_TROLPERS*/NULL AS ID_TROLPERS_CREADOR
+          ,V2.DES_TROLPERS AS DES_TROLPERS_CREADOR
+
+     FROM SIC1DOCU S1
+          JOIN SIC1IDENDOCU S8 ON S8.ID_DOCU = S1.ID_DOCU
+                                  AND S8.ID_TIPOIDEN = PKG_SICCONSGENERAL. FNC_SICOBTIDGEN ('VI_SICTIPOIDEN', 'DOCUMENTO')
+          LEFT JOIN VI_SICTROL S2 ON (S2.ID_TROL = S1.ID_TROLPERS)
+          LEFT JOIN SIC1STIPODOCU S3 ON (S3.ID_STIPODOCU = S1.ID_STIPODOCU)
+          LEFT JOIN SIC1PERS S4 ON (S4.ID_PERS = S1.ID_PERSEXTERNO)
+          LEFT JOIN VI_SICTIPODOCU S5 ON (S5.ID_TIPODOCU = S3.ID_TIPODOCU)
+          LEFT JOIN SIC1SCLASEEVEN S7 ON S7.ID_SCLASEEVEN = S1.ID_SCLASEEVEN
+          LEFT JOIN SIC3DOCUESTA T1 ON (T1.ID_DOCU = S1.ID_DOCU
+                                       AND T1.FEC_HASTA = PKG_SICCONSGENERAL.FNC_SICOBTFECINF)
+          LEFT JOIN VI_SICESTA T3 ON (T1.ID_ESTADOCU = T3.ID_ESTA)
+
+          LEFT JOIN SIC3DOCUPERS S6 ON S6.ID_DOCU = S1.ID_DOCU
+          LEFT JOIN SIC1PERS S7 ON S7.ID_PERS = S1.ID_PERS
+          LEFT JOIN VI_SICTROLPERS V2 ON V2.ID_TROLPERS = S6.ID_TROLPERS
+
