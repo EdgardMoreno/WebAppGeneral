@@ -42,9 +42,12 @@ public class ProductController implements Serializable{
     private List<ViSicprod> listProducts;
     private ViSicprod viSicprod;
     private Sic1prod sic1prod;
-    private String flgExternalPage;
+    
+    //private String flgExternalPage;
     private Integer indexTabla;
     private boolean flgEditProd;
+    private int paramPageFlgActivo = 0;
+    private int idProd = 0;
     
     @PostConstruct
     public void init() {
@@ -53,9 +56,8 @@ public class ProductController implements Serializable{
             
             listProducts = new ArrayList<>();
             sic1prod    = new Sic1prod();
-            viSicprod   = new ViSicprod();
+            viSicprod   = new ViSicprod();            
             
-            System.out.println("flgExternalPage:" + flgExternalPage); 
         
             List<String> list = new ArrayList<>();
             list.add("VI_SICSTIPOPROD");
@@ -111,14 +113,6 @@ public class ProductController implements Serializable{
         this.items = items;
     }
 
-    public String getFlgExternalPage() {
-        return flgExternalPage;
-    }
-
-    public void setFlgExternalPage(String flgExternalPage) {
-        this.flgExternalPage = flgExternalPage;
-    }
-
     public boolean isFlgEditProd() {
         return flgEditProd;
     }
@@ -126,6 +120,25 @@ public class ProductController implements Serializable{
     public void setFlgEditProd(boolean flgEditProd) {
         this.flgEditProd = flgEditProd;
     }
+
+    public int getParamPageFlgActivo() {
+        return paramPageFlgActivo;
+    }
+
+    public void setParamPageFlgActivo(int paramPageFlgActivo) {
+        this.paramPageFlgActivo = paramPageFlgActivo;
+    }
+
+    public int getIdProd() {
+        return idProd;
+    }
+
+    public void setIdProd(int idProd) {
+        this.idProd = idProd;
+    }
+
+
+    
     
     
     /********************************************************************/
@@ -182,14 +195,13 @@ public class ProductController implements Serializable{
         try{
             
             ProductServiceImpl productServiceImpl = new ProductServiceImpl();
-            productServiceImpl.insert(this.sic1prod);
+            String result = productServiceImpl.insert(this.sic1prod);
             
-            if(this.flgExternalPage != null){
-                RequestContext.getCurrentInstance().closeDialog(sic1prod);
-            }else{
-                sic1prod = new Sic1prod();
-            }
+            //Se llena el control oculto con el identificado del nuevo producto
+            this.idProd = Integer.valueOf(result);
             
+            
+            this.sic1prod = new Sic1prod();
             UtilClass.addInfoMessage(Constantes.CONS_SUCCESS_MESSAGE);
             
         }catch(CustomizerException ex){            

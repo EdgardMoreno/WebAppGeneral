@@ -237,7 +237,7 @@ public class DaoPersonImpl implements Serializable{
         if(obj.getIdTipopers()!= null && obj.getIdTipopers().intValue() > 0 )
             criteria.add(Restrictions.eq("idTipopers",obj.getIdTipopers()));
         if(obj.getDesPers()!= null && !obj.getDesPers().trim().isEmpty() )
-            criteria.add(Restrictions.like("desPers",'%' + obj.getDesPers()+ '%'));
+            criteria.add( Restrictions.like("desPers",'%' + obj.getDesPers().toUpperCase()+ '%').ignoreCase());
         
         List<ViSicpers> lst = criteria.list();        
 

@@ -45,45 +45,14 @@
 
                 //Setear por defecto Genero MASCULINO
                 document.forms['form']['form:sorGenero'][0].checked = true;
-                
+
                 //INVOCACION PAGINA EXTERNA: se bloquea el campo del DNI/RUC
-                var flgParam = $("#form\\:idFlgPaginaExterna").val();                
-                if(Number(flgParam) == 1 ){
-                    $("#form\\:numDocuIden").attr("disabled","true");
+                var flgParam = $("#form\\:idFlgPaginaExterna").val();
+                if (Number(flgParam) == 1) {
+                    $("#form\\:numDocuIden").attr("disabled", "true");
                 }
 
             });
-
-            /*Funcion que permite mostrar ventanas de confirmacion*/
-            function fnShowDialogConfirm(idElement) {
-
-                $.confirm({
-                    columnClass: 'col-md-4 col-md-offset-4', //Tamano de la ventana
-                    title: 'Confirmación',
-                    content: "¿Está seguro de continuar? ",
-                    type: 'blue',
-                    typeAnimated: true,
-                    draggable: true, //Animacion para que vibre
-                    animation: 'scaleX',
-                    closeAnimation: 'scaleX',
-                    theme: 'supervan',
-                    backgroundDismissAnimation: 'glow',
-                    buttons: {
-                        Aceptar: {
-                            text: 'Aceptar',
-                            btnClass: 'btn-primary',
-                            action: function () {
-                                $("#" + idElement).click();
-                            }
-                        },
-                        Cancelar: {
-                            text: 'Cancelar',
-                            btnClass: 'btn-primary'
-                        }
-                    }
-                });
-            }
-            ;
 
             function fnChangeTab(option) {
 
@@ -203,7 +172,7 @@
                     return false;
                 } else {
                     fnHideMessageValidation();
-                    fnShowDialogConfirm("form\\:btnGrabar"); // -> Se pasa como parametro el ID del boton que tien el metodo actionListener
+                    fnShowDialogConfirm("form\\:btnGrabar"); // -> Se pasa como parametro el ID del boton que tiene el metodo actionListener
                     return false;
                 }
 
@@ -213,23 +182,26 @@
             /*Función que se ejecuta durante el ciclo de vida de la llamada AJAX.
              *Cierra el IFRAME*/
             function fnAjaxListenSavePerson(data) {
-                
+
                 var flgParam = $("#form\\:idFlgPaginaExterna").val();
                 /*Pregunta si la pagina ha sido llamada desde una pagina externa*/
-                if(Number(flgParam) == 1){
-                
+                if (Number(flgParam) == 1) {
+
                     switch (data.status) {
                         case "success":
                             var idPers = $("#form\\:idPersona").val();
-                            alert("idPers:" + Number(idPers));
-                            if (Number(idPers) > 0){
+                            //alert("idPers:" + Number(idPers));
+                            if (Number(idPers) > 0) {
                                 parent.$.fancybox.close();
-                                parent.fnCerrarIFrame();
+                                parent.fnCloseIFrame_fromRegisterPerson();
                             }
                             break;
                     }
                 }
             }
+
+
+            
 
         </script>
 
@@ -293,7 +265,7 @@
 
                         <h:outputLabel value="Distrito:"/>
                         <h:inputText styleClass="form-control" value="#{personController.sic1lugar.desLugar}" />                        
-                        
+
                         <h:outputLabel value="idPersona:" style="display: none"/>
                         <h:inputText id="idPersona" value="#{personController.sic1pers.idPers}" style="display: none"/>
 
@@ -303,10 +275,10 @@
                     </h:panelGrid>
                     <br/>
                     <div class="offset-sm-2 col-sm-10">
-                        <input type="button" id="btnConfirm" value="Grabar" class="btn btn-primary" onclick="return fnValidateForm()"/>                            
+                        <input type="button" id="btnConfirm" value="Grabar" class="btn btn-primary" onclick="return fnValidateForm()"/>
                         <input type="button" id="btnConfirm" value="Cancelar" class="btn btn-primary" onclick="parent.$.fancybox.close();"/>
                     </div>
-                </div>                             
+                </div>
 
                 <h:commandButton id="btnGrabar" style="display: none">
                     <f:ajax execute="form" render="message pgFields idPersona idFlgPaginaExterna" listener="#{personController.savePerson()}" onevent="fnAjaxListenSavePerson"/>
@@ -315,6 +287,6 @@
             </h:form>
 
         </div> 
-        
+
     </h:body>
 </html>

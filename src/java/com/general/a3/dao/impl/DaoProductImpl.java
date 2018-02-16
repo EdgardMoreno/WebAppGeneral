@@ -222,11 +222,11 @@ public class DaoProductImpl implements Serializable{
             flgFilter = 1;
         }
         if(obj.getCodProd()!= null && obj.getCodProd().trim().length() > 0 ){
-            criteria.add(Restrictions.like("codProd",obj.getCodProd()+ "%"));
+            criteria.add(Restrictions.like("codProd",obj.getCodProd().toUpperCase() + "%"));
             flgFilter = 1;
         }
         if(obj.getDesProd()!= null && obj.getDesProd().trim().length() > 0 ){
-            criteria.add(Restrictions.eq("desProd",obj.getDesProd()));
+            criteria.add(Restrictions.like("desProd","%"  + obj.getDesProd().toUpperCase() + "%" ));
             flgFilter = 1;
         }
         
@@ -279,11 +279,11 @@ public class DaoProductImpl implements Serializable{
         if(obj.getIdProd()!= null && obj.getIdProd().intValue() > 0)
             criteria.add(Restrictions.eq("idProd",obj.getIdProd()));
         if(obj.getCodProd()!= null && obj.getCodProd().trim().length() > 0 )
-            criteria.add(Restrictions.eq("codProd",obj.getCodProd()));
+            criteria.add(Restrictions.like("codProd",obj.getCodProd().toUpperCase() + '%' ));
         if(obj.getIdStipoprod()!= null && obj.getIdStipoprod().intValue() > 0 )
             criteria.add(Restrictions.eq("idStipoprod",obj.getIdStipoprod()));        
         if(obj.getDesProd()!= null && !obj.getDesProd().trim().isEmpty() )
-            criteria.add(Restrictions.like("desProd",'%' + obj.getDesProd()+ '%'));
+            criteria.add(Restrictions.like("desProd",'%' + obj.getDesProd().toUpperCase() + '%'));
         
         List<ViSicprod> lst = criteria.list();
 

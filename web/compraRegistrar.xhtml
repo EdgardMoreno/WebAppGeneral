@@ -173,6 +173,7 @@
                 }
                 ;
 
+                /*Funcion que se utiliza para validar el formulario*/
                 function fnValidateForm() {
 
 
@@ -244,12 +245,20 @@
                 }
                 ;
 
-                function fnCerrarIFrame() {
+                function fnCloseIFrame_fromRegisterPerson() {
                     $("#form\\:btnSearchPerson").click();
                 }
                 ;
+                
+                function fnCloseIFrame_fromRegisterProduct() {
+                    $("#form\\:btnSearchProduct").click();
+                }
+                ;
 
-                /*AUTOCOMPLETE ajax*/
+                /*AUTOCOMPLETE ajax - BUSQUEDA DE PRODUCTOS : 
+                 * Calcula la posición donde se mostrará la tabla que contiene los productos obtenidos,
+                 * esta posición es justo debajo de la caja de texto donde se ingresa el codigo del producto.
+                 * */
                 function fnShowAutocompleteResult(data) {
 
                     switch (data.status) {
@@ -268,6 +277,15 @@
                     }
                 }
                 ;
+
+                /*CREACION PRODUCTOS: */
+                /*Se llama a la función de FancyBOX para que muestre la URL especificada.*/
+                function fnShowPopupCreateProduct(){
+                    var codProd = document.getElementById("form:codigoProducto").value;
+                    $("#linkDialog").attr("href", "faces/popups/popupProductoRegistrar.xhtml?paramCodProd=" + codProd + "&amp;paramExternalPage=1");
+                    $("#linkDialog").click(); //Origina que llame a la función de FancyBOX y que muestre la URL especificada.
+                    return false;
+                };                
 
                 /*Funcion que permite validar en ingreso del nro de serie y correlativo*/
                 function fnValiteVoucherHeader() {
@@ -295,13 +313,9 @@
                     if (numDocumento.length == 0) {
                         arrMessages.push("Debe ingresar el Correlativo.");
                         FlgError = true;
-                    }
-
-                   
+                    }                   
 
                     var divResu = $("#idDivValidation");
-
-
 
                     if (FlgError) {
 
@@ -404,7 +418,13 @@
                                     <f:ajax execute="codigoProducto" render="descProducto pnAutocomplete" event="keyup" listener="#{orderController.searchProduct()}"  onevent="fnShowAutocompleteResult" />
                                 </h:inputText>
                             </td>
-                            <td class="compra_panelGrid_3"></td>
+                            <td class="compra_panelGrid_3" >
+                                <h:commandLink  id="idCreateProduct" rendered="#{!orderController.flgIsSale}"
+                                                onclick="return fnShowPopupCreateProduct()"
+                                                styleClass="btn btn-default"> 
+                                    <span class="glyphicon glyphicon-new-window"></span>Nuevo
+                                </h:commandLink>
+                            </td>
                             <td class="compra_panelGrid_1">
                                 <h:outputLabel value="Descripción:"/>
                             </td>
@@ -512,96 +532,103 @@
                         <tr>
                             <td><h:outputLabel value="" /></td>
                         </tr>
-                        <tr>
-                            <td class="compra_totales_label">
-                                <h:outputLabel value="Forma de Pago:" />
-                            </td>
-                            <td class="compra_totales_text">                                    
-                                <h:selectOneMenu id="idPayMode" value="#{orderController.sic1docu.idModapago}" styleClass="form-control">
-                                    <f:selectItems value="#{orderController.itemsPayMode}" var="c" itemValue="#{c.idGeneral}" itemLabel="#{c.desGeneral}"/>
-                                    <f:ajax execute="idPayMode" render="idLabelTipotarjeta idTextTipotarjeta" event="change" listener="#{orderController.payModeValueChange}" />
-                                </h:selectOneMenu>
-                            </td>
-                        </tr>
-
-                        <tr>
-
-                            <td class="compra_totales_label">
-                                <h:panelGroup id="idLabelTipotarjeta">
-                                    <h:outputLabel value="Tipo Tarjeta:" rendered="#{not empty orderController.itemsTypeCard}" />
-                                </h:panelGroup>
-                            </td>
-                            <td class="compra_totales_text">
-                                <h:panelGroup id="idTextTipotarjeta">
-                                    <h:selectOneMenu  value="#{orderController.sic1docu.idTipotarjeta}"
-                                                      styleClass="form-control"
-                                                      rendered="#{not empty orderController.itemsTypeCard}">
-                                        <f:selectItem itemLabel="-- Seleccione --" itemValue="-1" />
-                                        <f:selectItems value="#{orderController.itemsTypeCard}" />
-                                    </h:selectOneMenu>
-                                </h:panelGroup>
-                            </td>
-
-                        </tr>
-                        <tr>
-                            <td class="compra_totales_label">
-                                <h:outputLabel value="Mto. Tarjeta:"/>
-                            </td>
-                            <td class="compra_totales_text">
-                                <div class="input-group mb-1 mb-sm-0">
-                                    <div class="input-group-addon">S/.</div>
-                                    <h:inputText
-                                        id="numMtotarjeta" autocomplete="off"
-                                        styleClass="form-control"
-                                        value="#{orderController.sic1docu.numMtotarjeta}"
-                                        onkeypress="return fnAllowOnlyDecimalNumbers(event)"
-                                        onblur="formatDecimal_2(this)"
-                                        />
-                                </div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="compra_totales_label">
-                                <h:outputLabel value="Efectivo?:"/>
-                            </td>
-                            <td class="compra_totales_text">
-                                <div class="input-group mb-1 mb-sm-0">
-                                    <div class="input-group-addon">S/.</div>
-                                    <h:inputText
-                                        id="numMtoefectivo" autocomplete="off"
-                                        styleClass="form-control"
-                                        value="#{orderController.sic1docu.numMtoefectivo}"
-                                        onkeypress="return fnAllowOnlyDecimalNumbers(event)"
-                                        onblur="formatDecimal_2(this)">
-                                    </h:inputText>
-                                </div>
-                            </td>
-                        </tr>
-
-                        <tr>
-                            <td class="compra_totales_label">
-                                <h:outputLabel value="Descuento:"/>
-                            </td>
-                            <td class="compra_totales_text">
-                                <div class="input-group mb-1 mb-sm-0">
-                                    <div class="input-group-addon">S/.</div>
-                                    <h:inputText id="numMtodscto" autocomplete="off"
-                                                 styleClass="form-control"
-                                                 value="#{orderController.sic1docu.numMtodscto}"
-                                                 onkeypress="return fnAllowOnlyDecimalNumbers(event)"
-                                                 >
-                                        <f:ajax execute="@this" event="blur" render="pnTotals" listener="#{orderController.recalculateTotals()}" />
-                                    </h:inputText>
-                                </div>
-                            </td>
-                        </tr>
                     </table>
 
-                    <br/>
+                    <h:panelGroup rendered="#{orderController.flgIsSale}" >
+                        <table width="100%" >
+                            <tr>
+                                <td class="compra_totales_label">
+                                    <h:outputLabel value="Forma de Pago:" />
+                                </td>
+                                <td class="compra_totales_text">
+                                    <h:selectOneMenu id="idPayMode" 
+                                                     value="#{orderController.sic1docu.idModapago}" 
+                                                     styleClass="form-control">
+                                        <f:selectItems value="#{orderController.itemsPayMode}" var="c" itemValue="#{c.idGeneral}" itemLabel="#{c.desGeneral}"/>
+                                        <f:ajax execute="idPayMode" render="idLabelTipotarjeta idTextTipotarjeta" event="change" listener="#{orderController.payModeValueChange}" />
+                                    </h:selectOneMenu>
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td class="compra_totales_label">
+                                    <h:panelGroup id="idLabelTipotarjeta" >
+                                        <h:outputLabel value="Tipo Tarjeta:" rendered="#{not empty orderController.itemsTypeCard}" />
+                                    </h:panelGroup>
+                                </td>
+                                <td class="compra_totales_text">
+                                    <h:panelGroup id="idTextTipotarjeta" >
+                                        <h:selectOneMenu  value="#{orderController.sic1docu.idTipotarjeta}"
+                                                          styleClass="form-control"
+                                                          rendered="#{not empty orderController.itemsTypeCard}">
+                                            <f:selectItem itemLabel="-- Seleccione --" itemValue="-1" />
+                                            <f:selectItems value="#{orderController.itemsTypeCard}" />
+                                        </h:selectOneMenu>
+                                    </h:panelGroup>
+                                </td>
+
+                            </tr>
+                            <tr>
+                                <td class="compra_totales_label">
+                                    <h:outputLabel value="Mto. Tarjeta:" />
+                                </td>
+                                <td class="compra_totales_text">
+                                    <div class="input-group mb-1 mb-sm-0">
+                                        <div class="input-group-addon">S/.</div>
+                                        <h:inputText
+                                            id="numMtotarjeta" autocomplete="off"
+                                            styleClass="form-control"
+                                            value="#{orderController.sic1docu.numMtotarjeta}"
+                                            onkeypress="return fnAllowOnlyDecimalNumbers(event)"
+                                            onblur="formatDecimal_2(this)"
+                                            />
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="compra_totales_label">
+                                    <h:outputLabel value="Efectivo?:"/>
+                                </td>
+                                <td class="compra_totales_text">
+                                    <div class="input-group mb-1 mb-sm-0">
+                                        <div class="input-group-addon">S/.</div>
+                                        <h:inputText
+                                            id="numMtoefectivo" autocomplete="off"
+                                            styleClass="form-control"
+                                            value="#{orderController.sic1docu.numMtoefectivo}"
+                                            onkeypress="return fnAllowOnlyDecimalNumbers(event)"
+                                            onblur="formatDecimal_2(this)">
+                                        </h:inputText>
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
+                    </h:panelGroup>                    
 
                     <h:panelGroup id="pnTotals">
 
                         <table style="width: 100%">
+                            
+                            <tr>
+                                <td class="compra_totales_label">
+                                    <h:outputLabel value="Descuento:"/>
+                                </td>
+                                <td class="compra_totales_text">
+                                    <div class="input-group mb-1 mb-sm-0">
+                                        <div class="input-group-addon">S/.</div>
+                                        <h:inputText id="numMtodscto" autocomplete="off"
+                                                     styleClass="form-control"
+                                                     value="#{orderController.sic1docu.numMtodscto}"
+                                                     onkeypress="return fnAllowOnlyDecimalNumbers(event)"
+                                                     >
+                                            <f:ajax execute="@this" event="blur" render="pnTotals" listener="#{orderController.recalculateTotals()}" />
+                                        </h:inputText>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr style="height: 10px">
+                                <td></td>
+                            </tr>
                             <tr style="color: white; border-top: 1px inset #2C3259 ; font-size: 15px">
                                 <td class="compra_totales_label">
                                     <h:outputLabel  value="SUB. TOTAL:" />
@@ -634,14 +661,15 @@
 
                             <tr style="color: white; border-top: 1px inset #2C3259; text-align: center">
                                 <td colspan="2">
-                                    <div class="calcularVuelto" onclick="fnCalcularVuelto()">CALCULAR VUELTO</div>
-                                    <input type="text" style="display:none" id="numMtovuelto" value="${orderController.sic1docu.numMtovuelto}" />
+                                    <h:panelGroup rendered="#{orderController.flgIsSale}" >
+                                        <div class="calcularVuelto" onclick="fnCalcularVuelto()">CALCULAR VUELTO</div>
+                                        <input type="text" style="display:none" id="numMtovuelto" value="${orderController.sic1docu.numMtovuelto}" />
+                                    </h:panelGroup>
                                 </td>
                             </tr>
 
                         </table>
-                    </h:panelGroup>                       
-
+                    </h:panelGroup>
                 </div>
 
 
@@ -764,7 +792,7 @@
                                         <td><h:commandLink value="#{e.getCodProd()}"  >
                                                 <f:ajax execute="pnAutocomplete"  render="form:codigoProducto form:descProducto form:pnAutocomplete" listener="#{orderController.selectAutocompleteProduct(e)}"  />
                                             </h:commandLink></td>
-                                        <td>#{e.getDesProd()}</td>                                        
+                                        <td>#{e.getDesProd()}</td>
                                     </tr>
                                 </ui:repeat>
                             </tbody>
@@ -774,11 +802,10 @@
 
                 <a id="linkDialog" href="#" class="iframe"  style="display:none"/>
                 <a id="idLink" href="#"  style="display:none"/>
-
-
-
-
-
+                <h:commandLink  id="btnSearchProduct" style="display:none" >                    
+                    <f:ajax execute="codigoProducto" render="descProducto" listener="#{orderController.searchProduct()}" />
+                </h:commandLink>
+                
             </div>
 
         </ui:define>

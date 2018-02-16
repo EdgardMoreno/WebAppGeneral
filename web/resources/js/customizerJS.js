@@ -1,3 +1,45 @@
+/*******************************************************************************************/
+/********************** VALIDACIONES GENERICAS *********************************************/
+
+/*Funcion que devuelve el tipo de persona en base al DoCUMENTO DE IDENTIDAD*/
+function fnGetPersType(valor){
+    /*Persona Juridica*/
+    if ( valor.length == 11 && valor.substring(0,2) == '20' ){
+        return "PJ";
+    } else if ( valor.length == 11 && valor.substring(0,2) == '10' ){
+        return "PJ";
+    } else if ( valor.length == 8 ){
+        return "PN";
+    } else {
+        return "ERROR";
+    }
+};
+
+/*Funcion que valida el documento de identidad ingresado*/
+function fnValidateDocuIden(val){
+    
+    var arrMessages = [];
+
+    if (val.length == 0 ){
+
+      arrMessages.push("Debe ingresar el Documento de Identidad.");
+      fnShowMessageValidation(arrMessages);
+      return false;
+
+    }else {
+
+        var resultado = fnGetPersType(val);
+
+        if ( resultado == "ERROR" ){
+            arrMessages.push("El formato del Documento de Identidad es inv&aacutelido.");
+            fnShowMessageValidation(arrMessages);
+            return false;
+        } else {
+            fnHideMessageValidation();
+            return true;
+        }
+    }
+};
 
 /*Función para que solo permita ingresar números*/
 function fnAllowOnlyNumbers(e){
@@ -15,7 +57,6 @@ function fnAllowOnlyNumbers(e){
     tecla_final = String.fromCharCode(tecla);
     return patron.test(tecla_final);
 };
-
 
 /*Función para que solo permita ingresar números decimales*/
 function fnAllowOnlyDecimalNumbers(e){
@@ -60,8 +101,8 @@ function fnFormatDecimal(val){
     }
 };
 
-/***********************************************************************/
-/****************MENSAJE DE VALIDACION**********************************/
+/******************************************************************************************************/
+/**************** MENSAJE DE VALIDACION ***************************************************************/
 /*Funcion que muestra el error*/
 function fnShowMessageValidation(arrMessage){
 
@@ -89,52 +130,10 @@ function fnHideMessageValidation(){
     
 };
 
-/***********************************************************************/
-/********************** PERSONA ****************************************/
-/*Funcion que devuelve el tipo de persona en base al DoCUMENTO DE IDENTIDAD*/
-function fnGetPersType(valor){
-    /*Persona Juridica*/
-    if ( valor.length == 11 && valor.substring(0,2) == '20' ){
-        return "PJ";
-    } else if ( valor.length == 11 && valor.substring(0,2) == '10' ){
-        return "PJ";
-    } else if ( valor.length == 8 ){
-        return "PN";
-    } else {
-        return "ERROR";
-    }
-};
-
-/*Funcion que valida el documento de identidad ingresado*/
-function fnValidateDocuIden(val){
-    
-    var arrMessages = [];
-
-    if (val.length == 0 ){
-
-      arrMessages.push("Debe ingresar el Documento de Identidad.");
-      fnShowMessageValidation(arrMessages);
-      return false;
-
-    }else {
-
-        var resultado = fnGetPersType(val);
-
-        if ( resultado == "ERROR" ){
-            arrMessages.push("El formato del Documento de Identidad es inv&aacutelido.");
-            fnShowMessageValidation(arrMessages);
-            return false;
-        } else {
-            fnHideMessageValidation();
-            return true;
-        }
-    }
-};
-
 /************************************************************************/
 /********************** MESSAGES ****************************************/
-/*Funcion que devuelve el tipo de persona en base al DoCUMENTO DE IDENTIDAD*/
 
+/*Funcion para mostrar un popup de tipo INFORMATIVO*/
 function fnShowInfoMessage(message){
 
     $.confirm({
@@ -157,6 +156,7 @@ function fnShowInfoMessage(message){
     });
 }
 
+/*Funcion para mostrar un popup de tipo ERROR*/
 function fnShowErrorMessage(message){
 
     $.confirm({
@@ -178,9 +178,98 @@ function fnShowErrorMessage(message){
     });
 }
 
+/* Funcion que permite mostrar POPUP de CONFIRMACION al realizar intentar grabar el formulario
+ * idElement: Es el ID del boton que tiene el metodo actionListener (dentro de la pantalla donde se está realizando la invocación
+ * a esta función ) el cual se invocará si el usuario hace click en ACEPTAR */
 
-/*******************************************************************************************************************/
-/********************** VALIDACIONES PANTALLA: COMPRAREGISTRAR.XHTML ****************************************/
+function fnShowDialogConfirm(idElement) {
+
+    $.confirm({
+        columnClass: 'col-md-4 col-md-offset-4', //Tamano de la ventana
+        title: 'Confirmaci&oacuten',
+        content: "¿Est&sacute seguro de continuar? ",
+        type: 'blue',
+        typeAnimated: true,
+        draggable: true, //Animacion para que vibre
+        animation: 'scaleX',
+        closeAnimation: 'scaleX',
+        theme: 'supervan',
+        backgroundDismissAnimation: 'glow',
+        buttons: {
+            Aceptar: {
+                text: 'Aceptar',
+                btnClass: 'btn-primary',
+                action: function () {
+                    $("#" + idElement).click(); //Se invoca al boton que hace la invocacion del metodo Grabar en el Managed Bean
+                }
+            },
+            Cancelar: {
+                text: 'Cancelar',
+                btnClass: 'btn-primary'
+            }
+        }
+    });
+}
+;
+
+/************************************************************************************************************/
+/********************** PANTALLA: REGISTRAR PRODUCTO *****************************************************************/
+
+function fnChangeTab(option) {
+
+    if (option == 1) {
+        $('[href="#menu1"]').tab('show');
+    } else if (option == 2) {
+        $('[href="#menu2"]').tab('show');
+    }
+
+    return false;
+}
+
+
+function fnValidateForm() {
+    
+    console.log("Product -> fnValidateForm" );
+    //obteniendo el valor que se puso en campo text del formulario                    
+    var CodigoProducto  = document.getElementById("form:codigoProducto").value;
+    var NombreProducto  = document.getElementById("form:nombreProducto").value;
+    var TipoProducto    = document.getElementById("form:tipoProducto").value;
+    var PrecioVenta     = document.getElementById("form:precioVenta").value;
+    var FlgError        = false;
+    var arrMessages     = [];
+
+
+    if (CodigoProducto.length == 0) {
+        arrMessages.push("Se debe ingresar el Código del Producto.");
+        FlgError = true;
+    }
+
+    if (NombreProducto.length == 0) {
+        arrMessages.push("Se debe ingresar el Nombre del Producto");        
+        FlgError = true;
+    }
+
+    if (PrecioVenta.length == 0) {
+        arrMessages.push("Se debe ingresar el Precio de Venta.");
+        FlgError = true;
+    }
+
+    //IMPRIMIR RESULTADO
+    if (FlgError == true) {
+        fnShowMessageValidation(arrMessages);
+        return false;
+    } else {
+        fnHideMessageValidation();
+        fnShowDialogConfirm("form\\:btnGrabar"); // -> Se pasa como parametro el ID del boton que tiene el metodo actionListener
+        return true;
+    }
+}
+
+             
+
+
+/*************************************************************************************************************/
+/********************** VALIDACIONES PANTALLA: COMPRAREGISTRAR.XHTML *****************************************/
 /*Funcion pque valida en ingreso del monto de descuento*/
 
 /*La logica se realiza en el Controlador

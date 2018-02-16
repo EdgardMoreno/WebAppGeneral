@@ -77,6 +77,7 @@ public class OrderController implements Serializable{
     
     private String msjValidation;
     private boolean flgPorRecoger;
+    private boolean flgIsSale;
     
     public OrderController(){
         String day = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("day");
@@ -254,6 +255,13 @@ public class OrderController implements Serializable{
     public void setFlgPorRecoger(boolean flgPorRecoger) {
         this.flgPorRecoger = flgPorRecoger;
     }
+
+    public boolean isFlgIsSale() {
+        return flgIsSale;
+    }
+
+   
+    
     
     
     /******************************************************************************/
@@ -400,6 +408,10 @@ public class OrderController implements Serializable{
         }
         
     }
+    
+    public void createNewProduct(){
+        
+    }
     /**/
     
     
@@ -419,11 +431,8 @@ public class OrderController implements Serializable{
                 System.out.println("Persona:" + sic1idenpers.getSic1pers().getDesPers());
                 sic1pers = sic1idenpers.getSic1pers();
                 System.out.println("Persona: " + sic1pers);
-
+                
             }
-            
-            
-
         } catch (CustomizerException ex) {
             throw new CustomizerException(ex.getMessage());
         }
@@ -605,6 +614,9 @@ public class OrderController implements Serializable{
         }
     }
     
+    /* Metodo que se ejecuta cuando es invocado desde una pagina externa, se llama desde desde el tag <f:metadata> ubicado en la
+     * página XHTML
+     */
     public void getParamsExternalPage(ComponentSystemEvent event) throws CustomizerException{
 
         if(!FacesContext.getCurrentInstance().isPostback()){
@@ -624,8 +636,14 @@ public class OrderController implements Serializable{
             //Si viene NULL quiere decir que se está tratando de registrar una nueva orden
             //Si es asi, la subclase del evento no puede esta vacia
             if (idDocu == null) {
-                if (codSClaseeven != null)                    
+                if (codSClaseeven != null)                    {
                     this.sic1docu.setCodSclaseeven(codSClaseeven);
+                    //Se verifica si está realizando una compra, si es asi se debe ocultar los controles
+                    //(Forma de pago, Mto Tarjeta y Efectivo)
+                    if (codSClaseeven.equalsIgnoreCase(Constantes.CONS_COD_SCLASEEVEN_VENTA)){
+                        this.flgIsSale = true;
+                    }
+                }
                 else
                     throw new CustomizerException("No se cargo la sub clase del evento.");
             }

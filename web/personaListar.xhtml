@@ -41,7 +41,7 @@
                     <h:inputText styleClass="form-control" value="#{personController.viSicpers.desPers}" />
                     <h:outputLabel value="Tipo Documento:"/>
                     <h:selectOneMenu value="#{personController.viSicpers.idTipoiden}" styleClass="form-control" >
-                        <f:selectItem itemLabel="-- Seleccione --" itemValue="-1" />
+                        <f:selectItem itemLabel="-- Todos --" itemValue="-1" />
                         <f:selectItems value="#{personController.itemsTipoIden}" />
                     </h:selectOneMenu>
 
@@ -58,7 +58,7 @@
 
                     <h:outputLabel value="Tipo Persona:"/>
                     <h:selectOneMenu value="#{personController.viSicpers.idTipopers}" styleClass="form-control" >
-                        <f:selectItem itemLabel="-- Seleccione --" itemValue="-1" />
+                        <f:selectItem itemLabel="-- Todos --" itemValue="-1" />
                         <f:selectItems value="#{personController.itemsTipoPers}" />
                     </h:selectOneMenu>
 
@@ -70,7 +70,7 @@
                              >
 
                     <h:column>
-                        <f:facet name="header">No.</f:facet>1
+                        <f:facet name="header">No.</f:facet>#{personController.lstPersonas.indexOf(item)}
                     </h:column>
 
                     <h:column>
@@ -94,15 +94,6 @@
                     </h:column>
 
                     <h:column>
-                        <p:commandButton icon="ui-icon-search"
-                                         actionListener="#{personController.selectFromDialog(item)}"
-                                         rendered="#{personController.paramPageFlgActivo==1?true:false}"/>
-                        &nbsp;
-                        <p:commandLink action="#{personController.deleteAction(item)}"  update="form" >
-                            <span class="glyphicon glyphicon-trash"></span>
-                            <p:confirm header="Confirmation" message="¿Está seguro de continuar?" icon="ui-icon-alert"  />
-                        </p:commandLink>
-                        &nbsp;
                         <p:commandLink action="#{personController.editAction(item)}" oncomplete="fnChangeTab(2); fnOcultarTipoPers(#{item.codIden});" update="form">
                             <span class="glyphicon glyphicon-pencil"></span>
                         </p:commandLink>
