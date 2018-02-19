@@ -72,6 +72,7 @@ public class OrderController implements Serializable{
     private String desFecRegistro;
     private Integer indexTabla;
     private String desTituloPagina;
+    private String codTRolpers;
     
     private List<Sic1prod> lstProducts;
     
@@ -260,6 +261,14 @@ public class OrderController implements Serializable{
         return flgIsSale;
     }
 
+    public String getCodTRolpers() {
+        return codTRolpers;
+    }
+
+    public void setCodTRolpers(String codTRolpers) {
+        this.codTRolpers = codTRolpers;
+    }
+
    
     
     
@@ -373,6 +382,15 @@ public class OrderController implements Serializable{
         
     }
     
+    public void searchProductByCod() throws CustomizerException{
+        ProductServiceImpl productServiceImpl = new ProductServiceImpl();
+        Sic1prod obj = productServiceImpl.getByCod(this.sic1prod.getCodProd());
+        this.sic1prod = obj;
+        
+        if (flgIsSale)
+            this.sic3docuprod.setNumValor(obj.getNumPrecio());
+    }
+    
     /**** AUTOCOMPLETE ******/
     public void searchProduct() throws CustomizerException{
         
@@ -402,16 +420,17 @@ public class OrderController implements Serializable{
         try{
             System.out.println("Producto:" + obj.getCodProd());
             this.sic1prod = obj;
+            
+            if (flgIsSale)
+                this.sic3docuprod.setNumValor(obj.getNumPrecio());
+            
             this.lstProducts.clear();
         }catch(Exception ex){
             throw new CustomizerException(ex.getMessage());
         }
         
-    }
-    
-    public void createNewProduct(){
-        
-    }
+    }    
+  
     /**/
     
     
@@ -447,6 +466,8 @@ public class OrderController implements Serializable{
         try{
             
             double numTotalPrice = 0;
+            boolean flgErrorDescuento = false;
+            
             BigDecimal numDescuento = this.sic1docu.getNumMtodscto();
 
             for(Sic3docuprod obj : this.lstSic3docuprod){
@@ -454,18 +475,24 @@ public class OrderController implements Serializable{
             }
             
             if (numDescuento != null && numDescuento.doubleValue() > numTotalPrice){
-                throw new ValidationException("El descuento no puede ser mayor al importe Total.");
+                numDescuento = new BigDecimal(0);
+                flgErrorDescuento = true;                
             }
 
             /*En caso haya descuento se resta del importe total*/
             if (numDescuento!= null && numDescuento.doubleValue() < numTotalPrice)
                 numTotalPrice = numTotalPrice - numDescuento.doubleValue();
-            else
-                this.sic1docu.setNumMtodscto(BigDecimal.ZERO);//Se setea a 0 cuando el monto a descontar es mayor al importe total.
+            
+                
 
             this.sic1docu.setNumMtoTotal(new BigDecimal(numTotalPrice).setScale(2, BigDecimal.ROUND_HALF_UP));        
             this.sic1docu.setNumSubtotal(new BigDecimal(numTotalPrice / (1 + Constantes.CONS_VALUE_IGV)).setScale(2, BigDecimal.ROUND_HALF_UP));        
             this.sic1docu.setNumIgv(new BigDecimal(this.sic1docu.getNumSubtotal().doubleValue() * Constantes.CONS_VALUE_IGV).setScale(2, BigDecimal.ROUND_HALF_UP));        
+            
+            if (flgErrorDescuento){
+                this.sic1docu.setNumMtodscto(numDescuento);//Se setea a 0 cuando el monto a descontar es mayor al importe total.
+                throw new ValidationException("El descuento no puede ser mayor al importe Total.");
+            }
             
         }catch(ValidationException ex){
             UtilClass.addErrorMessage(ex.getMessage());
@@ -550,7 +577,7 @@ public class OrderController implements Serializable{
                 BigDecimal idPers = this.sic1pers.getIdPers();
                 int numItems      = this.lstSic3docuprod.size();
                 
-                System.out.println("ID_PERS: " + idPers);
+                System.out.println("ID_PERS CLIENTE/PROVEEDOR: " + idPers);
 
                 if ( idPers.intValue() <= 0  ){
                     strMessage = "Falta ingresar el Cliente o Proveedor relacionado a la orden.";                    
@@ -626,17 +653,25 @@ public class OrderController implements Serializable{
             String tituloPagina     = (String)flash.get("paramTituloPagina");
             BigDecimal idDocu       = (BigDecimal)flash.get("paramIdDocu");  
             String codSClaseeven    = (String)flash.get("paramCodSClaseeven");
+            String codTRolpers      = (String)flash.get("paramCodTRolpers");
             
 
             System.out.println("tituloPagina:" + tituloPagina); 
+            System.out.println("codTRolpers:" + codTRolpers); 
 
             if (tituloPagina != null)
                 this.desTituloPagina = tituloPagina;
             
-            //Si viene NULL quiere decir que se está tratando de registrar una nueva orden
-            //Si es asi, la subclase del evento no puede esta vacia
+            /*Esto permite que cuando se registra un nueva persona, se guarde con el rol de CLIENTE O PROVEEDOR*/
+            if (codTRolpers != null)
+                this.codTRolpers = codTRolpers;
+            else
+                throw new CustomizerException("No se cargo el Tipo de Rol de la persona.");
+            
+            //Si idDocu viene NULL quiere decir que se está tratando de registrar una nueva orden
+            //Si es asi, la subclase del evento no puede esta vacia.
             if (idDocu == null) {
-                if (codSClaseeven != null)                    {
+                if (codSClaseeven != null) {
                     this.sic1docu.setCodSclaseeven(codSClaseeven);
                     //Se verifica si está realizando una compra, si es asi se debe ocultar los controles
                     //(Forma de pago, Mto Tarjeta y Efectivo)
@@ -646,6 +681,7 @@ public class OrderController implements Serializable{
                 }
                 else
                     throw new CustomizerException("No se cargo la sub clase del evento.");
+                
             }
 
 

@@ -9,7 +9,7 @@
 
     <f:metadata>        
         <f:viewParam name="titulo" value="#{orderController.desTituloPagina}"/>
-        <f:event type="preRenderView" listener="#{orderController.getParamsExternalPage}"/>        
+        <f:event type="preRenderView" listener="#{orderController.getParamsExternalPage}"/>
     </f:metadata>
 
     <ui:composition template="./templates/templatePrincipal.xhtml">
@@ -85,7 +85,7 @@
                         enableEscapeButton: "false",
                         autoDimensions: "false",
                         width: 800,
-                        height: 400,
+                        height: 460,
                         autoSize: false,
                         overlayColor: "#797379",
                         titleShow: true,
@@ -153,7 +153,7 @@
                     }
 
                     if (CostoUnitario.length == 0) {
-                        arrMessages.push("Debe ingresar el Costo del Producto.");
+                        arrMessages.push("Debe ingresar el Precio del Producto.");
                         FlgError = true;
                     }
 
@@ -222,122 +222,9 @@
                 }
                 ;
 
-                /*Función que se ejecuta durante el ciclo de vida de la llamada AJAX.
-                 * Evalua si el DNI/RUC ingresado existe, en caso no, muestra la pagina de REGISTRAR PERSONA*/
-                function fnAjaxListenPersonSearch(data) {
-
-                    switch (data.status) {
-                        case "begin":
-                            break;
-                        case "complete":
-                            break;
-                        case "success":
-                            var value = document.getElementById("form:razonSocial").value;
-                            if (value.length == 0) {
-                                var numDocuIden = document.getElementById("form:numDocuIden").value;
-                                //Se sobreescribe la propiedad HREF
-                                $("#linkDialog").attr("href", "faces/popups/popupPersonaRegistrar.xhtml?paramCodIden=" + numDocuIden + "&amp;paramExternalPage=1");
-                                $("#linkDialog").click(); //Origina que llame a la función de FancyBOX y que muestre la URL especificada.
-                                return false;
-                            }
-                            break;
-                    }
-                }
-                ;
-
-                function fnCloseIFrame_fromRegisterPerson() {
-                    $("#form\\:btnSearchPerson").click();
-                }
-                ;
                 
-                function fnCloseIFrame_fromRegisterProduct() {
-                    $("#form\\:btnSearchProduct").click();
-                }
-                ;
 
-                /*AUTOCOMPLETE ajax - BUSQUEDA DE PRODUCTOS : 
-                 * Calcula la posición donde se mostrará la tabla que contiene los productos obtenidos,
-                 * esta posición es justo debajo de la caja de texto donde se ingresa el codigo del producto.
-                 * */
-                function fnShowAutocompleteResult(data) {
-
-                    switch (data.status) {
-                        case "success":
-
-                            var h = $("#form\\:codigoProducto").css("height");
-                            var element = document.getElementById("form:codigoProducto");
-                            var rect = element.getBoundingClientRect(); //Obtiene la posicion absoluta del elemento
-                            //console.log(rect.top, rect.right, rect.bottom, rect.left);
-                            var top = Number(rect.top) + Number(h.replace("px", ""));
-
-                            $("#idDivAutocomplete").css({"display": "", "position": "absolute"});
-                            $("#idDivAutocomplete").css("top", top + "px");
-                            $("#idDivAutocomplete").css("left", rect.left + "px");
-                            break;
-                    }
-                }
-                ;
-
-                /*CREACION PRODUCTOS: */
-                /*Se llama a la función de FancyBOX para que muestre la URL especificada.*/
-                function fnShowPopupCreateProduct(){
-                    var codProd = document.getElementById("form:codigoProducto").value;
-                    $("#linkDialog").attr("href", "faces/popups/popupProductoRegistrar.xhtml?paramCodProd=" + codProd + "&amp;paramExternalPage=1");
-                    $("#linkDialog").click(); //Origina que llame a la función de FancyBOX y que muestre la URL especificada.
-                    return false;
-                };                
-
-                /*Funcion que permite validar en ingreso del nro de serie y correlativo*/
-                function fnValiteVoucherHeader() {
-
-                    var codSerie = document.getElementById("form:codSerie").value;
-                    var numDocumento = document.getElementById("form:numDocumento").value;
-                    var somTipoDocu = document.getElementById("form:somTipoDocu").selectedIndex;
-
-                    console.log("codSerie:" + codSerie);
-                    //console.log("numDocumento:" + numDocumento + " sdf:" + somTipoDocu.selectedIndex);
-
-                    var FlgError = false;
-                    var arrMessages = [];
-
-                    if (somTipoDocu == 0) {
-                        arrMessages.push("Seleccione el Tipo de Documento de la Orden.");
-                        FlgError = true;
-                    }
-
-                    if (codSerie.trim().length == 0) {
-                        arrMessages.push("Debe ingresar el Nro. de Serie.");
-                        FlgError = true;
-                    }
-
-                    if (numDocumento.length == 0) {
-                        arrMessages.push("Debe ingresar el Correlativo.");
-                        FlgError = true;
-                    }                   
-
-                    var divResu = $("#idDivValidation");
-
-                    if (FlgError) {
-
-                        var resultado = '<UL type = "square">';
-                        for (var i in arrMessages) {
-                            resultado += '<LI>' + arrMessages[i] + '</LI>';
-                        }
-                        resultado += '</UL>';
-
-                        console.log("resultado:" + resultado);
-
-                        divResu.html(resultado);
-                        divResu.css("display", "inline-block");
-
-                        return false;
-
-                    } else {
-                        divResu.html("");
-                        divResu.css("display", "none");
-                        return true;
-                    }
-                }
+                
 
 
 
@@ -434,7 +321,7 @@
                         </tr>
                         <tr>
                             <td class="compra_panelGrid_1">
-                                <h:outputLabel value="Costo Unitario:"/>
+                                <h:outputLabel value="Precio:"/>
                             </td>
                             <td class="compra_panelGrid_2">
                                 <div class="input-group mb-2 mb-sm-0">
@@ -621,7 +508,7 @@
                                                      value="#{orderController.sic1docu.numMtodscto}"
                                                      onkeypress="return fnAllowOnlyDecimalNumbers(event)"
                                                      >
-                                            <f:ajax execute="@this" event="blur" render="pnTotals" listener="#{orderController.recalculateTotals()}" />
+                                            <f:ajax execute="@this" event="blur" render="form:pnTotals message" listener="#{orderController.recalculateTotals()}" />
                                         </h:inputText>
                                     </div>
                                 </td>
@@ -676,10 +563,8 @@
                 <!-- ****************************************************************************** -->
                 <!-- GRABAR -->
                 <!-- ****************************************************************************** -->
-
                 <br/>
-
-                <div class="offset-sm-2 col-sm-10">
+                <div style="margin: 30px 0px" class="offset-sm-2 col-sm-10">
                     <h:commandLink value="Grabar" 
                                    styleClass="btn btn-primary"
                                    onclick="return fnValidateForm()" >
@@ -693,7 +578,12 @@
                 <!-- ****************************************************************************** -->
                 <!-- ELEMENTOS OCULTOS -->
                 <!-- ****************************************************************************** -->
-
+                <table class="ocultarObjeto">
+                    <tr>
+                        <td><label>CodTRolpers:</label></td>
+                        <td><input type="text" id="idCodTRolpers" disabled="true" value="${orderController.codTRolpers}"/></td>
+                    </tr>                    
+                </table>
                 <!-- ********************************** -->
                 <!-- INGRESO COMPROBANTE DE PAGO -->
                 <!-- *********************************** -->
@@ -790,7 +680,7 @@
                                 <ui:repeat var="e" value="#{orderController.lstProducts}" varStatus="status">
                                     <tr>
                                         <td><h:commandLink value="#{e.getCodProd()}"  >
-                                                <f:ajax execute="pnAutocomplete"  render="form:codigoProducto form:descProducto form:pnAutocomplete" listener="#{orderController.selectAutocompleteProduct(e)}"  />
+                                                <f:ajax execute="pnAutocomplete"  render="form:codigoProducto form:descProducto form:costoUnitario form:pnAutocomplete" listener="#{orderController.selectAutocompleteProduct(e)}"  />
                                             </h:commandLink></td>
                                         <td>#{e.getDesProd()}</td>
                                     </tr>
@@ -803,7 +693,7 @@
                 <a id="linkDialog" href="#" class="iframe"  style="display:none"/>
                 <a id="idLink" href="#"  style="display:none"/>
                 <h:commandLink  id="btnSearchProduct" style="display:none" >                    
-                    <f:ajax execute="codigoProducto" render="descProducto" listener="#{orderController.searchProduct()}" />
+                    <f:ajax execute="codigoProducto" render="codigoProducto descProducto costoUnitario" listener="#{orderController.searchProductByCod()}" />
                 </h:commandLink>
                 
             </div>

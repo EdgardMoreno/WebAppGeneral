@@ -69,6 +69,8 @@ public class Constantes {
         /*CODIGOS*/
         public static String CONS_COD_VENDEDOR      = "VI_SICVENDEDOR";
         public static String CONS_COD_NOAPLICA      = "VI_SICNOAPLICA";
+        public static String CONS_COD_TROLPROVEEDOR = "VI_SICTROLPROVEEDOR";
+        public static String CONS_COD_TROLCLIENTE   = "VI_SICTROLCLIENTE";
     
     /*CODIGO DE TIPO ROL DE ESTADOS*/
     public static String CONS_COD_TIPOROLESTA       = "VI_SICTROLESTA";    
@@ -80,6 +82,8 @@ public class Constantes {
         /*CODIGOS*/
         public static String CONS_COD_ESTAFINALIZADO       = "VI_SICESTAFINALIZADO";
         public static String CONS_COD_ESTAPORRECOGER       = "VI_SICESTAPORRECOGER";
+        public static String CONS_COD_ESTAANULADO          = "VI_SICESTAANULADO";
+        public static String CONS_COD_ESTAELIMINADO        = "VI_SICESTAELIM";
         
     /*CODIGO DE SUB CLASE DE EVENTO*/
     public static String CONS_COD_SCLASEEVEN        = "VI_SICSCLASEEVEN";

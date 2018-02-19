@@ -8,7 +8,12 @@
 
     <f:metadata>
         <f:viewParam name="paramExternalPage" value="#{personController.paramPageFlgActivo}"/>
-        <f:viewParam name="paramCodIden" value="#{personController.sic1idenpersId.codIden}"/>        
+        <f:viewParam name="paramCodIden" value="#{personController.sic1idenpersId.codIden}"/>
+        <f:viewParam name="paramCodTRolpers" value="#{personController.codTRolpers}"/>
+        <f:viewParam name="paramNuevoRegistro" value="#{personController.paramPageFlgNuevRegi}"/>
+        <f:viewParam name="paramIdPers" value="#{personController.paramPageIdPers}"/>
+        <f:event type="preRenderView" listener="#{personController.getParamsExternalPage}"/>
+        
     </f:metadata>
 
     <h:head>
@@ -38,21 +43,38 @@
         <script>
 
             $(document).ready(function () {
-
-                //Por defecto se oculta los campos de Razon Social
-                var obj = document.getElementById("form:pgFields");
-                obj.rows[1].style.display = "none";
+                
+                /*Por defecto se oculta los campos de Razon Social*/
+                fnHidePersJur();
 
                 //Setear por defecto Genero MASCULINO
                 document.forms['form']['form:sorGenero'][0].checked = true;
 
                 //INVOCACION PAGINA EXTERNA: se bloquea el campo del DNI/RUC
                 var flgParam = $("#form\\:idFlgPaginaExterna").val();
+                var flgNuevRegi = $("#idFlgNuevRegi").val();
+                console.log("flgParam: " + flgParam);
                 if (Number(flgParam) == 1) {
-                    $("#form\\:numDocuIden").attr("disabled", "true");
+                    if (flgNuevRegi == 'false')
+                        $("#form\\:numDocuIden").attr("disabled", "true");                    
+                }
+                
+                /*Se muestra los controles segun el valor del documento de identidad que haya sido 
+                 * enviada desde una pagina externa*/
+                var codIden = $("#form\\:numDocuIden").val();
+                console.log("codIden_externo:" + codIden);
+                if (codIden.trim().length > 0 ){
+                    fnOcultarTipoPers(codIden);
+                    fnCountLength(codIden,'idCantDigitosDocIden');
                 }
 
             });
+            
+            /*Funcionar que oculta los campos de razon social*/
+            function fnHidePersJur(){                
+                var obj = document.getElementById("form:pgFields");
+                obj.rows[1].style.display = "none";
+            }
 
             function fnChangeTab(option) {
 
@@ -82,7 +104,7 @@
                     obj.rows[2].style.display = "none";
                     obj.rows[3].style.display = "none";
                     obj.rows[4].style.display = "none";
-                    obj.rows[5].style.display = "none";
+                    
 
                 } else {
                     /*Mostrar Filas Persona Natural*/
@@ -134,10 +156,16 @@
                     arrMessages.push("Debe ingresar el Documento de Identidad.");
                     flgError = true;
                 } else {
-
+                    
                     mensaje = fnGetPersType(docuIden);
-
-                    if (mensaje == "PJ") {
+                    console.log("mensaje: " + mensaje);
+                    
+                    if (mensaje == "ERROR") {
+                        arrMessages.push("El formato del Documento de Identidad es inválido.");
+                        flgError = true;
+                    }                    
+                    else if (mensaje == "PJ") {
+                        
                         if (razonSocial.length == 0) {
                             arrMessages.push("Se debe ingresar la Razón Social.");
                             flgError = true;
@@ -172,7 +200,7 @@
                     return false;
                 } else {
                     fnHideMessageValidation();
-                    fnShowDialogConfirm("form\\:btnGrabar"); // -> Se pasa como parametro el ID del boton que tiene el metodo actionListener
+                    fnShowDialogConfirm("form\\:btnGrabar", "" ); // -> Se pasa como parametro el ID del boton que tiene el metodo actionListener
                     return false;
                 }
 
@@ -189,14 +217,31 @@
 
                     switch (data.status) {
                         case "success":
-                            var idPers = $("#form\\:idPersona").val();
-                            //alert("idPers:" + Number(idPers));
+                            var idPers = $("#form\\:idPersona").val();                            
                             if (Number(idPers) > 0) {
                                 parent.$.fancybox.close();
                                 parent.fnCloseIFrame_fromRegisterPerson();
-                            }
+                            }else{
+                                /*Ingresa cuando no se haya obtenido el ID_PERS, probablemente por algun error de
+                                 * validación, por eso se deja visible los controles segun el codigo de identidad ingresado.
+                                */
+                                var codIden = $("#form\\:numDocuIden").val();
+                                fnOcultarTipoPers(codIden);
+                            } 
                             break;
                     }
+                }else{
+                    var idPers = $("#form\\:idPersona").val();
+                    console.log("idPers: " + idPers);                    
+                    if (Number(idPers) > 0) {
+                        fnHidePersJur();//Ocultar campos de Razon Social
+                    }else{                        
+                        /*Ingresa cuando no se haya obtenido el ID_PERS, probablemente por algun error de 
+                         * validación, por eso se deja visible los controles segun el codigo de identidad ingresado.
+                        */                        
+                        var codIden = $("#form\\:numDocuIden").val();
+                        fnOcultarTipoPers(codIden);
+                    }                
                 }
             }
 
@@ -223,18 +268,24 @@
                     </div>
 
                     <br/>
-                    <h:panelGrid id="pgFields" columns="4" 
-                                 style="width:100%"
-                                 columnClasses="td-label-1, text_panelGrid_4c , td-label-1 , text_panelGrid_4c">
+                    <h:panelGrid id="pgFields" columns="4"                                  
+                                 style="width:90%"
+                                 columnClasses="form_label_small, form_input_small , form_label_small, form_input_small">
 
-                        <h:outputLabel value="Documento Identidad:"/>
-                        <h:inputText id="numDocuIden"
+                        <h:outputLabel value="Doc. Identidad:"/>                        
+                        <h:panelGroup>
+                            <div class="input-group mb-2 mb-sm-0">
+                                <div id="idCantDigitosDocIden" class="input-group-addon">0</div>
+                                <h:inputText id="numDocuIden"
                                      class="form-control"                                     
-                                     style="width:70%"
+                                     style="width:80%"
                                      onchange="fnOcultarTipoPers(this.value)"
-                                     onkeypress="return allowOnlyNumbers(event)"
-                                     value="#{personController.sic1idenpersId.codIden}">
-                        </h:inputText>
+                                     onkeypress="return fnAllowOnlyNumbers(event)"
+                                     onkeyup="fnCountLength(this.value,'idCantDigitosDocIden')"
+                                     value="#{personController.sic1idenpersId.codIden}"/>                        
+                            </div>
+                        </h:panelGroup>                        
+                        
                         <h:outputLabel value="" />
                         <h:outputLabel value="" />
 
@@ -244,33 +295,37 @@
                         <h:outputLabel value="" />
 
                         <h:outputLabel value="Nombre:"/>
-                        <h:inputText  styleClass="form-control" id="primerNombre" value="#{personController.sic1persindi.desPrimnomb }" />
-
-                        <h:outputLabel value=""/>
-                        <h:outputLabel value=""/>
-
-                        <h:outputLabel value="Apellido Paterno:"/>
-                        <h:inputText  styleClass="form-control" id="apePaterno" value="#{personController.sic1persindi.desApelpate}" />
-
-                        <h:outputLabel value="Apellido Materno:"/>
-                        <h:inputText  styleClass="form-control" id="apeMaterno" value="#{personController.sic1persindi.desApelmate}" />
-
+                        <h:inputText  styleClass="form-control" id="primerNombre" value="#{personController.sic1persindi.desPrimnomb}" />
+                        <h:outputLabel value="" />
+                        <h:outputLabel value="" />
+                        
                         <h:outputLabel value="Genero:"/>
                         <h:selectOneRadio id="sorGenero" value="#{personController.sic1persindi.idGenero}">
                             <f:selectItems value="#{personController.itemsGeneroPers}" />
                         </h:selectOneRadio>
-
                         <h:outputLabel value="Fecha Nacimiento:"/>
                         <h:inputText value="#{personController.desFecNaci}" styleClass="form-control datepicker" />
 
+                        <h:outputLabel value="Apellido Paterno:"/>
+                        <h:inputText  styleClass="form-control" id="apePaterno" value="#{personController.sic1persindi.desApelpate}" />
+                        <h:outputLabel value="Apellido Materno:"/>
+                        <h:inputText  styleClass="form-control" id="apeMaterno" value="#{personController.sic1persindi.desApelmate}" />
+                        
+                        <h:outputLabel value="E-mail:"/>
+                        <h:inputText styleClass="form-control" value="#{personController.sic1pers.codEmail}" />
                         <h:outputLabel value="Distrito:"/>
-                        <h:inputText styleClass="form-control" value="#{personController.sic1lugar.desLugar}" />                        
+                        <h:inputText styleClass="form-control" value="#{personController.sic1pers.desDistrito}" />
+                        
+                        <h:outputLabel value="Telefono:"/>
+                        <h:inputText styleClass="form-control" value="#{personController.sic1pers.codNumtele}" />
+                        <h:outputLabel value=""/>
+                        <h:outputLabel value=""/>                        
 
-                        <h:outputLabel value="idPersona:" style="display: none"/>
-                        <h:inputText id="idPersona" value="#{personController.sic1pers.idPers}" style="display: none"/>
+                        <h:outputLabel value="idPersona:" styleClass="ocultarObjeto"/>
+                        <h:inputText id="idPersona" value="#{personController.sic1pers.idPers}" styleClass="ocultarObjeto"/>
 
-                        <h:outputLabel value="flgPaginaExterna" style="display: none"/>
-                        <h:inputText id="idFlgPaginaExterna" value="#{personController.paramPageFlgActivo}" style="display: none"/>
+                        <h:outputLabel value="flgPaginaExterna" styleClass="ocultarObjeto" />
+                        <h:inputText id="idFlgPaginaExterna" value="#{personController.paramPageFlgActivo}" styleClass="ocultarObjeto"/>
 
                     </h:panelGrid>
                     <br/>
@@ -279,6 +334,20 @@
                         <input type="button" id="btnConfirm" value="Cancelar" class="btn btn-primary" onclick="parent.$.fancybox.close();"/>
                     </div>
                 </div>
+                
+                <!-- ********************************** -->
+                <!-- CONTROLES OCULTOS -->
+                <!-- ********************************** -->
+                <table class="ocultarObjeto">
+                    <tr>
+                        <td><label>CodTRolpers:</label></td>
+                        <td><input type="text" id="idCodTRolpers" disabled="true" value="${personController.codTRolpers}"/></td>
+                    </tr>
+                    <tr>
+                        <td><label>FlgNuevoRegistro:</label></td>
+                        <td><input type="text" id="idFlgNuevRegi" disabled="true" value="${personController.paramPageFlgNuevRegi}"/></td>
+                    </tr>
+                </table>
 
                 <h:commandButton id="btnGrabar" style="display: none">
                     <f:ajax execute="form" render="message pgFields idPersona idFlgPaginaExterna" listener="#{personController.savePerson()}" onevent="fnAjaxListenSavePerson"/>

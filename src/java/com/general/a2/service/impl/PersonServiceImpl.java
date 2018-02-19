@@ -9,6 +9,7 @@ import com.general.hibernate.views.ViSicpers;
 import com.general.util.beans.Constantes;
 import com.general.util.dao.DaoFuncionesUtil;
 import com.general.util.exceptions.CustomizerException;
+import com.general.util.exceptions.ValidationException;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.List;
@@ -34,12 +35,13 @@ public class PersonServiceImpl implements Serializable{
 
     /*METODOS*/
    
-    public String insert(Sic1idenpers obj) throws Exception {
+    public String insert(Sic1idenpers obj) throws ValidationException, CustomizerException {
         
         String result;
         Transaction tx = null;
         BigDecimal idTipoiden;
         BigDecimal idTipopers;
+        BigDecimal idTrolpers = null;
         try{
             
             session = HibernateUtil.getSessionFactory().openSession();
@@ -50,21 +52,35 @@ public class PersonServiceImpl implements Serializable{
             idTipopers = DaoFuncionesUtil.FNC_SICOBTIDGEN(((SessionImpl)session).connection(), Constantes.CONS_COD_TIPOPERS, obj.getSic1pers().getCodTipopers());
             obj.getSic1pers().setIdTipopers(idTipopers);
             
+            if (obj.getSic1pers().getCodTrolpers() != null){
+                idTrolpers = DaoFuncionesUtil.FNC_SICOBTIDGEN(((SessionImpl)session).connection(), Constantes.CONS_COD_TIPOROLPERS, obj.getSic1pers().getCodTrolpers());
+                obj.getSic1pers().setIdTrolpers(idTrolpers);
+            }
+            
             System.out.println("idTipoiden:" + idTipoiden);
             System.out.println("idTipopers:" + idTipopers);
+            System.out.println("idTrolpers:" + idTrolpers);
             
             tx = session.beginTransaction();            
             result = daoPersonImpl.insert(session, obj);
             tx.commit();
+        
+        }catch(ValidationException ex){
+            
+            if(tx != null)
+                tx.rollback();
+            
+            throw new ValidationException(ex.getMessage());
             
         }catch(Exception ex){
             
             if(tx != null)
                 tx.rollback();
             
-            throw new Exception(ex.getMessage());
+            throw new CustomizerException(ex.getMessage());
         }finally{
-            session.close();
+            if (session != null)
+                session.close();
         }
         
         return result;
@@ -79,7 +95,8 @@ public class PersonServiceImpl implements Serializable{
         }catch(Exception ex){
             throw new CustomizerException(ex.getMessage());
         }finally{
-            session.close();
+            if (session != null)
+                session.close();
         }
         return result;
     }
@@ -93,7 +110,8 @@ public class PersonServiceImpl implements Serializable{
         }catch(Exception ex){
             throw new CustomizerException(ex.getMessage());
         }finally{
-            session.close();
+            if (session != null)
+                session.close();
         }
         return result;
     }

@@ -13,12 +13,12 @@
         <meta name="author" content=""/>
         <link rel="icon" href="#{request.contextPath}/faces/resources/img/favicon.ico"></link>
 
-        <!--CSS STYLE -->
-        <h:outputStylesheet name="/datepicker/css/datepicker.css"/><!--DatePicker -->
+        <!--CSS STYLE -->        
         <h:outputStylesheet name="/css/bootstrap.min.css"/>
         <h:outputStylesheet name="/css/customizer.css"/>
         <h:outputStylesheet name="/css/jquery-confirm-3.3.css"/>
         <h:outputStylesheet name="/css/jquery.fancybox-2.1.7.css"/>
+        <h:outputStylesheet name="/datepicker/css/datepicker.css"/><!--DatePicker -->
 
 <!--<link rel="stylesheet" href="#{request.contextPath}/faces/resources/css/bootstrap-theme.min.css"/>-->        
 
@@ -27,8 +27,9 @@
         <script src="#{request.contextPath}/faces/resources/js/bootstrap.min.js"></script>
         <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js" />
 
-        <script src="#{request.contextPath}/faces/resources/datepicker/js/bootstrap-datepicker.js"></script>
+        
         <script src="#{request.contextPath}/faces/resources/datepicker/js/formatDatePicker.js"></script>
+        <script src="#{request.contextPath}/faces/resources/datepicker/js/bootstrap-datepicker.js"></script>
         <script src="#{request.contextPath}/faces/resources/js/jquery.fancybox-2.1.7.js"></script>
         <script src="#{request.contextPath}/faces/resources/js/jquery-confirm-3.3.js"></script>
 
@@ -62,8 +63,27 @@
 
                         <li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="#">Clientes<span class="caret"></span></a>
                             <ul class="dropdown-menu">
-                                <li><a href="#{request.contextPath}/faces/popups/popupPersonaRegistrar.xhtml">Registrar Cliente</a></li>
-                                <li><a href="#{request.contextPath}/faces/personaListar.xhtml">Buscar Clientes</a></li>
+                                <!--<li><a href="#{request.contextPath}/faces/popups/popupPersonaRegistrar.xhtml">Registrar Cliente</a></li>-->
+                                <li>                                
+                                    <h:commandLink value="Reporte de Clientes" action="#{masterPageController.redirect()}" >
+                                        <f:param name="paramTituloPagina" value="Reporte de Clientes" />
+                                        <f:param name="paramNombrePagina" value="personaListar" />
+                                        <f:param name="paramCodTRolpers" value="VI_SICTROLCLIENTE" />
+                                    </h:commandLink>
+                                </li>
+                            </ul>
+                        </li>
+                        
+                         <li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="#">Proveedores<span class="caret"></span></a>
+                            <ul class="dropdown-menu">
+                                <!--<li><a href="#{request.contextPath}/faces/popups/popupPersonaRegistrar.xhtml">Registrar Proveedor</a></li>-->
+                                <li>                                
+                                    <h:commandLink value="Reporte de Proveedores" action="#{masterPageController.redirect()}" >
+                                        <f:param name="paramTituloPagina" value="Reporte de Proveedores" />
+                                        <f:param name="paramNombrePagina" value="personaListar" />
+                                        <f:param name="paramCodTRolpers" value="VI_SICTROLPROVEEDOR" />
+                                    </h:commandLink>
+                                </li>
                             </ul>
                         </li>
 
@@ -74,12 +94,15 @@
                                         <f:param name="paramTituloPagina" value="Registrar Compra" />
                                         <f:param name="paramNombrePagina" value="compraRegistrar" />
                                         <f:param name="paramCodSClaseeven" value="VI_SICSCLASEEVENCOMPRA" />
+                                        <f:param name="paramCodTRolpers" value="VI_SICTROLPROVEEDOR" />
                                     </h:commandLink>
                                 </li>                                
                                 <li>
                                     <h:commandLink value="Reporte de Compras" action="#{masterPageController.redirect()}" >
                                         <f:param name="paramTituloPagina" value="Reporte de Compras" />
                                         <f:param name="paramNombrePagina" value="documentosListar" />
+                                        <f:param name="paramCodSClaseeven" value="VI_SICSCLASEEVENCOMPRA" />
+                                        <f:param name="paramCodTRolpers" value="VI_SICTROLCLIENTE" />
                                     </h:commandLink>
                                 </li>
                             </ul>
@@ -92,12 +115,15 @@
                                         <f:param name="paramTituloPagina" value="Registrar Venta" />
                                         <f:param name="paramNombrePagina" value="compraRegistrar" />
                                         <f:param name="paramCodSClaseeven" value="VI_SICSCLASEEVENVENTA" />
+                                        <f:param name="paramCodTRolpers" value="VI_SICTROLCLIENTE" />
                                     </h:commandLink>
                                 </li>
                                 <li>
                                     <h:commandLink value="Reporte de Ventas" action="#{masterPageController.redirect()}" >
                                         <f:param name="paramTituloPagina" value="Reporte de Ventas" />
                                         <f:param name="paramNombrePagina" value="documentosListar" />
+                                        <f:param name="paramCodSClaseeven" value="VI_SICSCLASEEVENVENTA" />
+                                        <f:param name="paramCodTRolpers" value="VI_SICTROLCLIENTE" />
                                     </h:commandLink>
                                 </li>
                                 

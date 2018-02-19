@@ -13,6 +13,7 @@ import com.general.hibernate.views.ViSicprod;
 import com.general.util.beans.Constantes;
 import com.general.util.beans.UtilClass;
 import com.general.util.exceptions.CustomizerException;
+import com.general.util.exceptions.ValidationException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -197,13 +198,17 @@ public class ProductController implements Serializable{
             ProductServiceImpl productServiceImpl = new ProductServiceImpl();
             String result = productServiceImpl.insert(this.sic1prod);
             
+            System.out.println("idProd: " + result);
+            
             //Se llena el control oculto con el identificado del nuevo producto
             this.idProd = Integer.valueOf(result);
             
             
             this.sic1prod = new Sic1prod();
             UtilClass.addInfoMessage(Constantes.CONS_SUCCESS_MESSAGE);
-            
+        
+        }catch(ValidationException ex){
+            UtilClass.addErrorMessage(ex.getMessage());
         }catch(CustomizerException ex){            
             throw new CustomizerException(ex.getMessage());
         }        

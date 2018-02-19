@@ -109,7 +109,7 @@ public class DaoSic1generalImp implements Serializable{
             session = HibernateUtil.getSessionFactory().openSession();
             BigDecimal intIdTipoDocu;       
 
-            intIdTipoDocu = DaoFuncionesUtil.FNC_SICOBTIDGEN(((SessionImpl)session).connection(), "VI_SICTIPODOCU", "COMPRA_VENTA");            
+            intIdTipoDocu = DaoFuncionesUtil.FNC_SICOBTIDGEN(((SessionImpl)session).connection(), "VI_SICTIPODOCU", "COMPROBANTEPAGO");            
             lstSic1stipodocu = session.createCriteria(Sic1stipodocu.class).add(Restrictions.eq("idTipodocu", intIdTipoDocu)).list();
         }catch(Exception ex){
             throw new Exception(ex.getMessage());

@@ -29,19 +29,23 @@ public class MasterPageController {
     public String redirect(){
         
         /*Se obtiene los parametros vinculados a los links*/
-        String tituloPagina = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("paramTituloPagina");
-        String nombrePagina = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("paramNombrePagina");
+        String tituloPagina  = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("paramTituloPagina");
+        String nombrePagina  = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("paramNombrePagina");
         String codSClaseeven = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("paramCodSClaseeven");
+        String codTRolpers   = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("paramCodTRolpers");
         
-        System.out.println("tituloPagina+ " + tituloPagina);
-        System.out.println("nombrePagina+ " + nombrePagina);
-        System.out.println("codSClaseeven+ " + codSClaseeven);
+        
+        System.out.println("tituloPagina: " + tituloPagina);
+        System.out.println("nombrePagina: " + nombrePagina);
+        System.out.println("codSClaseeven: " + codSClaseeven);
+        System.out.println("paramCodTRolpers: " + codTRolpers);
         
         /*Se guarda los valores en JSF Flash Scope*/
         Flash flash = FacesContext.getCurrentInstance().getExternalContext().getFlash();
         flash.clear();
         flash.put("paramTituloPagina", tituloPagina);
         flash.put("paramCodSClaseeven", codSClaseeven);
+        flash.put("paramCodTRolpers", codTRolpers);
         flash.setKeepMessages(true);
         
         return  nombrePagina + "?faces-redirect=true";

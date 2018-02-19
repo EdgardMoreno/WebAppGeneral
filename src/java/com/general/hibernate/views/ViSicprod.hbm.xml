@@ -40,8 +40,8 @@
       <property name="fecHasta" type="date">
         <column length="7" name="FEC_HASTA"/>
       </property>
-      <property name="numPrecio" type="big_decimal">
-        <column name="NUM_PRECIO" precision="22" scale="0"/>
+      <property name="numPrecio" type="string">
+        <column name="NUM_PRECIO" length="20"/>
       </property>
       <property name="numCantidad" type="big_decimal">
         <column name="NUM_CANTIDAD" precision="22" scale="0"/>
@@ -52,5 +52,9 @@
       <property name="numUtlcostovalor" type="big_decimal">
         <column name="NUM_ULTCOSTO_VALOR" precision="22" scale="0"/>
       </property>
+      <property name="desPersrelaproveedores" type="string">
+        <column name="DES_RELAPROVEEDORES" length="1000"/>
+      </property>
+      
   </class>
 </hibernate-mapping>

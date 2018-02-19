@@ -53,6 +53,18 @@ public class UtilClass {
         DateFormat df = new SimpleDateFormat("dd/MM/yyyy");        
         return df.parse(value);
     }
+    
+    /*Devuelve la fecha infinito*/
+    public static Date getObtFecInf() throws ParseException{
+        DateFormat df = new SimpleDateFormat("dd/MM/yyyy");        
+        return df.parse("31/12/2400");
+    }
+    
+    /*Devuelve la fecha inicial*/
+    public static Date getObtFecIni() throws ParseException{
+        DateFormat df = new SimpleDateFormat("dd/MM/yyyy");        
+        return df.parse("01/01/1900");
+    }
    
     
 }

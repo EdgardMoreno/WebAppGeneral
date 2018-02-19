@@ -78,6 +78,41 @@ public class DaoFuncionesUtil {
         
     } 
     
+    
+    
+    /*--------------------------------------------------------------------------------------------------------------
+    --DESCRIPCION:   FUNCION GENERICA QUE RETORNA EL INDENTIFICADOR PRINCIPAL.
+    --PARAMETROS:    X_DES_IDEN(VARIABLE DE INGRESO QUE CONTIENE PARTE DEL NOMBRE DE LA TABLA)
+    --               X_ID_TIPOIDEN(VARIABLE DE INGRESO QUE CONTIENE EL TIPO DE IDENTIFICADOR PRINCIPAL)
+    --               X_COD_IDEN(VARIABLE DE INGRESO QUE CONTIENE EL CODIGO DE IDENTIFICACION)
+    -------------------------------------------------------------------------------------------------------------- */
+    public static BigDecimal FNC_SICOBTIDIDEN(    Connection cnConexion
+                                                , String X_DES_IDEN
+                                                , Integer X_ID_TIPOIDEN
+                                                , String X_COD_IDEN) throws SQLException, Exception{        
+        
+        //Connection cnConexion = null;
+        BigDecimal result = null;
+        try{
+           
+            CallableStatement call = cnConexion.prepareCall("{ ? = call PKG_SICCONSGENERAL.FNC_SICOBTIDIDEN(?,?,?) }");
+            call.registerOutParameter( 1, Types.INTEGER ); // or whatever it is
+            call.setString(2, X_DES_IDEN);
+            call.setInt(3, X_ID_TIPOIDEN);
+            call.setString(4, X_COD_IDEN);
+            call.execute();
+            
+            result = call.getBigDecimal(1);
+            
+        }catch(Exception ex){            
+            throw new Exception(ex.getMessage());
+        }
+        return result; // propagate this back to enclosing class
+        
+    }
+    
+    
+    
     /*public static Integer FNC_SICOBTIDGEN(Session session, String X_COD_VALORTIPOGENERAL, String X_COD_VALORGENERAL){
         
         int result = session.doReturningWork(new ReturningWork<Integer>() {

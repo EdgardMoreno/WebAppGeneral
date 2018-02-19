@@ -19,6 +19,11 @@
     <property name="idPersClieprov" type="big_decimal">
       <column name="ID_PERS_CLIEPROV" precision="22" scale="0"/>
     </property>
+    
+    <property name="codIdenClieprov" type="string">
+      <column length="50" name="COD_IDEN_CLIEPROV"/>
+    </property>
+    
     <property name="desPersClieprov" type="string">
       <column length="250" name="DES_PERS_CLIEPROV"/>
     </property>
@@ -28,6 +33,18 @@
     <property name="desTrolpersClieprov" type="string">
       <column length="500" name="DES_TROLPERS_CLIEPROV"/>
     </property>
+    
+    <property name="idSclaseeven" type="big_decimal">
+      <column name="ID_SCLASEEVEN" precision="22" scale="0"/>
+    </property>
+    <property name="codSclaseeven" type="string">
+      <column length="250" name="COD_SCLASEEVEN"/>
+    </property>
+    <property name="desSclaseeven" type="string">
+      <column length="1000" name="DES_SCLASEEVEN"/>
+    </property>
+    
+    
     <property name="idStipodocu" type="big_decimal">
       <column name="ID_STIPODOCU" precision="22" scale="0"/>
     </property>
@@ -52,15 +69,21 @@
     <property name="fecHasta" type="date">
       <column length="7" name="FEC_HASTA"/>
     </property>
-    <property name="numSubtotal" type="big_decimal">
-      <column name="NUM_SUBTOTAL" precision="9" scale="3"/>
+    
+    <property name="numSubtotal" type="string">
+      <column name="NUM_SUBTOTAL" length="7"/>
     </property>
-    <property name="numIgv" type="big_decimal">
-      <column name="NUM_IGV" precision="7" scale="3"/>
+    <property name="numMtoigv" type="string">
+      <column name="NUM_MTOIGV" length="20"/>
     </property>
-    <property name="numTotal" type="big_decimal">
-      <column name="NUM_TOTAL" precision="22" scale="0"/>
+    <property name="numMtodscto" type="string">
+      <column name="NUM_MTODSCTO" length="20"/>
     </property>
+    <property name="numMtototal" type="string">
+      <column name="NUM_MTOTOTAL" length="20"/>
+    </property>
+    
+    
     <property name="idTipodocu" type="big_decimal">
       <column name="ID_TIPODOCU" precision="22" scale="0"/>
     </property>

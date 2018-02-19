@@ -33,7 +33,23 @@
       <column length="200" name="DES_CARGO_REP">
         <comment>El cargo que desempe?a la persona cuando tenga el rol de Representante</comment>
       </column>
+    </property>    
+    
+    <property name="codEmail" type="string">
+      <column length="200" name="COD_EMAIL">
+      </column>
     </property>
+    
+    <property name="desDistrito" type="string">
+      <column length="70" name="DES_DISTRITO">
+      </column>
+    </property>
+    
+    <property name="codNumtele" type="string">
+      <column length="50" name="COD_NUMTELE">
+      </column>
+    </property>
+    
     <set fetch="select" inverse="true" lazy="true" name="sic1docus" table="SIC1DOCU">
       <key>
         <column name="ID_PERS" precision="22" scale="0">

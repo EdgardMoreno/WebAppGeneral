@@ -35,23 +35,23 @@
 
         <script>
             
-            function fnAjaxListenSaveProduct(data) {
+            function fnAjaxListenSaveProduct(data) {                
                 
-                console.log("Grabando producto");
+                console.log("funcion: fnAjaxListenSaveProduct");
                 var flgParam = $("#form\\:idFlgPaginaExterna").val();
+                console.log("flgParam: " + flgParam);
                 /*Pregunta si la pagina ha sido llamada desde una pagina externa*/
                 if(Number(flgParam) == 1){
                     
                     switch (data.status) {
                         case "success":
-
-                        var idProd = $("#form\\:idProducto").val();
-                        alert("idProd:" + Number(idProd));
-                        if (Number(idProd) > 0){
-                            parent.$.fancybox.close();   
-                            parent.fnCloseIFrame_fromRegisterProduct();
-                        }
-                        break;
+                            var idProd = $("#form\\:idProducto").text();
+                            console.log("idProd: " + idProd);
+                            if (Number(idProd) > 0){
+                                parent.$.fancybox.close();   
+                                parent.fnCloseIFrame_fromRegisterProduct();
+                            }
+                            break;
                     }
                 }
             }
@@ -90,7 +90,7 @@
                                  value="#{productController.sic1prod.desProd}"/>
 
                     <h:outputLabel value="Tipo Producto:" />
-                    <h:selectOneMenu id="tipoProducto" style="width:60%" value="#{productController.sic1prod.idStipoprod}" styleClass="form-control">
+                    <h:selectOneMenu id="somTipoProducto" style="width:60%" value="#{productController.sic1prod.idStipoprod}" styleClass="form-control">
                         <f:selectItem itemLabel="-- Seleccione --" itemValue="-1" noSelectionOption="true"/>
                         <f:selectItems value="#{productController.items}" />
                     </h:selectOneMenu>
@@ -107,11 +107,11 @@
                         </div>
                     </h:panelGroup>
                     
-                    <h:outputLabel value="Id Producto:" />
-                    <h:outputLabel id="idProducto" value="#{productController.idProd}" />
+                    <h:outputLabel value="Id Producto:" style="display: none"/>
+                    <h:outputLabel id="idProducto" value="#{productController.idProd}" style="display: none"/>
                     
                     <h:outputLabel value="flgPaginaExterna" style="display: none"/>
-                    <h:inputText id="idFlgPaginaExterna" value="#{productController.paramPageFlgActivo}" />
+                    <h:inputText id="idFlgPaginaExterna" value="#{productController.paramPageFlgActivo}" style="display: none"/>
 
                 </h:panelGrid>
 

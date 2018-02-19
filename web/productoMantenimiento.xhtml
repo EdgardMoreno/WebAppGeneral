@@ -63,9 +63,14 @@
                         <h:dataTable id="tblProducts" var="item" value="#{productController.listProducts}" 
                                      width="100%"
                                      styleClass="table-bordered"
-                                     columnClasses="table_style_id,table_style_code,table_style_description_medium,
-                                     table_style_code,table_style_price,table_style_amount,
-                                     table_style_action" >                            
+                                     columnClasses="table_style_id, 
+                                                    table_style_code_small, 
+                                                    table_style_description_medium,
+                                                    table_style_code_small,
+                                                    table_style_description_small,
+                                                    table_style_price_small, 
+                                                    table_style_amount,
+                                                    table_style_action" >                            
 
                             <h:column>
                                 <f:facet name="header">No.</f:facet>#{productController.listProducts.indexOf(item) + 1}
@@ -82,20 +87,20 @@
                             <h:column>
                                 <f:facet name="header">Tipo</f:facet>#{item.desStipoprod}
                             </h:column>
+                            
+                            <h:column>
+                                <f:facet name="header">Proveedores</f:facet>#{item.desPersrelaproveedores}
+                            </h:column>
 
                             <h:column>
-                                <f:facet name="header">Precio</f:facet>#{item.numPrecio}
+                                <f:facet name="header">Precio (S/.)</f:facet>#{item.numPrecio}
                             </h:column>
 
                             <h:column>
                                 <f:facet name="header">Cantidad</f:facet>#{item.numCantidad}
                             </h:column>
 
-                            <h:column>
-                                <p:commandButton icon="ui-icon-search"
-                                                 actionListener="#{productController.selectProductFromDialog(item)}"
-                                                 rendered="#{not empty productController.flgExternalPage}"/>
-                                &nbsp;
+                            <h:column>                                
                                 <p:commandLink action="#{productController.deleteAction(item)}"  update="form" >
                                     <span class="glyphicon glyphicon-trash"></span>
                                     <p:confirm header="Confirmation" message="¿Está seguro de continuar?" icon="ui-icon-alert"  />
@@ -128,7 +133,7 @@
                                          value="#{productController.sic1prod.desProd}"/>
 
                             <h:outputLabel value="Tipo Producto:" />
-                            <h:selectOneMenu id="tipoProducto" style="width:60%" value="#{productController.sic1prod.idStipoprod}" styleClass="form-control">
+                            <h:selectOneMenu id="somTipoProducto" style="width:60%" value="#{productController.sic1prod.idStipoprod}" styleClass="form-control">
                                 <f:selectItem itemLabel="-- Seleccione --" itemValue="-1" noSelectionOption="true"/>
                                 <f:selectItems value="#{productController.items}" />
                             </h:selectOneMenu>
@@ -140,10 +145,16 @@
                                     <h:inputText id="precioVenta" styleClass="form-control"
                                                  style="width:25%"
                                                  value="#{productController.sic1prod.numPrecio}"
-                                                 onkeypress="return allowOnlyNumbers(event)"
+                                                 onkeypress="return fnAllowOnlyNumbers(event)"
                                                  onblur="formatDecimal_2(this)"/>
                                 </div>
-                            </h:panelGroup>                                
+                            </h:panelGroup>   
+
+                            <h:outputLabel value="Id Producto:" style="display: none"/>
+                            <h:outputLabel id="idProducto" value="#{productController.idProd}" style="display: none"/>
+
+                            <h:outputLabel value="flgPaginaExterna" style="display: none"/>
+                            <h:inputText id="idFlgPaginaExterna" value="#{productController.paramPageFlgActivo}" style="display: none"/>
 
                         </h:panelGrid>
 

@@ -22,12 +22,13 @@ public class ViSicprod  implements java.io.Serializable {
      private String desTipoprod;
      private Date fecDesde;
      private Date fecHasta;
-     private BigDecimal numPrecio;
+     private String numPrecio;
      private BigDecimal numCantidad;
      
      /*Agregado*/
      private BigDecimal numUtlcostoiddocu;
      private BigDecimal numUtlcostovalor;     
+     private String desPersrelaproveedores;
 
     public ViSicprod() {
     }
@@ -50,8 +51,7 @@ public class ViSicprod  implements java.io.Serializable {
        this.codTipoprod = codTipoprod;
        this.desTipoprod = desTipoprod;
        this.fecDesde = fecDesde;
-       this.fecHasta = fecHasta;
-       this.numPrecio = numPrecio;
+       this.fecHasta = fecHasta;       
        this.numCantidad = numCantidad;
     }
    
@@ -139,13 +139,15 @@ public class ViSicprod  implements java.io.Serializable {
     public void setFecHasta(Date fecHasta) {
         this.fecHasta = fecHasta;
     }
-    public BigDecimal getNumPrecio() {
-        return this.numPrecio;
+
+    public String getNumPrecio() {
+        return numPrecio;
     }
-    
-    public void setNumPrecio(BigDecimal numPrecio) {
+
+    public void setNumPrecio(String numPrecio) {
         this.numPrecio = numPrecio;
     }
+    
     public BigDecimal getNumCantidad() {
         return this.numCantidad;
     }
@@ -169,11 +171,16 @@ public class ViSicprod  implements java.io.Serializable {
     public void setNumUtlcostovalor(BigDecimal numUtlcostovalor) {
         this.numUtlcostovalor = numUtlcostovalor;
     }
-    
-    
 
+    public String getDesPersrelaproveedores() {
+        return desPersrelaproveedores;
+    }
 
-   public boolean equals(Object other) {
+    public void setDesPersrelaproveedores(String desPersrelaproveedores) {
+        this.desPersrelaproveedores = desPersrelaproveedores;
+    }
+
+    public boolean equals(Object other) {
          if ( (this == other ) ) return true;
 		 if ( (other == null ) ) return false;
 		 if ( !(other instanceof ViSicprod) ) return false;

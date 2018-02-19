@@ -7,11 +7,38 @@
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
       >
 
+    <f:metadata>        
+        <f:viewParam name="titulo" value="#{personController.desTituloPagina}"/>
+        <f:event type="preRenderView" listener="#{personController.getParamsExternalPage}"/>
+    </f:metadata>
+    
     <ui:composition template="./templates/templatePrincipal.xhtml">
 
         <ui:define name="header">
 
             <script>
+                
+                $(document).ready(function () {
+
+                    //Se utiliza para llamar a URL externa
+                    $(".iframe").fancybox({
+
+                        type: "iframe",
+                        modal: "true",
+                        enableEscapeButton: "false",
+                        autoDimensions: "false",
+                        width: 800,
+                        height: 460,
+                        autoSize: false,
+                        overlayColor: "#797379",
+                        titleShow: true,
+                        titlePosition: "outside",
+                        overlayOpacity: 0.6,
+                        transitionIn: "elastic",
+                        transitionOut: "elastic"
+
+                    });
+                });
 
             </script>
 
@@ -24,10 +51,8 @@
             <div class="container">
 
                 <div class="page-header" >
-                    <h3>Buscar Personas</h3>
+                    <h3>${personController.desTituloPagina}</h3>
                 </div>
-
-
 
                 <p:growl id="message" showDetail="true" />
 
@@ -35,8 +60,17 @@
                 <h:panelGrid columns="7" style="width:100%"
                              columnClasses="td-label-1, td-content-1, td-label-1, td-content-1, td-label-1, td-content-1, td-content-1" >
 
-                    <h:outputLabel value="Docu Identidad:"/>
-                    <h:inputText styleClass="form-control" value="#{personController.viSicpers.codIden}" />
+                    <h:outputLabel value="Doc. Identidad:"/>
+                    <h:panelGroup>
+                        <div class="input-group mb-2 mb-sm-0">
+                            <div id="idCantDigitosDocIden" class="input-group-addon">0</div>
+                            <h:inputText id="numDocuIden" styleClass="form-control" 
+                                 onkeypress="return fnAllowOnlyNumbers(event)"
+                                 onkeyup="fnCountLength(this.value,'idCantDigitosDocIden')"
+                                 value="#{personController.viSicpers.codIden}" />
+                        </div>
+                    </h:panelGroup>                     
+                    
                     <h:outputLabel value="Nombre/Razón Social:"/>
                     <h:inputText styleClass="form-control" value="#{personController.viSicpers.desPers}" />
                     <h:outputLabel value="Tipo Documento:"/>
@@ -47,12 +81,14 @@
 
                     <h:panelGroup>
                         <div class="form-inline header-format">
-                            <h:commandLink actionListener="#{personController.filterPersons()}" styleClass="btn btn-default">
+                            <h:commandLink styleClass="btn btn-default">
                                 <span class="glyphicon glyphicon-search"></span> Buscar
+                                <f:ajax execute="@form" render="tblPersons" listener="#{personController.filterPersons()}" />
                             </h:commandLink>
-                            <p:commandLink actionListener="#{personController.newPerson()}" oncomplete="fnChangeTab(2)" styleClass="btn btn-default" update="form">
+                            <br/>
+                            <h:commandLink styleClass="btn btn-default" onclick="return fnShowPopupCreateEditPerson(0)">
                                 <span class="glyphicon glyphicon-new-window"></span> Nuevo
-                            </p:commandLink>
+                            </h:commandLink>
                         </div>
                     </h:panelGroup>
 
@@ -63,23 +99,49 @@
                     </h:selectOneMenu>
 
                 </h:panelGrid>
+                
+                <!-- ********************************** -->
+                <!-- CONTROLES OCULTOS -->
+                <!-- ********************************** -->
+                
+                <table class="ocultarObjeto">
+                    <tr>
+                        <td><label>CodTRolpers:</label></td>
+                        <td><input type="text" id="idCodTRolpers" disabled="true" value="${personController.codTRolpers}"/></td>
+                    </tr>                    
+                </table>
+                
+                
+                
+                <!-- ********************************** -->
+                <!-- LISTAR PERSONA -->
+                <!-- ********************************** -->
+                
                 <br/>
-                <h:dataTable id="tblPersons" var="item" value="#{personController.lstPersonas}" rendered="#{not empty personController.lstPersonas}"
+                <h:dataTable id="tblPersons" var="item" 
+                             width="100%"
+                             value="#{personController.lstPersonas}"
                              styleClass="table-bordered"
-                             columnClasses="table_header2,table_header10,table_header3,table_header2,table_header3,table_header6,table_header5"
+                             columnClasses="table_style_id, table_style_code, table_style_date,
+                                            table_style_description_medium, table_style_code, table_style_code, 
+                                            table_style_code, table_style_action"
                              >
 
                     <h:column>
-                        <f:facet name="header">No.</f:facet>#{personController.lstPersonas.indexOf(item)}
+                        <f:facet name="header">No.</f:facet>#{personController.lstPersonas.indexOf(item) + 1}
                     </h:column>
 
                     <h:column>
-                        <f:facet name="header">Nombre</f:facet>#{item.desPers}
+                        <f:facet name="header">Fec. Registro</f:facet>#{item.fecCreacion}
                     </h:column>
-
+                    
                     <h:column>
                         <f:facet name="header">Documento Identidad</f:facet>#{item.codIden}
                     </h:column>
+                    
+                    <h:column>
+                        <f:facet name="header">Nombre Completo</f:facet>#{item.desPers}
+                    </h:column>                    
 
                     <h:column>
                         <f:facet name="header">Tipo Documento</f:facet>#{item.desTipoiden}
@@ -88,16 +150,15 @@
                     <h:column>
                         <f:facet name="header">Tipo de persona</f:facet>#{item.desTipopers}
                     </h:column>
-
+                    
                     <h:column>
                         <f:facet name="header">Rol</f:facet>#{item.desTrolpers}
-                    </h:column>
+                    </h:column>                   
 
                     <h:column>
-                        <p:commandLink action="#{personController.editAction(item)}" oncomplete="fnChangeTab(2); fnOcultarTipoPers(#{item.codIden});" update="form">
+                        <h:commandLink onclick="return fnShowPopupCreateEditPerson(#{item.idPers})" >
                             <span class="glyphicon glyphicon-pencil"></span>
-                        </p:commandLink>
-
+                        </h:commandLink>
                     </h:column>
                 </h:dataTable>
 
@@ -105,7 +166,9 @@
                     <p:commandButton value="Yes" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
                     <p:commandButton value="No"  type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
                 </p:confirmDialog>
-
+                
+                <a id="linkDialog" href="#" class="iframe"  style="display:none"/>
+                <a id="idLink" href="#"  style="display:none"/>
 
             </div>
 

@@ -19,9 +19,14 @@ public class ViSicdocu  implements java.io.Serializable {
      private Date fecCreacion;
      
      private BigDecimal idPersClieprov;
+     private String codIdenClieprov;
      private String desPersClieprov;
      private BigDecimal idTrolpersClieprov;
      private String desTrolpersClieprov;
+     
+     private BigDecimal idSclaseeven;
+     private String codSclaseeven;
+     private String desSclaseeven;
      
      private BigDecimal idStipodocu;
      private String desStipodocu;
@@ -30,10 +35,13 @@ public class ViSicdocu  implements java.io.Serializable {
      private BigDecimal numDocu;
      private String desNotas;
      private Date fecDesde;
-     private Date fecHasta;     
-     private BigDecimal numSubtotal;
-     private BigDecimal numIgv;
-     private BigDecimal numTotal;
+     private Date fecHasta;   
+     
+     private String numSubtotal;
+     private String numMtoigv;
+     private String numMtodscto;
+     private String numMtototal;     
+     
      private BigDecimal idTipodocu;
      private String desTipodocu;
      private String codTipodocu;
@@ -74,10 +82,7 @@ public class ViSicdocu  implements java.io.Serializable {
        this.numDocu = numDocu;
        this.desNotas = desNotas;
        this.fecDesde = fecDesde;
-       this.fecHasta = fecHasta;
-       this.numSubtotal = numSubtotal;
-       this.numIgv = numIgv;
-       this.numTotal = numTotal;
+       this.fecHasta = fecHasta;       
        this.idTipodocu = idTipodocu;
        this.desTipodocu = desTipodocu;
        this.codTipodocu = codTipodocu;
@@ -127,6 +132,15 @@ public class ViSicdocu  implements java.io.Serializable {
         this.idPersClieprov = idPersClieprov;
     }
 
+    public String getCodIdenClieprov() {
+        return codIdenClieprov;
+    }
+
+    public void setCodIdenClieprov(String codIdenClieprov) {
+        this.codIdenClieprov = codIdenClieprov;
+    }
+    
+    
     public String getDesPersClieprov() {
         return desPersClieprov;
     }
@@ -150,6 +164,32 @@ public class ViSicdocu  implements java.io.Serializable {
     public void setDesTrolpersClieprov(String desTrolpersClieprov) {
         this.desTrolpersClieprov = desTrolpersClieprov;
     }
+
+    public BigDecimal getIdSclaseeven() {
+        return idSclaseeven;
+    }
+
+    public void setIdSclaseeven(BigDecimal idSclaseeven) {
+        this.idSclaseeven = idSclaseeven;
+    }
+
+    public String getCodSclaseeven() {
+        return codSclaseeven;
+    }
+
+    public void setCodSclaseeven(String codSclaseeven) {
+        this.codSclaseeven = codSclaseeven;
+    }
+
+    public String getDesSclaseeven() {
+        return desSclaseeven;
+    }
+
+    public void setDesSclaseeven(String desSclaseeven) {
+        this.desSclaseeven = desSclaseeven;
+    }
+    
+    
     
     /*CREADOR*/
     
@@ -237,28 +277,41 @@ public class ViSicdocu  implements java.io.Serializable {
     public void setFecHasta(Date fecHasta) {
         this.fecHasta = fecHasta;
     }
-    
-    public BigDecimal getNumSubtotal() {
-        return this.numSubtotal;
+
+    public String getNumSubtotal() {
+        return numSubtotal;
     }
-    
-    public void setNumSubtotal(BigDecimal numSubtotal) {
+
+    public void setNumSubtotal(String numSubtotal) {
         this.numSubtotal = numSubtotal;
     }
-    public BigDecimal getNumIgv() {
-        return this.numIgv;
+
+    public String getNumMtoigv() {
+        return numMtoigv;
+    }
+
+    public void setNumMtoigv(String numMtoigv) {
+        this.numMtoigv = numMtoigv;
+    }
+
+    public String getNumMtototal() {
+        return numMtototal;
+    }
+
+    public void setNumMtototal(String numMtototal) {
+        this.numMtototal = numMtototal;
+    }
+
+    public String getNumMtodscto() {
+        return numMtodscto;
+    }
+
+    public void setNumMtodscto(String numMtodscto) {
+        this.numMtodscto = numMtodscto;
     }
     
-    public void setNumIgv(BigDecimal numIgv) {
-        this.numIgv = numIgv;
-    }
-    public BigDecimal getNumTotal() {
-        return this.numTotal;
-    }
     
-    public void setNumTotal(BigDecimal numTotal) {
-        this.numTotal = numTotal;
-    }
+    
     public BigDecimal getIdTipodocu() {
         return this.idTipodocu;
     }

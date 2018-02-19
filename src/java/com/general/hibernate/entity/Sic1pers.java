@@ -22,12 +22,19 @@ public class Sic1pers  implements java.io.Serializable {
      private Set sic1idenpers = new HashSet(0);
      private Sic1persindi sic1persindi;
      private Sic1persorga sic1persorga;
-     private Sic1lugar sic1lugar;     
+     private Sic1lugar sic1lugar;
      
+     private String codEmail;
+     private String desDistrito;
+     private String codNumtele;
+    
      /*Agregado*/
      private String codIden;
      private String codTipoiden;
      private String codTipopers;
+     
+     private BigDecimal idTrolpers;
+     private String codTrolpers;
 
     public Sic1pers() {
     }
@@ -90,6 +97,35 @@ public class Sic1pers  implements java.io.Serializable {
     public void setDesCargoRep(String desCargoRep) {
         this.desCargoRep = desCargoRep;
     }
+
+    public String getCodEmail() {
+        return codEmail;
+    }
+
+    public void setCodEmail(String codEmail) {
+        this.codEmail = codEmail;
+    }
+
+    public String getDesDistrito() {
+        return desDistrito;
+    }
+
+    public void setDesDistrito(String desDistrito) {
+        this.desDistrito = desDistrito;
+    }
+
+    public String getCodNumtele() {
+        return codNumtele;
+    }
+
+    public void setCodNumtele(String codNumtele) {
+        this.codNumtele = codNumtele;
+    }
+
+  
+    
+    
+    
     public Set getSic1docus() {
         return this.sic1docus;
     }
@@ -153,7 +189,25 @@ public class Sic1pers  implements java.io.Serializable {
 
     public void setCodTipopers(String codTipopers) {
         this.codTipopers = codTipopers;
-    }    
+    }  
+
+    public BigDecimal getIdTrolpers() {
+        return idTrolpers;
+    }
+
+    public void setIdTrolpers(BigDecimal idTrolpers) {
+        this.idTrolpers = idTrolpers;
+    }
+
+    public String getCodTrolpers() {
+        return codTrolpers;
+    }
+
+    public void setCodTrolpers(String codTrolpers) {
+        this.codTrolpers = codTrolpers;
+    }
+    
+    
     
     public String toString(){
         return "idPers: " + this.idPers + 

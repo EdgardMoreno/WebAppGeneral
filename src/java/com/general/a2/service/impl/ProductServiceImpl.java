@@ -7,7 +7,9 @@ import com.general.hibernate.entity.HibernateUtil;
 import com.general.hibernate.entity.Sic1prod;
 import com.general.hibernate.relaentity.Sic3proddocu;
 import com.general.hibernate.views.ViSicprod;
+import com.general.util.dao.DaoFuncionesUtil;
 import com.general.util.exceptions.CustomizerException;
+import com.general.util.exceptions.ValidationException;
 import java.io.Serializable;
 import java.util.List;
 import java.sql.SQLException;
@@ -37,14 +39,18 @@ public class ProductServiceImpl implements Serializable{
     }   
     
     /*METODOS*/        
-    public String insert(Sic1prod sic1prod) throws CustomizerException {
+    public String insert(Sic1prod sic1prod) throws ValidationException, CustomizerException {
         
         String result = null;
         try{
+            
             this.session = HibernateUtil.getSessionFactory().openSession();
             this.session.beginTransaction();
             result = daoProductImpl.insert(this.session, sic1prod);            
-            this.session.getTransaction().commit();         
+            this.session.getTransaction().commit();
+        }catch(ValidationException ex){
+            session.getTransaction().rollback();
+            throw new ValidationException(ex.getMessage());
         }catch(Exception ex){
             session.getTransaction().rollback();
             throw new CustomizerException(ex.getMessage());

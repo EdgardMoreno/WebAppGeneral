@@ -30,10 +30,11 @@ import java.io.Serializable;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.logging.Level;
 import org.hibernate.Criteria;
 import org.hibernate.Hibernate;
 import org.hibernate.HibernateException;
-import org.hibernate.Query;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.hibernate.jdbc.ReturningWork;
@@ -69,9 +70,7 @@ public class DaoDocumentImpl implements Serializable{
                     String strFecHasta = null;
                     String valor = null;
 
-                    BigDecimal intIdTipoIden;
-                    //int intIdTRolPers = -1;
-                    //int intIdTRolEsta = -1; 
+                    BigDecimal intIdTipoIden;                    
 
                     try{
                     
@@ -87,6 +86,9 @@ public class DaoDocumentImpl implements Serializable{
                         System.out.println("intIdTRolPers:" + sic1docu.getIdTrolpers());
                         System.out.println("intIdEstaDocu:" + sic1docu.getSic3docuesta().getId().getIdEstadocu());
                         System.out.println("intIdTRolEsta:" + sic1docu.getSic3docuesta().getId().getIdTrolestadocu());
+                        System.out.println("idSclaseeven:" + sic1docu.getIdSclaseeven());
+                        System.out.println("idSTipodocu:" + sic1docu.getIdStipodocu());
+                        System.out.println("idPersExterno:" + sic1docu.getIdPersexterno());
 
                         /*CONVERSION DE FECHAS*/            
                         if (sic1docu.getFecCreacion() != null){
@@ -100,11 +102,12 @@ public class DaoDocumentImpl implements Serializable{
                         }
                         /**/
 
+                        System.out.println("FecCreacion: " + strFecCreacion);
 
                         StoredProcedure sp = new StoredProcedure("PKG_SICMANTDOCU.PRC_SICCREADOCU");
 
                         sp.addParameter(new InParameter("X_ID_TIPOIDEN",        Types.INTEGER, intIdTipoIden));
-                        sp.addParameter(new InParameter("X_COD_IDEN",           Types.VARCHAR, sic1idendocu.getCodIden().toUpperCase()));
+                        sp.addParameter(new InParameter("X_COD_IDEN",           Types.VARCHAR, sic1idendocu.getCodIden().trim().toUpperCase()));
                         sp.addParameter(new InParameter("X_DES_TITULO",         Types.VARCHAR, null));
                         sp.addParameter(new InParameter("X_DES_NOTAS",          Types.VARCHAR, sic1docu.getDesNotas()));
                         sp.addParameter(new InParameter("X_FEC_CREACION",       Types.VARCHAR, strFecCreacion));
@@ -269,39 +272,47 @@ public class DaoDocumentImpl implements Serializable{
                     String strFecHasta = null;
                     String strFecDesde = null;
                     
-                    /*CONVERSION DE FECHAS*/            
-                    if (sic3docuesta.getId().getFecDesde() != null){
-                        strFecDesde = UtilClass.convertDateToString(sic3docuesta.getId().getFecDesde());
-                    }
-                    if (sic3docuesta.getFecHasta()!= null){
-                        strFecHasta = UtilClass.convertDateToString(sic3docuesta.getFecHasta());
-                    }
-                    /**/
+                    try {
+                    
+                        /*CONVERSION DE FECHAS*/            
+                        if (sic3docuesta.getId().getFecDesde() != null){
+                            strFecDesde = UtilClass.convertDateToString(sic3docuesta.getId().getFecDesde());
+                        }
+                        if (sic3docuesta.getFecHasta()!= null){
+                            strFecHasta = UtilClass.convertDateToString(sic3docuesta.getFecHasta());
+                        }
+                        /**/
 
-                    StoredProcedure sp = new StoredProcedure("PKG_SICMANTDOCU.PRC_SICRELADOCUESTA");
+                        BigDecimal idTreladocuesta = DaoFuncionesUtil.FNC_SICOBTIDGEN(cnctn, "VI_SICTRELA", "RELESTADODOCUMENTO");
+                        
+                        System.out.println("idTreladocuesta:" + idTreladocuesta);    
+                        
+                        StoredProcedure sp = new StoredProcedure("PKG_SICMANTDOCU.PRC_SICRELADOCUESTA");
 
-                    sp.addParameter(new InParameter("X_ID_DOCU",            Types.INTEGER, sic3docuesta.getId().getIdDocu()));
-                    sp.addParameter(new InParameter("X_ID_ESTAREL",         Types.INTEGER, sic3docuesta.getId().getIdEstadocu()));
-                    sp.addParameter(new InParameter("X_ID_TROLESTADOCU",    Types.INTEGER, sic3docuesta.getId().getIdTrolestadocu()));
-                    sp.addParameter(new InParameter("X_ID_TRELADOCU",       Types.INTEGER, sic3docuesta.getId().getIdTreladocu()));
-                    sp.addParameter(new InParameter("X_DES_NOTAS",          Types.VARCHAR, sic3docuesta.getDesNotas()));
-                    sp.addParameter(new InParameter("X_FEC_DESDE",          Types.VARCHAR, strFecDesde));
-                    sp.addParameter(new InParameter("X_FEC_HASTA",          Types.VARCHAR, strFecHasta));
+                        sp.addParameter(new InParameter("X_ID_DOCU",            Types.INTEGER, sic3docuesta.getId().getIdDocu()));
+                        sp.addParameter(new InParameter("X_ID_ESTAREL",         Types.INTEGER, sic3docuesta.getId().getIdEstadocu()));
+                        sp.addParameter(new InParameter("X_ID_TROLESTADOCU",    Types.INTEGER, sic3docuesta.getId().getIdTrolestadocu()));
+                        sp.addParameter(new InParameter("X_ID_TRELADOCU",       Types.INTEGER, idTreladocuesta));
+                        sp.addParameter(new InParameter("X_DES_NOTAS",          Types.VARCHAR, sic3docuesta.getDesNotas()));
+                        sp.addParameter(new InParameter("X_FEC_DESDE",          Types.VARCHAR, strFecDesde));
+                        sp.addParameter(new InParameter("X_FEC_HASTA",          Types.VARCHAR, strFecHasta));
 
-                    sp.addParameter(new OutParameter("X_ID_ERROR",          Types.INTEGER));
-                    sp.addParameter(new OutParameter("X_DES_ERROR",         Types.VARCHAR));
-                    sp.addParameter(new OutParameter("X_FEC_ERROR",         Types.DATE));
+                        sp.addParameter(new OutParameter("X_ID_ERROR",          Types.INTEGER));
+                        sp.addParameter(new OutParameter("X_DES_ERROR",         Types.VARCHAR));
+                        sp.addParameter(new OutParameter("X_FEC_ERROR",         Types.DATE));
 
-                    sp.ExecuteNonQuery(cnctn);
+                        sp.ExecuteNonQuery(cnctn);
 
-                    if (Integer.valueOf(sp.getParameter("X_ID_ERROR").toString()) != 0) {
-                        throw new SQLException((String) sp.getParameter("X_DES_ERROR"));
+                        if (Integer.valueOf(sp.getParameter("X_ID_ERROR").toString()) != 0) {
+                            throw new SQLException((String) sp.getParameter("X_DES_ERROR"));
+                        }
+                    
+                    } catch (Exception ex) {
+                        java.util.logging.Logger.getLogger(DaoDocumentImpl.class.getName()).log(Level.SEVERE, null, ex);
                     }
 
                 }
             });
-            
-            
             
         } catch (HibernateException ex) {
             throw new HibernateException(ex.getMessage());
@@ -537,32 +548,80 @@ public class DaoDocumentImpl implements Serializable{
     }
     
     
-    public List<ViSicdocu> listViSicdocu(Session session, ViSicdocu obj) {
+    public List<ViSicdocu> listViSicdocu(Session session, ViSicdocu obj) throws Exception {
                 
         int flgFilter = 0;
+        Date fecDesde = null, fecHasta = null;
         List<ViSicdocu> lstResult = new ArrayList();
-        Criteria criteria = session.createCriteria(ViSicdocu.class);
+        try{
+            
+            Criteria criteria = session.createCriteria(ViSicdocu.class);
         
-        if(obj.getIdDocu() != null && obj.getIdDocu().intValue() > 0){
-            criteria.add(Restrictions.eq("idDocu",obj.getIdDocu()));
-            flgFilter = 1;
-        }
-        if(obj.getCodIden() != null && obj.getCodIden().trim().length() > 0 ){
-            criteria.add(Restrictions.eq("codIden",obj.getCodIden()));
-            flgFilter = 1;
-        }
-        if(obj.getCodSerie()!= null && obj.getCodSerie().trim().length() > 0 ){
-            criteria.add(Restrictions.eq("codSerie",obj.getCodSerie()));
-            flgFilter = 1;
-        }
-        if(obj.getNumDocu() != null && obj.getNumDocu().intValue() > 0){
-            criteria.add(Restrictions.eq("numDocu",obj.getNumDocu()));
-            flgFilter = 1;
-        }
-        
-        if(flgFilter == 1){
-            criteria.addOrder(Order.desc("codSerie")).addOrder(Order.desc("numDocu"));
-            lstResult = criteria.list();    
+            System.out.println("FecDesde: " + obj.getFecDesde());
+            System.out.println("FecHasta: " + obj.getFecHasta());
+
+            if(obj.getFecDesde() != null || obj.getFecHasta() != null){
+              fecDesde = obj.getFecDesde() != null?obj.getFecDesde():UtilClass.getObtFecIni();
+              fecHasta = obj.getFecHasta() != null?obj.getFecHasta():UtilClass.getObtFecInf();
+            }
+            
+            System.out.println("FecDesde: " + fecDesde);
+            System.out.println("FecHasta: " + fecHasta);
+
+            if(obj.getCodSclaseeven()!= null && obj.getCodSclaseeven().length()> 0){
+                criteria.add(Restrictions.eq("codSclaseeven",obj.getCodSclaseeven()).ignoreCase());
+                flgFilter = 1;
+            }
+
+            if(obj.getIdDocu() != null && obj.getIdDocu().intValue() > 0){
+                criteria.add(Restrictions.eq("idDocu",obj.getIdDocu()));
+                flgFilter = 1;
+            }
+            if(obj.getCodIden() != null && obj.getCodIden().trim().length() > 0 ){
+                criteria.add(Restrictions.eq("codIden",obj.getCodIden()));
+                flgFilter = 1;
+            }
+            if(obj.getCodSerie()!= null && obj.getCodSerie().trim().length() > 0 ){
+                criteria.add(Restrictions.eq("codSerie",obj.getCodSerie()));
+                flgFilter = 1;
+            }
+            if(obj.getNumDocu() != null && obj.getNumDocu().intValue() > 0){
+                criteria.add(Restrictions.eq("numDocu",obj.getNumDocu()));
+                flgFilter = 1;
+            }
+
+            if(obj.getIdStipodocu()!= null && obj.getIdStipodocu().intValue() > 0){
+                criteria.add(Restrictions.eq("idStipodocu",obj.getNumDocu()));
+                flgFilter = 1;
+            }
+
+            if(obj.getIdEstadocu() != null && obj.getIdEstadocu().intValue() > 0){
+                criteria.add(Restrictions.eq("idEstadocu",obj.getNumDocu()));
+                flgFilter = 1;
+            }
+            
+            if(obj.getCodIdenClieprov()!= null && obj.getCodIdenClieprov().trim().length() > 0 ){
+                criteria.add(Restrictions.eq("codIdenClieprov",obj.getCodIdenClieprov()));
+                flgFilter = 1;
+            }
+            
+            if(obj.getDesPersClieprov()!= null && obj.getDesPersClieprov().trim().length() > 0 ){
+                criteria.add(Restrictions.like("desPersClieprov","%" + obj.getDesPersClieprov() + "%").ignoreCase());
+                flgFilter = 1;
+            }
+
+            if(fecDesde != null){
+                criteria.add(Restrictions.between("fecDesde",fecDesde, fecHasta));
+                flgFilter = 1;
+            }
+
+            if(flgFilter == 1){
+                criteria.addOrder(Order.desc("codSerie")).addOrder(Order.desc("numDocu"));
+                lstResult = criteria.list();    
+            }
+
+        }catch(Exception ex){
+            throw new Exception(ex.getMessage());
         }
 
         return lstResult;

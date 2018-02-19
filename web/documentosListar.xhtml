@@ -18,6 +18,17 @@
             
             <script>
                 
+                /*Funcion que permite anular el documento*/
+                function fnAnulDocu(idDocu){
+                    /*Valor del IDDOCU obtenido de la fila de la tabla se setear temporalmemte
+                     * en un INPUTTEXT para que luego se llamado desde el Managed Bean*/
+                    console.log("idDocu:" + idDocu);
+                    $("#form\\:idDocuSelected").val(idDocu);
+                    
+                    var message = "¿Está seguro de anular el documento seleccionado?";
+                    fnShowDialogConfirm('form\\:idBtnAnulDocu', message);
+                    return false;
+                }
                 
             </script>
                    
@@ -37,7 +48,7 @@
 
                         <h:outputLabel value="Tipo Documento:"/>
                         <h:selectOneMenu id="somTipoDocu" value="#{documentController.viSicdocu.idStipodocu}" style="width:100%" >
-                            <f:selectItem itemLabel="-- Seleccione --" itemValue="-1" />
+                            <f:selectItem itemLabel="-- Todos --" itemValue="-1" />
                             <f:selectItems value="#{documentController.itemSTipoDocu}" />
                         </h:selectOneMenu>
                         <h:outputLabel value="Cod. Serie:"/>
@@ -48,13 +59,20 @@
                         
                         <h:outputLabel value="Estado:"/>
                         <h:selectOneMenu value="#{documentController.viSicdocu.idStipodocu}" style="width:100%" >
-                            <f:selectItem itemLabel="-- Seleccione --" itemValue="-1" />
+                            <f:selectItem itemLabel="-- Todos --" itemValue="-1" />
                             <f:selectItems value="#{documentController.itemsEstaRol}" var="c" itemValue="#{c.idEsta}" itemLabel="#{c.desEsta}" />
                         </h:selectOneMenu>                        
                         <h:outputLabel value="Num. Docu:"/>
                         <h:inputText styleClass="form-control" value="#{documentController.viSicdocu.numDocu}"  />
+                        <h:outputLabel value=""/>
+                        <h:outputLabel value=""/>                        
+                        
+                        <h:outputLabel value="Docu. Identidad Cliente/Proveedor:"/>
+                        <h:inputText styleClass="form-control" value="#{documentController.viSicdocu.codIdenClieprov}" />
                         <h:outputLabel value="Cliente/Proveedor:"/>
-                        <h:inputText styleClass="form-control" value="#{documentController.viSicdocu.desPersClieprov}" style="width:150%" />
+                        <h:inputText styleClass="form-control" value="#{documentController.viSicdocu.desPersClieprov}" />
+                        <h:outputLabel value=""/>
+                        <h:outputLabel value=""/>
 
                         <h:outputLabel value="Fecha Desde:"/>
                         <h:inputText value="#{documentController.desFecDesde}" styleClass="form-control datepicker" />
@@ -70,42 +88,74 @@
 
                     </h:panelGrid>
                     <br/>
-                    <h:dataTable id="tblDocuments" 
+                    
+                    <!-- ********************************** -->
+                    <!-- ELEMENTOS OCULTOS -->
+                    <!-- *********************************** -->
+                    <label class="ocultarObjeto" >ID_Docu_seleccionado</label>
+                    <h:inputText id="idDocuSelected" value="#{documentController.idDocuSelected}" styleClass="ocultarObjeto" />
+                    
+                    
+                    <!-- ********************************** -->
+                    <!-- LISTA DE DOCUMENTOS -->
+                    <!-- *********************************** -->
+                    
+                    <h:dataTable id="idTblDocuments" 
                                  var="item" 
-                                 value="#{documentController.lstViSicdocus}" 
-                                 rendered="#{not empty documentController.lstViSicdocus}"
+                                 width="100%"
+                                 value="#{documentController.lstViSicdocus}"                                  
                                  styleClass="table-bordered"
-                                 columnClasses="table_style_id, table_style_id, table_style_code, table_style_code, table_style_code, table_style_description, table_style_action">                        
+                                 columnClasses="table_style_id,
+                                                table_style_code,                                                
+                                                table_style_date,
+                                                table_style_description_medium,
+                                                table_style_code_small,
+                                                table_style_price_small,
+                                                table_style_price_small,
+                                                table_style_price_small_discount,
+                                                table_style_price_small,
+                                                table_style_action">                        
 
                         <h:column>
-                            <f:facet name="header">No.</f:facet>1
-                        </h:column>                        
-
-                        <h:column>
-                            <f:facet name="header">idProd</f:facet>#{item.idDocu}
+                            <f:facet name="header">No.</f:facet>#{documentController.lstViSicdocus.indexOf(item) + 1}
                         </h:column>
                         
                         <h:column>
-                            <f:facet name="header">Evento</f:facet>VENTA
+                            <f:facet name="header">Evento</f:facet>#{item.desDocu}
                         </h:column>
                         
                         <h:column>
-                            <f:facet name="header">Tipo Comprobante</f:facet>#{item.desStipodocu}
-                        </h:column>
-
-                        <h:column>
-                            <f:facet name="header">Número</f:facet>#{item.codIden}
+                            <f:facet name="header">Fec. Registro</f:facet>#{item.fecDesde}
                         </h:column>
                         
                         <h:column>
                             <f:facet name="header">Cliente/Proveedor</f:facet>#{item.desPersClieprov}
                         </h:column>
+                        
+                        <h:column>
+                            <f:facet name="header">Estado</f:facet>#{item.desEstadocu}
+                        </h:column>
+                        
+                        <h:column>
+                            <f:facet name="header">Sub. Total</f:facet>#{item.numSubtotal}
+                        </h:column>
+                        
+                        <h:column>
+                            <f:facet name="header">I.G.V</f:facet>#{item.numMtoigv}
+                        </h:column>
+                        
+                        <h:column>
+                            <f:facet name="header">Descuento</f:facet>#{item.numMtodscto}
+                        </h:column>
+                        
+                        <h:column>
+                            <f:facet name="header">Total</f:facet>#{item.numMtototal}
+                        </h:column>
 
                         <h:column>
                             
-                            <h:commandLink action="compraRegistrar.xhtml" >
-                                <span class="glyphicon glyphicon-trash"></span>
-                                <f:param name="day" value="monday"/>
+                            <h:commandLink onclick="return fnAnulDocu(#{item.idDocu})" >
+                                <span class="glyphicon glyphicon-trash"></span>                                
                             </h:commandLink>
                             &nbsp;                           
                             <h:commandLink action="#{documentController.editAction(item)}">
@@ -114,6 +164,10 @@
                         </h:column>
                     </h:dataTable>
                 </div>
+            
+            <h:commandLink id="idBtnAnulDocu" value="Anular Documento" style="display: none">
+                <f:ajax execute="idDocuSelected" render="idTblDocuments" listener="#{documentController.anulDocu()}" />
+            </h:commandLink>
             
         </ui:define>
     </ui:composition>

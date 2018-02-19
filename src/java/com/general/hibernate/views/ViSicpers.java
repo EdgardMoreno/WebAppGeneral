@@ -19,6 +19,7 @@ public class ViSicpers  implements java.io.Serializable {
      private BigDecimal idCreador;
      private String desCreador;
      private BigDecimal idTrolcreador;
+     private String codTrolpers;
      private String desTrolcreador;
      private BigDecimal idPers;
      private String desPers;
@@ -160,6 +161,15 @@ public class ViSicpers  implements java.io.Serializable {
     public void setIdTrolcreador(BigDecimal idTrolcreador) {
         this.idTrolcreador = idTrolcreador;
     }
+
+    public String getCodTrolpers() {
+        return codTrolpers;
+    }
+
+    public void setCodTrolpers(String codTrolpers) {
+        this.codTrolpers = codTrolpers;
+    }
+    
     public String getDesTrolcreador() {
         return this.desTrolcreador;
     }

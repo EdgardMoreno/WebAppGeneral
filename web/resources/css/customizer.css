@@ -8,6 +8,11 @@ and open the template in the editor.
     Author     : Edgard
 */
 
+.ocultarObjeto{
+    /*display: none;*/
+    display: inline-block;
+}
+
 .label_panelGrid_2c {
      width: 20%;
      text-align: right;
@@ -38,6 +43,10 @@ and open the template in the editor.
     padding: 5px;
 
 }
+
+.form_label_small { width: 20px; padding: 3px; text-align: right; }
+.form_input_small { width: 15em; padding: 2px; }
+.form_input_medium { width: 20em; padding: 2px; }
 
 #Comentarios{
   display: none;
@@ -88,7 +97,6 @@ and open the template in the editor.
      text-align: center;
 
 }
-
 
 
 .td-label-1 {
@@ -155,14 +163,19 @@ and open the template in the editor.
 .table_header16 { width: 16%; text-align: center;}
 .table_header30 { width: 30%; text-align: left;}
 
-.table_style_id { width: 3em; text-align: center;}
+.table_style_id { width: 2em; text-align: center;}
+.table_style_code_small { width: 7em; text-align: center;}
+.table_style_code_medium { width: 9em; text-align: center;}
 .table_style_code { width: 12em; text-align: center;}
-.table_style_description_small { width: 20%; text-align: left;}
-.table_style_description_medium { width: 30%; text-align: left;}
+.table_style_description_small { width: 17%; text-align: left;}
+.table_style_description_medium { width: 26%; text-align: left;}
 .table_style_description { width: 40%; text-align: left;}
-.table_style_price { width: 9em; text-align: right; padding: 4px;}
-.table_style_amount { width: 7em; text-align: center;}
-.table_style_action { width: 6em; text-align: center;}
+.table_style_price_small_discount { width: 5em; text-align: right; padding: 4px; color: red}
+.table_style_price_small { width: 4em; text-align: right; padding: 4px; color: blue}
+.table_style_price { width: 7em; text-align: right; padding: 4px;}
+.table_style_amount { width: 3em; text-align: center;}
+.table_style_date { width: 6em; text-align: center;}
+.table_style_action { width: 4em; text-align: center;}
 
 .button_style {
     box-shadow: rgb(151, 196, 254) 0px 1px 0px 0px inset;

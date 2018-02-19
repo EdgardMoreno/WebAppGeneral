@@ -24,6 +24,7 @@ import org.hibernate.Session;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import com.general.util.beans.UtilClass;
+import com.general.util.exceptions.ValidationException;
 import java.io.Serializable;
 import org.hibernate.Criteria;
 import org.hibernate.Hibernate;
@@ -62,16 +63,33 @@ public class DaoPersonImpl implements Serializable{
                         BigDecimal intIdEstaCivil = null;
                         BigDecimal intIdTipoEmpresa = null;
                         BigDecimal intIdTipoOrga = null;
-                        BigDecimal intIdGenero = null;
+                        BigDecimal intIdGenero = null;                        
                         String dtFecNaci = null;
+                        String strFecDesde = null;
+                        String strFecHasta = null;                        
                         
                         try{
 
-                            intIdTipoLugar = DaoFuncionesUtil.FNC_SICOBTIDGEN(cnConexion, "VI_SICTIPOLUGAR", "VI_SICDIRECCION");
+                            Sic1pers sic1pers = sic1idenpers.getSic1pers();
+                            
+                            
+                            BigDecimal idTipoIden = sic1idenpers.getId().getIdTipoiden();
+                            String codIden        = sic1idenpers.getId().getCodIden().trim();
+                            
+                            /* Validar si la persona que se quiere registrar ya existe
+                            *  Si el ID_PERS es null quiere decir que es nuevo
+                            */
+                            if( sic1pers.getIdPers()== null){
+                                BigDecimal id = DaoFuncionesUtil.FNC_SICOBTIDIDEN(cnConexion, "PERS", idTipoIden.intValue(), codIden);
+                                if (id != null && id.intValue() > 0)
+                                    return "-99";
+                            }
+                            
+                            
+                            intIdTipoLugar =  DaoFuncionesUtil.FNC_SICOBTIDGEN(cnConexion, "VI_SICTIPOLUGAR", "VI_SICDIRECCION");
                             intIdTipoPersPN = DaoFuncionesUtil.FNC_SICOBTIDGEN(cnConexion, "VI_SICTIPOPERS", "N");
                             intIdTipoPersPJ = DaoFuncionesUtil.FNC_SICOBTIDGEN(cnConexion, "VI_SICTIPOPERS", "J");
                             
-                            Sic1pers sic1pers = sic1idenpers.getSic1pers();
                             
                             if(sic1pers.getSic1persindi().getFecNaci() != null){
                                 dtFecNaci = UtilClass.convertDateToString(sic1pers.getSic1persindi().getFecNaci());
@@ -96,14 +114,23 @@ public class DaoPersonImpl implements Serializable{
                                 throw new HibernateException("Tipo de Persona No Válida");
                             }
                             
+                            
+                            if (sic1idenpers.getFecDesde()!= null){
+                                strFecDesde = UtilClass.convertDateToString(sic1idenpers.getFecDesde());
+                            }
+                            if (sic1idenpers.getFecHasta()!= null){
+                                strFecHasta = UtilClass.convertDateToString(sic1idenpers.getFecHasta());
+                            }
+                            
                             //Sic1idenpers sic1idenpers = (Sic1idenpers)sic1pers.getSic1idenpers().iterator().next();
 
                             StoredProcedure sp = null;
                             sp = new StoredProcedure("PKG_SICMANTPERS.PRC_SICCREAPERS");                
 
                             sp.addParameter(new InParameter("X_ID_TIPOIDEN", Types.INTEGER, sic1idenpers.getId().getIdTipoiden().intValue()));
-                            sp.addParameter(new InParameter("X_COD_IDEN", Types.VARCHAR, sic1idenpers.getId().getCodIden()));
+                            sp.addParameter(new InParameter("X_COD_IDEN", Types.VARCHAR, sic1idenpers.getId().getCodIden().trim()));
                             sp.addParameter(new InParameter("X_ID_TIPOPERS", Types.INTEGER, sic1pers.getIdTipopers().intValue()));
+                            sp.addParameter(new InParameter("X_ID_TROLPERS", Types.INTEGER, sic1pers.getIdTrolpers()));
                             //Persona Juridica
                             sp.addParameter(new InParameter("X_DES_PERSORGA", Types.VARCHAR, sic1pers.getSic1persorga().getDesPersorga()));
                             sp.addParameter(new InParameter("X_DES_NOMBCOME", Types.VARCHAR, sic1pers.getSic1persorga().getDesPersorga()));
@@ -118,9 +145,12 @@ public class DaoPersonImpl implements Serializable{
                             sp.addParameter(new InParameter("X_ID_GENERO", Types.INTEGER, sic1pers.getSic1persindi().getIdGenero()));
                             sp.addParameter(new InParameter("X_FEC_NACI", Types.VARCHAR, dtFecNaci));
                             sp.addParameter(new InParameter("X_ID_ESTACIVIL", Types.INTEGER, intIdEstaCivil));
+                            
+                            sp.addParameter(new InParameter("COD_EMAIL", Types.VARCHAR, sic1pers.getCodEmail()));
+                            sp.addParameter(new InParameter("DES_DISTRITO", Types.VARCHAR, sic1pers.getDesDistrito()));
 
                             sp.addParameter(new InParameter("X_DES_TELFFIJO", Types.VARCHAR, null));
-                            sp.addParameter(new InParameter("X_DES_TELFCELU", Types.VARCHAR, null));
+                            sp.addParameter(new InParameter("X_DES_TELFCELU", Types.VARCHAR, sic1pers.getCodNumtele()));
                             sp.addParameter(new InParameter("X_DES_TELFFAX", Types.VARCHAR, null));
                             sp.addParameter(new InParameter("X_DES_CORREO", Types.VARCHAR, null));
                             sp.addParameter(new InParameter("X_DES_UBIGEO", Types.VARCHAR, null));
@@ -133,8 +163,8 @@ public class DaoPersonImpl implements Serializable{
                             sp.addParameter(new InParameter("X_COD_NUMDIRE", Types.VARCHAR, null));
                             sp.addParameter(new InParameter("X_COD_NUMINTERIOR", Types.VARCHAR, null));
                             sp.addParameter(new InParameter("X_ID_TIPODOMI", Types.VARCHAR, null));
-                            sp.addParameter(new InParameter("X_FEC_DESDE", Types.VARCHAR, null));
-                            sp.addParameter(new InParameter("X_FEC_HASTA", Types.VARCHAR, null));
+                            sp.addParameter(new InParameter("X_FEC_DESDE", Types.VARCHAR, strFecDesde));
+                            sp.addParameter(new InParameter("X_FEC_HASTA", Types.VARCHAR, strFecHasta));
 
                             sp.addParameter(new OutParameter("X_ID_PERS", Types.INTEGER));
                             sp.addParameter(new OutParameter("X_ID_ERROR", Types.INTEGER));
@@ -155,10 +185,15 @@ public class DaoPersonImpl implements Serializable{
                      }
             });
             
+            if (result.equals("-99"))
+                throw new ValidationException("El documento de identidad ingresado ya existe");
+            
             return result;
             
         } catch (HibernateException ex) {
             throw new SQLException(ex.getMessage());
+        } catch (ValidationException ex) {
+            throw new ValidationException(ex.getMessage());
         } catch (Exception ex) {
             throw new Exception(ex.getMessage());
         }
@@ -228,6 +263,8 @@ public class DaoPersonImpl implements Serializable{
                
         Criteria criteria = session.createCriteria(ViSicpers.class);
         
+        if(obj.getCodTrolpers()!= null && obj.getCodTrolpers().trim().length() > 0)
+            criteria.add(Restrictions.like("codTrolpers", '%' + obj.getCodTrolpers() + '%').ignoreCase());
         if(obj.getIdPers()!= null && obj.getIdPers().intValue() > 0)
             criteria.add(Restrictions.eq("idPers",obj.getIdPers()));
         if(obj.getCodIden() != null && obj.getCodIden().trim().length() > 0 )
@@ -237,7 +274,7 @@ public class DaoPersonImpl implements Serializable{
         if(obj.getIdTipopers()!= null && obj.getIdTipopers().intValue() > 0 )
             criteria.add(Restrictions.eq("idTipopers",obj.getIdTipopers()));
         if(obj.getDesPers()!= null && !obj.getDesPers().trim().isEmpty() )
-            criteria.add( Restrictions.like("desPers",'%' + obj.getDesPers().toUpperCase()+ '%').ignoreCase());
+            criteria.add( Restrictions.like("desPers",'%' + obj.getDesPers() + '%').ignoreCase());
         
         List<ViSicpers> lst = criteria.list();        
 

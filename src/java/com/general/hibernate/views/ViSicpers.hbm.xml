@@ -46,6 +46,9 @@
     <property name="idTrolpers" type="big_decimal">
       <column name="ID_TROLPERS" precision="22" scale="0"/>
     </property>
+    <property name="codTrolpers" type="string">
+      <column length="500" name="COD_TROLPERS" />
+    </property>
     <property name="desTrolpers" type="string">
       <column length="500" name="DES_TROLPERS"/>
     </property>

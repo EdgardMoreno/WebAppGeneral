@@ -153,7 +153,7 @@ public class Sic1generalServiceImpl implements Serializable{
     /*CATALOGO DE ESTADOS*/
     public List<ViSicestageneral> getCataEstaRolDocuInf( ) throws Exception{
         ViSicestageneral obj = new ViSicestageneral();
-        obj.setCodTrolesta("VI_SICESTADOCUINF");
+        obj.setCodTrolesta("VI_SICESTADOCUCOMPROBANTE");
         return daoSic1generalImp.getCataEstaRol(obj);
         
     }

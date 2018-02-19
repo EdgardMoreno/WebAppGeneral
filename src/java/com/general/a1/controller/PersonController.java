@@ -17,6 +17,7 @@ import com.general.hibernate.views.ViSicpers;
 import com.general.util.beans.Constantes;
 import com.general.util.beans.UtilClass;
 import com.general.util.exceptions.CustomizerException;
+import com.general.util.exceptions.ValidationException;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -24,6 +25,9 @@ import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
+import javax.faces.context.FacesContext;
+import javax.faces.context.Flash;
+import javax.faces.event.ComponentSystemEvent;
 import javax.faces.model.SelectItem;
 import javax.inject.Named;
 import org.primefaces.context.RequestContext;
@@ -57,20 +61,20 @@ public class PersonController implements Serializable{
     private List<SelectItem> itemsGeneroPers = new ArrayList();
     
     /*Almacenada los datos que son enviados desde otra pagina*/
-    private int paramPageFlgActivo = 0;
-    private String paramPageCodIden;
+    private int paramPageFlgActivo = 0;    
+    private boolean paramPageFlgNuevRegi = false;
+    private int paramPageIdPers = 0;
+    
+    private String desTituloPagina;
+    private String codTRolpers;
     
     public PersonController(){
-        
     }
     
     @PostConstruct
     public void init() {
         
         try{
-            
-            System.out.println("paramPageFlgActivo:" + paramPageFlgActivo);
-            System.out.println("paramPageCodIden:" + paramPageCodIden);
             
             viSicpers = new ViSicpers();
             
@@ -100,8 +104,8 @@ public class PersonController implements Serializable{
             /*CARGAR GENERO*/
             itemsGeneroPers = sic1generalServiceImpl.getCataGender();
             
-            if(this.paramPageFlgActivo == 1)
-                sic1idenpersId.setCodIden(this.paramPageCodIden);
+//            if(this.paramPageFlgActivo == 1)
+//                sic1idenpersId.setCodIden(this.paramPageCodIden);
             
         
         }catch(Exception e){            
@@ -197,13 +201,13 @@ public class PersonController implements Serializable{
         this.desFecNaci = desFecNaci;
     }
 
-    public String getParamPageCodIden() {
+    /*public String getParamPageCodIden() {
         return paramPageCodIden;
     }
 
     public void setParamPageCodIden(String paramPageCodIden) {
         this.paramPageCodIden = paramPageCodIden;
-    }
+    }*/
 
     public int getParamPageFlgActivo() {
         return paramPageFlgActivo;
@@ -213,13 +217,46 @@ public class PersonController implements Serializable{
         this.paramPageFlgActivo = paramPageFlgActivo;
     }
 
+    public boolean isParamPageFlgNuevRegi() {
+        return paramPageFlgNuevRegi;
+    }
+
+    public void setParamPageFlgNuevRegi(boolean paramPageFlgNuevRegi) {
+        this.paramPageFlgNuevRegi = paramPageFlgNuevRegi;
+    }
+
+    public int getParamPageIdPers() {
+        return paramPageIdPers;
+    }
+
+    public void setParamPageIdPers(int paramPageIdPers) {
+        this.paramPageIdPers = paramPageIdPers;
+    }
+
     public ViSicpers getViSicpers() {
         return viSicpers;
     }
 
     public void setViSicpers(ViSicpers viSicpers) {
         this.viSicpers = viSicpers;
-    }   
+    }
+
+    public String getDesTituloPagina() {
+        return desTituloPagina;
+    }
+
+    public void setDesTituloPagina(String desTituloPagina) {
+        this.desTituloPagina = desTituloPagina;
+    }
+
+    public String getCodTRolpers() {
+        return codTRolpers;
+    }
+
+    public void setCodTRolpers(String codTRolpers) {
+        this.codTRolpers = codTRolpers;
+    }
+    
     
     
     /*****************************************************************/ 
@@ -227,7 +264,7 @@ public class PersonController implements Serializable{
     /*****************************************************************/ 
     public List<ViSicpers> filterPersons() throws CustomizerException {
         
-         this.lstPersonas = personServiceImpl.listViSicPers(viSicpers);
+        this.lstPersonas = personServiceImpl.listViSicPers(viSicpers);
         return lstPersonas;
     }
     
@@ -287,29 +324,45 @@ public class PersonController implements Serializable{
             System.out.println("Persona:" + sic1pers.getDesPers());
             System.out.println("Fecha Nacimiento:" + this.desFecNaci);
             
+            if(sic1idenpersId.getCodIden().trim().length() < 8)
+                throw new ValidationException("Documento de Identidad inválido.");
+            
             /*Deduciendo el Tipo de documento y persona*/
             if(sic1idenpersId.getCodIden().trim().length() == Constantes.CONS_VALUE_TIPOPERS_RUC 
                     && sic1idenpersId.getCodIden().startsWith("10", 0)){
                 
                 sic1pers.setCodTipoiden(Constantes.CONS_COD_TIPOIDEN_RUC);
-                sic1pers.setCodTipopers(Constantes.CONS_COD_TIPOPERS_NATURAL);
+                sic1pers.setCodTipopers(Constantes.CONS_COD_TIPOPERS_JURIDICO);
+                
+                //Limpiar Persona Natural
+                sic1persindi    = new Sic1persindi();
                 
             }else if(sic1idenpersId.getCodIden().trim().length() == Constantes.CONS_VALUE_TIPOPERS_RUC
                     && sic1idenpersId.getCodIden().startsWith("20", 0)){
                 
                 sic1pers.setCodTipoiden(Constantes.CONS_COD_TIPOIDEN_RUC);
                 sic1pers.setCodTipopers(Constantes.CONS_COD_TIPOPERS_JURIDICO);                
+                
+                //Limpiar Persona Natural
+                sic1persindi    = new Sic1persindi();
             
             }else if(sic1idenpersId.getCodIden().trim().length() == Constantes.CONS_VALUE_TIPOPERS_DNI){
                 
                 sic1pers.setCodTipoiden(Constantes.CONS_COD_TIPOIDEN_DNI);
                 sic1pers.setCodTipopers(Constantes.CONS_COD_TIPOPERS_NATURAL);
                 
+                //Limpiar Persona Juridica
+                sic1persorga    = new Sic1persorga();
             }else {
                 
                 sic1pers.setCodTipoiden(Constantes.CONS_COD_TIPOIDEN_OTROS_NAT);
                 sic1pers.setCodTipopers(Constantes.CONS_COD_TIPOPERS_NATURAL);
-            }            
+                
+                //Limpiar Persona Juridica
+                sic1persorga    = new Sic1persorga();
+            }
+            
+            this.sic1pers.setCodTrolpers(codTRolpers);
 
             /*PERSONA NATURAL*/
             if(desFecNaci != null && !desFecNaci.isEmpty())
@@ -339,14 +392,58 @@ public class PersonController implements Serializable{
             sic1pers.setIdPers(new BigDecimal(strResul));
             
             UtilClass.addInfoMessage(Constantes.CONS_SUCCESS_MESSAGE);       
-                    
-        } catch (Exception e) {
-          throw new CustomizerException(e.getMessage());
+        
+        } catch (ValidationException ex) {
+            UtilClass.addErrorMessage(ex.getMessage());
+        } catch (Exception ex) {
+          throw new CustomizerException(ex.getMessage());
         }
     }
     
     public void eliminarPersona(Sic1pers sic1pers){
         
     }
+    
+    public void getParamsExternalPage(ComponentSystemEvent event) throws CustomizerException{
+        
+        if(!FacesContext.getCurrentInstance().isPostback()){
+            
+            System.out.println("paramPageFlgActivo: " + paramPageFlgActivo);
+            System.out.println("idPers: " + paramPageIdPers );
+            
+            Flash flash = FacesContext.getCurrentInstance().getExternalContext().getFlash();
+            String tituloPagina     = (String)flash.get("paramTituloPagina"); 
+            String codTRolpers    = (String)flash.get("paramCodTRolpers");
+            
+            System.out.println("codTRolpers: " + codTRolpers);
+            
+            if (codTRolpers != null){
+                this.viSicpers.setCodTrolpers(codTRolpers);
+                this.codTRolpers = codTRolpers;
+            }
+            else
+                throw new CustomizerException("No se cargo el Tipo de Rol de la persona.");
+            
+            this.desTituloPagina = tituloPagina;
+            
+            /*Obtener los datos de la persona que se solicita su edicion desde una pagina externa*/
+            if (paramPageIdPers > 0){
+                
+                Sic1idenpers obj = personServiceImpl.getById(new BigDecimal(paramPageIdPers));
+                        
+                sic1idenpers    = obj;
+                sic1pers        = obj.getSic1pers();
+                sic1idenpersId  = obj.getId();
+                sic1persindi    = obj.getSic1pers().getSic1persindi();
+                
+                if (obj.getSic1pers().getSic1persorga() != null)                
+                    sic1persorga    = obj.getSic1pers().getSic1persorga();
+                else
+                    sic1persorga = new Sic1persorga();
+                
+                //sic1lugar       = new Sic1lugar();
+            }
+        }
+    }   
     
 }

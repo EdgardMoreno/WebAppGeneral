@@ -3,17 +3,13 @@ package com.general.a2.service.impl;
 
 
 import com.general.a3.dao.impl.DaoDocumentImpl;
-import com.general.a3.dao.impl.DaoPersonImpl;
-import com.general.a3.dao.impl.DaoProductImpl;
 import com.general.hibernate.entity.HibernateUtil;
 import com.general.hibernate.entity.Sic1docu;
 import com.general.hibernate.entity.Sic1idendocu;
-import com.general.hibernate.entity.Sic1pers;
 import com.general.hibernate.relaentity.Sic3docudocu;
 import com.general.hibernate.relaentity.Sic3docuesta;
 import com.general.hibernate.relaentity.Sic3docuestaId;
 import com.general.hibernate.relaentity.Sic3docupers;
-import com.general.hibernate.relaentity.Sic3proddocu;
 import com.general.hibernate.views.ViSicdocu;
 import com.general.hibernate.relaentity.Sic3docuprod;
 import com.general.interfac.service.DocumentService;
@@ -24,7 +20,6 @@ import com.general.util.dao.DaoFuncionesUtil;
 import com.general.util.exceptions.CustomizerException;
 import com.general.util.exceptions.ValidationException;
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.internal.SessionImpl;
@@ -53,7 +48,7 @@ public class DocuOrderServiceImpl implements Serializable, DocumentService{
     public String insert(Sic1idendocu sic1idendocu) throws ValidationException, CustomizerException {        
                 
         double numMtoTotal      = 0.0;        
-        String strIdDocuResult        = null;
+        String strIdDocuResult  = null;
         Transaction tx          = null;
         BigDecimal numMtoComision;
         
@@ -148,10 +143,12 @@ public class DocuOrderServiceImpl implements Serializable, DocumentService{
             
             tx.commit();
         }catch (ValidationException ex){
+            if(tx != null)
+                tx.rollback();
             throw new ValidationException(ex.getMessage());
         }catch(Exception ex){
             if(tx != null)
-                tx.rollback();            
+                tx.rollback();
             throw new CustomizerException(ex.getMessage());
         }finally{
             if (session != null)
@@ -181,6 +178,47 @@ public class DocuOrderServiceImpl implements Serializable, DocumentService{
         }
         return result;
     }
+    
+    public void relateDocuEsta( BigDecimal idDocu
+                                ,String codTrolestadocu
+                                ,String codEstadocu ) throws CustomizerException {
+        
+        Transaction tx = null;
+        try{
+            
+            session = HibernateUtil.getSessionFactory().openSession();
+            
+            BigDecimal intIdTRolEsta  = DaoFuncionesUtil.FNC_SICOBTIDGEN(((SessionImpl) session).connection()
+                                                                        , Constantes.CONS_COD_TIPOROLESTA
+                                                                        , codTrolestadocu);
+
+            BigDecimal intIdEsta      = DaoFuncionesUtil.FNC_SICOBTIDGEN(((SessionImpl) session).connection()
+                                                                        , Constantes.CONS_COD_ESTA
+                                                                        , codEstadocu);
+            
+            System.out.println("intIdTRolEsta: " + intIdTRolEsta);
+            System.out.println("intIdEsta: " + intIdEsta);
+            
+            Sic3docuestaId id = new Sic3docuestaId();
+            id.setIdTrolestadocu(intIdTRolEsta);
+            id.setIdEstadocu(intIdEsta);
+            id.setIdDocu(idDocu);
+            Sic3docuesta sic3docuesta = new Sic3docuesta();
+            sic3docuesta.setId(id);
+            
+            tx = session.beginTransaction();            
+            daoDocumentImpl.relateDocuEsta(session, sic3docuesta);
+            tx.commit();
+            
+        }catch(Exception ex){
+            if(tx != null)
+                tx.rollback();
+            throw new CustomizerException(ex.getMessage());
+        }finally{
+            if (session != null)
+                session.close();
+        }
+    }
 
     @Override
     public String relateDocuEsta(Sic3docuesta sic3docuesta) throws ValidationException, CustomizerException {
@@ -199,7 +237,7 @@ public class DocuOrderServiceImpl implements Serializable, DocumentService{
     }
     
     @Override
-    public List<ViSicdocu> listViSicdocu(ViSicdocu obj) throws ValidationException, CustomizerException {
+    public List<ViSicdocu> listViSicdocu(ViSicdocu obj) throws CustomizerException {
         
         List<ViSicdocu> lstResult;
         try{

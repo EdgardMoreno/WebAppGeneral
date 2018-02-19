@@ -22,6 +22,7 @@ import org.hibernate.Transaction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import com.general.util.beans.UtilClass;
+import com.general.util.exceptions.ValidationException;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -49,11 +50,14 @@ public class DaoProductImpl implements Serializable{
     }
     
     /*METODOS*/
-    public String insert(Session session, Sic1prod sic1prod) throws Exception {
+    public String insert(Session session, Sic1prod sic1prod) throws ValidationException, Exception {
         
         try {
             
-            System.out.println("************* REGISTRAR PRODUCTO*************" + sic1prod);            
+            System.out.println("************* REGISTRAR PRODUCTO*************" + sic1prod);
+            
+            
+            
             
             String result = session.doReturningWork(new ReturningWork<String>() {
                 @Override
@@ -69,6 +73,16 @@ public class DaoProductImpl implements Serializable{
                         intIdTipoIden = DaoFuncionesUtil.FNC_SICOBTIDGEN(cnctn, "VI_SICTIPOIDEN", "IDENPROD");
 
                         System.out.println("intIdTipoIden:" + intIdTipoIden);
+                        
+                        
+                        /* Validar si el producto que se quiere registrar ya existe
+                        *  Si el ID_PROD es null quiere decir que es un nuevo producto
+                        */
+                        if( sic1prod.getIdProd()== null){
+                            BigDecimal id = DaoFuncionesUtil.FNC_SICOBTIDIDEN(cnctn, "PROD", intIdTipoIden.intValue(), sic1prod.getCodProd());
+                            if (id != null && id.intValue() > 0)
+                                return "-99";                                
+                        }
 
                         /*CONVERSION DE FECHAS*/            
                         if (sic1prod.getFecDesde()!= null){
@@ -102,8 +116,8 @@ public class DaoProductImpl implements Serializable{
                             throw new SQLException((String)sp.getParameter("X_DES_ERROR"));
                         }
 
-                        valor = sp.getParameter("X_ID_PROD").toString();
-                    
+                        valor = sp.getParameter("X_ID_PROD").toString();                    
+                   
                     } catch (Exception ex) {
                         throw new HibernateException(ex.getMessage());
                     }
@@ -111,10 +125,15 @@ public class DaoProductImpl implements Serializable{
                 }
             });
             
-            return result;
+            if (result.equals("-99"))
+                throw new ValidationException("El código del producto ingresado ya existe");
             
+            return result;
+        
         } catch (HibernateException ex) {
             throw new HibernateException(ex.getMessage());
+        } catch (ValidationException ex) {
+            throw new ValidationException(ex.getMessage());       
         } catch (Exception ex) {
             throw new Exception(ex.getMessage());
         }
@@ -222,11 +241,11 @@ public class DaoProductImpl implements Serializable{
             flgFilter = 1;
         }
         if(obj.getCodProd()!= null && obj.getCodProd().trim().length() > 0 ){
-            criteria.add(Restrictions.like("codProd",obj.getCodProd().toUpperCase() + "%"));
+            criteria.add(Restrictions.like("codProd",obj.getCodProd() + "%").ignoreCase());
             flgFilter = 1;
         }
         if(obj.getDesProd()!= null && obj.getDesProd().trim().length() > 0 ){
-            criteria.add(Restrictions.like("desProd","%"  + obj.getDesProd().toUpperCase() + "%" ));
+            criteria.add(Restrictions.like("desProd","%"  + obj.getDesProd() + "%" ).ignoreCase());
             flgFilter = 1;
         }
         
@@ -246,7 +265,7 @@ public class DaoProductImpl implements Serializable{
         Criteria criteria = session.createCriteria(Sic1prod.class);
        
         if(codProd != null && codProd.trim().length() > 0 ){
-            criteria.add(Restrictions.like("codProd", codProd.toUpperCase() + "%"));
+            criteria.add(Restrictions.like("codProd", codProd + "%").ignoreCase());
             flgFilter = 1;
         }
         
@@ -265,7 +284,7 @@ public class DaoProductImpl implements Serializable{
         Criteria criteria = session.createCriteria(Sic1prod.class);        
         
         if(cod!= null){
-            criteria.add(Restrictions.eq("codProd",cod.trim()));         
+            criteria.add(Restrictions.eq("codProd",cod.trim()).ignoreCase());         
             sic1prod = (Sic1prod)criteria.uniqueResult();            
         }
 
@@ -279,11 +298,11 @@ public class DaoProductImpl implements Serializable{
         if(obj.getIdProd()!= null && obj.getIdProd().intValue() > 0)
             criteria.add(Restrictions.eq("idProd",obj.getIdProd()));
         if(obj.getCodProd()!= null && obj.getCodProd().trim().length() > 0 )
-            criteria.add(Restrictions.like("codProd",obj.getCodProd().toUpperCase() + '%' ));
+            criteria.add(Restrictions.like("codProd",obj.getCodProd() + '%' ).ignoreCase());
         if(obj.getIdStipoprod()!= null && obj.getIdStipoprod().intValue() > 0 )
             criteria.add(Restrictions.eq("idStipoprod",obj.getIdStipoprod()));        
         if(obj.getDesProd()!= null && !obj.getDesProd().trim().isEmpty() )
-            criteria.add(Restrictions.like("desProd",'%' + obj.getDesProd().toUpperCase() + '%'));
+            criteria.add(Restrictions.like("desProd",'%' + obj.getDesProd() + '%').ignoreCase());
         
         List<ViSicprod> lst = criteria.list();
 
