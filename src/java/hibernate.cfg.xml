@@ -14,6 +14,7 @@
     <property name="hibernate.current_session_context_class">thread</property>
     <property name="hibernate.query.factory_class">org.hibernate.hql.internal.classic.ClassicQueryTranslatorFactory</property>
     <property name="hibernate.proc.param_null_passing">true</property>
+
     <mapping resource="com/general/hibernate/relaentity/Sic3docuesta.hbm.xml"/>
     <mapping resource="com/general/hibernate/relaentity/Sic3docudocu.hbm.xml"/>
     <mapping resource="com/general/hibernate/entity/Sic1general.hbm.xml"/>
@@ -40,5 +41,6 @@
     <mapping resource="com/general/hibernate/views/ViSicprod.hbm.xml"/>
     <mapping resource="com/general/hibernate/entity/Sic1usuario.hbm.xml"/>
     <mapping resource="com/general/hibernate/relaentity/Sic3docuprod.hbm.xml"/>
+    <mapping resource="com/general/hibernate1/Sic4cuaddiario.hbm.xml"/>
   </session-factory>
 </hibernate-configuration>

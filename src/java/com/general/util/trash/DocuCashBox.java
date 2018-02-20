@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.general.a2.service.impl;
+package com.general.util.trash;
 
 import com.general.hibernate.entity.Sic1idendocu;
 import com.general.hibernate.relaentity.Sic3docudocu;

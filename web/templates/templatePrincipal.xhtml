@@ -54,6 +54,19 @@
                     </div>
                     <ul class="nav navbar-nav">
                         <li class="active"><a href="#{request.contextPath}/faces/index.xhtml">Inicio</a></li>
+                        
+                        <li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="#">Cuadre Diario<span class="caret"></span></a>
+                            <ul class="dropdown-menu">
+                                <li><a href="#{request.contextPath}/faces/cajaAperturar.xhtml?">Aperturar Caja</a></li>                                
+                                <li>
+                                    <h:commandLink value="Cerrar Caja" action="#{masterPageController.redirect()}">
+                                        <f:param name="paramTituloPagina" value=" " />
+                                        <f:param name="paramNombrePagina" value="cajaCerrar" />                                    
+                                    </h:commandLink>
+                                </li>                                
+                            </ul>
+                        </li>
+                        
                         <li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="#">Productos<span class="caret"></span></a>
                             <ul class="dropdown-menu">
                                 <li><a href="#{request.contextPath}/faces/productoMantenimiento.xhtml?flgExternalPage=true">Consultar / Registrar</a></li>
