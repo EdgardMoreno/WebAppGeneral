@@ -82,7 +82,7 @@ function fnAllowOnlyDecimalNumbers(e){
 
 /*Fúncion que permite formatear a 2 decimales el número ingresado*/
 function formatDecimal_2(obj){
-
+    console.log("obj:" + obj);
     if (obj.value.length > 0){
         var nro = obj.value;
         var result = Number(Math.round( nro + 'e2') + 'e-2').toFixed(2);
@@ -504,3 +504,29 @@ function fnShowPopupCreateEditPerson(idPers) {
 /************************************************************************************************************/
 /********************** PANTALLA: LISTAR DOCUMENTOS *********************************************************/
 /************************************************************************************************************/
+
+
+/************************************************************************************************************/
+/********************** PANTALLA: CUADRE CAJA ***************************************************************/
+/************************************************************************************************************/
+/*Función que se ejecuta durante el ciclo de vida de la llamada AJAX.
+ *Se pinta de color rojo si hay faltantes en el cuadre de EFECTIVO Y/O TARJETA */
+function fnAjaxListenCalcularCuadreCaja(data) {
+
+    switch (data.status) {        
+        case "success":
+            var efectivo = document.getElementById("idSobraFaltaEfectivo");
+            console.log("Celda: " + efectivo);
+            console.log("efectivo: " + efectivo.innerHTML);
+            if (Number(efectivo.innerHTML) < 0) {
+                console.log("holass");
+                    efectivo.style.color = "red";
+            }
+            var tarjeta = document.getElementById("idSobraFaltaTarjeta");
+            console.log("tarjeta: " + tarjeta.innerHTML);
+            if (Number(tarjeta.innerHTML) < 0) {
+                    tarjeta.style.color = red;
+            }
+            break;
+    }
+};

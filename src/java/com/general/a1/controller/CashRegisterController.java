@@ -5,7 +5,11 @@
  */
 package com.general.a1.controller;
 
+import com.general.a2.service.impl.CashRegisterServiceImpl;
 import com.general.hibernate1.Sic4cuaddiario;
+import com.general.hibernate1.Sic4cuaddiarioId;
+import com.general.util.beans.Constantes;
+import com.general.util.beans.UtilClass;
 import com.general.util.exceptions.CustomizerException;
 import java.math.BigDecimal;
 import javax.annotation.PostConstruct;
@@ -42,6 +46,8 @@ public class CashRegisterController {
     private BigDecimal numCalcuDenom0_10;
     private BigDecimal numCalcuDenom0_05;
     
+    private String desTotalVentas;    
+    private String desFecRegistro;
     
     @PostConstruct
     public void init() {
@@ -49,17 +55,61 @@ public class CashRegisterController {
         try{
             System.out.println("initia");
             
+            desFecRegistro          = UtilClass.getCurrentDay();
             
+            int valIni = 0;
+            
+            this.setNumCalcuDenom0200(new BigDecimal(valIni).setScale(2));
+            this.setNumCalcuDenom0100(new BigDecimal(valIni).setScale(2));
+            this.setNumCalcuDenom0050(new BigDecimal(valIni).setScale(2));
+            this.setNumCalcuDenom0020(new BigDecimal(valIni).setScale(2));
+            this.setNumCalcuDenom0010(new BigDecimal(valIni).setScale(2));
+            this.setNumCalcuDenom0005(new BigDecimal(valIni).setScale(2));
+            this.setNumCalcuDenom0002(new BigDecimal(valIni).setScale(2));
+            this.setNumCalcuDenom0001(new BigDecimal(valIni).setScale(2));
+            this.setNumCalcuDenom0_50(new BigDecimal(valIni).setScale(2));
+            this.setNumCalcuDenom0_20(new BigDecimal(valIni).setScale(2));
+            this.setNumCalcuDenom0_10(new BigDecimal(valIni).setScale(2));
+            this.setNumCalcuDenom0_05(new BigDecimal(valIni).setScale(2));
+            
+            this.desTotalVentas = "S/ 0.00";
+            
+            int val = 2;
             box = new Sic4cuaddiario();
-//            box.setNumEfectDenom0200(new BigDecimal(0));
-//            box.setNumEfectDenom0100(new BigDecimal(0));
-//            box.setNumEfectDenom0050(new BigDecimal(0));
+            
+            box.setNumEfectDenom0200(new BigDecimal(val));
+            box.setNumEfectDenom0100(new BigDecimal(val));
+            box.setNumEfectDenom0050(new BigDecimal(val));
+            box.setNumEfectDenom0020(new BigDecimal(val));
+            box.setNumEfectDenom0010(new BigDecimal(val));
+            box.setNumEfectDenom0005(new BigDecimal(val));
+            box.setNumEfectDenom0002(new BigDecimal(val));
+            box.setNumEfectDenom0001(new BigDecimal(val));
+            box.setNumEfectDenom0_50(new BigDecimal(val));
+            box.setNumEfectDenom0_20(new BigDecimal(val));
+            box.setNumEfectDenom0_10(new BigDecimal(val));
+            box.setNumEfectDenom0_05(new BigDecimal(val));
+            
+            box.setNumEfectDenomTotal(new BigDecimal(valIni));
+            
+            box.setNumEfectGastoTotal(new BigDecimal(30).setScale(2));
+            box.setNumEfectApertCaja(new BigDecimal(200).setScale(2));            
+            box.setNumEfectTotal(new BigDecimal(valIni).setScale(2));
 
-            box.setNumEfectApertCaja(new BigDecimal(0));
-            box.setNumEfectGastoTotal(new BigDecimal(0));
-
-            box.setNumEfectTotalGastoSiste(new BigDecimal(10));
-            box.setNumEfectTotalVentaSiste(new BigDecimal(50));
+            box.setNumEfectTotalVentaSiste(new BigDecimal(500).setScale(2));
+            box.setNumEfectTotalGastoSiste(new BigDecimal(30).setScale(2));
+            box.setNumEfectTotalSistema(new BigDecimal(valIni).setScale(2));
+            
+            box.setNumEfectSobraFalta(new BigDecimal(valIni).setScale(2));
+            
+            /*TARJETA*/
+            box.setNumTarjeCrediTotal(new BigDecimal(20).setScale(2));
+            box.setNumTarjeDebitTotal(new BigDecimal(60).setScale(2));
+            box.setNumTarjeTotal(new BigDecimal(valIni).setScale(2));
+            
+            box.setNumTarjeTotalSiste(new BigDecimal(80).setScale(2));
+            
+            box.setNumTarjeSobraFalta(new BigDecimal(valIni).setScale(2));
             
         }catch(Exception ex){
             System.out.println("Error:" + ex.getMessage());
@@ -179,8 +229,22 @@ public class CashRegisterController {
     public void setNumCalcuDenom0_05(BigDecimal numCalcuDenom0_05) {
         this.numCalcuDenom0_05 = numCalcuDenom0_05;
     }
-    
-    
+
+    public String getDesTotalVentas() {
+        return desTotalVentas;
+    }
+
+    public void setDesTotalVentas(String desTotalVentas) {
+        this.desTotalVentas = desTotalVentas;
+    }
+
+    public String getDesFecRegistro() {
+        return desFecRegistro;
+    }
+
+    public void setDesFecRegistro(String desFecRegistro) {
+        this.desFecRegistro = desFecRegistro;
+    }
     
     /*METODOS*/
     
@@ -199,6 +263,10 @@ public class CashRegisterController {
     }
     
     public void calcular(){
+        
+        /*************************************/
+        /*** TOTAL EFECTIVO ******************/
+        /*************************************/
         
         /*CALCULADO SEGUN DENOMINACION*/
         double totalDenom = 0;
@@ -254,7 +322,7 @@ public class CashRegisterController {
         
         System.out.println("TOTAL DENOMINACION :" + totalDenom);
         
-        this.box.setNumEfectDenomTotal(new BigDecimal(totalDenom));
+        this.box.setNumEfectDenomTotal(new BigDecimal(totalDenom).setScale(2, BigDecimal.ROUND_HALF_UP));
         
         /*CALCULAR: TOTAL EFECTIVO:*/
         totalDenom -=  box.getNumEfectApertCaja().add(this.box.getNumEfectGastoTotal()).doubleValue();
@@ -264,15 +332,47 @@ public class CashRegisterController {
         this.box.setNumEfectTotal(new BigDecimal(totalDenom).setScale(2,BigDecimal.ROUND_HALF_UP));
         
         /*CALCULAR: TOTAL EFECTIVO DEL SISTEMA*/
-        box.setNumEfectTotalSistema(box.getNumEfectTotalGastoSiste().add(box.getNumEfectTotalVentaSiste()));
+        box.setNumEfectTotalSistema(box.getNumEfectTotalGastoSiste().add(box.getNumEfectTotalVentaSiste()).setScale(2, BigDecimal.ROUND_HALF_UP));
         System.out.println("TOTAL EFECTIVO DEL SISTEMA:" + box.getNumEfectTotalSistema());
         
         /*CALCULAR: SOBRANTE / FALTANTE*/
-        box.setNumEfectSobraFalta(box.getNumEfectTotal().add(box.getNumEfectTotalSistema()));
+        box.setNumEfectSobraFalta(box.getNumEfectTotalSistema().subtract(box.getNumEfectTotal()).setScale(2, BigDecimal.ROUND_HALF_UP));
         System.out.println("SOBRANTE / FALTANTE:" + box.getNumEfectSobraFalta());
+        
+        /***********************************/
+        /*** CALCULO DE TARJETA ***********/
+        /***********************************/
+        box.setNumTarjeTotal(box.getNumTarjeCrediTotal().add(box.getNumTarjeDebitTotal()).setScale(2, BigDecimal.ROUND_HALF_UP));
+        
+        box.setNumTarjeSobraFalta(box.getNumTarjeTotalSiste().subtract(box.getNumTarjeTotal()).setScale(2,BigDecimal.ROUND_HALF_UP ));
+        
+        /***********************************/
+        /*** TOTAL VENTAS ******************/
+        /***********************************/
+        
+        this.desTotalVentas = "S/" + box.getNumEfectTotalSistema().add(box.getNumTarjeTotalSiste()).toString();
+        
         
         
     }
     
-    
+    public void save() throws CustomizerException{
+        System.out.println("valor:" + box.getNumEfectTotal());
+        
+        try{
+            
+            CashRegisterServiceImpl service = new CashRegisterServiceImpl();
+            
+            Sic4cuaddiarioId id = new Sic4cuaddiarioId();
+            id.setIdPers(new BigDecimal(3)); //Ira el ID_PERS DEL USUARIO LOGUEADO
+            id.setNumPeri(new BigDecimal(UtilClass.getCurrentTime_YYYYMMDD()));
+            
+            box.setId(id);
+            service.insert(box);
+            
+            UtilClass.addInfoMessage(Constantes.CONS_SUCCESS_MESSAGE);
+        }catch(Exception ex ){
+            throw new CustomizerException(ex.getMessage());
+        }
+    }
 }

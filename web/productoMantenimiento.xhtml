@@ -64,8 +64,9 @@
                                      width="100%"
                                      styleClass="table-bordered"
                                      columnClasses="table_style_id, 
+                                                    table_style_date,
                                                     table_style_code_small, 
-                                                    table_style_description_medium,
+                                                    table_style_description_small,
                                                     table_style_code_small,
                                                     table_style_description_small,
                                                     table_style_price_small, 
@@ -76,6 +77,10 @@
                                 <f:facet name="header">No.</f:facet>#{productController.listProducts.indexOf(item) + 1}
                             </h:column>
 
+                            <h:column>
+                                <f:facet name="header">Fec. Registro</f:facet>#{item.fecDesde}
+                            </h:column>
+                            
                             <h:column>
                                 <f:facet name="header">Código</f:facet>#{item.codProd}
                             </h:column>

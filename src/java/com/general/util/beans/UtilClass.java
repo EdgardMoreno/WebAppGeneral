@@ -44,6 +44,11 @@ public class UtilClass {
         return df.format(new Date());
     }
     
+    public static String getCurrentTime_YYYYMMDD(){
+        DateFormat df = new SimpleDateFormat("yyyyMMdd");
+        return df.format(new Date());
+    }
+    
     public static String convertDateToString(Date value){
         DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
         return df.format(value);

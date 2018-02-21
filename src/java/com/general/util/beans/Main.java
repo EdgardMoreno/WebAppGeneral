@@ -20,6 +20,7 @@ import com.general.hibernate.entity.Sic1pers;
 import com.general.a2.service.impl.PersonServiceImpl;
 import com.general.a2.service.impl.ProductServiceImpl;
 import com.general.a2.service.impl.Sic1generalServiceImpl;
+import com.general.a3.dao.impl.DaoCashRegisterImpl;
 import com.general.a3.dao.impl.DaoDocumentImpl;
 import com.general.a3.dao.impl.DaoLoginImpl;
 import com.general.a3.dao.impl.DaoUserImpl;
@@ -32,6 +33,7 @@ import com.general.hibernate.views.ViSicestageneral;
 import com.general.hibernate.views.ViSicpers;
 import com.general.hibernate.views.ViSicprod;
 import com.general.hibernate.entity.Sic1usuario;
+import com.general.hibernate1.Sic4cuaddiarioId;
 import com.general.util.dao.DaoFuncionesUtil;
 import java.io.File;
 import java.math.BigDecimal;
@@ -89,6 +91,18 @@ public class Main {
 //         
 //         /**/
 
+        /*OBTENER CUADRE CAJA*/
+        
+        if (true){
+            System.out.println("Fecha:" + UtilClass.getCurrentTime_YYYYMMDD());
+            DaoCashRegisterImpl dao = new DaoCashRegisterImpl();
+            Sic4cuaddiarioId id = new Sic4cuaddiarioId();
+            id.setIdPers(new BigDecimal(3)); //Ira el ID_PERS DEL USUARIO LOGUEADO
+            id.setNumPeri(new BigDecimal("20180252"));
+            dao.getById(session, id);
+            
+        }
+
         /*VALIDAR USUARIO*/        
         if (false) {
             DaoLoginImpl daoObj = new DaoLoginImpl();
@@ -114,7 +128,7 @@ public class Main {
         }
         
         /////---- OBTENER EL CODIGO DEL ULTIMO ESTADO DEL DOCUMENTO
-        if (true) {
+        if (false) {
             DaoDocumentImpl obj = new DaoDocumentImpl();
             obj.getLastCodEstaDocu(session , new BigDecimal(28335));
         }

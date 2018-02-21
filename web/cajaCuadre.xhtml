@@ -1,0 +1,359 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"  >
+
+    <f:metadata>        
+        <f:viewParam name="titulo" value="#{cashRegisterController.desTituloPagina}"/>
+        <f:event type="preRenderView" listener="#{cashRegisterController.getParamsExternalPage}"/>
+    </f:metadata>
+
+    <ui:composition template="./templates/templatePrincipal.xhtml">
+
+        <ui:define name="header">
+
+            <script>
+
+
+            </script>
+
+            <style>
+
+                .panelEfectivo {
+                    margin-top: 5px;
+                    position:relative;
+                    float:left;
+                    /*border: 1px solid black;*/
+                }
+                .panelTarjeta {
+                    margin-top: 5px;
+                    position:absolute;                    
+                    left: 470px;
+                    /*border: 1px solid black;*/
+                }
+
+               
+
+                table{
+                    font-family: Verdana;
+                    font-size: 10px;
+                }
+
+                th{
+                    background-color: #222222;
+                    font-weight: bolder;
+                    text-align: center;
+                    color: white;
+                }
+
+                .total{
+                    background-color: white;                    
+                    text-align: right;
+                    padding:2px 0px 2px 3px;
+                    font-weight: bold;
+                }
+                .superTotal{
+                    background-color: #167F92;
+                    font-weight: bolder;
+                    text-align: right;
+                    color: white;
+                    padding: 3px;
+                }
+
+                .superTotal_valor{
+                    background-color: #167F92;
+                    font-weight: bolder;
+                    text-align: right;
+                    color: white;
+                    padding: 3px;
+                    font-size: 11px;
+                }
+
+                .separadorColu{
+                    width: 0.5em;
+                    border: 0px;
+                    background-color: white;
+                }                
+
+                .separadorFila{
+                    height: 0.5em;
+                    border: 0px;
+                    background-color: white;
+                }                    
+
+                .left{
+                    text-align: left;
+                }
+
+                .right{
+                    text-align: right;
+                }
+
+                .center{
+                    text-align: center;
+                }
+
+                .denominacion{                    
+                    text-align: right;
+                    padding-right: 3px;
+                }
+
+                .valor{text-align: right; width: 65px; padding-right: 3px; margin: 0px; font-weight: bold;}
+                .cantidad{background-color: white; text-align: center; width: 75px; padding: 0px; margin: 0px;}
+                .gasto{ color: red;}
+                .sobraFalta{ font-size: 14px; 
+                            background-color: #167F92;
+                            font-weight: bolder;
+                            text-align: right;
+                            color: white;
+                            padding: 3px;}
+                .ingresoMto{text-align: right;width: 14em;}
+                .totalVentas{
+                            font-weight: bolder;
+                            text-align: right;
+                            font-size: 15px; 
+                            color: black;
+                            padding: 3px;
+                            }
+
+
+            </style>
+            
+            <script>
+                /*Funcion que permite validar el formulario al grabar*/
+                function fnValidateForm(){
+                    fnShowDialogConfirm("form\\:idBtnGrabar", "" ); // -> Se pasa como parametro el ID del boton que tiene el metodo actionListener
+                    return false;
+                }
+                
+            </script>
+
+        </ui:define>
+
+        <ui:define name="content">            
+
+            <div class="container">
+                
+                <div id="divResultadoValidacion"/>
+
+                <p:growl id="message" showDetail="true" />
+
+                <div class="page-header" >
+                    <h3>${cashRegisterController.desTituloPagina}</h3>
+                </div>
+
+                <table >
+                    <tr>
+                        <td style="text-align: right; font-weight: bold; font-size: 11px; padding: 3px" >Fecha de Registro:</td>
+                        <td style="text-align: left; font-size: 11px; padding: 3px">${cashRegisterController.desFecRegistro}</td>
+                    </tr>
+                    <tr>
+                        <td style="text-align: right; font-weight: bold; font-size: 11px; padding: 3px">Vendedor:</td>
+                        <td style="text-align: left; font-size: 11px; padding: 3px">Edgard Moreno</td>
+                    </tr>
+                </table>
+
+                
+
+                <!-- ****************************************** -->
+                <!-- EFECTIVO -->
+                <!-- ****************************************** -->
+                <div class="panelEfectivo">
+                    <table id="idTblEfectivo" border="1" >
+                        <tr>
+                            <th>EFECTIVO</th>
+                            <th class="separadorColu"></th>
+                            <th style="width: 6em" >CANTIDAD</th>
+                            <th style="width: 6em" >VALOR</th>
+                        </tr>
+                        <tr>
+                            <td class="denominacion" >S/200.00</td>
+                            <th class="separadorColu"></th>
+                            <td class="cantidad"><h:inputText styleClass="cantidad" value="#{cashRegisterController.box.numEfectDenom0200}" onkeypress="return fnAllowOnlyNumbers(event)" /></td>
+                            <td class="valor" >${cashRegisterController.numCalcuDenom0200}</td>
+                        </tr>
+                        <tr>
+                            <td class="denominacion" >S/100.00</td>
+                            <th class="separadorColu"></th>
+                            <td class="cantidad"><h:inputText styleClass="cantidad" value="#{cashRegisterController.box.numEfectDenom0100}" onkeypress="return fnAllowOnlyNumbers(event)"/></td>
+                            <td class="valor" >${cashRegisterController.numCalcuDenom0100}</td>
+                        </tr>
+                        <tr>
+                            <td class="denominacion" >S/50.00</td>
+                            <th class="separadorColu"></th>
+                            <td class="cantidad"><h:inputText styleClass="cantidad" value="#{cashRegisterController.box.numEfectDenom0050}" onkeypress="return fnAllowOnlyNumbers(event)"/></td>
+                            <td class="valor" >${cashRegisterController.numCalcuDenom0050}</td>
+                        </tr>
+                        <tr>
+                            <td class="denominacion" >S/20.00</td>
+                            <th class="separadorColu"></th>
+                            <td class="cantidad"><h:inputText styleClass="cantidad" value="#{cashRegisterController.box.numEfectDenom0020}" onkeypress="return fnAllowOnlyNumbers(event)"/></td>
+                            <td class="valor" >${cashRegisterController.numCalcuDenom0020}</td>
+                        </tr>
+                        <tr>
+                            <td class="denominacion" >S/10.00</td>
+                            <th class="separadorColu"></th>
+                            <td class="cantidad"><h:inputText styleClass="cantidad" value="#{cashRegisterController.box.numEfectDenom0010}" onkeypress="return fnAllowOnlyNumbers(event)"/></td>
+                            <td class="valor" >${cashRegisterController.numCalcuDenom0010}</td>
+                        </tr>
+                        <tr>
+                            <td class="denominacion" >S/5.00</td>
+                            <th class="separadorColu"></th>
+                            <td class="cantidad"><h:inputText styleClass="cantidad" value="#{cashRegisterController.box.numEfectDenom0005}" onkeypress="return fnAllowOnlyNumbers(event)"/></td>
+                            <td class="valor" >${cashRegisterController.numCalcuDenom0005}</td>
+                        </tr>
+                        <tr>
+                            <td class="denominacion" >S/2.00</td>
+                            <th class="separadorColu"></th>
+                            <td class="cantidad"><h:inputText styleClass="cantidad" value="#{cashRegisterController.box.numEfectDenom0002}" onkeypress="return fnAllowOnlyNumbers(event)"/></td>
+                            <td class="valor" >${cashRegisterController.numCalcuDenom0002}</td>
+                        </tr>
+                        <tr>
+                            <td class="denominacion" >S/1.00</td>
+                            <th class="separadorColu"></th>
+                            <td class="cantidad"><h:inputText styleClass="cantidad" value="#{cashRegisterController.box.numEfectDenom0001}" onkeypress="return fnAllowOnlyNumbers(event)"/></td>
+                            <td class="valor" >${cashRegisterController.numCalcuDenom0001}</td>
+                        </tr>
+                        <tr>
+                            <td class="denominacion" >S/0.50</td>
+                            <th class="separadorColu"></th>
+                            <td class="cantidad"><h:inputText styleClass="cantidad" value="#{cashRegisterController.box.numEfectDenom0_50}" onkeypress="return fnAllowOnlyNumbers(event)"/></td>
+                            <td class="valor" >${cashRegisterController.numCalcuDenom0_50}</td>
+                        </tr>
+                        <tr>
+                            <td class="denominacion" >S/0.20</td>
+                            <th class="separadorColu"></th>
+                            <td class="cantidad"><h:inputText styleClass="cantidad" value="#{cashRegisterController.box.numEfectDenom0_20}" onkeypress="return fnAllowOnlyNumbers(event)"/></td>
+                            <td class="valor" >${cashRegisterController.numCalcuDenom0_20}</td>
+                        </tr>
+                        <tr>
+                            <td class="denominacion" >S/0.10</td>
+                            <th class="separadorColu"></th>
+                            <td class="cantidad"><h:inputText styleClass="cantidad" value="#{cashRegisterController.box.numEfectDenom0_10}" onkeypress="return fnAllowOnlyNumbers(event)"/></td>
+                            <td class="valor" >${cashRegisterController.numCalcuDenom0_10}</td>
+                        </tr>
+                        <tr>
+                            <td class="denominacion" >S/0.05</td>
+                            <th class="separadorColu"></th>
+                            <td class="cantidad"><h:inputText styleClass="cantidad" value="#{cashRegisterController.box.numEfectDenom0_05}" onkeypress="return fnAllowOnlyNumbers(event)"/></td>
+                            <td class="valor" >${cashRegisterController.numCalcuDenom0_05}</td>
+                        </tr>
+                        <tr>
+                            <td class="superTotal">TOTAL:</td>
+                            <th class="separadorColu"></th>
+                            <td class="superTotal_valor" colspan="2">#{cashRegisterController.box.numEfectDenomTotal}</td>
+                        </tr>
+                        <tr>
+                            <td class="total">TOTAL GASTOS:</td>
+                            <th class="separadorColu"></th>
+                            <td colspan="2"><h:inputText id="idGastEfec" styleClass="ingresoMto gasto total" value="#{cashRegisterController.box.numEfectGastoTotal}" onkeypress="return fnAllowOnlyDecimalNumbers(event)" onblur="formatDecimal_2(this)" /></td>
+                        </tr>
+                        <tr>
+                            <td class="total">APERTURA CAJA:</td>
+                            <th class="separadorColu"></th>
+                            <td colspan="2"><h:inputText id="idAperCaja" styleClass="ingresoMto total" value="#{cashRegisterController.box.numEfectApertCaja}" onkeypress="return fnAllowOnlyDecimalNumbers(event)" onblur="formatDecimal_2(this)" /></td>
+                        </tr>
+                        <tr>
+                            <td class="superTotal">TOTAL EFECTIVO:</td>
+                            <th class="separadorColu"></th>
+                            <td class="superTotal_valor" colspan="2">#{cashRegisterController.box.numEfectTotal}</td>
+                        </tr>                    
+
+                        <tr>
+                            <td class="total">SISTEMA: TOTAL VENTAS EFECTIVO:</td>
+                            <th class="separadorColu"></th>
+                            <td class="total" colspan="2">${cashRegisterController.box.numEfectTotalVentaSiste}</td>
+                        </tr>
+                        <tr>                        
+                            <td class="total">SISTEMA: TOTAL GASTOS EFECTIVO:</td>
+                            <th class="separadorColu"></th>
+                            <td class="total gasto" colspan="2">${cashRegisterController.box.numEfectTotalGastoSiste}</td>
+                        </tr>
+                        <tr>
+                            <td class="superTotal">SISTEMA: TOTAL EFECTIVO:</td>
+                            <th class="separadorColu"></th>
+                            <td class="superTotal_valor" colspan="2">${cashRegisterController.box.numEfectTotalSistema}</td>
+                        </tr>                    
+                        <tr>
+                            <td class="sobraFalta">SOBRANTE / FALTANTE:</td>
+                            <th class="separadorColu"></th>
+                            <td id="idSobraFaltaEfectivo" class="sobraFalta" colspan="2">${cashRegisterController.box.numEfectSobraFalta}</td>
+                        </tr>
+
+                    </table>
+                    
+                    <br/>
+                    <div class="offset-sm-2 col-sm-10">
+                        <h:commandLink styleClass="btn btn-primary" value="Calcular">
+                            <f:ajax execute="@form" render="@form" listener="#{cashRegisterController.calcular()}" onevent="fnAjaxListenCalcularCuadreCaja" />
+                        </h:commandLink>
+                        <input type="button" id="btnConfirm" value="Grabar" class="btn btn-danger" onclick="return fnValidateForm()"/>
+                    </div>
+                    
+                    <h:commandLink styleClass="btn btn-primary"
+                                   id="idBtnGrabar"
+                                   value="Calcular" 
+                                   actionListener="#{cashRegisterController.save()}"
+                                   style="display: none" />
+                    
+                </div>
+
+
+                <!-- ****************************************** -->
+                <!-- TARJETA -->
+                <!-- ****************************************** -->
+                <div class="panelTarjeta">
+                    <table id="idTblTarjeta" width="375" border="1" >
+                        <tr>
+                            <th style="width: 23em" >TARJETA</th>
+                            <th class="separadorColu"></th>                        
+                            <th >VALOR</th>
+                        </tr>
+                        <tr>
+                            <td class="total" >TARJ. CREDITO:</td>
+                            <th class="separadorColu"></th>
+                            <td ><h:inputText styleClass="ingresoMto total" value="#{cashRegisterController.box.numTarjeCrediTotal}" onkeypress="return fnAllowOnlyNumbers(event)" /></td>                        
+                        </tr>
+                         <tr>
+                            <td class="total" >TARJ. DEBITO:</td>
+                            <th class="separadorColu"></th>
+                            <td ><h:inputText styleClass="ingresoMto total" value="#{cashRegisterController.box.numTarjeDebitTotal}" onkeypress="return fnAllowOnlyNumbers(event)" /></td>                        
+                        </tr>
+                        <tr>
+                            <td class="superTotal" >TOTAL TARJETA:</td>
+                            <th class="separadorColu"></th>
+                            <td class="superTotal_valor">${cashRegisterController.box.numTarjeTotal}</td>
+                        </tr>
+                        <tr>
+                            <td class="total" >SISTEMA: TOTAL VENTAS TARJETA:</td>
+                            <th class="separadorColu"></th> 
+                            <td class="valor">${cashRegisterController.box.numTarjeTotalSiste}</td>
+                        </tr>
+                        <tr>
+                            <td class="sobraFalta" >SOBRANTE / FALTANTE</td>
+                            <th class="separadorColu"></th>
+                            <td id="idSobraFaltaTarjeta" class="sobraFalta">${cashRegisterController.box.numTarjeSobraFalta}</td>
+                        </tr>
+                    </table>
+                    <br/>
+                    <br/>
+                    <table width="375" >
+                        <tr>
+                            <td style="width: 21.5em" class="totalVentas" >TOTAL VENTAS:</td>
+                            <td class="separadorColu"></td>                        
+                            <td style="width: 5em" class="totalVentas">${cashRegisterController.desTotalVentas}</td>
+                        </tr>
+                                                
+                    </table>
+                </div>
+
+
+              
+            </div>
+
+        </ui:define>
+    </ui:composition>
+</html>

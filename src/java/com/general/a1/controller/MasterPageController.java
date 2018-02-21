@@ -6,6 +6,7 @@
 package com.general.a1.controller;
 
 import com.general.util.beans.Constantes;
+import com.general.util.beans.UtilClass;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 import javax.faces.bean.ViewScoped;
@@ -21,12 +22,14 @@ import javax.faces.context.Flash;
 public class MasterPageController {
     
     public  Constantes constantes;
-
-        
-    
-    
     
     public String redirect(){
+        
+        /*VALIDAR SI SE HA APERTURADO CAJA*/
+        if (true){
+            UtilClass.addErrorMessage("Para continuar se debe realizar la apertura de caja.");
+            return null;
+        }
         
         /*Se obtiene los parametros vinculados a los links*/
         String tituloPagina  = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("paramTituloPagina");
