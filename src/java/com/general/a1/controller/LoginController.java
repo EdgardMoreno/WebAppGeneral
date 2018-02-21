@@ -6,7 +6,6 @@
 package com.general.a1.controller;
 
 import com.general.a2.service.impl.LoginServiceImpl;
-import com.general.a2.service.impl.UserServiceImpl;
 import com.general.hibernate.entity.Sic1usuario;
 import com.general.util.exceptions.CustomizerException;
 import java.io.Serializable;
@@ -44,8 +43,8 @@ public class LoginController implements Serializable{
     }    
     
     
-    /*METODOS*/            
-    public String validateUsernamePassword() throws CustomizerException{        
+    /*METODOS*/
+    public String validateUsernamePassword() throws CustomizerException{
         
         System.out.println("Validate Usuario:");
         System.out.println("Usuario: " + this.usuario.getCodUsuario());

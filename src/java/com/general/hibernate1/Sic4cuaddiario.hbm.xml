@@ -12,12 +12,12 @@
                 <column name="NUM_PERI" precision="22" scale="0" />
             </key-property>
         </composite-id>
-        <property name="fecApertura" type="date">
+        <property name="fecApertura" type="timestamp">
             <column name="FEC_APERTURA" length="7">
                 <comment>Contiene la fecha de apertura de la caja en formato -&gt; dd/mm/yyyy hh:mi:ss</comment>
             </column>
         </property>
-        <property name="fecCierre" type="date">
+        <property name="fecCierre" type="timestamp">
             <column name="FEC_CIERRE" length="7">
                 <comment>Contiene la fecha de cierre de la caja en formato -&gt; dd/mm/yyyy hh:mi:ss</comment>
             </column>

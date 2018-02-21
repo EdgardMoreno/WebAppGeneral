@@ -39,6 +39,11 @@ public class UtilClass {
         return df.format(new Date());
     }
     
+    
+    public static Date getCurrentDateTime(){        
+        return new Date();
+    }
+    
     public static String getCurrentTime(){
         DateFormat df = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
         return df.format(new Date());

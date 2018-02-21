@@ -32,11 +32,19 @@ public class DaoCashRegisterImpl {
         }
     }
     
+     public void update(Session session, Sic4cuaddiario obj) throws Exception {        
+        try {            
+            session.update(obj);
+        } catch (Exception ex) {
+            throw new Exception(ex.getMessage());
+        }
+    }
+    
     public Sic4cuaddiario getById(Session session, Sic4cuaddiarioId id) throws Exception {
         
         Sic4cuaddiario obj = null;
         try {        
-            obj = (Sic4cuaddiario)session.load(Sic4cuaddiario.class,id);
+            obj = (Sic4cuaddiario)session.get(Sic4cuaddiario.class,id);
         } catch (Exception ex) {
             throw new Exception(ex.getMessage());
         }

@@ -26,7 +26,7 @@ public class MasterPageController {
     public String redirect(){
         
         /*VALIDAR SI SE HA APERTURADO CAJA*/
-        if (true){
+        if (false){
             UtilClass.addErrorMessage("Para continuar se debe realizar la apertura de caja.");
             return null;
         }

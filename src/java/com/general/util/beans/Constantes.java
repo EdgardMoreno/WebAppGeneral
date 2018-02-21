@@ -84,6 +84,8 @@ public class Constantes {
         public static String CONS_COD_ESTAPORRECOGER       = "VI_SICESTAPORRECOGER";
         public static String CONS_COD_ESTAANULADO          = "VI_SICESTAANULADO";
         public static String CONS_COD_ESTAELIMINADO        = "VI_SICESTAELIM";
+        public static String CONS_COD_ESTACREADO           = "VI_SICESTACREA";
+        public static String CONS_COD_ESTACERRADO           = "VI_SICESTACERR";
         
     /*CODIGO DE SUB CLASE DE EVENTO*/
     public static String CONS_COD_SCLASEEVEN        = "VI_SICSCLASEEVEN";

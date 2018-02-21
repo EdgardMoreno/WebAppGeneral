@@ -33,6 +33,7 @@ import com.general.hibernate.views.ViSicestageneral;
 import com.general.hibernate.views.ViSicpers;
 import com.general.hibernate.views.ViSicprod;
 import com.general.hibernate.entity.Sic1usuario;
+import com.general.hibernate1.Sic4cuaddiario;
 import com.general.hibernate1.Sic4cuaddiarioId;
 import com.general.util.dao.DaoFuncionesUtil;
 import java.io.File;
@@ -92,14 +93,16 @@ public class Main {
 //         /**/
 
         /*OBTENER CUADRE CAJA*/
+        System.out.println("Date Time:" + UtilClass.getCurrentDateTime());
         
         if (true){
             System.out.println("Fecha:" + UtilClass.getCurrentTime_YYYYMMDD());
             DaoCashRegisterImpl dao = new DaoCashRegisterImpl();
             Sic4cuaddiarioId id = new Sic4cuaddiarioId();
             id.setIdPers(new BigDecimal(3)); //Ira el ID_PERS DEL USUARIO LOGUEADO
-            id.setNumPeri(new BigDecimal("20180252"));
-            dao.getById(session, id);
+            id.setNumPeri(new BigDecimal("20180222"));
+            Sic4cuaddiario obj = dao.getById(session, id);
+            System.out.println("Sic4cuaddiario: " + obj);
             
         }
 
@@ -163,7 +166,7 @@ public class Main {
         
         ///////////////
         /**/
-        if (true) {
+        if (false) {
             
             DaoDocumentImpl daoDocumentImpl = new DaoDocumentImpl();
             Sic1idendocu obj = new Sic1idendocu();
@@ -174,7 +177,7 @@ public class Main {
         }
 
         /*MANY TO ONE EXAMPLE*/
-        if (true) {
+        if (false) {
             //session.beginTransaction();
             DaoPersonImpl daoPersonImpl = new DaoPersonImpl();
             Sic1pers obj = new Sic1pers();
@@ -202,7 +205,7 @@ public class Main {
             session.close();
         }
 
-        if (true) {
+        if (false) {
             DaoPersonImpl daoPersonImpl = new DaoPersonImpl();
             ViSicpers obj = new ViSicpers();
             obj.setCodIden("43390561");

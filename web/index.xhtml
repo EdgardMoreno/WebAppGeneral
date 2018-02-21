@@ -6,18 +6,155 @@
       xmlns:a="http://xmlns.jcp.org/jsf/passthrough"
       xmlns:p="http://primefaces.org/ui"
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets" >    
-    
+
     <ui:composition template="./templates/templatePrincipal.xhtml">
 
         <ui:define name="header">
-            
+
+            <script>
+
+                $(document).ready(function(){
+
+                    var flgCajaAperturada = $("#form\\:idTxtCajaAperturada").val();
+                    console.log("flgCajaAperturada:" + flgCajaAperturada);
+                    if (Number(flgCajaAperturada) == 0)
+                        $("#idDivFinal").css("display", "inline-block");
+                });
+
+                /*Funcion que permite validar en ingreso del Mto de Apertura*/
+                function fnValidateForm(){
+
+                    var mtoApertura = document.getElementById("form:idMtoApertura").value;
+                    console.log("mtoApertura" + mtoApertura);                    
+
+                    var FlgError = false;
+                    var arrMessages = [];
+
+                    if (mtoApertura.trim().length == 0) {
+                        arrMessages.push("Debe ingresar un monto para la apertura.");
+                        FlgError = true;
+                    }
+
+                    var divResu = $("#idDivValidation");
+
+                    if (FlgError) {
+
+                        var resultado = '<UL type = "square">';
+                        for (var i in arrMessages) {
+                            resultado += '<LI>' + arrMessages[i] + '</LI>';
+                        }
+                        resultado += '</UL>';
+
+                        console.log("resultado:" + resultado);
+
+                        divResu.html(resultado);
+                        divResu.css("display", "inline-block");
+
+                        return false;
+
+                    } else {
+                        divResu.html("");
+                        divResu.css("display", "none");
+                        return true;
+                    }
+                };
+                
+                function fnAjaxListenAperturaCaja(data) {
+
+                    switch (data.status) {        
+                        case "success":
+                             var flgCajaAperturada = $("#form\\:idTxtCajaAperturada").val();
+                            console.log("flgCajaAperturada:" + flgCajaAperturada);                            
+                            if (Number(flgCajaAperturada) == 1) {
+                                $("#idDivFinal").css("display", "none");
+                            }                           
+                            break;
+                    }
+                };
+
+            </script>
+
         </ui:define>
 
-        
-        <ui:define name="content">            
-            
+        <ui:define name="content">
+
+            <div class="container" style="border: 1px solid black">
+
+
+                <!-- ********************************** -->
+                <!-- DATOS OCULTOS -->
+                <!-- *********************************** -->
+                <table class="ocultarObjeto">
+                    <tr>
+                        <td><label>Caja Aperturada?</label></td>
+                        <td><h:inputText id="idTxtCajaAperturada" value="#{indexController.flgCajaAperturada}" /></td>
+                    </tr>
+                </table>
+                
+                <!-- ********************************** -->
+                <!-- PANTALLA INGRESO MONTO APERTURA -->
+                <!-- *********************************** -->
+
+                <div id="idDivFinal" class="jconfirm jconfirm-supervan jconfirm-open" style="display: none">
+                    <div class="jconfirm-bg" style="transition-duration: 0.4s; transition-timing-function: cubic-bezier(0.36, 0.55, 0.19, 1);">
+
+                    </div>
+                    <div class="jconfirm-scrollpane">
+                        <div class="jconfirm-row">
+                            <div class="jconfirm-cell">
+                                <div class="jconfirm-holder" style="padding-top: 40px; padding-bottom: 40px;">
+                                    <div class="jc-bs3-container container">
+                                        <div class="jc-bs3-row row justify-content-md-center justify-content-sm-center justify-content-xs-center justify-content-lg-center">
+                                            <div class="jconfirm-box-container col-md-4 col-md-offset-4 " style="transform: translate(0px, 0px); transition-duration: 0.4s; transition-timing-function: cubic-bezier(0.36, 0.55, 0.19, 1);">
+
+                                                <div class="jconfirm-content" style="background-color: white; border: 8px solid #C0C0C0; padding: 10px; border-radius: 15px"  >
+
+                                                    <div id="idDivValidation" class="messageValidation" ></div>
+
+                                                    <br/>
+                                                    <div style="text-align: center">
+                                                        <table style="margin: 0 auto;">
+
+                                                            <tr>
+                                                                <td class="compra_panelGrid_1"><h:outputLabel value="Monto Apertura:"/></td>
+                                                                <td class="compra_panelGrid_2">
+                                                                    <h:inputText id="idMtoApertura"
+                                                                                 autocomplete="off"
+                                                                                 class="form-control" 
+                                                                                 value="#{indexController.numMtoApertura}" 
+                                                                                 onkeypress="return fnAllowOnlyDecimalNumbers(event)"
+                                                                                 onblur="formatDecimal_2(this)" />
+                                                                </td>
+                                                            </tr>                                                        
+                                                        </table>
+                                                        <br/>
+                                                        <h:commandLink value="Aceptar" styleClass="btn btn-primary"
+                                                                       onclick="return fnValidateForm()">
+                                                            <f:ajax execute="idMtoApertura" render="idTxtCajaAperturada" listener="#{indexController.openCashRegister()}" onevent="fnAjaxListenAperturaCaja"/>
+                                                        </h:commandLink>                                                        
+                                                    </div>
+
+                                                </div>
+                                            </div>
+
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
         </ui:define>
-          
+
     </ui:composition>
 </html>
 

@@ -6,6 +6,7 @@
 package com.general.a1.controller;
 
 import com.general.a2.service.impl.CashRegisterServiceImpl;
+import com.general.hibernate.entity.Sic1usuario;
 import com.general.hibernate1.Sic4cuaddiario;
 import com.general.hibernate1.Sic4cuaddiarioId;
 import com.general.util.beans.Constantes;
@@ -46,16 +47,18 @@ public class CashRegisterController {
     private BigDecimal numCalcuDenom0_10;
     private BigDecimal numCalcuDenom0_05;
     
-    private String desTotalVentas;    
-    private String desFecRegistro;
+    private String desTotalVentas;
+    
+    private Sic1usuario user;
+    //private String desFecRegistro;
     
     @PostConstruct
     public void init() {
         
         try{
-            System.out.println("initia");
+            System.out.println("iniciando");
             
-            desFecRegistro          = UtilClass.getCurrentDay();
+            //desFecRegistro          = UtilClass.getCurrentDay();
             
             int valIni = 0;
             
@@ -74,8 +77,17 @@ public class CashRegisterController {
             
             this.desTotalVentas = "S/ 0.00";
             
-            int val = 2;
-            box = new Sic4cuaddiario();
+            /******************************************/
+            /***SE OBTIENE LOS DATOS DE LA APERTURA***/
+            /******************************************/
+            CashRegisterServiceImpl service = new CashRegisterServiceImpl();
+            Sic4cuaddiarioId id = new Sic4cuaddiarioId();
+            id.setIdPers(new BigDecimal(3)); //Ira el ID_PERS DEL USUARIO LOGUEADO
+            id.setNumPeri(new BigDecimal(UtilClass.getCurrentTime_YYYYMMDD()));
+            
+            box = service.getById(id);
+            
+            int val = 2;           
             
             box.setNumEfectDenom0200(new BigDecimal(val));
             box.setNumEfectDenom0100(new BigDecimal(val));
@@ -238,13 +250,7 @@ public class CashRegisterController {
         this.desTotalVentas = desTotalVentas;
     }
 
-    public String getDesFecRegistro() {
-        return desFecRegistro;
-    }
-
-    public void setDesFecRegistro(String desFecRegistro) {
-        this.desFecRegistro = desFecRegistro;
-    }
+   
     
     /*METODOS*/
     
@@ -368,7 +374,7 @@ public class CashRegisterController {
             id.setNumPeri(new BigDecimal(UtilClass.getCurrentTime_YYYYMMDD()));
             
             box.setId(id);
-            service.insert(box);
+            service.close(box);
             
             UtilClass.addInfoMessage(Constantes.CONS_SUCCESS_MESSAGE);
         }catch(Exception ex ){
