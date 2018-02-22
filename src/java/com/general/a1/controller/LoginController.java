@@ -5,6 +5,7 @@
  */
 package com.general.a1.controller;
 
+import com.general.security.SessionUtils;
 import com.general.a2.service.impl.LoginServiceImpl;
 import com.general.hibernate.entity.Sic1usuario;
 import com.general.util.exceptions.CustomizerException;
@@ -12,6 +13,7 @@ import java.io.Serializable;
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
+import javax.servlet.http.HttpSession;
 
 /**
  *
@@ -22,38 +24,62 @@ import javax.faces.bean.SessionScoped;
 @SessionScoped
 public class LoginController implements Serializable{
     
-    private Sic1usuario usuario;
+    
+    private String userName;
+    private String passWord;
+    private Sic1usuario user;
     
     public LoginController(){
-        
+        //https://www.journaldev.com/7252/jsf-authentication-login-logout-database-example
     }
     
     @PostConstruct
     public void init(){
-        usuario = new Sic1usuario();
+        user = new Sic1usuario();
     }
     
     /*ATRIBUTOS*/
-    public Sic1usuario getUsuario() {
-        return usuario;
+
+    public String getUserName() {
+        return userName;
     }
 
-    public void setUsuario(Sic1usuario usuario) {
-        this.usuario = usuario;
-    }    
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+
+    public String getPassWord() {
+        return passWord;
+    }
+
+    public void setPassWord(String passWord) {
+        this.passWord = passWord;
+    }
+
+    public Sic1usuario getUser() {
+        return user;
+    }
+
+    public void setUser(Sic1usuario user) {
+        this.user = user;
+    }
+   
     
     
     /*METODOS*/
     public String validateUsernamePassword() throws CustomizerException{
         
         System.out.println("Validate Usuario:");
-        System.out.println("Usuario: " + this.usuario.getCodUsuario());
-        System.out.println("PWD: " + this.usuario.getCodPwd());
+        System.out.println("Usuario: " + this.userName);
+        System.out.println("PWD: " + this.passWord);
         
         LoginServiceImpl loginServiceImpl = new LoginServiceImpl();
-        this.usuario = loginServiceImpl.validateUsernamePassword(this.usuario);
+        this.user = loginServiceImpl.validateUsernamePassword(this.userName, this.passWord);
         
-        return "";
+        HttpSession session = SessionUtils.getSession();
+	session.setAttribute("user", user);
+	
+        return "index";
     }
     
 }

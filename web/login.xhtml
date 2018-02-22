@@ -232,8 +232,8 @@
                         <p class="form-title">
                             Sign In</p>
                         <h:form styleClass="login">
-                            <h:inputText id="idCodUsuario" value="#{loginController.usuario.codUsuario}" />
-                            <h:inputSecret value="#{loginController.usuario.codPwd}" />
+                            <h:inputText id="idCodUsuario" value="#{loginController.userName}" />
+                            <h:inputSecret value="#{loginController.passWord}" />
                             <h:commandLink value="Ingresar" class="btn btn-success btn-sm" action="#{loginController.validateUsernamePassword()}" />
                             <div class="remember-forgot">
                                 <div class="row">

@@ -34,22 +34,17 @@ public class DaoLoginImpl implements Serializable{
     }
     
     
-    public Sic1usuario validateUsernamePassword(Session session, Sic1usuario obj) throws Exception {        
+    public Sic1usuario validateUsernamePassword(Session session, String userName, String passWord) throws Exception {        
         
-        Sic1usuario sic1usuario = new Sic1usuario();
+        Sic1usuario sic1usuario;
         
         Criteria criteria = session.createCriteria(Sic1usuario.class);
+            
+        criteria.add(Restrictions.eq("codUsuario",userName).ignoreCase());
+        criteria.add(Restrictions.eq("codPwd",passWord));
+            
+        sic1usuario = (Sic1usuario)criteria.uniqueResult();
         
-        if( obj.getCodUsuario() != null &&
-                obj.getCodUsuario().trim().length() > 0 &&
-                obj.getCodPwd()!= null && 
-                obj.getCodPwd().trim().length() > 0 ){
-            
-            criteria.add(Restrictions.eq("codUsuario",obj.getCodUsuario().toUpperCase()));
-            criteria.add(Restrictions.eq("codPwd",obj.getCodPwd()));
-            
-            sic1usuario = (Sic1usuario)criteria.uniqueResult();
-        }
         
         /*Si el usuario existe se obtiene los datos complementarios*/
         if (sic1usuario != null){

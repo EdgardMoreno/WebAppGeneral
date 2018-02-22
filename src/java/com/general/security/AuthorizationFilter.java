@@ -1,3 +1,5 @@
+package com.general.security;
+
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
@@ -25,12 +27,7 @@ import javax.servlet.http.HttpSession;
     In the doFilter method we will redirect user to login page if he tries to access other page without logging in.
 */
 
-
-public class AuthorizationFilter{
-    
-}
-
-/*@WebFilter(filterName = "AuthFilter", urlPatterns = { "*.xhtml" })
+@WebFilter(filterName = "AuthFilter", urlPatterns = { "*.xhtml" })
 public class AuthorizationFilter implements Filter {
 
 	public AuthorizationFilter() {
@@ -67,4 +64,4 @@ public class AuthorizationFilter implements Filter {
 	public void destroy() {
 
 	}
-}*/
+}

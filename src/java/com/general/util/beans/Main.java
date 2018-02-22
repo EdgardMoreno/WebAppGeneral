@@ -112,7 +112,7 @@ public class Main {
             Sic1usuario obj = new Sic1usuario();
             obj.setCodUsuario("emoreno");
             obj.setCodPwd("123");
-            obj = daoObj.validateUsernamePassword(session,obj);
+            obj = daoObj.validateUsernamePassword(session,"","");
         }
         
         /*VALIDAR USUARIO*/        
@@ -121,7 +121,7 @@ public class Main {
             Sic1usuario obj = new Sic1usuario();
             obj.setCodUsuario("emoreno");
             obj.setCodPwd("123");
-            obj = daoObj.validateUsernamePassword(session,obj);
+            obj = daoObj.validateUsernamePassword(session,"", "");
         }
 
         /////---- OBTENER LOS PRODUCTOS RELACIONADOS AL DOCUMENTO

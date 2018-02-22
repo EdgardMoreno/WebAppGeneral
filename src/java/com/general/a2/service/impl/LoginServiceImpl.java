@@ -42,12 +42,12 @@ public class LoginServiceImpl implements Serializable{
     }
     
     
-    public Sic1usuario validateUsernamePassword(Sic1usuario obj) throws CustomizerException {
+    public Sic1usuario validateUsernamePassword(String userName, String passWord) throws CustomizerException {
         
         Sic1usuario result;        
         try{
             session = HibernateUtil.getSessionFactory().openSession();
-            result = daoLoginImpl.validateUsernamePassword(session, obj);
+            result = daoLoginImpl.validateUsernamePassword(session, userName, passWord);
         }catch(Exception ex){
             throw new CustomizerException(ex.getMessage());
         }finally{
