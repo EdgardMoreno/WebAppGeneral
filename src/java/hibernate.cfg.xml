@@ -7,23 +7,18 @@
     <property name="hibernate.connection.url">jdbc:oracle:thin:@localhost:1521:XE</property>
     <property name="hibernate.connection.username">SICDBA</property>
     <property name="hibernate.connection.password">Oracle01</property>
-    
     <!-- show mysql queries output in console -->
     <property name="hibernate.show_sql">true</property>
-    
     <property name="hibernate.cache.use_second_level_cache">true</property>
     <property name="hibernate.cache.region.factory_class">org.hibernate.cache.ehcache.EhCacheRegionFactory</property>
     <property name="spring.jpa.properties.hibernate.proc.param_null_passing">true</property>
     <property name="hibernate.current_session_context_class">thread</property>
     <property name="hibernate.query.factory_class">org.hibernate.hql.internal.classic.ClassicQueryTranslatorFactory</property>
     <property name="hibernate.proc.param_null_passing">true</property>
-    
     <!-- add annotated resources here -->
     <!--<mapping class="com.memorynotfound.hibernate.DateAndTime"/>-->
-     
     <!-- manage automatic database creation -->
     <!--   <property name="hibernate.hbm2ddl.auto">create-drop</property>-->
-
     <mapping resource="com/general/hibernate/relaentity/Sic3docuesta.hbm.xml"/>
     <mapping resource="com/general/hibernate/relaentity/Sic3docudocu.hbm.xml"/>
     <mapping resource="com/general/hibernate/entity/Sic1general.hbm.xml"/>
@@ -50,6 +45,7 @@
     <mapping resource="com/general/hibernate/views/ViSicprod.hbm.xml"/>
     <mapping resource="com/general/hibernate/entity/Sic1usuario.hbm.xml"/>
     <mapping resource="com/general/hibernate/relaentity/Sic3docuprod.hbm.xml"/>
-    <mapping resource="com/general/hibernate1/Sic4cuaddiario.hbm.xml"/>
+    <mapping resource="com/general/hibernate/temp/Sic4cuaddiario.hbm.xml"/>
+    <mapping resource="com/general/hibernate1/ViSiccuaddiario.hbm.xml"/>
   </session-factory>
 </hibernate-configuration>

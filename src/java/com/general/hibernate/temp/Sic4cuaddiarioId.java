@@ -1,4 +1,4 @@
-package com.general.hibernate1;
+package com.general.hibernate.temp;
 // Generated 20/02/2018 11:01:48 AM by Hibernate Tools 4.3.1
 
 

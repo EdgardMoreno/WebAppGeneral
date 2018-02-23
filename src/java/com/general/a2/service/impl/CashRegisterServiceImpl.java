@@ -7,13 +7,15 @@ package com.general.a2.service.impl;
 
 import com.general.a3.dao.impl.DaoCashRegisterImpl;
 import com.general.hibernate.entity.HibernateUtil;
-import com.general.hibernate1.Sic4cuaddiario;
-import com.general.hibernate1.Sic4cuaddiarioId;
+import com.general.hibernate.temp.Sic4cuaddiario;
+import com.general.hibernate.temp.Sic4cuaddiarioId;
+import com.general.hibernate1.ViSiccuaddiario;
 import com.general.util.beans.Constantes;
 import com.general.util.beans.UtilClass;
 import com.general.util.dao.DaoFuncionesUtil;
 import com.general.util.exceptions.CustomizerException;
 import java.math.BigDecimal;
+import java.util.List;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.internal.SessionImpl;
@@ -101,5 +103,21 @@ public class CashRegisterServiceImpl {
         }
         return obj;
     }
+     
+     
+     public List<ViSiccuaddiario> listViSiccuaddiario(ViSiccuaddiario obj) throws CustomizerException{
+        
+        List<ViSiccuaddiario> result;
+        try{
+            DaoCashRegisterImpl dao = new DaoCashRegisterImpl();
+            session = HibernateUtil.getSessionFactory().openSession();
+            result = dao.listViSiccuaddiario(session, obj);
+        }catch(Exception ex){
+            throw new CustomizerException(ex.getMessage());
+        }finally{
+            session.close();
+        }
+        return result;
+    }  
     
 }

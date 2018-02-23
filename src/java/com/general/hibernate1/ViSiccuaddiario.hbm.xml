@@ -1,0 +1,81 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 23/02/2018 02:41:39 PM by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+    <class name="com.general.hibernate1.ViSiccuaddiario" table="VI_SICCUADDIARIO" schema="SICDBA" optimistic-lock="version">
+        
+        <id name="idPers" type="big_decimal">
+            <column name="ID_PERS" precision="22" scale="0" />
+            <generator class="assigned"/>
+        </id>
+        
+        <property name="numPeri" type="big_decimal">
+            <column name="NUM_PERI" precision="22" scale="0" />
+        </property>
+        <property name="desPers" type="string">
+            <column name="DES_PERS" length="250" />
+        </property>
+        <property name="fecApertura" type="timestamp">
+            <column name="FEC_APERTURA" length="7" />
+        </property>
+        <property name="fecCierre" type="timestamp">
+            <column name="FEC_CIERRE" length="7" />
+        </property>
+        <property name="numEfectDenomTotal" type="string">
+            <column name="NUM_EFECT_DENOM_TOTAL" length="9" />
+        </property>
+        <property name="numEfectGastoTotal" type="string">
+            <column name="NUM_EFECT_GASTO_TOTAL" length="9" />
+        </property>
+        <property name="numEfectApertCaja" type="string">
+            <column name="NUM_EFECT_APERT_CAJA" length="9" />
+        </property>
+        <property name="numEfectTotalVentaSiste" type="string">
+            <column name="NUM_EFECT_TOTAL_VENTA_SISTE" length="9" />
+        </property>
+        <property name="numEfectTotalGastoSiste" type="string">
+            <column name="NUM_EFECT_TOTAL_GASTO_SISTE" length="9" />
+        </property>
+        <property name="numEfectTotalSistema" type="string">
+            <column name="NUM_EFECT_TOTAL_SISTEMA" length="9" />
+        </property>
+        <property name="numEfectSobraFalta" type="string">
+            <column name="NUM_EFECT_SOBRA_FALTA" length="9" />
+        </property>
+        <property name="numTarjeCrediTotal" type="string">
+            <column name="NUM_TARJE_CREDI_TOTAL" length="9" />
+        </property>
+        <property name="numTarjeDebitTotal" type="string">
+            <column name="NUM_TARJE_DEBIT_TOTAL" length="9" />
+        </property>
+        <property name="numTarjeTotal" type="string">
+            <column name="NUM_TARJE_TOTAL" length="9" />
+        </property>
+        <property name="numTarjeTotalSiste" type="string">
+            <column name="NUM_TARJE_TOTAL_SISTE" length="9" />
+        </property>
+        <property name="numTarjeSobraFalta" type="string">
+            <column name="NUM_TARJE_SOBRA_FALTA" length="9" />
+        </property>
+        <property name="numTarjeGastoTotal" type="string">
+            <column name="NUM_TARJE_GASTO_TOTAL" length="9" />
+        </property>
+        <property name="numTarjeGastoTotalSiste" type="string">
+            <column name="NUM_TARJE_GASTO_TOTAL_SISTE" length="9" />
+        </property>
+        <property name="numGastoSobraFalta" type="string">
+            <column name="NUM_GASTO_SOBRA_FALTA" length="9" />
+        </property>
+        <property name="idEsta" type="big_decimal">
+            <column name="ID_ESTA" precision="22" scale="0" />
+        </property>
+        <property name="codEsta" type="string">
+            <column name="COD_ESTA" length="50" />
+        </property>
+        <property name="desEsta" type="string">
+            <column name="DES_ESTA" length="500" />
+        </property>
+        
+    </class>
+</hibernate-mapping>

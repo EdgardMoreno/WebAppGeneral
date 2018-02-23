@@ -33,8 +33,9 @@ import com.general.hibernate.views.ViSicestageneral;
 import com.general.hibernate.views.ViSicpers;
 import com.general.hibernate.views.ViSicprod;
 import com.general.hibernate.entity.Sic1usuario;
-import com.general.hibernate1.Sic4cuaddiario;
-import com.general.hibernate1.Sic4cuaddiarioId;
+import com.general.hibernate.temp.Sic4cuaddiario;
+import com.general.hibernate.temp.Sic4cuaddiarioId;
+import com.general.hibernate1.ViSiccuaddiario;
 import com.general.util.dao.DaoFuncionesUtil;
 import java.io.File;
 import java.math.BigDecimal;
@@ -117,6 +118,15 @@ public class Main {
 
         /*OBTENER CUADRE CAJA*/
         System.out.println("Date Time:" + UtilClass.getCurrentDateTime());
+        
+        if (true){            
+            DaoCashRegisterImpl dao = new DaoCashRegisterImpl();            
+            ViSiccuaddiario obj = new ViSiccuaddiario();
+            obj.setFecApertura(UtilClass.convertStringToDate("21/02/2018"));
+            dao.listViSiccuaddiario(session, obj);
+            System.out.println("Sic4cuaddiario: " + obj);
+            
+        }
         
         if (false){
             System.out.println("Fecha:" + UtilClass.getCurrentTime_YYYYMMDD());

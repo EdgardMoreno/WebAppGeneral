@@ -5,6 +5,7 @@
  */
 package com.general.util.beans;
 
+import java.math.BigDecimal;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -54,6 +55,12 @@ public class UtilClass {
         return df.format(new Date());
     }
     
+    public static BigDecimal convertDateToNumber(Date value){
+        DateFormat df = new SimpleDateFormat("yyyyMMdd");
+        return new BigDecimal(df.format(value));
+    }
+    
+    
     public static String convertDateToString(Date value){
         DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
         return df.format(value);
@@ -74,6 +81,16 @@ public class UtilClass {
     public static Date getObtFecIni() throws ParseException{
         DateFormat df = new SimpleDateFormat("dd/MM/yyyy");        
         return df.parse("01/01/1900");
+    }
+    
+    /*Devuelve la fecha inicial*/
+    public static int getObtFecIni_YYYYMMDD() throws ParseException{        
+        return 19000101;
+    }
+    
+     /*Devuelve la fecha infinito*/
+    public static int getObtFecInf_YYYYMMDD() throws ParseException{
+        return 24003112;
     }
    
     

@@ -7,13 +7,16 @@ package com.general.a1.controller;
 
 import com.general.a2.service.impl.CashRegisterServiceImpl;
 import com.general.hibernate.entity.Sic1usuario;
-import com.general.hibernate1.Sic4cuaddiario;
-import com.general.hibernate1.Sic4cuaddiarioId;
+import com.general.hibernate.temp.Sic4cuaddiario;
+import com.general.hibernate.temp.Sic4cuaddiarioId;
+import com.general.hibernate1.ViSiccuaddiario;
 import com.general.security.SessionUtils;
 import com.general.util.beans.Constantes;
 import com.general.util.beans.UtilClass;
 import com.general.util.exceptions.CustomizerException;
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
@@ -49,9 +52,12 @@ public class CashRegisterController {
     private BigDecimal numCalcuDenom0_05;
     
     private String desTotalVentas;
+    private String desFecDesde;
+    private String desFecHasta;
     
-    private Sic1usuario user;
-    //private String desFecRegistro;
+    private List<ViSiccuaddiario> listViDayBox;
+    private ViSiccuaddiario viDayBox;
+    
     
     @PostConstruct
     public void init() {
@@ -59,7 +65,7 @@ public class CashRegisterController {
         try{
             System.out.println("iniciando");
             
-            //desFecRegistro          = UtilClass.getCurrentDay();
+            listViDayBox = new ArrayList();
             
             int valIni = 0;
             
@@ -252,10 +258,45 @@ public class CashRegisterController {
 
     public void setDesTotalVentas(String desTotalVentas) {
         this.desTotalVentas = desTotalVentas;
+    }    
+
+    public String getDesFecDesde() {
+        return desFecDesde;
     }
 
-   
+    public void setDesFecDesde(String desFecDesde) {
+        this.desFecDesde = desFecDesde;
+    }
+
+    public String getDesFecHasta() {
+        return desFecHasta;
+    }
+
+    public void setDesFecHasta(String desFecHasta) {
+        this.desFecHasta = desFecHasta;
+    }
+
+    public List<ViSiccuaddiario> getListViDayBox() {
+        return listViDayBox;
+    }
+
+    public void setListViDayBox(List<ViSiccuaddiario> listViDayBox) {
+        this.listViDayBox = listViDayBox;
+    }
+
+    public ViSiccuaddiario getViDayBox() {
+        return viDayBox;
+    }
+
+    public void setViDayBox(ViSiccuaddiario viDayBox) {
+        this.viDayBox = viDayBox;
+    }
+
     
+
+    
+    
+
     /*METODOS*/
     
     public void getParamsExternalPage(ComponentSystemEvent event) throws CustomizerException{
@@ -264,9 +305,6 @@ public class CashRegisterController {
             
             Flash flash = FacesContext.getCurrentInstance().getExternalContext().getFlash();        
             String tituloPagina     = (String)flash.get("paramTituloPagina"); 
-            
-            
-            
             
             this.desTituloPagina = tituloPagina;        
         }
@@ -387,5 +425,28 @@ public class CashRegisterController {
         }catch(Exception ex ){
             throw new CustomizerException(ex.getMessage());
         }
+    }
+    
+    public void filter() throws CustomizerException{        
+        
+         try {
+
+            CashRegisterServiceImpl service = new CashRegisterServiceImpl();
+             
+            if(this.desFecDesde != null && this.desFecDesde.trim().length() > 0)
+                viDayBox.setFecApertura(UtilClass.convertStringToDate(desFecDesde));
+            else
+                 viDayBox.setFecApertura(null);
+            if(this.desFecHasta != null && this.desFecHasta.trim().length() > 0)
+                viDayBox.setFecCierre(UtilClass.convertStringToDate(desFecHasta));
+            else
+                viDayBox.setFecCierre(null);
+
+            this.listViDayBox = service.listViSiccuaddiario(viDayBox);  
+            
+        } catch (Exception e) {
+            throw new CustomizerException(e.getMessage());
+        }
+        
     }
 }

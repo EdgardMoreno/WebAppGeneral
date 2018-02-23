@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 20/02/2018 11:01:49 AM by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+  <class name="com.general.hibernate.temp.Sic4cuaddiario" optimistic-lock="version" schema="SICDBA" table="SIC4CUADDIARIO">
+    <composite-id class="com.general.hibernate.temp.Sic4cuaddiarioId" name="id">
+      <key-property name="idPers" type="big_decimal">
+        <column name="ID_PERS" precision="22" scale="0"/>
+      </key-property>
+      <key-property name="numPeri" type="big_decimal">
+        <column name="NUM_PERI" precision="22" scale="0"/>
+      </key-property>
+    </composite-id>
+    <property name="fecApertura" type="timestamp">
+      <column length="7" name="FEC_APERTURA">
+        <comment>Contiene la fecha de apertura de la caja en formato -&gt; dd/mm/yyyy hh:mi:ss</comment>
+      </column>
+    </property>
+    <property name="fecCierre" type="timestamp">
+      <column length="7" name="FEC_CIERRE">
+        <comment>Contiene la fecha de cierre de la caja en formato -&gt; dd/mm/yyyy hh:mi:ss</comment>
+      </column>
+    </property>
+    <property name="numEfectDenom0200" type="big_decimal">
+      <column name="NUM_EFECT_DENOM_0200" precision="22" scale="0">
+        <comment>Indica la cantidad de billetes con denominación de 200.</comment>
+      </column>
+    </property>
+    <property name="numEfectDenom0100" type="big_decimal">
+      <column name="NUM_EFECT_DENOM_0100" precision="22" scale="0">
+        <comment>Indica la cantidad de billetes con denominación de 100</comment>
+      </column>
+    </property>
+    <property name="numEfectDenom0050" type="big_decimal">
+      <column name="NUM_EFECT_DENOM_0050" precision="22" scale="0">
+        <comment>Indica la cantidad de billetes con denominación de 50</comment>
+      </column>
+    </property>
+    <property name="numEfectDenom0020" type="big_decimal">
+      <column name="NUM_EFECT_DENOM_0020" precision="22" scale="0">
+        <comment>Indica la cantidad de billetes con denominación de 20</comment>
+      </column>
+    </property>
+    <property name="numEfectDenom0010" type="big_decimal">
+      <column name="NUM_EFECT_DENOM_0010" precision="22" scale="0">
+        <comment>Indica la cantidad de billetes con denominación de 10</comment>
+      </column>
+    </property>
+    <property name="numEfectDenom0005" type="big_decimal">
+      <column name="NUM_EFECT_DENOM_0005" precision="22" scale="0">
+        <comment>Indica la cantidad de monedas con denominación de 5</comment>
+      </column>
+    </property>
+    <property name="numEfectDenom0002" type="big_decimal">
+      <column name="NUM_EFECT_DENOM_0002" precision="22" scale="0">
+        <comment>Indica la cantidad de monedas con denominación de 2</comment>
+      </column>
+    </property>
+    <property name="numEfectDenom0001" type="big_decimal">
+      <column name="NUM_EFECT_DENOM_0001" precision="22" scale="0">
+        <comment>Indica la cantidad de monedas con denominación de 1</comment>
+      </column>
+    </property>
+    <property name="numEfectDenom0_50" type="big_decimal">
+      <column name="NUM_EFECT_DENOM_0_50" precision="22" scale="0">
+        <comment>Indica la cantidad de monedas con denominación de 0.5</comment>
+      </column>
+    </property>
+    <property name="numEfectDenom0_20" type="big_decimal">
+      <column name="NUM_EFECT_DENOM_0_20" precision="22" scale="0">
+        <comment>Indica la cantidad de monedas con denominación de 0.20</comment>
+      </column>
+    </property>
+    <property name="numEfectDenom0_10" type="big_decimal">
+      <column name="NUM_EFECT_DENOM_0_10" precision="22" scale="0">
+        <comment>Indica la cantidad de monedas con denominación de 0.10</comment>
+      </column>
+    </property>
+    <property name="numEfectDenom0_05" type="big_decimal">
+      <column name="NUM_EFECT_DENOM_0_05" precision="22" scale="0">
+        <comment>Indica la cantidad de monedas con denominación de 0.05</comment>
+      </column>
+    </property>
+    <property name="numEfectDenomTotal" type="big_decimal">
+      <column name="NUM_EFECT_DENOM_TOTAL" precision="9" scale="3">
+        <comment>Contiene la suma total en efectivo disponible en caja, que el usuario ha ingresado. formula: SUM(NUM_EFECT_DENOM_)</comment>
+      </column>
+    </property>
+    <property name="numEfectGastoTotal" type="big_decimal">
+      <column name="NUM_EFECT_GASTO_TOTAL" precision="9" scale="3">
+        <comment>Contiene el total de gastos en efectivo que ha sido ingresado por el usuario.</comment>
+      </column>
+    </property>
+    <property name="numEfectApertCaja" type="big_decimal">
+      <column name="NUM_EFECT_APERT_CAJA" precision="9" scale="3">
+        <comment>Contiene el monto con el que se apertura caja al momento de iniciar las operaciones</comment>
+      </column>
+    </property>
+    <property name="numEfectTotal" type="big_decimal">
+      <column name="NUM_EFECT_TOTAL" precision="9" scale="3">
+        <comment>Contiene la SUMATORIA DE TODO LO EFECTIVO QUE HA SIDO INGRESADO POR EL USUARIO FORMULA: (NUM_EFECT_DENOM_TOTAL - NUM_EFECT_GASTO_TOTAL -
+                NUM_EFECT_APERT_CAJA)</comment>
+      </column>
+    </property>
+    <property name="numEfectTotalVentaSiste" type="big_decimal">
+      <column name="NUM_EFECT_TOTAL_VENTA_SISTE" precision="9" scale="3">
+        <comment>CONTIENE EL TOTAL DE LA VENTAS EN EFECTIVO REGISTRADAS A TRAVES DEL SISTEMA DE VENTAS</comment>
+      </column>
+    </property>
+    <property name="numEfectTotalGastoSiste" type="big_decimal">
+      <column name="NUM_EFECT_TOTAL_GASTO_SISTE" precision="9" scale="3">
+        <comment>CONTIENE EL TOTAL DE GASTOS EN EFECTIVO REGISTRADAS A TRAVES DEL SISTEMA DE VENTAS</comment>
+      </column>
+    </property>
+    <property name="numEfectTotalSistema" type="big_decimal">
+      <column name="NUM_EFECT_TOTAL_SISTEMA" precision="9" scale="3">
+        <comment>CONTIENE LA RESTA DE LOS VENDIDO - GASTADO. FORMULA :(NUM_EFECT_TOTAL_VENTA_SISTEMA - NUM_EFECT_TOTAL_GASTO_SISTEMA)</comment>
+      </column>
+    </property>
+    <property name="numEfectSobraFalta" type="big_decimal">
+      <column name="NUM_EFECT_SOBRA_FALTA" precision="9" scale="3">
+        <comment>CONTIENE EL SOBRANTE O FALTANTE FINAL DE EFECTIVO</comment>
+      </column>
+    </property>
+    <property name="numTarjeCrediTotal" type="big_decimal">
+      <column name="NUM_TARJE_CREDI_TOTAL" precision="9" scale="3">
+        <comment>Contiene el monto total en Tarjetas de Credito</comment>
+      </column>
+    </property>
+    <property name="numTarjeDebitTotal" type="big_decimal">
+      <column name="NUM_TARJE_DEBIT_TOTAL" precision="9" scale="3">
+        <comment>Contiene el monto total en Tarjetas de Debito</comment>
+      </column>
+    </property>
+    <property name="numTarjeTotal" type="big_decimal">
+      <column name="NUM_TARJE_TOTAL" precision="9" scale="3">
+        <comment>Contiene el monto total en Tarjetas</comment>
+      </column>
+    </property>
+    <property name="numTarjeTotalSiste" type="big_decimal">
+      <column name="NUM_TARJE_TOTAL_SISTE" precision="9" scale="3">
+        <comment>Contiene el monto total en Tarjetas obtenido desde el sistema de ventas</comment>
+      </column>
+    </property>
+    <property name="numTarjeSobraFalta" type="big_decimal">
+      <column name="NUM_TARJE_SOBRA_FALTA" precision="9" scale="3">
+        <comment>Contiene el Sobrante o Faltante final en Tarjetas</comment>
+      </column>
+    </property>
+    <property name="numTarjeGastoTotal" type="big_decimal">
+      <column name="NUM_TARJE_GASTO_TOTAL" precision="9" scale="3">
+        <comment>Contiene el monto total en Gastos</comment>
+      </column>
+    </property>
+    <property name="numTarjeGastoTotalSiste" type="big_decimal">
+      <column name="NUM_TARJE_GASTO_TOTAL_SISTE" precision="9" scale="3">
+        <comment>Contiene el monto total en Gastos obtenido desde el sistema de ventas</comment>
+      </column>
+    </property>
+    <property name="numGastoSobraFalta" type="big_decimal">
+      <column name="NUM_GASTO_SOBRA_FALTA" precision="9" scale="3">
+        <comment>Contiene el Sobrante o Faltante final en Gastos</comment>
+      </column>
+    </property>
+    <property name="idEsta" type="big_decimal">
+      <column name="ID_ESTA" precision="9" scale="0">
+        <comment>Contiene el identificador del estado de la caja</comment>
+      </column>
+    </property>
+  </class>
+</hibernate-mapping>
