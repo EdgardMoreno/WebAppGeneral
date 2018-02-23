@@ -5,7 +5,6 @@
  */
 package com.general.a3.dao.impl;
 
-import com.general.hibernate.entity.Sic1docu;
 import com.general.hibernate1.Sic4cuaddiario;
 import com.general.hibernate1.Sic4cuaddiarioId;
 import org.hibernate.Session;

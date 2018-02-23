@@ -628,8 +628,7 @@ public class DaoDocumentImpl implements Serializable{
     }
     
     
-    public String getLastCodEstaDocu(Session session, BigDecimal id_docu){
-        
+    public String getLastCodEstaDocu(Session session, BigDecimal id_docu){        
         
         String result = session.doReturningWork(new ReturningWork<String>() {
             @Override

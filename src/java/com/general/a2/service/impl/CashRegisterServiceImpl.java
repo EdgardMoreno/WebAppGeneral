@@ -74,6 +74,9 @@ public class CashRegisterServiceImpl {
             dao.update(session, obj);
             tx.commit();
             
+            
+            
+            
         } catch (Exception e) {
             if(tx != null)
                 tx.rollback();

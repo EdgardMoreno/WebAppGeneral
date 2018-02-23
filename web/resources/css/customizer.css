@@ -9,8 +9,8 @@ and open the template in the editor.
 */
 
 .ocultarObjeto{
-    /*display: none;*/
-    display: inline-block;
+    display: none;
+    /*display: inline-block;*/
 }
 
 .label_panelGrid_2c {

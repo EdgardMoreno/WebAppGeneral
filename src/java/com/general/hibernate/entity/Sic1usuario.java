@@ -23,6 +23,10 @@ public class Sic1usuario  implements java.io.Serializable {
      private String codEmail;
      
      /*Agregado*/
+     private String codEstacaja;
+     private String codTrolpers;
+     
+     /*Agregado*/
      private Sic1idenpers sic1idenpers;     
 
     public Sic1usuario() {
@@ -107,6 +111,24 @@ public class Sic1usuario  implements java.io.Serializable {
     public void setSic1idenpers(Sic1idenpers sic1idenpers) {
         this.sic1idenpers = sic1idenpers;
     }
+
+    public String getCodEstacaja() {
+        return codEstacaja;
+    }
+
+    public void setCodEstacaja(String codEstacaja) {
+        this.codEstacaja = codEstacaja;
+    }
+
+    public String getCodTrolpers() {
+        return codTrolpers;
+    }
+
+    public void setCodTrolpers(String codTrolpers) {
+        this.codTrolpers = codTrolpers;
+    }
+    
+    
     
     
     

@@ -47,6 +47,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import java.sql.Connection;
+import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 
@@ -66,6 +67,28 @@ public class Main {
         Session session = sessionFactory.openSession();
         //Session sessionTemp = sessionFactory.openSession();
         System.out.println("ejemplo:");
+        
+        if (false) {
+            try{
+
+                Query  query = session.createSQLQuery(
+                "select s.id_pers, s.num_peri from sic4cuaddiario s where s.id_pers = :id_pers")
+                .setParameter("id_pers", "3");
+                List<Object[]> rows = query.list();
+
+                for(Object[] row : rows){
+                    System.out.println("hola" + row[0].toString());
+                    System.out.println("hola" + row[1].toString());
+                }
+
+                System.out.println("hola");
+
+            }catch(Exception ex){
+
+            }
+        }
+        
+        
         //cnConexion = DaoConexion.verificarConexion(cnConexion);
 //         try {             
 //             
@@ -95,7 +118,7 @@ public class Main {
         /*OBTENER CUADRE CAJA*/
         System.out.println("Date Time:" + UtilClass.getCurrentDateTime());
         
-        if (true){
+        if (false){
             System.out.println("Fecha:" + UtilClass.getCurrentTime_YYYYMMDD());
             DaoCashRegisterImpl dao = new DaoCashRegisterImpl();
             Sic4cuaddiarioId id = new Sic4cuaddiarioId();
@@ -107,12 +130,12 @@ public class Main {
         }
 
         /*VALIDAR USUARIO*/        
-        if (false) {
+        if (true) {
             DaoLoginImpl daoObj = new DaoLoginImpl();
             Sic1usuario obj = new Sic1usuario();
             obj.setCodUsuario("emoreno");
             obj.setCodPwd("123");
-            obj = daoObj.validateUsernamePassword(session,"","");
+            obj = daoObj.validateUsernamePassword(session,"admin","123");
         }
         
         /*VALIDAR USUARIO*/        

@@ -7,10 +7,19 @@ package com.general.a3.dao.impl;
 
 import com.general.hibernate.entity.Sic1idenpers;
 import com.general.hibernate.entity.Sic1usuario;
+import com.general.util.beans.UtilClass;
 import java.io.Serializable;
+import java.math.BigDecimal;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.List;
 import org.hibernate.Criteria;
+import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.criterion.Restrictions;
+import org.hibernate.jdbc.ReturningWork;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -43,8 +52,7 @@ public class DaoLoginImpl implements Serializable{
         criteria.add(Restrictions.eq("codUsuario",userName).ignoreCase());
         criteria.add(Restrictions.eq("codPwd",passWord));
             
-        sic1usuario = (Sic1usuario)criteria.uniqueResult();
-        
+        sic1usuario = (Sic1usuario)criteria.uniqueResult();        
         
         /*Si el usuario existe se obtiene los datos complementarios*/
         if (sic1usuario != null){
@@ -52,6 +60,32 @@ public class DaoLoginImpl implements Serializable{
             DaoPersonImpl daoPersonImpl = new DaoPersonImpl();
             Sic1idenpers sic1idenpers = daoPersonImpl.getById(session, sic1usuario.getIdUsuario());
             sic1usuario.setSic1idenpers(sic1idenpers);
+            
+            /*Se obtiene el rol del usuario y el codigo del estado de la caja*/
+            String sql =                     
+                " SELECT  PKG_SICCONSGENERAL.FNC_SICOBTCODGEN('VI_SICTROLPERS',ROL.ID_TROLPERS) AS COD_TROLPERS " +
+                "        ,PKG_SICCONSGENERAL.FNC_SICOBTCODGEN('VI_SICESTA',T0.ID_ESTA) AS COD_ESTACAJA      " +
+                " FROM SIC1PERS PERS " +
+                " JOIN SIC7PERSROL ROL ON ROL.ID_PERS = PERS.ID_PERS " +
+                "                         AND ROL.FEC_HASTA = PKG_SICCONSGENERAL.FNC_SICOBTFECINF " +
+                " LEFT JOIN SIC4CUADDIARIO T0 ON T0.ID_PERS = PERS.ID_PERS " +
+                " AND T0.NUM_PERI = :num_peri " +
+                " WHERE PERS.ID_PERS = :id_pers ";
+
+            Query  query = session.createSQLQuery(sql)
+                     .setParameter("num_peri", UtilClass.getCurrentTime_YYYYMMDD())
+                     .setParameter("id_pers", sic1usuario.getIdUsuario());
+            
+            List<Object[]> rows = query.list();
+            
+            for(Object[] row : rows){
+                
+                System.out.println("COD_TROLPERS: " + row[0].toString());
+                System.out.println("COD_ESTACAJA: " + (String)row[1]);
+                
+                sic1usuario.setCodTrolpers(row[0].toString());
+                sic1usuario.setCodEstacaja((String)row[1]);                
+            }
         }
         return sic1usuario;
     }

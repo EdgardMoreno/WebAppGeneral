@@ -197,6 +197,8 @@
                 padding: 10px;
                 left: 40%;
             }
+            
+            
 
 
         </style>
@@ -218,9 +220,12 @@
     <h:body>
 
         <div class="container">
+            
+            <p:growl id="message" showDetail="true" />
+            
             <div class="row">
                 <div class="col-md-12">
-                    <div class="pr-wrap">
+                    <div class="pr-wrap" >
                         <div class="pass-reset">
                             <label>
                                 Enter the email you signed up with</label>
@@ -245,7 +250,7 @@
                                             </label>
                                         </div>
                                     </div>
-                                    <div class="col-md-6 forgot-pass-content">
+                                    <div class="col-md-6 forgot-pass-content" style="display: none" >
                                         <a href="javascription:void(0)" class="forgot-pass">Olvidé contraseña</a>
                                     </div>
                                 </div>
@@ -254,6 +259,8 @@
                     </div>
                 </div>
             </div>
+            
+            <div class="logo" style="border: 1px solid black"></div>
             <div class="posted-by">DECO STYLOS: <a href="http://www.jquery2dotnet.com">www.decostylos.com</a></div>
         </div>
     </h:body>

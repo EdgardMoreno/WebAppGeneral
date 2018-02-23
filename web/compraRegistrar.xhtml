@@ -233,7 +233,7 @@
 
         <ui:define name="content">
 
-            <div class="container" style="border: 1px solid black"> 
+            <div class="container" > 
 
                 <div id="divResultadoValidacion"></div>
 
@@ -588,6 +588,7 @@
                 <!-- INGRESO COMPROBANTE DE PAGO -->
                 <!-- *********************************** -->
 
+                <!-- IMPORTANTE: TODO EL CSS UTILIZADO ES DEL ARCHIVO DE FANCY BOX -->
                 <div id="idDivFinal" class="jconfirm jconfirm-supervan jconfirm-open" style="display: none">
                     <div class="jconfirm-bg" style="transition-duration: 0.4s; transition-timing-function: cubic-bezier(0.36, 0.55, 0.19, 1);">
 
@@ -645,7 +646,7 @@
                                                                 listener="#{orderController.saveOrder()}"/>
 
                                                     </h:commandLink>
-                                                    &nbsp;                        
+                                                    &nbsp;
                                                     <h:commandLink value="Cancelar" 
                                                                    styleClass="btn btn-primary">
                                                     </h:commandLink>                                                

@@ -5,11 +5,9 @@
  */
 package com.general.a3.dao.impl;
 
-import com.general.hibernate.entity.Sic1idenpers;
+
 import com.general.hibernate.entity.Sic1usuario;
 import java.io.Serializable;
-import java.math.BigDecimal;
-import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.criterion.Restrictions;
 import org.slf4j.Logger;

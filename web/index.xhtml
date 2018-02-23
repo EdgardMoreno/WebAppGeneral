@@ -16,7 +16,7 @@
                 $(document).ready(function(){
 
                     var flgCajaAperturada = $("#form\\:idTxtCajaAperturada").val();
-                    console.log("flgCajaAperturada:" + flgCajaAperturada);
+                    console.log("Load Page: flgCajaAperturada:" + flgCajaAperturada);
                     if (Number(flgCajaAperturada) == 0)
                         $("#idDivFinal").css("display", "inline-block");
                 });
@@ -25,7 +25,7 @@
                 function fnValidateForm(){
 
                     var mtoApertura = document.getElementById("form:idMtoApertura").value;
-                    console.log("mtoApertura" + mtoApertura);                    
+                    console.log("mtoApertura: " + mtoApertura);                    
 
                     var FlgError = false;
                     var arrMessages = [];
@@ -53,6 +53,8 @@
                         return false;
 
                     } else {
+                        console.log("sin errores"); 
+                        
                         divResu.html("");
                         divResu.css("display", "none");
                         return true;
@@ -60,14 +62,16 @@
                 };
                 
                 function fnAjaxListenAperturaCaja(data) {
-
-                    switch (data.status) {        
+                    
+                    console.log("status: " + data.status);
+                    
+                    switch (data.status) {
                         case "success":
-                             var flgCajaAperturada = $("#form\\:idTxtCajaAperturada").val();
-                            console.log("flgCajaAperturada:" + flgCajaAperturada);                            
-                            if (Number(flgCajaAperturada) == 1) {
+                            var flgCajaAperturada = $("#form\\:idTxtCajaAperturada").val();
+                            console.log("flgCajaAperturada:" + flgCajaAperturada);
+                            if (Number(flgCajaAperturada) == 1){
                                 $("#idDivFinal").css("display", "none");
-                            }                           
+                            }
                             break;
                     }
                 };
@@ -78,9 +82,10 @@
 
         <ui:define name="content">
 
-            <div class="container" style="border: 1px solid black">
+            <div class="container">
 
-
+                <p:growl id="message" showDetail="true" />
+                
                 <!-- ********************************** -->
                 <!-- DATOS OCULTOS -->
                 <!-- *********************************** -->
@@ -92,9 +97,11 @@
                 </table>
                 
                 <!-- ********************************** -->
-                <!-- PANTALLA INGRESO MONTO APERTURA -->
+                <!-- PANTALLA INGRESO MONTO APERTURA:   -->
                 <!-- *********************************** -->
-
+                
+                <!-- IMPORTANTE: TODO EL CSS UTILIZADO ES DEL ARCHIVO DE FANCY BOX -->
+                
                 <div id="idDivFinal" class="jconfirm jconfirm-supervan jconfirm-open" style="display: none">
                     <div class="jconfirm-bg" style="transition-duration: 0.4s; transition-timing-function: cubic-bezier(0.36, 0.55, 0.19, 1);">
 
@@ -110,14 +117,17 @@
                                                 <div class="jconfirm-content" style="background-color: white; border: 8px solid #C0C0C0; padding: 10px; border-radius: 15px"  >
 
                                                     <div id="idDivValidation" class="messageValidation" ></div>
-
-                                                    <br/>
+                                                    
                                                     <div style="text-align: center">
                                                         <table style="margin: 0 auto;">
-
+                                                            
+                                                            <tr>
+                                                                <th colspan="3" style="text-align: center;">
+                                                                    <H3>Aperturar Caja</H3></th>
+                                                            </tr>
                                                             <tr>
                                                                 <td class="compra_panelGrid_1"><h:outputLabel value="Monto Apertura:"/></td>
-                                                                <td class="compra_panelGrid_2">
+                                                                <td>&nbsp;
                                                                     <h:inputText id="idMtoApertura"
                                                                                  autocomplete="off"
                                                                                  class="form-control" 
@@ -125,13 +135,16 @@
                                                                                  onkeypress="return fnAllowOnlyDecimalNumbers(event)"
                                                                                  onblur="formatDecimal_2(this)" />
                                                                 </td>
+                                                                <td>&nbsp;
+                                                                    <h:commandLink value="Aceptar" styleClass="btn btn-primary"
+                                                                       onclick="return fnValidateForm()">
+                                                                        <f:ajax execute="idMtoApertura" render="idTxtCajaAperturada message" listener="#{indexController.openCashRegister()}" onevent="fnAjaxListenAperturaCaja"/>
+                                                                    </h:commandLink>
+                                                                </td>
                                                             </tr>                                                        
                                                         </table>
                                                         <br/>
-                                                        <h:commandLink value="Aceptar" styleClass="btn btn-primary"
-                                                                       onclick="return fnValidateForm()">
-                                                            <f:ajax execute="idMtoApertura" render="idTxtCajaAperturada" listener="#{indexController.openCashRegister()}" onevent="fnAjaxListenAperturaCaja"/>
-                                                        </h:commandLink>                                                        
+                                                       
                                                     </div>
 
                                                 </div>

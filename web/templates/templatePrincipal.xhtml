@@ -38,10 +38,26 @@
 
         <title>Facelets Template</title>
 
+        <style>
+            
+            #idDivDisplayUser{
+                
+                position:relative;
+                margin: 3px;
+                width: auto;
+                float:right;
+                top: 0px;
+                text-align: left;
+                font-weight: bolder;
+            }
+            
+        </style>        
+        
+        
         <div id="header">
             <ui:insert name="header"></ui:insert>
         </div>
-
+        
     </h:head>
 
     <h:body>
@@ -59,8 +75,7 @@
                         <li class="active"><a href="#{request.contextPath}/faces/index.xhtml">Inicio</a></li>
                         
                         <li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="#">Cuadre Caja<span class="caret"></span></a>
-                            <ul class="dropdown-menu">
-                                <li><a href="#{request.contextPath}/faces/cajaAperturar.xhtml?">Aperturar Caja</a></li>                                
+                            <ul class="dropdown-menu">                                
                                 <li>
                                     <h:commandLink value="Cuadrar Caja" action="#{masterPageController.redirect()}">
                                         <f:param name="paramTituloPagina" value="Cuadre Caja" />
@@ -153,12 +168,19 @@
                             </ul>
                         </li>
                     </ul>
-                    <ul class="nav navbar-nav navbar-right">
-                        <li><a href="#"><span class="glyphicon glyphicon-user"></span> Salir</a></li>
-                        <li><a href="#"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
+                    <ul class="nav navbar-nav navbar-right">                        
+                        
+                        <li>
+                            <h:commandLink action="#{masterPageController.logout()}" >
+                                <span class="glyphicon glyphicon-user"></span> Salir
+                            </h:commandLink>
+                        </li>
+                        <!--<li><a href="#"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>-->
                     </ul>
                 </div>
             </nav>
+            
+            <div id="idDivDisplayUser">Bienvenido: #{masterPageController.desLoginUser}</div>
 
             <div id="content">
                 <ui:insert name="content"></ui:insert>

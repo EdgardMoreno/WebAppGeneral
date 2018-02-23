@@ -9,6 +9,7 @@ import com.general.a2.service.impl.CashRegisterServiceImpl;
 import com.general.hibernate.entity.Sic1usuario;
 import com.general.hibernate1.Sic4cuaddiario;
 import com.general.hibernate1.Sic4cuaddiarioId;
+import com.general.security.SessionUtils;
 import com.general.util.beans.Constantes;
 import com.general.util.beans.UtilClass;
 import com.general.util.exceptions.CustomizerException;
@@ -82,10 +83,13 @@ public class CashRegisterController {
             /******************************************/
             CashRegisterServiceImpl service = new CashRegisterServiceImpl();
             Sic4cuaddiarioId id = new Sic4cuaddiarioId();
-            id.setIdPers(new BigDecimal(3)); //Ira el ID_PERS DEL USUARIO LOGUEADO
+            id.setIdPers(SessionUtils.getUserId()); //Ira el ID_PERS DEL USUARIO LOGUEADO
             id.setNumPeri(new BigDecimal(UtilClass.getCurrentTime_YYYYMMDD()));
             
             box = service.getById(id);
+            
+            if (box == null)
+                box = new Sic4cuaddiario();
             
             int val = 2;           
             
@@ -98,14 +102,14 @@ public class CashRegisterController {
             box.setNumEfectDenom0002(new BigDecimal(val));
             box.setNumEfectDenom0001(new BigDecimal(val));
             box.setNumEfectDenom0_50(new BigDecimal(val));
-            box.setNumEfectDenom0_20(new BigDecimal(val));
-            box.setNumEfectDenom0_10(new BigDecimal(val));
-            box.setNumEfectDenom0_05(new BigDecimal(val));
+            box.setNumEfectDenom0_20(new BigDecimal(val));/*0.20*/
+            box.setNumEfectDenom0_10(new BigDecimal(val));/*0.10*/
+            box.setNumEfectDenom0_05(new BigDecimal(val));/*0.05*/
             
             box.setNumEfectDenomTotal(new BigDecimal(valIni));
             
             box.setNumEfectGastoTotal(new BigDecimal(30).setScale(2));
-            box.setNumEfectApertCaja(new BigDecimal(200).setScale(2));            
+            //box.setNumEfectApertCaja(new BigDecimal(200).setScale(2));            
             box.setNumEfectTotal(new BigDecimal(valIni).setScale(2));
 
             box.setNumEfectTotalVentaSiste(new BigDecimal(500).setScale(2));
@@ -370,11 +374,14 @@ public class CashRegisterController {
             CashRegisterServiceImpl service = new CashRegisterServiceImpl();
             
             Sic4cuaddiarioId id = new Sic4cuaddiarioId();
-            id.setIdPers(new BigDecimal(3)); //Ira el ID_PERS DEL USUARIO LOGUEADO
+            id.setIdPers(SessionUtils.getUserId()); //Ira el ID_PERS DEL USUARIO LOGUEADO
             id.setNumPeri(new BigDecimal(UtilClass.getCurrentTime_YYYYMMDD()));
             
             box.setId(id);
             service.close(box);
+            
+            /*Actualizando el nuevo estado de la caja en la Session*/
+            SessionUtils.setCodEstaCaja(Constantes.CONS_COD_ESTACERRADO);
             
             UtilClass.addInfoMessage(Constantes.CONS_SUCCESS_MESSAGE);
         }catch(Exception ex ){

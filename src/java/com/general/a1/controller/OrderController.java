@@ -20,6 +20,7 @@ import com.general.hibernate.entity.Sic1idenpers;
 import com.general.hibernate.entity.Sic1idenpersId;
 import com.general.hibernate.relaentity.Sic3docuprod;
 import com.general.hibernate.relaentity.Sic3docuprodId;
+import com.general.security.SessionUtils;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -35,7 +36,6 @@ import com.general.util.beans.Constantes;
 import com.general.util.beans.UtilClass;
 import com.general.util.exceptions.CustomizerException;
 import com.general.util.exceptions.ValidationException;
-import java.math.BigInteger;
 import java.text.ParseException;
 import javax.faces.context.FacesContext;
 import javax.faces.context.Flash;
@@ -118,20 +118,6 @@ public class OrderController implements Serializable{
             
             /*Data*/
             lstSic3docuprod  = new ArrayList();
-            
-            //eliminar
-//            Sic1prod sic1prod = new Sic1prod();
-//            sic1prod.setCodProd("asdasd");
-//            sic1prod.setDesProd("fsfsdf");
-//            sic1prod.setNumPrecio(new BigDecimal(30.21).setScale(2, BigDecimal.ROUND_HALF_UP));
-//            
-//            Sic3proddocu sic3proddocu = new Sic3proddocu();
-//            sic3proddocu.setSic1prod(sic1prod);
-//            sic3proddocu.setNumValor(sic1prod.getNumPrecio());
-//            sic3proddocu.setNumCantidad(new BigDecimal(20));
-//            
-//            this.lstSic3proddocu.add(sic3proddocu);
-            //
             
             this.loadCatalogs();
         
@@ -268,10 +254,6 @@ public class OrderController implements Serializable{
     public void setCodTRolpers(String codTRolpers) {
         this.codTRolpers = codTRolpers;
     }
-
-   
-    
-    
     
     /******************************************************************************/
     /****** METODOS ***************************************************************/
@@ -586,9 +568,7 @@ public class OrderController implements Serializable{
                 if (numItems == 0  ){
                     strMessage = "Falta ingresar productos a la orden.";                    
                     throw new ValidationException(strMessage);
-                }   
-
-               
+                }
 
                 /**************** Guardar Documento ************************/
                 //Codiden
@@ -598,7 +578,7 @@ public class OrderController implements Serializable{
                 //this.sic1docu.setSic1idendocu(sic1idendocu);
 
                 this.sic1docu.setDesDocu("Compra Nro. " + strCodigo);
-                this.sic1docu.setIdPers(new BigDecimal(BigInteger.ONE)); //Codigo del Vendedor cuando inicia Sesion
+                this.sic1docu.setIdPers(SessionUtils.getUserId()); //Login
                 this.sic1docu.setIdPersexterno(idPers);
                 this.sic1docu.setFecDesde(UtilClass.convertStringToDate(this.desFecRegistro));
 
@@ -628,10 +608,8 @@ public class OrderController implements Serializable{
                 this.sic3docuprod = new Sic3docuprod();
                 this.sic1prod = new Sic1prod();                    
                 this.desFecRegistro = UtilClass.getCurrentDay();
-
                 
-                this.loadCatalogs();
-                
+                this.loadCatalogs();                
             }
 
         } catch (ValidationException ex){
@@ -714,8 +692,7 @@ public class OrderController implements Serializable{
                 
                 /*Cargar el catalogo de Tipo de Tarjeta*/
                 this.payModeValueChange();
-            }
-                        
+            }        
         }
-    }    
+    }
 }

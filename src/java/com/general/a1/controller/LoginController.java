@@ -8,6 +8,7 @@ package com.general.a1.controller;
 import com.general.security.SessionUtils;
 import com.general.a2.service.impl.LoginServiceImpl;
 import com.general.hibernate.entity.Sic1usuario;
+import com.general.util.beans.UtilClass;
 import com.general.util.exceptions.CustomizerException;
 import java.io.Serializable;
 import javax.annotation.PostConstruct;
@@ -69,6 +70,7 @@ public class LoginController implements Serializable{
     /*METODOS*/
     public String validateUsernamePassword() throws CustomizerException{
         
+        System.out.println("Login:" + SessionUtils.getSession());
         System.out.println("Validate Usuario:");
         System.out.println("Usuario: " + this.userName);
         System.out.println("PWD: " + this.passWord);
@@ -76,10 +78,14 @@ public class LoginController implements Serializable{
         LoginServiceImpl loginServiceImpl = new LoginServiceImpl();
         this.user = loginServiceImpl.validateUsernamePassword(this.userName, this.passWord);
         
-        HttpSession session = SessionUtils.getSession();
-	session.setAttribute("user", user);
-	
-        return "index";
+        if (user != null) {       
+            HttpSession session = SessionUtils.getSession();
+            session.setAttribute("user", user);
+            return "index";
+        }else{
+            UtilClass.addErrorMessage("Usuario o contraseña incorrecta.");
+            return "";
+        }
     }
     
 }
