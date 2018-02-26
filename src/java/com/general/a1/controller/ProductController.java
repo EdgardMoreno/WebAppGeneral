@@ -187,8 +187,14 @@ public class ProductController implements Serializable{
         
     }
     
+    public void clearSearch(){
+        viSicprod = new ViSicprod();
+        listProducts = new ArrayList<>();
+    }
+    
     public void clearForm(){
         this.sic1prod = new Sic1prod();
+        this.flgEditProd = false;
     }
     
     public void saveProduct() throws CustomizerException{

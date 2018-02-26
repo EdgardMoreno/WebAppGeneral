@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project-private xmlns="http://www.netbeans.org/ns/project-private/1">
-    <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="29">
+    <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="31">
         <file>
             <url>web/personaMantenimiento.xhtml</url>
             <bookmark id="13">
@@ -31,7 +31,7 @@
             </bookmark>
             <bookmark id="28">
                 <name/>
-                <line>217</line>
+                <line>218</line>
                 <key/>
             </bookmark>
         </file>
@@ -52,12 +52,12 @@
             </bookmark>
             <bookmark id="6">
                 <name/>
-                <line>170</line>
+                <line>177</line>
                 <key/>
             </bookmark>
             <bookmark id="29">
                 <name/>
-                <line>280</line>
+                <line>287</line>
                 <key/>
             </bookmark>
         </file>
@@ -65,12 +65,17 @@
             <url>src/java/com/general/a1/controller/OrderController.java</url>
             <bookmark id="22">
                 <name/>
-                <line>435</line>
+                <line>473</line>
+                <key/>
+            </bookmark>
+            <bookmark id="31">
+                <name/>
+                <line>614</line>
                 <key/>
             </bookmark>
             <bookmark id="18">
                 <name/>
-                <line>565</line>
+                <line>673</line>
                 <key/>
             </bookmark>
         </file>
@@ -78,7 +83,7 @@
             <url>src/java/com/general/a1/controller/PersonController.java</url>
             <bookmark id="11">
                 <name/>
-                <line>324</line>
+                <line>329</line>
                 <key/>
             </bookmark>
         </file>
@@ -91,42 +96,47 @@
             </bookmark>
             <bookmark id="23">
                 <name/>
-                <line>213</line>
+                <line>184</line>
                 <key/>
             </bookmark>
             <bookmark id="26">
                 <name/>
-                <line>224</line>
+                <line>195</line>
                 <key/>
             </bookmark>
             <bookmark id="15">
                 <name/>
-                <line>246</line>
+                <line>217</line>
                 <key/>
             </bookmark>
             <bookmark id="25">
                 <name/>
-                <line>262</line>
+                <line>233</line>
                 <key/>
             </bookmark>
             <bookmark id="24">
                 <name/>
-                <line>486</line>
+                <line>462</line>
+                <key/>
+            </bookmark>
+            <bookmark id="30">
+                <name/>
+                <line>529</line>
                 <key/>
             </bookmark>
             <bookmark id="20">
                 <name/>
-                <line>629</line>
+                <line>628</line>
                 <key/>
             </bookmark>
             <bookmark id="19">
                 <name/>
-                <line>704</line>
+                <line>703</line>
                 <key/>
             </bookmark>
             <bookmark id="17">
                 <name/>
-                <line>704</line>
+                <line>703</line>
                 <key/>
             </bookmark>
         </file>

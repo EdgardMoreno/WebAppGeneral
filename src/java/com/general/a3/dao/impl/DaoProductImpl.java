@@ -96,11 +96,11 @@ public class DaoProductImpl implements Serializable{
                         StoredProcedure sp = new StoredProcedure("PKG_SICMANTPROD.PRC_SICCREAPROD");                
 
                         sp.addParameter(new InParameter("X_ID_TIPOIDEN",    Types.INTEGER, intIdTipoIden));
-                        sp.addParameter(new InParameter("X_COD_IDEN",       Types.VARCHAR, sic1prod.getCodProd().toUpperCase()));
-                        sp.addParameter(new InParameter("X_DES_PROD",       Types.VARCHAR, sic1prod.getDesProd().toUpperCase()));
+                        sp.addParameter(new InParameter("X_COD_IDEN",       Types.VARCHAR, sic1prod.getCodProd().trim().toUpperCase()));
+                        sp.addParameter(new InParameter("X_DES_PROD",       Types.VARCHAR, sic1prod.getDesProd().trim().toUpperCase()));
                         //Persona Juridica
                         sp.addParameter(new InParameter("X_ID_STIPOPROD",   Types.INTEGER, sic1prod.getIdStipoprod()));
-                        sp.addParameter(new InParameter("X_DES_PRODCOME",   Types.VARCHAR, sic1prod.getDesProdcome() != null?sic1prod.getDesProdcome().toUpperCase():null));
+                        sp.addParameter(new InParameter("X_DES_PRODCOME",   Types.VARCHAR, sic1prod.getDesProdcome() != null?sic1prod.getDesProdcome().trim().toUpperCase():null));
                         sp.addParameter(new InParameter("X_FEC_DESDE",      Types.VARCHAR, strFecDesde));
                         sp.addParameter(new InParameter("X_FEC_HASTA",      Types.VARCHAR, strFecHasta));
                         sp.addParameter(new InParameter("X_NUM_VALOR",      Types.NUMERIC, sic1prod.getNumPrecio()));

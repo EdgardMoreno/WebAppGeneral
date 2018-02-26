@@ -6,6 +6,7 @@
 package com.general.util.dao;
 
 import conexionbd.StoredProcedure;
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.sql.CallableStatement;
 import java.sql.Connection;
@@ -20,7 +21,7 @@ import org.hibernate.internal.SessionImpl;
  *
  * @author emoreno
  */
-public class DaoFuncionesUtil {
+public class DaoFuncionesUtil implements Serializable{
     
     public static BigDecimal FNC_SICOBTIDGEN(Connection conexion, String X_COD_VALORTIPOGENERAL, String X_COD_VALORGENERAL) throws Exception {
         

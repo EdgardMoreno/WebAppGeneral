@@ -242,7 +242,7 @@ function fnChangeTab(option) {
 }
 
 
-function fnValidateForm() {
+function fnValidateProductForm() {
     
     console.log("Product -> fnValidateForm" );
     //obteniendo el valor que se puso en campo text del formulario                    
@@ -274,10 +274,10 @@ function fnValidateForm() {
         FlgError = true;
     }
 
-    if (PrecioVenta.length == 0) {
+    /*if (PrecioVenta.length == 0) {
         arrMessages.push("Se debe ingresar el Precio de Venta.");
         FlgError = true;
-    }
+    }*/
 
     //IMPRIMIR RESULTADO
     if (FlgError == true) {
@@ -285,7 +285,7 @@ function fnValidateForm() {
         return false;
     } else {
         fnHideMessageValidation();
-        fnShowDialogConfirm("form\\:btnGrabar", ""); // -> Se pasa como parametro el ID del boton que tiene el metodo actionListener
+        //fnShowDialogConfirm("form\\:btnGrabar", ""); // -> Se pasa como parametro el ID del boton que tiene el metodo actionListener
         return true;
     }
 }
@@ -328,6 +328,8 @@ function fnShowPopupCreateProduct(){
     var nombreProducto = document.getElementById("form:descProducto").value;
     
     console.log("codProd: "+ codProd.trim().length);
+    console.log("nombreProducto: "+ nombreProducto);
+    console.log("nombreProducto: "+ nombreProducto.trim().length);
     
     if (codProd.trim().length < 3){
         fnShowErrorMessage("C&oacutedigo del Producto debe contener al menos 3 caracteres.");
@@ -335,7 +337,8 @@ function fnShowPopupCreateProduct(){
     else if (nombreProducto.trim().length > 0){
         fnShowErrorMessage("Producto ingresado ya existe.");
     }
-    else if (nombreProducto.trim().length == 0){                    
+    else if (nombreProducto.trim().length == 0){
+        console.log("Mostrar Popup Persona");
         $("#linkDialog").attr("href", "faces/popups/popupProductoRegistrar.xhtml?paramCodProd=" + codProd + "&paramExternalPage=1");
         $("#linkDialog").click(); //Origina que llame a la función de FancyBOX y que muestre la URL especificada.                        
     }
@@ -366,6 +369,11 @@ function fnValiteVoucherHeader() {
 
     if (codSerie.trim().length == 0) {
         arrMessages.push("Debe ingresar el Nro. de Serie.");
+        FlgError = true;
+    }
+
+    if (codSerie.trim().length > 4) {
+        arrMessages.push("Nro. de Serie no puede ser mayor a 4 digitos.");
         FlgError = true;
     }
 
@@ -412,6 +420,7 @@ function fnAjaxListenPersonSearch(data) {
             if (value.length == 0) {
                 var codTRolpers = document.getElementById("idCodTRolpers").value;
                 var numDocuIden = document.getElementById("form:numDocuIden").value;
+                console.log("codTRolpers: " + codTRolpers);
                 //Se sobreescribe la propiedad HREF
                 $("#linkDialog").attr("href", "faces/popups/popupPersonaRegistrar.xhtml?paramExternalPage=1&paramCodIden=" + numDocuIden + "&paramCodTRolpers=" + codTRolpers + "&paramNuevoRegistro=false");
                 $("#linkDialog").click(); //Origina que llame a la función de FancyBOX y que muestre la URL especificada.
@@ -429,6 +438,40 @@ function fnCloseIFrame_fromRegisterProduct() {
     $("#form\\:btnSearchProduct").click();
 };
 
+
+/*Funcion que valida los campos antes de agregar un producto*/
+function fnValiteAddProduct() {
+    //obteniendo el valor que se puso en campo text del formulario
+    var CodigoProducto = document.getElementById("form:codigoProducto").value;
+    var CostoUnitario = document.getElementById("form:costoUnitario").value;
+    var Cantidad = document.getElementById("form:cantidad").value;
+    var FlgError = false;
+    var arrMessages = [];
+
+    if (CodigoProducto.length == 0) {
+        arrMessages.push("Debe ingresar el Código del Producto");
+        FlgError = true;
+    }
+
+    if (CostoUnitario.length == 0) {
+        arrMessages.push("Debe ingresar el Precio del Producto.");
+        FlgError = true;
+
+    }else if (Number(Cantidad) <= 0) {
+        arrMessages.push("Debe ingresar una cantidad mayor a 0.");
+        FlgError = true;
+    }
+
+    //IMPRIMIR RESULTADO
+    if (FlgError == true) {
+        fnShowMessageValidation(arrMessages);
+        return false;
+    } else {
+        fnHideMessageValidation();
+        return true;
+    }
+}
+;
 
 
 
@@ -525,8 +568,64 @@ function fnAjaxListenCalcularCuadreCaja(data) {
             var tarjeta = document.getElementById("idSobraFaltaTarjeta");
             console.log("tarjeta: " + tarjeta.innerHTML);
             if (Number(tarjeta.innerHTML) < 0) {
-                    tarjeta.style.color = red;
+                    tarjeta.style.color = "red";
             }
+            
+            $("#btnConfirm").attr("disabled",false);
             break;
+    }
+};
+
+/*Funcion que permite deshabilitar el boton de CERRAR CAJA*/
+function fnHideSaveButton(){
+    //document.getElementById("btnConfirm").disabled = "false";
+    console.log("deshabilitar boton");
+    $("#btnConfirm").attr("disabled",true);
+}
+
+
+/************************************************************************************************************/
+/********************** PANTALLA: INDEX *********************************************************************/
+/************************************************************************************************************/
+/*Funcion que permite validar en ingreso del Mto de Apertura para la Caja Diaria*/
+function fnValidateIndexForm(){
+
+    var mtoApertura = document.getElementById("form:idMtoApertura").value;
+    console.log("mtoApertura: " + mtoApertura);                    
+
+    var FlgError = false;
+    var arrMessages = [];
+
+    if (mtoApertura.trim().length == 0) {
+        arrMessages.push("Debe ingresar un monto para la apertura.");
+        FlgError = true;
+    }else if (Number(mtoApertura) < 50){
+        arrMessages.push("El monto m&iacutenimo para aperturar caja es de S/100.00");
+        FlgError = true;
+    }
+
+    var divResu = $("#idDivValidation");
+
+    if (FlgError) {
+
+        var resultado = '<UL type = "square">';
+        for (var i in arrMessages) {
+            resultado += '<LI>' + arrMessages[i] + '</LI>';
+        }
+        resultado += '</UL>';
+
+        console.log("resultado:" + resultado);
+
+        divResu.html(resultado);
+        divResu.css("display", "inline-block");
+
+        return false;
+
+    } else {
+        console.log("sin errores"); 
+        
+        divResu.html("");
+        divResu.css("display", "none");
+        return true;
     }
 };

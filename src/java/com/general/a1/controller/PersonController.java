@@ -268,6 +268,11 @@ public class PersonController implements Serializable{
         return lstPersonas;
     }
     
+    public void clearSearch(){
+        viSicpers = new ViSicpers();
+        lstPersonas = new ArrayList();
+    }
+    
     public void newPerson(){
         
         Sic1idenpersId  sic1idenpersId = new Sic1idenpersId();
@@ -407,19 +412,29 @@ public class PersonController implements Serializable{
     public void getParamsExternalPage(ComponentSystemEvent event) throws CustomizerException{
         
         if(!FacesContext.getCurrentInstance().isPostback()){
+            /*Metodo 1: Se obtiene los parametros que son enviados por la url con fancyBox. Por ejemplo cuando
+            se quiere registrar una nueva persona desde la pantalla del Registro COMPRA/VENTA*/
+            System.out.println("paramPageFlgActivo: " + this.paramPageFlgActivo);
+            System.out.println("idPers: " + this.paramPageIdPers );
+            System.out.println("codTRolpers: " + this.codTRolpers );
             
-            System.out.println("paramPageFlgActivo: " + paramPageFlgActivo);
-            System.out.println("idPers: " + paramPageIdPers );
-            
+            /*Metodo 2:Se obtiene los parametros que son enviados utilizando FLASH LIFECYCLE, esto se utiliza en los menus desplegables 
+            de la  PAGINA MAESTRA*/
             Flash flash = FacesContext.getCurrentInstance().getExternalContext().getFlash();
             String tituloPagina     = (String)flash.get("paramTituloPagina"); 
-            String codTRolpers    = (String)flash.get("paramCodTRolpers");
+            String codTRolpersLocal = (String)flash.get("paramCodTRolpers");
+            String codIdenPers      = (String)flash.get("paramCodIden");
             
-            System.out.println("codTRolpers: " + codTRolpers);
+            System.out.println("codTRolpers: " + codTRolpersLocal);
+            System.out.println("codIdenPers: " + codIdenPers);
+            System.out.println("tituloPagina: " + tituloPagina);
             
-            if (codTRolpers != null){
-                this.viSicpers.setCodTrolpers(codTRolpers);
-                this.codTRolpers = codTRolpers;
+            /*Se consigue el rol */
+            codTRolpersLocal = this.codTRolpers==null?codTRolpersLocal:this.codTRolpers;
+            
+            if (codTRolpersLocal != null){
+                this.viSicpers.setCodTrolpers(codTRolpersLocal);
+                this.codTRolpers = codTRolpersLocal;
             }
             else
                 throw new CustomizerException("No se cargo el Tipo de Rol de la persona.");
@@ -434,13 +449,18 @@ public class PersonController implements Serializable{
                 sic1idenpers    = obj;
                 sic1pers        = obj.getSic1pers();
                 sic1idenpersId  = obj.getId();
-                sic1persindi    = obj.getSic1pers().getSic1persindi();
+                
+                /*Si es nulo, inicializamos el objeto para que no salga error al momento de grabar */
+                if (obj.getSic1pers().getSic1persindi() != null)  
+                    sic1persindi    = obj.getSic1pers().getSic1persindi();
+                else
+                    sic1persindi  = new Sic1persindi();
                 
                 if (obj.getSic1pers().getSic1persorga() != null)                
                     sic1persorga    = obj.getSic1pers().getSic1persorga();
                 else
                     sic1persorga = new Sic1persorga();
-                
+                /**/
                 //sic1lugar       = new Sic1lugar();
             }
         }

@@ -13,6 +13,7 @@
         <meta name="description" content=""/>
         <meta name="author" content=""/>
         <link rel="icon" href="#{request.contextPath}/faces/resources/img/favicon.ico"></link>
+        
 
         <!--CSS STYLE -->        
         <h:outputStylesheet name="/css/bootstrap.min.css"/>
@@ -59,8 +60,16 @@
         </div>
         
     </h:head>
+    
+    <script type="text/javascript">
+        window.history.forward();
+        function noBack()
+        {
+            window.history.forward();
+        }
+    </script>
 
-    <h:body>
+    <body onLoad="noBack();" onpageshow="if (event.persisted) noBack();" onUnload="">
 
         <h:form id="form">
             
@@ -69,7 +78,7 @@
             <nav class="navbar navbar-inverse">
                 <div class="container-fluid">
                     <div class="navbar-header">
-                        <a class="navbar-brand" href="#">WebSiteName</a>
+                        <a class="navbar-brand" href="#">DECO STYLOS</a>
                     </div>
                     <ul class="nav navbar-nav">
                         <li class="active"><a href="#{request.contextPath}/faces/index.xhtml">Inicio</a></li>
@@ -84,8 +93,8 @@
                                 </li>
                                 <li>
                                     <h:commandLink value="Reporte de Cuadre" action="#{masterPageController.redirect()}">
-                                        <f:param name="paramTituloPagina" value="Reporte de Cuadre" />
-                                        <f:param name="paramNombrePagina" value="cajaCuadre" />                                    
+                                        <f:param name="paramTituloPagina" value="Reporte de Caja Diaria" />
+                                        <f:param name="paramNombrePagina" value="cajaCuadreListar" />                                    
                                     </h:commandLink>
                                 </li>
                                 
@@ -95,7 +104,7 @@
                         <li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="#">Productos<span class="caret"></span></a>
                             <ul class="dropdown-menu">
                                 <li><a href="#{request.contextPath}/faces/productoMantenimiento.xhtml?flgExternalPage=true">Consultar / Registrar</a></li>
-                                <li><a href="#{request.contextPath}/faces/actualizarPrecios.xhtml">Actualizar Precios</a></li>
+                                <!--<li><a href="#{request.contextPath}/faces/actualizarPrecios.xhtml">Actualizar Precios</a></li>-->
                             </ul>
                         </li>
 
@@ -192,5 +201,5 @@
 
         </h:form>
 
-    </h:body>
+    </body>
 </html>

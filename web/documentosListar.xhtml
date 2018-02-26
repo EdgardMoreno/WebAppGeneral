@@ -46,7 +46,7 @@
                                  columnClasses="td-label-1, td-content-1, td-label-1, td-content-1, td-label-1, td-content-1">
 
                         <h:outputLabel value="Tipo Documento:"/>
-                        <h:selectOneMenu id="somTipoDocu" value="#{documentController.viSicdocu.idStipodocu}" style="width:100%" >
+                        <h:selectOneMenu id="somTipoDocu" value="#{documentController.viSicdocu.idStipodocu}" style="width:100%" styleClass="form-control">
                             <f:selectItem itemLabel="-- Todos --" itemValue="-1" />
                             <f:selectItems value="#{documentController.itemSTipoDocu}" />
                         </h:selectOneMenu>
@@ -57,12 +57,20 @@
                         
                         
                         <h:outputLabel value="Estado:"/>
-                        <h:selectOneMenu value="#{documentController.viSicdocu.idStipodocu}" style="width:100%" >
+                        <h:selectOneMenu value="#{documentController.viSicdocu.idStipodocu}" style="width:100%" styleClass="form-control">
                             <f:selectItem itemLabel="-- Todos --" itemValue="-1" />
                             <f:selectItems value="#{documentController.itemsEstaRol}" var="c" itemValue="#{c.idEsta}" itemLabel="#{c.desEsta}" />
                         </h:selectOneMenu>                        
                         <h:outputLabel value="Num. Docu:"/>
-                        <h:inputText styleClass="form-control" value="#{documentController.viSicdocu.numDocu}"  />
+                        <h:panelGroup>
+                            <div class="input-group mb-2 mb-sm-0">
+                                <div id="idCantDigitosDocIden" class="input-group-addon">0</div>
+                                <h:inputText id="numDocuIden" autocomplete="off"                                                 
+                                             onkeypress="return fnAllowOnlyNumbers(event)"
+                                             onkeyup="fnCountLength(this.value,'idCantDigitosDocIden')"
+                                             value="#{documentController.viSicdocu.numDocu}" styleClass="form-control"/>
+                            </div>
+                        </h:panelGroup>                        
                         <h:outputLabel value=""/>
                         <h:outputLabel value=""/>                        
                         
@@ -81,8 +89,8 @@
                         <h:commandLink actionListener="#{documentController.filterDocuments()}" styleClass="btn btn-default">
                             <span class="glyphicon glyphicon-search"></span> Buscar
                         </h:commandLink>
-                        <p:commandLink actionListener="#{documentController.newDocument()}" styleClass="btn btn-default" update="form">
-                            <span class="glyphicon glyphicon-new-window"></span> Nuevo
+                        <p:commandLink actionListener="#{documentController.clearSearch()}" styleClass="btn btn-default" update="form">
+                            <span class="glyphicon glyphicon-erase"></span> Limpiar
                         </p:commandLink>
 
                     </h:panelGrid>
@@ -105,7 +113,7 @@
                                  value="#{documentController.lstViSicdocus}"                                  
                                  styleClass="table-bordered"
                                  columnClasses="table_style_id,
-                                                table_style_code,                                                
+                                                table_style_code,
                                                 table_style_date,
                                                 table_style_description_medium,
                                                 table_style_code_small,
@@ -113,6 +121,8 @@
                                                 table_style_price_small,
                                                 table_style_price_small_discount,
                                                 table_style_price_small,
+                                                table_style_code_small,
+                                                table_style_code_small,
                                                 table_style_action">                        
 
                         <h:column>
@@ -150,6 +160,14 @@
                         <h:column>
                             <f:facet name="header">Total</f:facet>#{item.numMtototal}
                         </h:column>
+                        
+                        <h:column>
+                            <f:facet name="header">Modo Pago</f:facet>#{item.desModoPago}
+                        </h:column>
+                        
+                        <h:column>
+                            <f:facet name="header">Responsable</f:facet>#{item.desPersCreador}
+                        </h:column>
 
                         <h:column>
                             
@@ -158,7 +176,7 @@
                             </h:commandLink>
                             &nbsp;                           
                             <h:commandLink action="#{documentController.editAction(item)}">
-                                <span class="glyphicon glyphicon-pencil"></span>
+                                <span class="glyphicon glyphicon-info-sign"></span>
                             </h:commandLink>                           
                         </h:column>
                     </h:dataTable>

@@ -2,7 +2,7 @@ package com.general.hibernate.temp;
 // Generated 20/02/2018 11:01:48 AM by Hibernate Tools 4.3.1
 
 
-import com.general.hibernate.temp.Sic4cuaddiarioId;
+
 import java.math.BigDecimal;
 import java.util.Date;
 
@@ -43,6 +43,7 @@ public class Sic4cuaddiario  implements java.io.Serializable {
      private BigDecimal numTarjeGastoTotal;
      private BigDecimal numTarjeGastoTotalSiste;
      private BigDecimal numGastoSobraFalta;
+     private BigDecimal numTotalVenta;
      private BigDecimal idEsta;
 
     public Sic4cuaddiario() {
@@ -317,10 +318,13 @@ public class Sic4cuaddiario  implements java.io.Serializable {
         this.idEsta = idEsta;
     }
 
-   
+    public BigDecimal getNumTotalVenta() {
+        return numTotalVenta;
+    }
 
-
-
+    public void setNumTotalVenta(BigDecimal numTotalVenta) {
+        this.numTotalVenta = numTotalVenta;
+    }
 
 }
 

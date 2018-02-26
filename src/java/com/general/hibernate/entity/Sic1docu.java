@@ -37,6 +37,8 @@ public class Sic1docu  implements java.io.Serializable {
      private BigDecimal idSclaseeven;
      private BigDecimal idPersexterno; //identificador del Proveedor o Cliente
      
+     private Integer flgPrecsinIGV;
+     
      /*Agregado*/
      private Sic1idendocu sic1idendocu;
      private Sic3docuesta sic3docuesta;
@@ -235,11 +237,7 @@ public class Sic1docu  implements java.io.Serializable {
 
     public void setIdPersexterno(BigDecimal idPersexterno) {
         this.idPersexterno = idPersexterno;
-    }
-
-   
-    
-    
+    }    
 
     public List<Sic3docuprod> getLstSic3docuprod() {
         return lstSic3docuprod;
@@ -288,14 +286,25 @@ public class Sic1docu  implements java.io.Serializable {
     public void setCodEstadocu(String codEstadocu) {
         this.codEstadocu = codEstadocu;
     }
+
+    public Integer getFlgPrecsinIGV() {
+        return flgPrecsinIGV;
+    }
+
+    public void setFlgPrecsinIGV(Integer flgPrecsinIGV) {
+        this.flgPrecsinIGV = flgPrecsinIGV;
+    }
+    
+    
     
     public String toString(){
-       return "idDocu: " + this.idDocu + 
+       return " idDocu: " + this.idDocu + 
               " desDocu: " + this.desDocu +
               " codSerie: " + this.codSerie +
               " numDocu: " + this.numDocu +
               " idPers: " + this.idPers +
-              " idStipodocu: " + this.idStipodocu;               
+              " idPrecsinIGV: " + this.flgPrecsinIGV +
+              " idStipodocu: " + this.idStipodocu;
     }
 }
 

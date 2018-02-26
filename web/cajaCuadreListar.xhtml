@@ -2,13 +2,13 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="http://xmlns.jcp.org/jsf/html"
-      xmlns:f="http://xmlns.jcp.org/jsf/core"
-      xmlns:a="http://xmlns.jcp.org/jsf/passthrough"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"      
       xmlns:p="http://primefaces.org/ui"
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets"  >
     
     <f:metadata>        
         <f:viewParam name="titulo" value="#{cashRegisterController.desTituloPagina}"/>        
+        <f:event type="preRenderView" listener="#{cashRegisterController.getParamsExternalPage}"/>
     </f:metadata>
     
     <ui:composition template="./templates/templatePrincipal.xhtml">
@@ -34,7 +34,7 @@
         </ui:define>
         
         <ui:define name="content">
-            <div class="container" id="resultadoValidacion"></div>
+            
                 
                 <div class="container">
                     
@@ -42,48 +42,23 @@
                         <h3>${cashRegisterController.desTituloPagina}</h3>
                     </div>
 
-                    <h:panelGrid columns="6" style="width:85%"
-                                 columnClasses="td-label-1, td-content-1, td-label-1, td-content-1, td-label-1, td-content-1">
+                    <h:panelGrid columns="5"
+                                 width="600px"                                 
+                                 columnClasses="form_label_4, 
+                                                form_input_2, 
+                                                form_label_4, 
+                                                form_input_2,
+                                                td-controls-1">
 
-                        <h:outputLabel value="Tipo Documento:"/>
-                        <h:selectOneMenu id="somTipoDocu" value="#{documentController.viSicdocu.idStipodocu}" style="width:100%" >
-                            <f:selectItem itemLabel="-- Todos --" itemValue="-1" />
-                            <f:selectItems value="#{documentController.itemSTipoDocu}" />
-                        </h:selectOneMenu>
-                        <h:outputLabel value="Cod. Serie:"/>
-                        <h:inputText styleClass="form-control" value="#{documentController.viSicdocu.codSerie}"  />
-                        <h:outputLabel value="Creador:"/>
-                        <h:inputText styleClass="form-control" value="#{documentController.viSicdocu.desPersCreador}"  style="width:150%"/>
                         
-                        
-                        <h:outputLabel value="Estado:"/>
-                        <h:selectOneMenu value="#{documentController.viSicdocu.idStipodocu}" style="width:100%" >
-                            <f:selectItem itemLabel="-- Todos --" itemValue="-1" />
-                            <f:selectItems value="#{documentController.itemsEstaRol}" var="c" itemValue="#{c.idEsta}" itemLabel="#{c.desEsta}" />
-                        </h:selectOneMenu>                        
-                        <h:outputLabel value="Num. Docu:"/>
-                        <h:inputText styleClass="form-control" value="#{documentController.viSicdocu.numDocu}"  />
-                        <h:outputLabel value=""/>
-                        <h:outputLabel value=""/>                        
-                        
-                        <h:outputLabel value="Docu. Identidad Cliente/Proveedor:"/>
-                        <h:inputText styleClass="form-control" value="#{documentController.viSicdocu.codIdenClieprov}" />
-                        <h:outputLabel value="Cliente/Proveedor:"/>
-                        <h:inputText styleClass="form-control" value="#{documentController.viSicdocu.desPersClieprov}" />
-                        <h:outputLabel value=""/>
-                        <h:outputLabel value=""/>
-
                         <h:outputLabel value="Fecha Desde:"/>
-                        <h:inputText value="#{documentController.desFecDesde}" styleClass="form-control datepicker" />
+                        <h:inputText value="#{cashRegisterController.desFecDesde}" styleClass="form-control datepicker" />
                         <h:outputLabel value="Fecha Hasta:"/>
-                        <h:inputText value="#{documentController.desFecHasta}" styleClass="form-control datepicker" />
+                        <h:inputText value="#{cashRegisterController.desFecHasta}" styleClass="form-control datepicker" />
                         
-                        <h:commandLink actionListener="#{documentController.filterDocuments()}" styleClass="btn btn-default">
+                        <h:commandLink actionListener="#{cashRegisterController.filter()}" styleClass="btn btn-default">
                             <span class="glyphicon glyphicon-search"></span> Buscar
-                        </h:commandLink>
-                        <p:commandLink actionListener="#{documentController.newDocument()}" styleClass="btn btn-default" update="form">
-                            <span class="glyphicon glyphicon-new-window"></span> Nuevo
-                        </p:commandLink>
+                        </h:commandLink>                        
 
                     </h:panelGrid>
                     <br/>
@@ -91,76 +66,95 @@
                     <!-- ********************************** -->
                     <!-- ELEMENTOS OCULTOS -->
                     <!-- *********************************** -->
-                    <label class="ocultarObjeto" >ID_Docu_seleccionado</label>
-                    <h:inputText id="idDocuSelected" value="#{documentController.idDocuSelected}" styleClass="ocultarObjeto" />
+                   
                     
                     
                     <!-- ********************************** -->
                     <!-- LISTA DE DOCUMENTOS -->
                     <!-- *********************************** -->
-                    
                     <h:dataTable id="idTblDocuments" 
                                  var="item" 
                                  width="100%"
-                                 value="#{documentController.lstViSicdocus}"                                  
+                                 value="#{cashRegisterController.listViDayBox}"                                  
                                  styleClass="table-bordered"
                                  columnClasses="table_style_id,
-                                                table_style_code,                                                
-                                                table_style_date,
-                                                table_style_description_medium,
+                                                table_style_code,
                                                 table_style_code_small,
+                                                table_style_date_2,
+                                                table_style_date_2,
+                                                table_style_price_small,
+                                                table_style_price_small,                                                
+                                                table_style_price_small,                                                
                                                 table_style_price_small,
                                                 table_style_price_small,
-                                                table_style_price_small_discount,
+                                                table_style_price_small,
+                                                table_style_price_small,
                                                 table_style_price_small,
                                                 table_style_action">                        
 
                         <h:column>
-                            <f:facet name="header">No.</f:facet>#{documentController.lstViSicdocus.indexOf(item) + 1}
+                            <f:facet name="header">Nro.</f:facet>#{cashRegisterController.listViDayBox.indexOf(item) + 1}
                         </h:column>
                         
                         <h:column>
-                            <f:facet name="header">Evento</f:facet>#{item.desDocu}
+                            <f:facet name="header">Vendedor</f:facet>#{item.desPers}
                         </h:column>
                         
                         <h:column>
-                            <f:facet name="header">Fec. Registro</f:facet>#{item.fecDesde}
+                            <f:facet name="header">Estado</f:facet>#{item.desEsta}
                         </h:column>
                         
                         <h:column>
-                            <f:facet name="header">Cliente/Proveedor</f:facet>#{item.desPersClieprov}
+                            <f:facet name="header">Fec. Apertura</f:facet>#{item.fecApertura}
                         </h:column>
                         
                         <h:column>
-                            <f:facet name="header">Estado</f:facet>#{item.desEstadocu}
+                            <f:facet name="header">Fec. Cierre</f:facet>#{item.fecCierre}
                         </h:column>
                         
                         <h:column>
-                            <f:facet name="header">Sub. Total</f:facet>#{item.numSubtotal}
+                            <f:facet name="header">Mto. Ape. Caja</f:facet>#{item.numEfectApertCaja}
                         </h:column>
                         
                         <h:column>
-                            <f:facet name="header">I.G.V</f:facet>#{item.numMtoigv}
+                            <f:facet name="header">Usu. Cheques / Monedas</f:facet>#{item.numEfectDenomTotal}
+                        </h:column>                        
+                                               
+                        <h:column>
+                            <f:facet name="header">Sist. Total (Efectivo)</f:facet>#{item.numEfectTotalSistema}
                         </h:column>
                         
                         <h:column>
-                            <f:facet name="header">Descuento</f:facet>#{item.numMtodscto}
+                            <f:facet name="header">Descuadre (Efectivo)</f:facet>#{item.numEfectSobraFalta}
                         </h:column>
                         
                         <h:column>
-                            <f:facet name="header">Total</f:facet>#{item.numMtototal}
+                            <f:facet name="header">Usu. Total (Tarjeta)</f:facet>#{item.numTarjeTotalSiste}
                         </h:column>
-
+                        
                         <h:column>
-                            <h:commandLink action="#{documentController.editAction(item)}">
-                                <span class="glyphicon glyphicon-pencil"></span>
+                            <f:facet name="header">Sist. Total (Tarjeta)</f:facet>#{item.numTarjeTotalSiste}
+                        </h:column>
+                        
+                        <h:column>
+                            <f:facet name="header">Descuadre (Tarjeta)</f:facet>#{item.numTarjeSobraFalta}
+                        </h:column>
+                        
+                        <h:column>
+                            <f:facet name="header">Total Venta Dia</f:facet>#{item.numTotalVenta}
+                        </h:column>
+                        
+                        <h:column>
+                            <h:commandLink action="#{cashRegisterController.viewDetail(item)}">
+                                <span class="glyphicon glyphicon-info-sign"></span>
                             </h:commandLink>                           
                         </h:column>
                     </h:dataTable>
+                    
                 </div>
             
             <h:commandLink id="idBtnAnulDocu" value="Anular Documento" style="display: none">
-                <f:ajax execute="idDocuSelected" render="idTblDocuments" listener="#{documentController.anulDocu()}" />
+                <f:ajax execute="idDocuSelected" render="idTblDocuments" listener="#{cashRegisterController.viewDetail(item)}" />
             </h:commandLink>
             
         </ui:define>

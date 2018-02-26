@@ -9,6 +9,7 @@ import com.general.util.beans.Comision;
 import conexionbd.InParameter;
 import conexionbd.OutParameter;
 import conexionbd.StoredProcedure;
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -18,7 +19,7 @@ import java.sql.Types;
  *
  * @author Edgard
  */
-public class DaoUtilClass {
+public class DaoUtilClass implements Serializable{
  
     public Comision calculateCommission(Connection cnConexion, Comision comision) throws Exception {
                 

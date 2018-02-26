@@ -1,0 +1,362 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"      
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets" >
+
+    <f:metadata>        
+        <f:viewParam name="titulo" value="#{orderController.desTituloPagina}"/>
+        <f:event type="preRenderView" listener="#{orderController.getParamsExternalPage}"/>
+    </f:metadata>
+
+    <ui:composition template="./templates/templatePrincipal.xhtml">
+
+        <ui:define name="header">
+
+            <style>
+                    
+                .panelIngresoDatosOrden {
+                    position:relative;
+                    float:left;
+                    /*border: 1px solid black;*/
+                    width: 71%;
+                }
+
+                .panelResumenOrden {
+                    position:relative;
+                    float:right;
+                    width: 28%;
+                    border: 1px inset #FFF;
+                    background-color: #167F92;
+                }
+                
+                .calcularVuelto{
+                    border: 2px outset #FFF;
+                    text-align: center;
+                    height: 35px;
+                    padding: 5px;
+                    /*vertical-align: middle;*/                    
+                }
+
+               
+
+            </style>
+
+            <script>               
+              
+
+                $(document).ready(function () {
+
+                    //Se utiliza para llamar a URL externa
+                    $(".iframe").fancybox({
+
+                        type: "iframe",
+                        modal: "true",
+                        enableEscapeButton: "false",
+                        autoDimensions: "false",
+                        width: 800,
+                        height: 460,
+                        autoSize: false,
+                        overlayColor: "#797379",
+                        titleShow: true,
+                        titlePosition: "outside",
+                        overlayOpacity: 0.6,
+                        transitionIn: "elastic",
+                        transitionOut: "elastic"
+
+                    });
+
+                   
+
+                });
+                
+
+            </script>
+        </ui:define>
+
+        <ui:define name="content">
+
+            <div class="container" > 
+
+                <div id="divResultadoValidacion"></div>
+
+                <p:growl id="message" showDetail="true" />
+
+                <div class="page-header" >
+                    <h3>${orderController.desTituloPagina}</h3>
+                </div>
+
+                <!-- ****************************************************************************** -->
+                <!-- PANEL PARA INGRESO DE DATOS DE LA ORDEN -->
+                <!-- ****************************************************************************** -->
+
+                <div class="panelIngresoDatosOrden">
+                    <table>
+                        <tr>
+                            <td class="compra_panelGrid_1"><h:outputLabel value="Fecha:"/></td>
+                            <td class="compra_panelGrid_2">#{orderController.sic1docu.fecDesde}"</td>
+                        </tr>
+                        <tr >
+                            <td colspan="2" style="padding: 6px"><h:outputLabel value="DATOS CLIENTE"/></td>                            
+                        </tr>
+                        <tr>
+                            <td class="compra_panelGrid_1"><h:outputLabel value="Proveedor/Cliente:"/>
+                            </td>
+                            <td class="compra_panelGrid_2">
+                                #{orderController.sic1idenpersId.codIden} - #{orderController.sic1pers.desPers}
+                            </td>                           
+                        </tr>
+                        <tr>
+                            <td colspan="2" style="padding: 6px"><h:outputLabel value="DETALLE DE PRODUCTOS"/></td>                            
+                        </tr>                 
+                    </table>
+
+                    <br/>
+                    
+                    <!-- ****************************************************************************** -->
+                    <!-- DETALLE DE PRODUCTOS -->
+                    <!-- ****************************************************************************** -->
+
+                    <h:panelGrid id="pnDetOrder" columns="1" width="100%" >
+
+                        <h:dataTable value="#{orderController.lstSic3docuprod}"
+                                     var="item"
+                                     id="idTableDetOrder"
+                                     width="100%"
+                                     styleClass = "table-bordered"                                         
+                                     columnClasses = "table_style_id,
+                                                      table_style_code,
+                                                      table_style_description,
+                                                      table_style_price,
+                                                      table_style_amount">
+
+                            <h:column headerClass="table_style_id">
+                                <f:facet name="header">No.</f:facet>#{item.numIndex}
+                            </h:column>                            
+                            <h:column headerClass="table_style_code">
+                                <f:facet name="header">CODIGO</f:facet>#{item.sic1prod.codProd}
+                            </h:column>
+                            <h:column headerClass="table_style_description">
+                                <f:facet name="header">DESCRIPCION</f:facet>#{item.sic1prod.desProd}
+                            </h:column>
+                            <h:column id="idTablePrice" headerClass="table_style_price">
+                                <div >
+                                    <h:outputLabel value="S/." />
+                                    <f:facet name="header">PRECIO</f:facet>#{item.numValor}
+                                </div>
+                            </h:column>
+                            <h:column id="idTableAmount" headerClass="table_style_amount">
+                                <f:facet id="eeeee" name="header">CANTIDAD</f:facet>#{item.numCantidad}
+                            </h:column>                           
+                        </h:dataTable>
+
+                    </h:panelGrid>
+                </div>
+
+
+                <!-- ****************************************************************************** -->
+                <!-- PANEL DEL RESUMEN DE LA ORDEN -->
+                <!-- ****************************************************************************** -->
+
+                <div class="panelResumenOrden">
+
+                    <table width="100%" >
+                        <tr>
+                            <td colspan="2" style="color: white; padding: 20px 5px 10px; border-bottom: 2px inset #2C3259">
+                                <strong><h4> RESUMEN DE LA ORDEN</h4></strong>
+                            </td>
+                        </tr>   
+                        <tr>
+                            <td><h:outputLabel value="" /></td>
+                        </tr>
+                    </table>
+
+                    <h:panelGroup rendered="#{orderController.flgIsSale}" >
+                        <table width="100%" >
+                            <tr>
+                                <td class="compra_totales_label">
+                                    <h:outputLabel value="Forma de Pago:" />
+                                </td>
+                                <td class="compra_totales_text">
+                                    <h:selectOneMenu id="idPayMode" 
+                                                     value="#{orderController.sic1docu.idModapago}" 
+                                                     styleClass="form-control">
+                                        <f:selectItems value="#{orderController.itemsPayMode}" var="c" itemValue="#{c.idGeneral}" itemLabel="#{c.desGeneral}"/>                                        
+                                    </h:selectOneMenu>
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td class="compra_totales_label">
+                                    <h:panelGroup id="idLabelTipotarjeta" >
+                                        <h:outputLabel value="Tipo Tarjeta:" rendered="#{not empty orderController.itemsTypeCard}" />
+                                    </h:panelGroup>
+                                </td>
+                                <td class="compra_totales_text">
+                                    <h:panelGroup id="idTextTipotarjeta" >
+                                        <h:selectOneMenu  value="#{orderController.sic1docu.idTipotarjeta}"
+                                                          styleClass="form-control"
+                                                          rendered="#{not empty orderController.itemsTypeCard}">                                        
+                                            <f:selectItems value="#{orderController.itemsTypeCard}" />
+                                        </h:selectOneMenu>
+                                    </h:panelGroup>
+                                </td>
+
+                            </tr>
+                            <tr>
+                                <td class="compra_totales_label">
+                                    <h:panelGroup id="idLabelMtoTarjeta" >
+                                        <h:outputLabel value="Mto. Tarjeta:*" rendered="#{not empty orderController.itemsTypeCard}" />
+                                    </h:panelGroup>
+                                </td>
+                                <td class="compra_totales_text">
+                                    <h:panelGroup id="idMtoTarjeta"  >
+                                        <h:panelGroup rendered="#{not empty orderController.itemsTypeCard}">
+                                            <div class="input-group mb-1 mb-sm-0">
+                                                <div class="input-group-addon">S/.</div>
+                                                <h:inputText
+                                                    id="numMtotarjeta" autocomplete="off"                                                    
+                                                    styleClass="form-control"
+                                                    value="#{orderController.sic1docu.numMtotarjeta}"                                                
+                                                    onkeypress="return fnAllowOnlyDecimalNumbers(event)">                                                
+                                                </h:inputText>
+                                            </div>
+                                        </h:panelGroup>
+                                    </h:panelGroup>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="compra_totales_label">
+                                    <h:outputLabel value="Efectivo:*"/>
+                                </td>
+                                <td class="compra_totales_text">
+                                    <div class="input-group mb-1 mb-sm-0">
+                                        <div class="input-group-addon">S/.</div>
+                                        <h:inputText
+                                            id="numMtoefectivo" autocomplete="off"
+                                            styleClass="form-control"
+                                            value="#{orderController.sic1docu.numMtoefectivo}"
+                                            onkeypress="return fnAllowOnlyDecimalNumbers(event)">                                            
+                                        </h:inputText>
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
+                    </h:panelGroup>                    
+
+                    <h:panelGroup id="pnTotals">
+
+                        <table style="width: 100%">
+                            
+                            <tr>
+                                <td class="compra_totales_label">
+                                    <h:outputLabel value="Descuento:"/>
+                                </td>
+                                <td class="compra_totales_text">
+                                    <div class="input-group mb-1 mb-sm-0">
+                                        <div class="input-group-addon">S/.</div>
+                                        <h:inputText id="numMtodscto" autocomplete="off"
+                                                     styleClass="form-control"
+                                                     style="color: red"
+                                                     value="#{orderController.sic1docu.numMtodscto}"
+                                                     onkeypress="return fnAllowOnlyDecimalNumbers(event)"
+                                                     >                                            
+                                        </h:inputText>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr style="height: 10px">
+                                <td></td>
+                            </tr>
+                            <tr style="color: white; border-top: 1px inset #2C3259 ; font-size: 15px">
+                                <td class="compra_totales_label">
+                                    <h:outputLabel  value="SUB. TOTAL:" />
+                                </td>
+                                <td class="compra_totales_text">
+                                    <h:outputLabel value="S/." />
+                                    <h:outputLabel value="#{orderController.sic1docu.numSubtotal}" />
+                                </td>
+                            </tr>
+
+                            <tr style="color: white; border-top: 1px inset #2C3259; font-size: 15px">
+                                <td class="compra_totales_label">
+                                    <h:outputLabel  value="IGV(18%):" />
+                                </td>
+                                <td class="compra_totales_text">
+                                    <h:outputLabel value="S/." />
+                                    <h:outputLabel value="#{orderController.sic1docu.numIgv}" />
+                                </td>
+                            </tr>   
+
+                            <tr style="color: white; border-top: 1px inset #2C3259; font-size: 21px ">
+                                <td class="compra_totales_label" >
+                                    <h:outputLabel  value="TOTAL:" />
+                                </td>
+                                <td class="compra_totales_text">
+                                    <h:outputLabel value="S/." />
+                                    <h:outputLabel id="numMtoTotal" value="#{orderController.sic1docu.numMtoTotal}" />
+                                </td>
+                            </tr>
+                            
+                            <tr>
+                                <td colspan="2" style="text-align: center; color: white">
+                                    <h:panelGroup rendered="#{!orderController.flgIsSale}">
+                                        <h:selectBooleanCheckbox value="#{orderController.flgPrecioSinIGV}" >
+                                            <f:ajax execute="@this" event="change" render="form:pnTotals message" listener="#{orderController.recalculateTotals()}" />
+                                        </h:selectBooleanCheckbox>
+                                        <h:outputLabel value="PRECIO NO INCLUYE I.G.V." />
+                                    </h:panelGroup>
+                                </td>
+                            </tr>
+                            
+                            <!--Se muestra el vuelto -->
+                            <tr style="color: white; border-top: 1px inset #2C3259; text-align: center">
+                                <td colspan="2">
+                                    <h:panelGroup rendered="#{orderController.flgIsSale}" >
+                                        <div class="calcularVuelto">VUELTO: #{orderController.sic1docu.numMtovuelto}</div>
+                                    </h:panelGroup>
+                                </td>
+                            </tr>                           
+                            
+
+                        </table>
+                    </h:panelGroup>
+                </div>
+
+
+                <!-- ****************************************************************************** -->
+                <!-- GRABAR -->
+                <!-- ****************************************************************************** -->
+                <br/>
+                <div style="margin: 30px 0px" class="offset-sm-2 col-sm-10">
+                    <h:commandLink value="Grabar"                                   
+                                   styleClass="btn btn-danger"
+                                   onclick="return fnValidateForm()" >
+                    </h:commandLink>
+                    &nbsp;
+                    <h:selectBooleanCheckbox value="#{orderController.flgPorRecoger}"></h:selectBooleanCheckbox>
+                    <h:outputLabel value="PENDIENTE DE RECOJO:" />
+
+                </div>
+
+                <!-- ****************************************************************************** -->
+                <!-- ELEMENTOS OCULTOS -->
+                <!-- ****************************************************************************** -->
+                <table class="ocultarObjeto">
+                    <tr>
+                        <td><label>CodTRolpers:</label></td>
+                        <td><input type="text" id="idCodTRolpers" disabled="true" value="${orderController.codTRolpers}"/></td>
+                    </tr>                    
+                </table>
+
+                <a id="linkDialog" href="#" class="iframe"  style="display:none"/>
+                <a id="idLink" href="#"  style="display:none"/>
+               
+                
+            </div>
+
+        </ui:define>
+    </ui:composition>
+</html>

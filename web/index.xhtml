@@ -21,45 +21,6 @@
                         $("#idDivFinal").css("display", "inline-block");
                 });
 
-                /*Funcion que permite validar en ingreso del Mto de Apertura*/
-                function fnValidateForm(){
-
-                    var mtoApertura = document.getElementById("form:idMtoApertura").value;
-                    console.log("mtoApertura: " + mtoApertura);                    
-
-                    var FlgError = false;
-                    var arrMessages = [];
-
-                    if (mtoApertura.trim().length == 0) {
-                        arrMessages.push("Debe ingresar un monto para la apertura.");
-                        FlgError = true;
-                    }
-
-                    var divResu = $("#idDivValidation");
-
-                    if (FlgError) {
-
-                        var resultado = '<UL type = "square">';
-                        for (var i in arrMessages) {
-                            resultado += '<LI>' + arrMessages[i] + '</LI>';
-                        }
-                        resultado += '</UL>';
-
-                        console.log("resultado:" + resultado);
-
-                        divResu.html(resultado);
-                        divResu.css("display", "inline-block");
-
-                        return false;
-
-                    } else {
-                        console.log("sin errores"); 
-                        
-                        divResu.html("");
-                        divResu.css("display", "none");
-                        return true;
-                    }
-                };
                 
                 function fnAjaxListenAperturaCaja(data) {
                     
@@ -137,7 +98,7 @@
                                                                 </td>
                                                                 <td>&nbsp;
                                                                     <h:commandLink value="Aceptar" styleClass="btn btn-primary"
-                                                                       onclick="return fnValidateForm()">
+                                                                       onclick="return fnValidateIndexForm()">
                                                                         <f:ajax execute="idMtoApertura" render="idTxtCajaAperturada message" listener="#{indexController.openCashRegister()}" onevent="fnAjaxListenAperturaCaja"/>
                                                                     </h:commandLink>
                                                                 </td>

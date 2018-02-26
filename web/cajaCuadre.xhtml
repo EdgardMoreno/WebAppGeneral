@@ -118,16 +118,28 @@
                             color: black;
                             padding: 3px;
                             }
+                            
+                input, select, textarea{
+                    color: blue;
+                }
+                
+                input[type="text"], textarea {
+
+                    background-color : #FAFFBD; 
+
+                  }
 
 
             </style>
             
             <script>
                 /*Funcion que permite validar el formulario al grabar*/
-                function fnValidateForm(){
-                    fnShowDialogConfirm("form\\:idBtnGrabar", "" ); // -> Se pasa como parametro el ID del boton que tiene el metodo actionListener
+                function fnValidateForm(){                    
+                    fnShowDialogConfirm("form\\:idBtnGrabar", "Se procederá a cerrar caja, los datos ya no podrán ser modificados. ¿Seguro que desea continuar?" ); // -> Se pasa como parametro el ID del boton que tiene el metodo actionListener
                     return false;
                 }
+                
+               
                 
             </script>
 
@@ -147,7 +159,7 @@
 
                 <table >
                     <tr>
-                        <td style="text-align: right; font-weight: bold; font-size: 11px; padding: 3px" >Fecha de Registro:</td>
+                        <td style="text-align: right; font-weight: bold; font-size: 11px; padding: 3px" >Fecha de Apertura:</td>
                         <td style="text-align: left; font-size: 11px; padding: 3px">${cashRegisterController.box.fecApertura}</td>
                     </tr>
                     <tr>
@@ -172,84 +184,84 @@
                         <tr>
                             <td class="denominacion" >S/200.00</td>
                             <th class="separadorColu"></th>
-                            <td class="cantidad"><h:inputText styleClass="cantidad" value="#{cashRegisterController.box.numEfectDenom0200}" onkeypress="return fnAllowOnlyNumbers(event)" autocomplete="off" /></td>
+                            <td class="cantidad"><h:inputText styleClass="cantidad" value="#{cashRegisterController.box.numEfectDenom0200}" onkeypress="return fnAllowOnlyNumbers(event)" onblur="fnHideSaveButton()" autocomplete="off" readonly="#{!cashRegisterController.editFields}"/></td>
                             <td class="valor" >${cashRegisterController.numCalcuDenom0200}</td>
                         </tr>
                         <tr>
                             <td class="denominacion" >S/100.00</td>
                             <th class="separadorColu"></th>
-                            <td class="cantidad"><h:inputText styleClass="cantidad" value="#{cashRegisterController.box.numEfectDenom0100}" onkeypress="return fnAllowOnlyNumbers(event)" autocomplete="off" /></td>
+                            <td class="cantidad"><h:inputText styleClass="cantidad" value="#{cashRegisterController.box.numEfectDenom0100}" onkeypress="return fnAllowOnlyNumbers(event)" onblur="fnHideSaveButton()" autocomplete="off" readonly="#{!cashRegisterController.editFields}"/></td>
                             <td class="valor" >${cashRegisterController.numCalcuDenom0100}</td>
                         </tr>
                         <tr>
                             <td class="denominacion" >S/50.00</td>
                             <th class="separadorColu"></th>
-                            <td class="cantidad"><h:inputText styleClass="cantidad" value="#{cashRegisterController.box.numEfectDenom0050}" onkeypress="return fnAllowOnlyNumbers(event)" autocomplete="off" /></td>
+                            <td class="cantidad"><h:inputText styleClass="cantidad" value="#{cashRegisterController.box.numEfectDenom0050}" onkeypress="return fnAllowOnlyNumbers(event)" onblur="fnHideSaveButton()" autocomplete="off" readonly="#{!cashRegisterController.editFields}"/></td>
                             <td class="valor" >${cashRegisterController.numCalcuDenom0050}</td>
                         </tr>
                         <tr>
                             <td class="denominacion" >S/20.00</td>
                             <th class="separadorColu"></th>
-                            <td class="cantidad"><h:inputText styleClass="cantidad" value="#{cashRegisterController.box.numEfectDenom0020}" onkeypress="return fnAllowOnlyNumbers(event)" autocomplete="off" /></td>
+                            <td class="cantidad"><h:inputText styleClass="cantidad" value="#{cashRegisterController.box.numEfectDenom0020}" onkeypress="return fnAllowOnlyNumbers(event)" onblur="fnHideSaveButton()" autocomplete="off" readonly="#{!cashRegisterController.editFields}"/></td>
                             <td class="valor" >${cashRegisterController.numCalcuDenom0020}</td>
                         </tr>
                         <tr>
                             <td class="denominacion" >S/10.00</td>
                             <th class="separadorColu"></th>
-                            <td class="cantidad"><h:inputText styleClass="cantidad" value="#{cashRegisterController.box.numEfectDenom0010}" onkeypress="return fnAllowOnlyNumbers(event)" autocomplete="off" /></td>
+                            <td class="cantidad"><h:inputText styleClass="cantidad" value="#{cashRegisterController.box.numEfectDenom0010}" onkeypress="return fnAllowOnlyNumbers(event)" onblur="fnHideSaveButton()" autocomplete="off" readonly="#{!cashRegisterController.editFields}"/></td>
                             <td class="valor" >${cashRegisterController.numCalcuDenom0010}</td>
                         </tr>
                         <tr>
                             <td class="denominacion" >S/5.00</td>
                             <th class="separadorColu"></th>
-                            <td class="cantidad"><h:inputText styleClass="cantidad" value="#{cashRegisterController.box.numEfectDenom0005}" onkeypress="return fnAllowOnlyNumbers(event)" autocomplete="off" /></td>
+                            <td class="cantidad"><h:inputText styleClass="cantidad" value="#{cashRegisterController.box.numEfectDenom0005}" onkeypress="return fnAllowOnlyNumbers(event)" onblur="fnHideSaveButton()" autocomplete="off" readonly="#{!cashRegisterController.editFields}"/></td>
                             <td class="valor" >${cashRegisterController.numCalcuDenom0005}</td>
                         </tr>
                         <tr>
                             <td class="denominacion" >S/2.00</td>
                             <th class="separadorColu"></th>
-                            <td class="cantidad"><h:inputText styleClass="cantidad" value="#{cashRegisterController.box.numEfectDenom0002}" onkeypress="return fnAllowOnlyNumbers(event)" autocomplete="off" /></td>
+                            <td class="cantidad"><h:inputText styleClass="cantidad" value="#{cashRegisterController.box.numEfectDenom0002}" onkeypress="return fnAllowOnlyNumbers(event)" onblur="fnHideSaveButton()" autocomplete="off" readonly="#{!cashRegisterController.editFields}"/></td>
                             <td class="valor" >${cashRegisterController.numCalcuDenom0002}</td>
                         </tr>
                         <tr>
                             <td class="denominacion" >S/1.00</td>
                             <th class="separadorColu"></th>
-                            <td class="cantidad"><h:inputText styleClass="cantidad" value="#{cashRegisterController.box.numEfectDenom0001}" onkeypress="return fnAllowOnlyNumbers(event)" autocomplete="off" /></td>
+                            <td class="cantidad"><h:inputText styleClass="cantidad" value="#{cashRegisterController.box.numEfectDenom0001}" onkeypress="return fnAllowOnlyNumbers(event)" onblur="fnHideSaveButton()" autocomplete="off" readonly="#{!cashRegisterController.editFields}"/></td>
                             <td class="valor" >${cashRegisterController.numCalcuDenom0001}</td>
                         </tr>
                         <tr>
                             <td class="denominacion" >S/0.50</td>
                             <th class="separadorColu"></th>
-                            <td class="cantidad"><h:inputText styleClass="cantidad" value="#{cashRegisterController.box.numEfectDenom0_50}" onkeypress="return fnAllowOnlyNumbers(event)" autocomplete="off" /></td>
+                            <td class="cantidad"><h:inputText styleClass="cantidad" value="#{cashRegisterController.box.numEfectDenom0_50}" onkeypress="return fnAllowOnlyNumbers(event)" onblur="fnHideSaveButton()" autocomplete="off" readonly="#{!cashRegisterController.editFields}"/></td>
                             <td class="valor" >${cashRegisterController.numCalcuDenom0_50}</td>
                         </tr>
                         <tr>
                             <td class="denominacion" >S/0.20</td>
                             <th class="separadorColu"></th>
-                            <td class="cantidad"><h:inputText styleClass="cantidad" value="#{cashRegisterController.box.numEfectDenom0_20}" onkeypress="return fnAllowOnlyNumbers(event)" autocomplete="off" /></td>
+                            <td class="cantidad"><h:inputText styleClass="cantidad" value="#{cashRegisterController.box.numEfectDenom0_20}" onkeypress="return fnAllowOnlyNumbers(event)" onblur="fnHideSaveButton()" autocomplete="off" readonly="#{!cashRegisterController.editFields}"/></td>
                             <td class="valor" >${cashRegisterController.numCalcuDenom0_20}</td>
                         </tr>
                         <tr>
                             <td class="denominacion" >S/0.10</td>
                             <th class="separadorColu"></th>
-                            <td class="cantidad"><h:inputText styleClass="cantidad" value="#{cashRegisterController.box.numEfectDenom0_10}" onkeypress="return fnAllowOnlyNumbers(event)" autocomplete="off" /></td>
+                            <td class="cantidad"><h:inputText styleClass="cantidad" value="#{cashRegisterController.box.numEfectDenom0_10}" onkeypress="return fnAllowOnlyNumbers(event)" onblur="fnHideSaveButton()" autocomplete="off" readonly="#{!cashRegisterController.editFields}"/></td>
                             <td class="valor" >${cashRegisterController.numCalcuDenom0_10}</td>
                         </tr>
                         <tr>
                             <td class="denominacion" >S/0.05</td>
                             <th class="separadorColu"></th>
-                            <td class="cantidad"><h:inputText styleClass="cantidad" value="#{cashRegisterController.box.numEfectDenom0_05}" onkeypress="return fnAllowOnlyNumbers(event)" autocomplete="off" /></td>
+                            <td class="cantidad"><h:inputText styleClass="cantidad" value="#{cashRegisterController.box.numEfectDenom0_05}" onkeypress="return fnAllowOnlyNumbers(event)" onblur="fnHideSaveButton()" autocomplete="off" readonly="#{!cashRegisterController.editFields}"/></td>
                             <td class="valor" >${cashRegisterController.numCalcuDenom0_05}</td>
                         </tr>
                         <tr>
-                            <td class="superTotal">TOTAL:</td>
+                            <td class="superTotal">TOTAL (BILLETES/MONEDAS):</td>
                             <th class="separadorColu"></th>
                             <td class="superTotal_valor" colspan="2">#{cashRegisterController.box.numEfectDenomTotal}</td>
                         </tr>
-                        <tr>
+                        <tr style="display: none">
                             <td class="total">TOTAL GASTOS:</td>
                             <th class="separadorColu"></th>
-                            <td colspan="2"><h:inputText id="idGastEfec" styleClass="ingresoMto gasto total" value="#{cashRegisterController.box.numEfectGastoTotal}" onkeypress="return fnAllowOnlyDecimalNumbers(event)" onblur="formatDecimal_2(this)"  autocomplete="off" /></td>
+                            <td colspan="2"><h:inputText id="idGastEfec" styleClass="ingresoMto gasto total" value="#{cashRegisterController.box.numEfectGastoTotal}" onkeypress="return fnAllowOnlyDecimalNumbers(event)" onblur="formatDecimal_2(this); fnHideSaveButton()"  autocomplete="off" readonly="#{!cashRegisterController.editFields}"/></td>
                         </tr>
                         <tr>
                             <td class="total">APERTURA CAJA:</td>
@@ -267,8 +279,8 @@
                             <th class="separadorColu"></th>
                             <td class="total" colspan="2">${cashRegisterController.box.numEfectTotalVentaSiste}</td>
                         </tr>
-                        <tr>                        
-                            <td class="total">SISTEMA: TOTAL GASTOS EFECTIVO:</td>
+                        <tr style="display: none">      
+                            <td class="total" >SISTEMA: TOTAL GASTOS EFECTIVO:</td>
                             <th class="separadorColu"></th>
                             <td class="total gasto" colspan="2">${cashRegisterController.box.numEfectTotalGastoSiste}</td>
                         </tr>
@@ -286,18 +298,22 @@
                     </table>
                     
                     <br/>
-                    <div class="offset-sm-2 col-sm-10">
-                        <h:commandLink styleClass="btn btn-primary" value="Calcular">
-                            <f:ajax execute="@form" render="@form" listener="#{cashRegisterController.calcular()}" onevent="fnAjaxListenCalcularCuadreCaja" />
-                        </h:commandLink>
-                        <input type="button" id="btnConfirm" value="Grabar" class="btn btn-danger" onclick="return fnValidateForm()"/>
-                    </div>
                     
-                    <h:commandLink styleClass="btn btn-primary"
-                                   id="idBtnGrabar"
-                                   value="Calcular" 
-                                   actionListener="#{cashRegisterController.save()}"
-                                   style="display: none" />
+                    <h:panelGroup id="idPnBotones" rendered="#{cashRegisterController.editFields}">
+                        <div class="offset-sm-2 col-sm-10">
+                            <h:commandLink id="idBtnCalcular" styleClass="btn btn-primary" value="Calcular">
+                                <f:ajax execute="@form" render="@form" listener="#{cashRegisterController.calculate()}" onevent="fnAjaxListenCalcularCuadreCaja" />
+                            </h:commandLink>
+                            <input type="button" disabled="true" id="btnConfirm" value="Cerrar Caja" class="btn btn-danger" onclick="return fnValidateForm()"/>
+                        </div>
+
+                        <h:commandLink styleClass="btn btn-primary"
+                                       id="idBtnGrabar"
+                                       value="Grabar"                                        
+                                       style="display: none" >
+                            <f:ajax execute="@form" render="@form" listener="#{cashRegisterController.save()}" />
+                        </h:commandLink>
+                    </h:panelGroup>
                     
                 </div>
 
@@ -315,12 +331,12 @@
                         <tr>
                             <td class="total" >TARJ. CREDITO:</td>
                             <th class="separadorColu"></th>
-                            <td ><h:inputText styleClass="ingresoMto total" value="#{cashRegisterController.box.numTarjeCrediTotal}" onkeypress="return fnAllowOnlyNumbers(event)"  autocomplete="off" /></td>                        
+                            <td ><h:inputText id="MtoTarjCred" styleClass="ingresoMto total" value="#{cashRegisterController.box.numTarjeCrediTotal}" onkeypress="return fnAllowOnlyDecimalNumbers(event)"  onblur="formatDecimal_2(this); fnHideSaveButton()" autocomplete="off" readonly="#{!cashRegisterController.editFields}"/></td>
                         </tr>
                          <tr>
                             <td class="total" >TARJ. DEBITO:</td>
                             <th class="separadorColu"></th>
-                            <td ><h:inputText styleClass="ingresoMto total" value="#{cashRegisterController.box.numTarjeDebitTotal}" onkeypress="return fnAllowOnlyNumbers(event)"  autocomplete="off" /></td>                        
+                            <td ><h:inputText id="MtoTarjDebi" styleClass="ingresoMto total" value="#{cashRegisterController.box.numTarjeDebitTotal}" onkeypress="return fnAllowOnlyDecimalNumbers(event)"  onblur="formatDecimal_2(this); fnHideSaveButton()" autocomplete="off" readonly="#{!cashRegisterController.editFields}"/></td>
                         </tr>
                         <tr>
                             <td class="superTotal" >TOTAL TARJETA:</td>
@@ -340,14 +356,15 @@
                     </table>
                     <br/>
                     <br/>
-                    <table width="375" >
-                        <tr>
-                            <td style="width: 21.5em" class="totalVentas" >TOTAL VENTAS:</td>
-                            <td class="separadorColu"></td>                        
-                            <td style="width: 5em" class="totalVentas">${cashRegisterController.desTotalVentas}</td>
-                        </tr>
-                                                
-                    </table>
+                    
+                        <table width="375" >
+                            <tr>
+                                <td style="width: 21.5em" class="totalVentas" >TOTAL VENTAS(EFEC + TARJ):</td>
+                                <td class="separadorColu"></td>                        
+                                <td style="width: 5em" class="totalVentas">${cashRegisterController.desTotalVentas}</td>
+                            </tr>
+
+                        </table>                    
                 </div>
 
 

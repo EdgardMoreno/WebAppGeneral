@@ -45,8 +45,10 @@ and open the template in the editor.
 }
 
 .form_label_small { width: 20px; padding: 3px; text-align: right; }
+.form_label_4 { width: 25px; padding: 3px; text-align: right; }
 .form_input_small { width: 15em; padding: 2px; }
 .form_input_medium { width: 20em; padding: 2px; }
+.form_input_2 { width: 70PX; padding: 2px; }
 
 #Comentarios{
   display: none;
@@ -175,7 +177,12 @@ and open the template in the editor.
 .table_style_price { width: 7em; text-align: right; padding: 4px;}
 .table_style_amount { width: 3em; text-align: center;}
 .table_style_date { width: 6em; text-align: center;}
+.table_style_date_2 { width: 8em; text-align: center;}
 .table_style_action { width: 4em; text-align: center;}
+
+.red{
+ color: red;   
+}
 
 .button_style {
     box-shadow: rgb(151, 196, 254) 0px 1px 0px 0px inset;

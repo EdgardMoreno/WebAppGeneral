@@ -14,8 +14,12 @@ import com.general.util.beans.Constantes;
 import com.general.util.beans.UtilClass;
 import com.general.util.dao.DaoFuncionesUtil;
 import com.general.util.exceptions.CustomizerException;
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.List;
+import javax.faces.context.FacesContext;
+import javax.faces.context.Flash;
+import javax.faces.event.ComponentSystemEvent;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.internal.SessionImpl;
@@ -24,7 +28,7 @@ import org.hibernate.internal.SessionImpl;
  *
  * @author emoreno
  */
-public class CashRegisterServiceImpl {
+public class CashRegisterServiceImpl implements Serializable{
     
     private Session session;
     
@@ -88,7 +92,7 @@ public class CashRegisterServiceImpl {
         }
     }
     
-     public Sic4cuaddiario getById(Sic4cuaddiarioId id) throws Exception {
+     public Sic4cuaddiario getById(Sic4cuaddiarioId id) throws CustomizerException {
         
         Sic4cuaddiario obj = null;
         try {        
@@ -96,7 +100,37 @@ public class CashRegisterServiceImpl {
             session = HibernateUtil.getSessionFactory().openSession();
             obj = dao.getById(session, id);
         } catch (Exception ex) {
-            throw new Exception(ex.getMessage());
+            throw new CustomizerException(ex.getMessage());
+        }finally{
+            if(session != null)
+                session.close();
+        }
+        return obj;
+    }
+     
+     public Sic4cuaddiario getById(BigDecimal idPers, BigDecimal numPeri) throws CustomizerException {
+        
+        Sic4cuaddiario obj = null;
+        try {
+            
+            Sic4cuaddiarioId id = new Sic4cuaddiarioId();
+            id.setIdPers(idPers);
+            id.setNumPeri(numPeri);            
+            
+            DaoCashRegisterImpl dao = new DaoCashRegisterImpl();
+            session = HibernateUtil.getSessionFactory().openSession();
+            obj = dao.getById(session, id);
+            
+            /*Se obtiene los totales de la VENTA en EFECTIVO/TARJETA que se realizó desde el sistema*/
+            obj = dao.getSummaryOrders(session, obj);
+            
+            if(obj != null && obj.getNumEfectApertCaja()!= null)
+                obj.getNumEfectApertCaja().setScale(2,BigDecimal.ROUND_HALF_UP);
+            
+            System.out.println("Apertura Caja: " + obj.getNumEfectApertCaja());
+            
+        } catch (Exception ex) {
+            throw new CustomizerException(ex.getMessage());
         }finally{
             if(session != null)
                 session.close();
@@ -105,19 +139,21 @@ public class CashRegisterServiceImpl {
     }
      
      
-     public List<ViSiccuaddiario> listViSiccuaddiario(ViSiccuaddiario obj) throws CustomizerException{
-        
-        List<ViSiccuaddiario> result;
-        try{
-            DaoCashRegisterImpl dao = new DaoCashRegisterImpl();
-            session = HibernateUtil.getSessionFactory().openSession();
-            result = dao.listViSiccuaddiario(session, obj);
-        }catch(Exception ex){
-            throw new CustomizerException(ex.getMessage());
-        }finally{
-            session.close();
-        }
-        return result;
-    }  
+    public List<ViSiccuaddiario> listViSiccuaddiario(ViSiccuaddiario obj) throws CustomizerException{
+
+       List<ViSiccuaddiario> result;
+       try{
+           DaoCashRegisterImpl dao = new DaoCashRegisterImpl();
+           session = HibernateUtil.getSessionFactory().openSession();
+           result = dao.listViSiccuaddiario(session, obj);
+       }catch(Exception ex){
+           throw new CustomizerException(ex.getMessage());
+       }finally{
+           session.close();
+       }
+       return result;
+    }
+     
+    
     
 }

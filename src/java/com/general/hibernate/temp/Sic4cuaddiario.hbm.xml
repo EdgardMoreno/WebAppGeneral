@@ -162,6 +162,13 @@
         <comment>Contiene el Sobrante o Faltante final en Gastos</comment>
       </column>
     </property>
+    
+    <property name="numTotalVenta" type="big_decimal">
+      <column name="NUM_TOTAL_VENTA" precision="9" scale="3">
+        <comment>Contiene el total de la ventas: Efectivo + Tarjeta</comment>
+      </column>
+    </property>
+    
     <property name="idEsta" type="big_decimal">
       <column name="ID_ESTA" precision="9" scale="0">
         <comment>Contiene el identificador del estado de la caja</comment>

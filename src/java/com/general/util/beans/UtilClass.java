@@ -5,6 +5,7 @@
  */
 package com.general.util.beans;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -17,7 +18,7 @@ import javax.faces.context.FacesContext;
  *
  * @author emoreno
  */
-public class UtilClass {
+public class UtilClass implements Serializable{
     
     
     public static void addInfoMessage(/*String summary,*/ String detail) {

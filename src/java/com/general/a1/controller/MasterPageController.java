@@ -67,8 +67,8 @@ public class MasterPageController {
             /*Caja Cerrada*/
             else if (codEstaCaja != null && codEstaCaja.equalsIgnoreCase(Constantes.CONS_COD_ESTACERRADO)){
                 
-                /*Si está cerrada la caja no puede realizar ninguna VENTA*/
-                if (codSClaseeven != null && codSClaseeven.equals("VI_SICSCLASEEVENVENTA")){
+                /*Si está cerrada la caja no puede realizar ninguna VENTA, Solo se puede consultar el reporte*/
+                if (codSClaseeven != null && codSClaseeven.equals("VI_SICSCLASEEVENVENTA") && !nombrePagina.equalsIgnoreCase("documentosListar")){
                     UtilClass.addErrorMessage("La caja ya ha sido cerrada.");
                     return "";
                 }

@@ -16,6 +16,11 @@
     <property name="fecCreacion" type="date">
       <column length="7" name="FEC_CREACION"/>
     </property>
+    
+    <property name="desModoPago" type="string">
+      <column length="80" name="DES_MODOPAGO"/>
+    </property>    
+    
     <property name="idPersClieprov" type="big_decimal">
       <column name="ID_PERS_CLIEPROV" precision="22" scale="0"/>
     </property>

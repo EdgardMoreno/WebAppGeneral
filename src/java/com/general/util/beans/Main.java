@@ -6,6 +6,7 @@
 package com.general.util.beans;
 
 import com.general.a1.controller.PersonController;
+import com.general.a2.service.impl.CashRegisterServiceImpl;
 import com.general.a2.service.impl.DocuOrderServiceImpl;
 import com.general.interfac.dao.DaoSic1general;
 import com.general.a3.dao.impl.DaoPersonImpl;
@@ -119,11 +120,20 @@ public class Main {
         /*OBTENER CUADRE CAJA*/
         System.out.println("Date Time:" + UtilClass.getCurrentDateTime());
         
-        if (true){            
+        if (false){            
             DaoCashRegisterImpl dao = new DaoCashRegisterImpl();            
             ViSiccuaddiario obj = new ViSiccuaddiario();
-            obj.setFecApertura(UtilClass.convertStringToDate("21/02/2018"));
+            obj.setFecApertura("21/02/2018");
             dao.listViSiccuaddiario(session, obj);
+            System.out.println("Sic4cuaddiario: " + obj);
+            
+        }
+        
+        /*CUADRE DIARIO: OBTENER TOTALES DE EFECTIVO Y TARJETA */
+         if (true){             
+            System.out.println("Fecha:" + UtilClass.getCurrentTime_YYYYMMDD());
+            CashRegisterServiceImpl service = new CashRegisterServiceImpl();
+            Sic4cuaddiario obj = service.getById(new BigDecimal(3), new BigDecimal("20180225"));
             System.out.println("Sic4cuaddiario: " + obj);
             
         }
@@ -133,7 +143,7 @@ public class Main {
             DaoCashRegisterImpl dao = new DaoCashRegisterImpl();
             Sic4cuaddiarioId id = new Sic4cuaddiarioId();
             id.setIdPers(new BigDecimal(3)); //Ira el ID_PERS DEL USUARIO LOGUEADO
-            id.setNumPeri(new BigDecimal("20180222"));
+            id.setNumPeri(new BigDecimal("20180225"));
             Sic4cuaddiario obj = dao.getById(session, id);
             System.out.println("Sic4cuaddiario: " + obj);
             

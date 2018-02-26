@@ -89,5 +89,8 @@
     <property name="idPersexterno" type="big_decimal">
       <column name="ID_PERSEXTERNO" precision="22" scale="0"/>
     </property>
+    <property name="flgPrecsinIGV" type="integer">
+      <column name="FLG_PRECSINIGV" precision="5" scale="0"/>
+    </property>
   </class>
 </hibernate-mapping>

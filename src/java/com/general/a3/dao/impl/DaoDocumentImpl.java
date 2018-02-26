@@ -101,7 +101,10 @@ public class DaoDocumentImpl implements Serializable{
                             strFecHasta = UtilClass.convertDateToString(sic1docu.getFecHasta());
                         }
                         /**/
-
+                        String codSerie = null;
+                        if (sic1docu.getCodSerie()!=null && sic1docu.getCodSerie().trim().length()>0)
+                            codSerie = sic1docu.getCodSerie().trim().toUpperCase();
+                                
                         System.out.println("FecCreacion: " + strFecCreacion);
 
                         StoredProcedure sp = new StoredProcedure("PKG_SICMANTDOCU.PRC_SICCREADOCU");
@@ -122,11 +125,15 @@ public class DaoDocumentImpl implements Serializable{
                         sp.addParameter(new InParameter("X_NUM_MTOCOMI",        Types.NUMERIC, sic1docu.getNumMtocomi()));
                         sp.addParameter(new InParameter("X_NUM_MTOEFECTIVO",    Types.NUMERIC, sic1docu.getNumMtoefectivo()));
 
-                        sp.addParameter(new InParameter("X_COD_SERIE",          Types.INTEGER, sic1docu.getCodSerie()));
+                        sp.addParameter(new InParameter("X_COD_SERIE",          Types.VARCHAR, codSerie));
                         sp.addParameter(new InParameter("X_NUM_DOCU",           Types.INTEGER, sic1docu.getNumDocu()));
                         sp.addParameter(new InParameter("X_NUM_MTODSCTO",       Types.NUMERIC, sic1docu.getNumMtodscto()));
                         sp.addParameter(new InParameter("X_NUM_SUBTOTAL",       Types.NUMERIC, sic1docu.getNumSubtotal()));
                         sp.addParameter(new InParameter("X_NUM_IGV",            Types.NUMERIC, sic1docu.getNumIgv()));
+                        
+                        sp.addParameter(new InParameter("X_NUM_MTOVUELTO",      Types.NUMERIC, sic1docu.getNumMtovuelto()));
+                        sp.addParameter(new InParameter("X_FLG_PRECSINIGV",     Types.NUMERIC, sic1docu.getFlgPrecsinIGV()));
+                        
                         sp.addParameter(new InParameter("X_ID_SCLASEEVEN",      Types.NUMERIC, sic1docu.getIdSclaseeven())); //Indica si es Compra o Venta
                         sp.addParameter(new InParameter("X_ID_PERSEXTERNO",     Types.NUMERIC, sic1docu.getIdPersexterno())); //Indica el IDPers el Cliente/Proveedor
 
@@ -499,7 +506,7 @@ public class DaoDocumentImpl implements Serializable{
             flgFilter = 1;
         }
         if(obj.getId() != null && obj.getId().getCodIden() != null && obj.getId().getCodIden().trim().length() > 0 ){
-            criteria.add(Restrictions.eq("codIden",obj.getId().getCodIden()));
+            criteria.add(Restrictions.eq("codIden",obj.getId().getCodIden()).ignoreCase());
             flgFilter = 1;
         }
 
@@ -612,6 +619,11 @@ public class DaoDocumentImpl implements Serializable{
 
             if(fecDesde != null){
                 criteria.add(Restrictions.between("fecDesde",fecDesde, fecHasta));
+                flgFilter = 1;
+            }
+            
+            if(obj.getDesPersCreador()!= null && obj.getDesPersCreador().trim().length() > 0 ){                
+                criteria.add(Restrictions.like("desPersCreador","%" + obj.getDesPersCreador() + "%").ignoreCase());
                 flgFilter = 1;
             }
 

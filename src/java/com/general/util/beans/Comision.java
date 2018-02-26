@@ -5,13 +5,14 @@
  */
 package com.general.util.beans;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 
 /**
  *
  * @author Edgard
  */
-public class Comision {
+public class Comision implements Serializable{
     
     private BigDecimal num_Importe;
     private BigDecimal id_Modapago;

@@ -18,6 +18,8 @@ public class ViSicdocu  implements java.io.Serializable {
      private String desDocu;
      private Date fecCreacion;
      
+     private String desModoPago;
+     
      private BigDecimal idPersClieprov;
      private String codIdenClieprov;
      private String desPersClieprov;
@@ -121,6 +123,17 @@ public class ViSicdocu  implements java.io.Serializable {
     public void setFecCreacion(Date fecCreacion) {
         this.fecCreacion = fecCreacion;
     }
+    
+    /*MODALIDAD DE PAGO*/
+
+    public String getDesModoPago() {
+        return desModoPago;
+    }
+
+    public void setDesModoPago(String desModoPago) {
+        this.desModoPago = desModoPago;
+    }
+    
     
     
     /*CLIENTE PROVEEDOR*/

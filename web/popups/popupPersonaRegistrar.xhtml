@@ -173,7 +173,7 @@
                     } else if (mensaje == "PN") {
 
                         if (primerNombre.length == 0) {
-                            arrMessages.push("Se debe ingresar el Primer Nombre");
+                            arrMessages.push("Se debe ingresar el Nombre");
                             flgError = true;
                         }
 
@@ -182,10 +182,10 @@
                             flgError = true;
                         }
 
-                        if (apeMaterno.length == 0) {
+                        /*if (apeMaterno.length == 0) {
                             arrMessages.push("Se debe ingresar el Apellido Materno.");
                             flgError = true;
-                        }
+                        }*/
 
                         if (genero == -1) {
                             arrMessages.push("Se debe especificar el género.");
@@ -264,7 +264,7 @@
                 <div class="container">
 
                     <div class="page-header" >
-                        <h3>Registrar Cliente</h3>
+                        <h3>Registrar Persona</h3>
                     </div>
 
                     <br/>
@@ -272,7 +272,7 @@
                                  style="width:90%"
                                  columnClasses="form_label_small, form_input_small , form_label_small, form_input_small">
 
-                        <h:outputLabel value="Doc. Identidad:"/>                        
+                        <h:outputLabel value="Doc. Identidad:*"/>                        
                         <h:panelGroup>
                             <div class="input-group mb-2 mb-sm-0">
                                 <div id="idCantDigitosDocIden" class="input-group-addon">0</div>
@@ -289,24 +289,24 @@
                         <h:outputLabel value="" />
                         <h:outputLabel value="" />
 
-                        <h:outputLabel value="Razón Social:"/>
+                        <h:outputLabel value="Razón Social:*"/>
                         <h:inputText styleClass="form-control left" id="razonSocial" value="#{personController.sic1persorga.desPersorga}" />
                         <h:outputLabel value="" />
                         <h:outputLabel value="" />
 
-                        <h:outputLabel value="Nombre:"/>
+                        <h:outputLabel value="Nombre:*"/>
                         <h:inputText  styleClass="form-control" id="primerNombre" value="#{personController.sic1persindi.desPrimnomb}" />
                         <h:outputLabel value="" />
                         <h:outputLabel value="" />
                         
                         <h:outputLabel value="Genero:"/>
                         <h:selectOneRadio id="sorGenero" value="#{personController.sic1persindi.idGenero}">
-                            <f:selectItems value="#{personController.itemsGeneroPers}" />
+                           <f:selectItems value="#{personController.itemsGeneroPers}" />                           
                         </h:selectOneRadio>
                         <h:outputLabel value="Fecha Nacimiento:"/>
                         <h:inputText value="#{personController.desFecNaci}" styleClass="form-control datepicker" />
 
-                        <h:outputLabel value="Apellido Paterno:"/>
+                        <h:outputLabel value="Apellido Paterno:*"/>
                         <h:inputText  styleClass="form-control" id="apePaterno" value="#{personController.sic1persindi.desApelpate}" />
                         <h:outputLabel value="Apellido Materno:"/>
                         <h:inputText  styleClass="form-control" id="apeMaterno" value="#{personController.sic1persindi.desApelmate}" />

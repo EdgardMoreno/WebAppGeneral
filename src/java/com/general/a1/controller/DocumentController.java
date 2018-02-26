@@ -204,8 +204,9 @@ public class DocumentController implements Serializable{
         return "";
     }
     
-    public String newDocument(){
-        return "";
+    public void clearSearch(){
+        viSicdocu = new ViSicdocu();
+        lstViSicdocus  = new ArrayList();
     }
     
     public String editAction(ViSicdocu obj ) throws ServletException, IOException{
@@ -213,12 +214,12 @@ public class DocumentController implements Serializable{
         Flash flash = FacesContext.getCurrentInstance().getExternalContext().getFlash();
         flash.clear();
         flash.put("paramIdDocu", obj.getIdDocu());
-        flash.put("paramTituloPagina", "EDITAR " + obj.getDesStipodocu() + ": " + obj.getCodIden());
+        flash.put("paramTituloPagina", "VER " + obj.getDesStipodocu() + ": " + obj.getCodIden());
         flash.put("paramCodTRolpers", this.codTRolpers );
         
         //flash.setKeepMessages(true);
         
-        return "compraRegistrar?faces-redirect=true";
+        return "ordenDetalle?faces-redirect=true";
     }
     
     /*Metodo para anular un documento*/

@@ -3,11 +3,12 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="http://xmlns.jcp.org/jsf/html"
       xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:a="http://xmlns.jcp.org/jsf/passthrough"
       xmlns:p="http://primefaces.org/ui"
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets" >
 
     <h:head>
-
+        <link rel="icon" href="#{request.contextPath}/faces/resources/img/favicon.ico"></link>
         <h:outputStylesheet name="/css/bootstrap.min.css"/>
         <h:outputStylesheet name="/css/customizer.css"/>
 
@@ -237,8 +238,8 @@
                         <p class="form-title">
                             Sign In</p>
                         <h:form styleClass="login">
-                            <h:inputText id="idCodUsuario" value="#{loginController.userName}" />
-                            <h:inputSecret value="#{loginController.passWord}" />
+                            <h:inputText id="idCodUsuario" value="#{loginController.userName}" a:placeholder="usuario" />
+                            <h:inputSecret value="#{loginController.passWord}" a:placeholder="contaseña"/>
                             <h:commandLink value="Ingresar" class="btn btn-success btn-sm" action="#{loginController.validateUsernamePassword()}" />
                             <div class="remember-forgot">
                                 <div class="row">

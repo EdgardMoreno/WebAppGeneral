@@ -77,8 +77,7 @@
                         <f:selectItems value="#{personController.itemsTipoIden}" />
                     </h:selectOneMenu>
 
-                    <h:panelGroup>
-                        <div class="form-inline header-format">
+                    <h:panelGroup>                        
                             <h:commandLink styleClass="btn btn-default">
                                 <span class="glyphicon glyphicon-search"></span> Buscar
                                 <f:ajax execute="@form" render="tblPersons" listener="#{personController.filterPersons()}" />
@@ -87,7 +86,10 @@
                             <h:commandLink styleClass="btn btn-default" onclick="return fnShowPopupCreateEditPerson(0)">
                                 <span class="glyphicon glyphicon-new-window"></span> Nuevo
                             </h:commandLink>
-                        </div>
+                            <h:commandLink styleClass="btn btn-default">
+                                <span class="glyphicon glyphicon-erase"></span> Limpiar
+                                <f:ajax render="@form" listener="#{personController.clearSearch()}" />
+                            </h:commandLink>                        
                     </h:panelGroup>
 
                     <h:outputLabel value="Tipo Persona:"/>

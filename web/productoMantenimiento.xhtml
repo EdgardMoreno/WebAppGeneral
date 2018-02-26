@@ -56,6 +56,9 @@
                                 <p:commandLink actionListener="#{productController.newProduct()}" oncomplete="fnChangeTab(2)" styleClass="btn btn-default" update="form">
                                     <span class="glyphicon glyphicon-new-window"></span> Nuevo
                                 </p:commandLink>
+                                <p:commandLink actionListener="#{productController.clearSearch()}" styleClass="btn btn-default" update="form">
+                                    <span class="glyphicon glyphicon-erase"></span> Limpiar
+                                </p:commandLink>
                             </h:panelGroup>
 
                         </h:panelGrid>
@@ -124,20 +127,20 @@
                         <br/>
                         <h:panelGrid id="pgRegProduct" columns="2"  style="width:80%" columnClasses="label_panelGrid_2c, text_panelGrid_2c">
 
-                            <h:outputLabel value="Código Producto:"/>
+                            <h:outputLabel value="Código Producto:*"/>
                             <h:inputText id="codigoProducto"
                                          styleClass="form-control left"
                                          disabled="#{productController.flgEditProd}"
                                          style="width:30%"
                                          value="#{productController.sic1prod.codProd}"/>
 
-                            <h:outputLabel value="Nombre Producto:"/>
+                            <h:outputLabel value="Nombre Producto:*"/>
                             <h:inputText id="nombreProducto"
                                          styleClass="form-control left"
                                          style="width:60%"
                                          value="#{productController.sic1prod.desProd}"/>
 
-                            <h:outputLabel value="Tipo Producto:" />
+                            <h:outputLabel value="Tipo Producto:*" />
                             <h:selectOneMenu id="somTipoProducto" style="width:60%" value="#{productController.sic1prod.idStipoprod}" styleClass="form-control">
                                 <f:selectItem itemLabel="-- Seleccione --" itemValue="-1" noSelectionOption="true"/>
                                 <f:selectItems value="#{productController.items}" />
@@ -150,7 +153,7 @@
                                     <h:inputText id="precioVenta" styleClass="form-control"
                                                  style="width:25%"
                                                  value="#{productController.sic1prod.numPrecio}"
-                                                 onkeypress="return fnAllowOnlyNumbers(event)"
+                                                 onkeypress="return fnAllowOnlyDecimalNumbers(event)"
                                                  onblur="formatDecimal_2(this)"/>
                                 </div>
                             </h:panelGroup>   
@@ -164,7 +167,7 @@
                         </h:panelGrid>
 
                         <div class="offset-sm-2 col-sm-10">
-                            <p:commandLink value="Grabar" onstart="return fnValidateForm()" styleClass="btn btn-primary" action="#{productController.saveProduct()}" update="message form:pgRegProduct" oncomplete="fnChangeTab(2)">
+                            <p:commandLink value="Grabar" onstart="return fnValidateProductForm()" styleClass="btn btn-primary" action="#{productController.saveProduct()}" update="message form:pgRegProduct" oncomplete="fnChangeTab(2)">
                                 <p:confirm header="Confirmation" message="¿Está seguro de continuar?" icon="ui-icon-alert" />
                             </p:commandLink>
                             &nbsp;
