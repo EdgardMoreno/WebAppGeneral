@@ -533,8 +533,21 @@ public class DaoDocumentImpl implements Serializable{
                 Hibernate.initialize(sic1idendocu.getSic1docu());
         }
 
-        return sic1idendocu;
+        return sic1idendocu;        
+    }
+    
+    public boolean verifyByCodiden(Session session, String codIden) {
         
+        boolean exist = false;        
+        Criteria criteria = session.createCriteria(Sic1idendocu.class);
+        
+        if(codIden!= null){
+            criteria.add(Restrictions.eq("id.codIden",codIden).ignoreCase());
+            Sic1idendocu sic1idendocu = (Sic1idendocu)criteria.uniqueResult();
+            if (sic1idendocu != null)
+                exist = true;            
+        }
+        return exist;
     }
     
     public Sic1idendocu getById(Session session, BigDecimal id_docu ) {

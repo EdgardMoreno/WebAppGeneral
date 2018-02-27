@@ -65,9 +65,9 @@ public class DocuOrderServiceImpl implements Serializable, DocumentService{
 
             /*VALIDAR SI EXISTE DOCUMENTO: Cuando se crea un nuevo documento el ID_DOCU es nulo. Se verifica que no exista*/
                 if(sic1docu.getIdDocu() == null ){
-                    Sic1idendocu obj = daoDocumentImpl.get(session, sic1idendocu);
-                    if (obj != null){
-                        throw new ValidationException("El Número del Documento ingresado ya existe");
+                    boolean exist = daoDocumentImpl.verifyByCodiden(session, sic1idendocu.getCodIden());
+                    if (exist){
+                        throw new ValidationException("El Número del comprobante ingresado ya existe.");
                     }
                 }
 
@@ -181,7 +181,7 @@ public class DocuOrderServiceImpl implements Serializable, DocumentService{
     
     public void relateDocuEsta( BigDecimal idDocu
                                 ,String codTrolestadocu
-                                ,String codEstadocu ) throws CustomizerException {
+                                ,String codEstadocu ) throws Exception {
         
         Transaction tx = null;
         try{
@@ -213,7 +213,7 @@ public class DocuOrderServiceImpl implements Serializable, DocumentService{
         }catch(Exception ex){
             if(tx != null)
                 tx.rollback();
-            throw new CustomizerException(ex.getMessage());
+            throw new Exception(ex.getMessage());
         }finally{
             if (session != null)
                 session.close();

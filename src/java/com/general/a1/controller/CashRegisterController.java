@@ -16,6 +16,7 @@ import com.general.util.exceptions.CustomizerException;
 import com.general.util.exceptions.ValidationException;
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 import javax.annotation.PostConstruct;
@@ -60,12 +61,13 @@ public class CashRegisterController implements Serializable{
     private ViSiccuaddiario viDayBox;
     
     private boolean editFields;
+    private String desPersCajero;
     
     @PostConstruct
     public void init() {
         
         try{
-            System.out.println("iniciando");
+            System.out.println("iniciando");            
             
             editFields = true;
             listViDayBox = new ArrayList();
@@ -110,6 +112,16 @@ public class CashRegisterController implements Serializable{
     public void setDesTituloPagina(String desTituloPagina) {
         this.desTituloPagina = desTituloPagina;
     }
+
+    public String getDesPersCajero() {
+        return desPersCajero;
+    }
+
+    public void setDesPersCajero(String desPersCajero) {
+        this.desPersCajero = desPersCajero;
+    }
+    
+    
 
     public BigDecimal getNumCalcuDenom0200() {
         return numCalcuDenom0200;
@@ -339,6 +351,11 @@ public class CashRegisterController implements Serializable{
             /***********************************/
             /*** CALCULO DE TARJETA ***********/
             /***********************************/
+            if(box.getNumTarjeCrediTotal() == null)
+                box.setNumTarjeCrediTotal(new BigDecimal("0.00"));
+            if(box.getNumTarjeDebitTotal() == null)
+                box.setNumTarjeDebitTotal(new BigDecimal("0.00"));
+            
             box.setNumTarjeTotal(box.getNumTarjeCrediTotal().add(box.getNumTarjeDebitTotal()).setScale(2, BigDecimal.ROUND_HALF_UP));
 
             /*CALCULAR: TARJETA SOBRANTE / FALTANTE*/
@@ -422,6 +439,7 @@ public class CashRegisterController implements Serializable{
         flash.clear();
         flash.put("paramExternalPage", "1");
         flash.put("paramIdPers", obj.getId().getIdPers());
+        flash.put("paramDesPersCajero", obj.getDesPers());
         flash.put("paramNumPeri", obj.getId().getNumPeri());
         flash.put("paramTituloPagina", "VER CUADRE DE CAJA: " + obj.getFecApertura().substring(0, 9) );
         
@@ -432,7 +450,8 @@ public class CashRegisterController implements Serializable{
         
     }
     
-     public void getParamsExternalPage(ComponentSystemEvent event) throws CustomizerException{
+    /*Metodo que es invocado desde la pagina xhtml: <f:metadata>*/
+    public void getParamsExternalPage(ComponentSystemEvent event) throws CustomizerException{
         
         if(!FacesContext.getCurrentInstance().isPostback()){
             
@@ -440,11 +459,13 @@ public class CashRegisterController implements Serializable{
             String externalPage     = (String)flash.get("paramExternalPage");
             String tituloPagina     = (String)flash.get("paramTituloPagina"); 
             BigDecimal idPers       = (BigDecimal)flash.get("paramIdPers");
+            String desPersCajeroTmp    = (String)flash.get("paramDesPersCajero");
             BigDecimal numPeri      = (BigDecimal)flash.get("paramNumPeri");
             
             System.out.println("externalPage: " + externalPage);
             System.out.println("tituloPagina: " + tituloPagina);
             System.out.println("idPers: " + idPers);
+            System.out.println("desPersCajero: " + desPersCajeroTmp);
             System.out.println("numPeri: " + numPeri);
             
             
@@ -454,6 +475,7 @@ public class CashRegisterController implements Serializable{
             if (externalPage != null && externalPage.equals("1")){
                 
                 this.editFields = false;
+                this.desPersCajero = desPersCajeroTmp;
                 
                 /*OBTENER LOS DATOS DE LA CAJA DIARIA QUE SE QUIERE VER SU DETALLE*/
                 if (numPeri != null && numPeri.intValue() > 0 && 
@@ -464,11 +486,6 @@ public class CashRegisterController implements Serializable{
                     
                     this.calculate();
                     
-//                    if (this.box.getNumTotalVenta() != null)
-//                        this.desTotalVentas = "S/" + this.box.getNumTotalVenta().toString();
-//                    else 
-//                        this.desTotalVentas = "S/0.00";
-                    
                 }else{
                     throw new CustomizerException("Los parámetros no se cargaron correctamente.");
                 }
@@ -477,7 +494,9 @@ public class CashRegisterController implements Serializable{
                 
                 /******************************************/
                 /***SE OBTIENE LOS DATOS DE LA APERTURA***/
-                /******************************************/            
+                /******************************************/
+                this.desPersCajero = SessionUtils.getUserCompleteName();
+                
                 CashRegisterServiceImpl service = new CashRegisterServiceImpl();
                 this.box = service.getById(SessionUtils.getUserId(), new BigDecimal(UtilClass.getCurrentTime_YYYYMMDD()));
 
@@ -529,6 +548,4 @@ public class CashRegisterController implements Serializable{
             }
         }
     }
-    
-    
 }

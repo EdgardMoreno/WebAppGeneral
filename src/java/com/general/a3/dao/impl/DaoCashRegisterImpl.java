@@ -128,6 +128,7 @@ public class DaoCashRegisterImpl {
             System.out.println("numTotalTarj:" + numTotalTarj);
 
             obj.setNumTarjeTotalSiste(new BigDecimal(numTotalTarj).setScale(2, BigDecimal.ROUND_HALF_UP));
+            obj.setNumEfectTotalGastoSiste(new BigDecimal("0.00"));
 
         }
         

@@ -89,9 +89,14 @@
                         <h:commandLink actionListener="#{documentController.filterDocuments()}" styleClass="btn btn-default">
                             <span class="glyphicon glyphicon-search"></span> Buscar
                         </h:commandLink>
-                        <p:commandLink actionListener="#{documentController.clearSearch()}" styleClass="btn btn-default" update="form">
-                            <span class="glyphicon glyphicon-erase"></span> Limpiar
-                        </p:commandLink>
+                        <h:panelGroup>
+                            <p:commandLink actionListener="#{documentController.clearSearch()}" styleClass="btn btn-default" update="form">
+                                <span class="glyphicon glyphicon-erase"></span> Limpiar
+                            </p:commandLink>
+                            <p:commandLink styleClass="btn btn-default" onclick="fnRedirectRegisterPurchase()">
+                                <span class="glyphicon glyphicon-new-window"></span> Nuevo
+                            </p:commandLink>
+                        </h:panelGroup>
 
                     </h:panelGrid>
                     <br/>

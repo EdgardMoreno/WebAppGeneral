@@ -244,7 +244,7 @@ function fnChangeTab(option) {
 
 function fnValidateProductForm() {
     
-    console.log("Product -> fnValidateForm" );
+    console.log("Product -> fnValidateProductForm" );
     //obteniendo el valor que se puso en campo text del formulario                    
     var CodigoProducto  = document.getElementById("form:codigoProducto").value;
     var NombreProducto  = document.getElementById("form:nombreProducto").value;
@@ -629,3 +629,17 @@ function fnValidateIndexForm(){
         return true;
     }
 };
+
+
+/**********************************************************************************************************/
+/********************** ACCESOS MENU *********************************************************************/
+/*********************************************************************************************************/
+/*Función que permite ejecutar la opcion que llama a la PANTALLA: REPORTE DE COMPRAS*/
+function fnRedirectPurchaseReport(){
+    $("#form\\:idMenuPurchaseReport").click();
+}
+
+/*Función que permite ejecutar la opcion que llama a la PANTALLA: REGISTRAR COMPRAS*/
+function fnRedirectRegisterPurchase(){
+    $("#form\\:idMenuRegisterPurchase").click();
+}

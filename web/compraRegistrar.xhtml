@@ -145,7 +145,7 @@
                 }
 
                 /*Funcion que se utiliza para validar el formulario*/
-                function fnValidateForm() {
+                function fnValidateOrderForm() {
 
 
                     //var codSerie = document.getElementById("form:codSerie").value;
@@ -566,7 +566,7 @@
                 <div style="margin: 30px 0px" class="offset-sm-2 col-sm-10">
                     <h:commandLink value="Grabar"                                   
                                    styleClass="btn btn-danger"
-                                   onclick="return fnValidateForm()" >
+                                   onclick="return fnValidateOrderForm()" >
                     </h:commandLink>
                     &nbsp;
                     <h:selectBooleanCheckbox value="#{orderController.flgPorRecoger}"></h:selectBooleanCheckbox>

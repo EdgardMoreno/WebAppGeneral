@@ -137,7 +137,7 @@
                         <li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="#">Compras<span class="caret"></span></a>
                             <ul class="dropdown-menu">
                                 <li>
-                                    <h:commandLink value="Ingreso de Mercadería" action="#{masterPageController.redirect()}" >
+                                    <h:commandLink id="idMenuRegisterPurchase" value="Ingreso de Mercadería" action="#{masterPageController.redirect()}" >
                                         <f:param name="paramTituloPagina" value="Registrar Compra" />
                                         <f:param name="paramNombrePagina" value="compraRegistrar" />
                                         <f:param name="paramCodSClaseeven" value="VI_SICSCLASEEVENCOMPRA" />
@@ -145,7 +145,7 @@
                                     </h:commandLink>
                                 </li>                                
                                 <li>
-                                    <h:commandLink value="Reporte de Compras" action="#{masterPageController.redirect()}" >
+                                    <h:commandLink id="idMenuPurchaseReport" value="Reporte de Compras" action="#{masterPageController.redirect()}" >
                                         <f:param name="paramTituloPagina" value="Reporte de Compras" />
                                         <f:param name="paramNombrePagina" value="documentosListar" />
                                         <f:param name="paramCodSClaseeven" value="VI_SICSCLASEEVENCOMPRA" />

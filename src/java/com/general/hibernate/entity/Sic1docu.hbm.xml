@@ -13,7 +13,7 @@
         <comment>Contiene las notas que describen el contenido del documento.</comment>
       </column>
     </property>
-    <property name="fecCreacion" type="date">
+    <property name="fecCreacion" type="timestamp">
       <column length="7" name="FEC_CREACION">
         <comment>fecha de creacion del documento.</comment>
       </column>

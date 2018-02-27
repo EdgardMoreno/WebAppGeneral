@@ -214,8 +214,9 @@ public class DocumentController implements Serializable{
         Flash flash = FacesContext.getCurrentInstance().getExternalContext().getFlash();
         flash.clear();
         flash.put("paramIdDocu", obj.getIdDocu());
-        flash.put("paramTituloPagina", "VER " + obj.getDesStipodocu() + ": " + obj.getCodIden());
+        flash.put("paramTituloPagina", "VER DETALLE " + obj.getDesSclaseeven() + ": " + obj.getDesStipodocu() + " " + obj.getCodIden());
         flash.put("paramCodTRolpers", this.codTRolpers );
+        flash.put("paramCodSClaseeven", obj.getCodSclaseeven());
         
         //flash.setKeepMessages(true);
         
@@ -223,17 +224,20 @@ public class DocumentController implements Serializable{
     }
     
     /*Metodo para anular un documento*/
-    public void anulDocu() throws CustomizerException{
-        System.out.println("id_docu:" + this.getIdDocuSelected());
-        
-        documentServiceImpl.relateDocuEsta(this.getIdDocuSelected()
-                                           ,Constantes.CONS_COD_ESTADOCUCOMPROBANTE
-                                           ,Constantes.CONS_COD_ESTAANULADO);
-        
-        this.filterDocuments();
-        
-    } 
+    public void anulDocu() throws CustomizerException{        
+        try{            
+            System.out.println("id_docu:" + this.getIdDocuSelected());
+            documentServiceImpl.relateDocuEsta( this.getIdDocuSelected()
+                                               ,Constantes.CONS_COD_ESTADOCUCOMPROBANTE
+                                               ,Constantes.CONS_COD_ESTAANULADO);
+            this.filterDocuments();
+
+        } catch (Exception e) {
+            throw new CustomizerException(e.getMessage());
+        }
+    }
     
+    /*Metodo que es invocado desde la pagina xhtml: <f:metadata>*/
     public void getParamsExternalPage(ComponentSystemEvent event) throws CustomizerException{
         
         if(!FacesContext.getCurrentInstance().isPostback()){
@@ -241,7 +245,7 @@ public class DocumentController implements Serializable{
             Flash flash = FacesContext.getCurrentInstance().getExternalContext().getFlash();        
             String tituloPagina     = (String)flash.get("paramTituloPagina"); 
             String codSClaseeven    = (String)flash.get("paramCodSClaseeven");
-            String codTRolpers      = (String)flash.get("paramCodTRolpers");
+            String codTRolpersTmp      = (String)flash.get("paramCodTRolpers");
             
             /*Codigo que determinara si la operacion es una COMPRA O VENTA*/
             if (codSClaseeven != null)
@@ -252,8 +256,8 @@ public class DocumentController implements Serializable{
             
              /*Esto permite que cuando se registra un nueva persona, se guarde con el rol 
                de CLIENTE O PROVEEDOR*/
-            if (codTRolpers != null)
-                this.codTRolpers = codTRolpers;
+            if (codTRolpersTmp != null)
+                this.codTRolpers = codTRolpersTmp;
             else
                 throw new CustomizerException("No se cargo el Tipo de Rol de la persona.");            
             

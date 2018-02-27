@@ -10,7 +10,6 @@ import com.general.hibernate.entity.Sic1docu;
 import com.general.hibernate.entity.Sic1general;
 import com.general.hibernate.entity.Sic1pers;
 import com.general.hibernate.entity.Sic1prod;
-import com.general.hibernate.relaentity.Sic3proddocu;
 import com.general.a2.service.impl.PersonServiceImpl;
 import com.general.a2.service.impl.ProductServiceImpl;
 import com.general.a2.service.impl.Sic1generalServiceImpl;
@@ -741,6 +740,7 @@ public class OrderController implements Serializable{
                 this.sic3docuprod = new Sic3docuprod();
                 this.sic1prod = new Sic1prod();                    
                 this.desFecRegistro = UtilClass.getCurrentDay();
+                this.flgPorRecoger = false;
                 
                 sic1docu.setNumSubtotal(new BigDecimal("0.00"));
                 sic1docu.setNumIgv(new BigDecimal("0.00"));
@@ -753,6 +753,20 @@ public class OrderController implements Serializable{
         } catch (ValidationException ex){
             UtilClass.addErrorMessage(ex.getMessage());
         }catch (CustomizerException ex) {
+            throw new CustomizerException(ex.getMessage());
+        }
+    }
+    
+    /*Metodo que permite finalizar las ordenes pendientes de recojo*/
+    public void finishPendingOrder() throws CustomizerException{
+        
+        try{        
+            System.out.println("Finalizar Orden Pendiente: "  + this.sic1docu.getIdDocu());
+            this.orderServiceImpl.relateDocuEsta(this.sic1docu.getIdDocu(), Constantes.CONS_COD_ESTADOCUCOMPROBANTE, Constantes.CONS_COD_ESTAFINALIZADO);
+            this.flgPorRecoger = false;        
+
+            UtilClass.addInfoMessage("La orden se finalizó correctamente.");
+        }catch (Exception ex) {
             throw new CustomizerException(ex.getMessage());
         }
     }
@@ -804,6 +818,13 @@ public class OrderController implements Serializable{
             /*OBTENER LOS DATOS DE LA ORDEN*/
             if (idDocu != null && idDocu.intValue() > 0 ){
                 
+                /*Verificar si es una venta*/
+                if (codSClaseevenTmp != null) {
+                    if (codSClaseevenTmp.equalsIgnoreCase(Constantes.CONS_COD_SCLASEEVEN_VENTA))
+                        this.flgIsSale = true;
+                }else
+                    throw new CustomizerException("No se cargo la sub clase del evento.");
+                
                 /*La FACTURA o BOLETA no se puede editar*/
                 this.editFields = false;
 
@@ -824,6 +845,24 @@ public class OrderController implements Serializable{
                 for(int i = 0; i < this.lstSic3docuprod.size(); i++){
                     this.lstSic3docuprod.get(i).setNumIndex(i+1);
                 }
+                
+                /*Formateando Montos*/
+                if (this.sic1docu.getNumMtodscto()!= null)
+                    this.sic1docu.getNumMtodscto().setScale(2,BigDecimal.ROUND_HALF_UP);
+                else
+                    this.sic1docu.setNumMtodscto(new BigDecimal("0.00"));
+                
+                if (this.sic1docu.getNumMtoefectivo()!= null)
+                    this.sic1docu.getNumMtoefectivo().setScale(2,BigDecimal.ROUND_HALF_UP);
+                else
+                    this.sic1docu.setNumMtoefectivo(new BigDecimal("0.00"));
+                
+                if (this.sic1docu.getNumMtotarjeta()!= null)
+                    this.sic1docu.getNumMtotarjeta().setScale(2,BigDecimal.ROUND_HALF_UP);
+                else
+                    this.sic1docu.setNumMtotarjeta(new BigDecimal("0.00"));
+                
+                
                 
                 /*Marcado el check PENDIENTE POR RECOGER*/
                 if(this.sic1docu.getCodEstadocu().equalsIgnoreCase(Constantes.CONS_COD_ESTAPORRECOGER))

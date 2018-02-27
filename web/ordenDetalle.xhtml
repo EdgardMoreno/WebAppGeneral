@@ -39,39 +39,20 @@
                     padding: 5px;
                     /*vertical-align: middle;*/                    
                 }
+                
+                .style_label{text-align: right; font-weight: bold; font-size: 12px; padding: 3px; width: 150px; }
+                .style_content{text-align: left; font-size: 13px; padding: 3px }
 
                
 
             </style>
 
-            <script>               
-              
-
-                $(document).ready(function () {
-
-                    //Se utiliza para llamar a URL externa
-                    $(".iframe").fancybox({
-
-                        type: "iframe",
-                        modal: "true",
-                        enableEscapeButton: "false",
-                        autoDimensions: "false",
-                        width: 800,
-                        height: 460,
-                        autoSize: false,
-                        overlayColor: "#797379",
-                        titleShow: true,
-                        titlePosition: "outside",
-                        overlayOpacity: 0.6,
-                        transitionIn: "elastic",
-                        transitionOut: "elastic"
-
-                    });
-
-                   
-
-                });
+            <script>
                 
+                function fnFinishOrder(){
+                    fnShowDialogConfirm("form\\:idBtnHideFinishOrder","");
+                    return false;
+                }                
 
             </script>
         </ui:define>
@@ -93,24 +74,33 @@
                 <!-- ****************************************************************************** -->
 
                 <div class="panelIngresoDatosOrden">
-                    <table>
+                    
+                    
+                    <table >
                         <tr>
-                            <td class="compra_panelGrid_1"><h:outputLabel value="Fecha:"/></td>
-                            <td class="compra_panelGrid_2">#{orderController.sic1docu.fecDesde}"</td>
+                            <td colspan="2"><h4>Datos de la Operación</h4></td>
                         </tr>
-                        <tr >
-                            <td colspan="2" style="padding: 6px"><h:outputLabel value="DATOS CLIENTE"/></td>                            
+                        <tr>                        
+                            <td class="style_label">Fecha:</td>
+                            <td class="style_content">${orderController.sic1docu.fecCreacion}</td>
+                        </tr>                        
+                        <tr>
+                            <td class="style_label">DNI/RUC:</td>
+                            <td class="style_content">#{orderController.sic1idenpersId.codIden}</td>
                         </tr>
                         <tr>
-                            <td class="compra_panelGrid_1"><h:outputLabel value="Proveedor/Cliente:"/>
-                            </td>
-                            <td class="compra_panelGrid_2">
-                                #{orderController.sic1idenpersId.codIden} - #{orderController.sic1pers.desPers}
-                            </td>                           
+                            <td class="style_label">Nombre/R.Social:</td>
+                            <td class="style_content">#{orderController.sic1pers.desPers}</td>
                         </tr>
                         <tr>
-                            <td colspan="2" style="padding: 6px"><h:outputLabel value="DETALLE DE PRODUCTOS"/></td>                            
-                        </tr>                 
+                            <td class="style_label">Por Recoger?:</td>
+                            <td class="style_content">#{orderController.flgPorRecoger?'SI':'NO'}</td>
+                        </tr>
+                        <tr>
+                            <td class="style_label">Precio producto incluye IGV?:</td>
+                            <td class="style_content">#{orderController.flgPrecioSinIGV?'NO':'SI'}</td>
+                        </tr>
+                        
                     </table>
 
                     <br/>
@@ -118,7 +108,7 @@
                     <!-- ****************************************************************************** -->
                     <!-- DETALLE DE PRODUCTOS -->
                     <!-- ****************************************************************************** -->
-
+                    <h4>Detalle de Productos</h4>
                     <h:panelGrid id="pnDetOrder" columns="1" width="100%" >
 
                         <h:dataTable value="#{orderController.lstSic3docuprod}"
@@ -148,7 +138,7 @@
                                 </div>
                             </h:column>
                             <h:column id="idTableAmount" headerClass="table_style_amount">
-                                <f:facet id="eeeee" name="header">CANTIDAD</f:facet>#{item.numCantidad}
+                                <f:facet name="header">CANTIDAD</f:facet>#{item.numCantidad}
                             </h:column>                           
                         </h:dataTable>
 
@@ -172,7 +162,7 @@
                             <td><h:outputLabel value="" /></td>
                         </tr>
                     </table>
-
+                    
                     <h:panelGroup rendered="#{orderController.flgIsSale}" >
                         <table width="100%" >
                             <tr>
@@ -181,6 +171,7 @@
                                 </td>
                                 <td class="compra_totales_text">
                                     <h:selectOneMenu id="idPayMode" 
+                                                     disabled="true"
                                                      value="#{orderController.sic1docu.idModapago}" 
                                                      styleClass="form-control">
                                         <f:selectItems value="#{orderController.itemsPayMode}" var="c" itemValue="#{c.idGeneral}" itemLabel="#{c.desGeneral}"/>                                        
@@ -197,6 +188,7 @@
                                 <td class="compra_totales_text">
                                     <h:panelGroup id="idTextTipotarjeta" >
                                         <h:selectOneMenu  value="#{orderController.sic1docu.idTipotarjeta}"
+                                                          disabled="true"
                                                           styleClass="form-control"
                                                           rendered="#{not empty orderController.itemsTypeCard}">                                        
                                             <f:selectItems value="#{orderController.itemsTypeCard}" />
@@ -208,39 +200,21 @@
                             <tr>
                                 <td class="compra_totales_label">
                                     <h:panelGroup id="idLabelMtoTarjeta" >
-                                        <h:outputLabel value="Mto. Tarjeta:*" rendered="#{not empty orderController.itemsTypeCard}" />
+                                        <h:outputLabel value="Mto. Tarjeta:" rendered="#{not empty orderController.itemsTypeCard}" />
                                     </h:panelGroup>
                                 </td>
                                 <td class="compra_totales_text">
-                                    <h:panelGroup id="idMtoTarjeta"  >
-                                        <h:panelGroup rendered="#{not empty orderController.itemsTypeCard}">
-                                            <div class="input-group mb-1 mb-sm-0">
-                                                <div class="input-group-addon">S/.</div>
-                                                <h:inputText
-                                                    id="numMtotarjeta" autocomplete="off"                                                    
-                                                    styleClass="form-control"
-                                                    value="#{orderController.sic1docu.numMtotarjeta}"                                                
-                                                    onkeypress="return fnAllowOnlyDecimalNumbers(event)">                                                
-                                                </h:inputText>
-                                            </div>
-                                        </h:panelGroup>
-                                    </h:panelGroup>
+                                    <h:outputLabel value="S/." />
+                                    <h:outputLabel value="#{orderController.sic1docu.numMtotarjeta}" />
                                 </td>
                             </tr>
                             <tr>
                                 <td class="compra_totales_label">
-                                    <h:outputLabel value="Efectivo:*"/>
+                                    <h:outputLabel value="Efectivo:"/>
                                 </td>
                                 <td class="compra_totales_text">
-                                    <div class="input-group mb-1 mb-sm-0">
-                                        <div class="input-group-addon">S/.</div>
-                                        <h:inputText
-                                            id="numMtoefectivo" autocomplete="off"
-                                            styleClass="form-control"
-                                            value="#{orderController.sic1docu.numMtoefectivo}"
-                                            onkeypress="return fnAllowOnlyDecimalNumbers(event)">                                            
-                                        </h:inputText>
-                                    </div>
+                                    <h:outputLabel value="S/." />
+                                    <h:outputLabel value="#{orderController.sic1docu.numMtoefectivo}" />                                    
                                 </td>
                             </tr>
                         </table>
@@ -255,16 +229,8 @@
                                     <h:outputLabel value="Descuento:"/>
                                 </td>
                                 <td class="compra_totales_text">
-                                    <div class="input-group mb-1 mb-sm-0">
-                                        <div class="input-group-addon">S/.</div>
-                                        <h:inputText id="numMtodscto" autocomplete="off"
-                                                     styleClass="form-control"
-                                                     style="color: red"
-                                                     value="#{orderController.sic1docu.numMtodscto}"
-                                                     onkeypress="return fnAllowOnlyDecimalNumbers(event)"
-                                                     >                                            
-                                        </h:inputText>
-                                    </div>
+                                    <h:outputLabel value="S/." />
+                                    <h:outputLabel value="#{orderController.sic1docu.numMtodscto}" />
                                 </td>
                             </tr>
                             <tr style="height: 10px">
@@ -300,17 +266,6 @@
                                 </td>
                             </tr>
                             
-                            <tr>
-                                <td colspan="2" style="text-align: center; color: white">
-                                    <h:panelGroup rendered="#{!orderController.flgIsSale}">
-                                        <h:selectBooleanCheckbox value="#{orderController.flgPrecioSinIGV}" >
-                                            <f:ajax execute="@this" event="change" render="form:pnTotals message" listener="#{orderController.recalculateTotals()}" />
-                                        </h:selectBooleanCheckbox>
-                                        <h:outputLabel value="PRECIO NO INCLUYE I.G.V." />
-                                    </h:panelGroup>
-                                </td>
-                            </tr>
-                            
                             <!--Se muestra el vuelto -->
                             <tr style="color: white; border-top: 1px inset #2C3259; text-align: center">
                                 <td colspan="2">
@@ -331,14 +286,12 @@
                 <!-- ****************************************************************************** -->
                 <br/>
                 <div style="margin: 30px 0px" class="offset-sm-2 col-sm-10">
-                    <h:commandLink value="Grabar"                                   
+                    <h:commandLink id="btnFinishOrder"
+                                   value="Finalizar Operación"
+                                   rendered="#{orderController.flgPorRecoger}"
                                    styleClass="btn btn-danger"
-                                   onclick="return fnValidateForm()" >
+                                   onclick="return fnFinishOrder()" >
                     </h:commandLink>
-                    &nbsp;
-                    <h:selectBooleanCheckbox value="#{orderController.flgPorRecoger}"></h:selectBooleanCheckbox>
-                    <h:outputLabel value="PENDIENTE DE RECOJO:" />
-
                 </div>
 
                 <!-- ****************************************************************************** -->
@@ -348,12 +301,14 @@
                     <tr>
                         <td><label>CodTRolpers:</label></td>
                         <td><input type="text" id="idCodTRolpers" disabled="true" value="${orderController.codTRolpers}"/></td>
-                    </tr>                    
+                    </tr>
+                    <tr>
+                        <td><p:commandLink id="idBtnHideFinishOrder" value="Finalizar Orden" actionListener="#{orderController.finishPendingOrder()}" update="form" /></td>
+                    </tr>
                 </table>
 
-                <a id="linkDialog" href="#" class="iframe"  style="display:none"/>
-                <a id="idLink" href="#"  style="display:none"/>
-               
+                
+                
                 
             </div>
 
