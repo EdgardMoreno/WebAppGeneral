@@ -164,6 +164,16 @@
                     if (fecRegistro.length == 0) {
                         arrMessages.push("Debe ingresar la fecha de la operación.");
                         FlgError = true;
+                    }else if(!fnValidateDateDDMMAAAA(fecRegistro)){
+                        arrMessages.push("El formato de la Fecha de Registro es incorrecto.");
+                        FlgError = true;
+                    }else{
+                        /*Validar fecha mayor a la actual*/
+                        var msj = fnValidateBiggerDate(fecRegistro);
+                        if (msj.length > 0){
+                            arrMessages.push(msj);
+                            FlgError = true;
+                        }
                     }
 
                     if (razonSocial.length == 0) {
@@ -229,7 +239,7 @@
                                 <h:inputText id="fecRegistro" size="10" 
                                              value="#{orderController.desFecRegistro}"
                                              styleClass="form-control datepicker"
-                                             style="font-size:14px;font-weight:bold;"/></td>
+                                             style="font-size:14px;font-weight:bold; z-index: 50 "/></td>
                         </tr>
                         <tr >
                             <td colspan="2" style="padding: 6px"><h:outputLabel value="INGRESAR DATOS CLIENTE"/></td>                            

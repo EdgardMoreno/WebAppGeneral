@@ -22,8 +22,7 @@
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
         <meta charset="utf-8"/>
 
-        <!--CSS STYLE -->
-        <h:outputStylesheet name="/datepicker/css/datepicker.css"/><!--DatePicker -->
+        <!--CSS STYLE -->        
         <h:outputStylesheet name="/css/bootstrap.min.css"/>
         <h:outputStylesheet name="/css/customizer.css"/>
         <h:outputStylesheet name="/css/jquery-confirm-3.3.css"/>        
@@ -31,16 +30,17 @@
         <!--JQUERY-->
         <script src="#{request.contextPath}/faces/resources/js/jquery-3.2.1.min.js"></script>
         <script src="#{request.contextPath}/faces/resources/js/customizerJS.js"></script>
-        <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js" />
-
-        <script src="#{request.contextPath}/faces/resources/datepicker/js/bootstrap-datepicker.js"></script>
-        <script src="#{request.contextPath}/faces/resources/datepicker/js/formatDatePicker.js"></script>
-
-        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+        <script src="#{request.contextPath}/faces/resources/js/jquery-ui.js" />
+        
+        <script src="#{request.contextPath}/faces/resources/js/bootstrap.min.js"></script>
         <script src="#{request.contextPath}/faces/resources/js/jquery-confirm-3.3.js"></script>
 
 
         <script>
+            
+            $( function() {
+               $(".datepicker").datepicker();
+            });
 
             $(document).ready(function () {
                 
@@ -299,8 +299,8 @@
                         <h:outputLabel value="" />
                         <h:outputLabel value="" />
                         
-                        <h:outputLabel value="Genero:"/>
-                        <h:selectOneRadio id="sorGenero" value="#{personController.sic1persindi.idGenero}">
+                        <h:outputLabel rendered="false" value="Genero:"/>
+                        <h:selectOneRadio rendered="false" id="sorGenero" value="#{personController.sic1persindi.idGenero}">
                            <f:selectItems value="#{personController.itemsGeneroPers}" />                           
                         </h:selectOneRadio>
                         <h:outputLabel value="Fecha Nacimiento:"/>

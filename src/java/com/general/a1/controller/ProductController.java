@@ -161,16 +161,23 @@ public class ProductController implements Serializable{
         RequestContext.getCurrentInstance().closeDialog(prod);
     }
     
-    public String deleteAction(Sic1prod obj) {
-              
-        listProducts.remove(obj);
-        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Info", "Fila eliminada"));        
-        return "";
+    public void deleteAction(ViSicprod obj) throws CustomizerException {
+        
+        try{
+            
+            //No existe la tabla SIC3PRODESTA. Se deja como pendiente...
+            listProducts.remove(obj);
+            UtilClass.addInfoMessage("Producto eliminado.");
+            
+            
+        }catch(Exception ex){
+            throw new CustomizerException(ex.getMessage());
+        }
     }
     
-    public void editAction(ViSicprod obj) throws CustomizerException {
+    public void editAction(int index) throws CustomizerException {
       
-        this.indexTabla = listProducts.indexOf(obj);
+        ViSicprod obj = listProducts.get(index);
         ProductServiceImpl productServiceImpl = new ProductServiceImpl();
         this.sic1prod = productServiceImpl.getByCod(obj.getCodProd());
         this.flgEditProd = true;

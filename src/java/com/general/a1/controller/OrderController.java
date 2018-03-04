@@ -833,7 +833,7 @@ public class OrderController implements Serializable{
 
                 /*Se obtiene los datos del Cliente/Proveedor*/
                 PersonServiceImpl personServiceImpl = new PersonServiceImpl();
-                Sic1idenpers sic1idenpers           = personServiceImpl.getById(sic1idendocu.getSic1docu().getIdPers());
+                Sic1idenpers sic1idenpers           = personServiceImpl.getById(sic1idendocu.getSic1docu().getIdPersexterno());
 
                 /*Seteando en las variables para que se visualice los datos en la pantalla*/
                 this.sic1docu           = sic1idendocu.getSic1docu();

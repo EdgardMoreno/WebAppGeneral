@@ -61,28 +61,29 @@
                             <f:selectItem itemLabel="-- Todos --" itemValue="-1" />
                             <f:selectItems value="#{documentController.itemsEstaRol}" var="c" itemValue="#{c.idEsta}" itemLabel="#{c.desEsta}" />
                         </h:selectOneMenu>                        
-                        <h:outputLabel value="Num. Docu:"/>
+                        <h:outputLabel value="Correlativo:"/>                        
+                            <h:inputText autocomplete="off"                                                                                          
+                                         value="#{documentController.viSicdocu.numDocu}" styleClass="form-control"/>                        
+                        <h:outputLabel value=""/>
+                        <h:outputLabel value=""/>                        
+                        
+                        <h:outputLabel value="Docu. Identidad Cliente/Proveedor:"/>
                         <h:panelGroup>
                             <div class="input-group mb-2 mb-sm-0">
                                 <div id="idCantDigitosDocIden" class="input-group-addon">0</div>
                                 <h:inputText id="numDocuIden" autocomplete="off"                                                 
                                              onkeypress="return fnAllowOnlyNumbers(event)"
                                              onkeyup="fnCountLength(this.value,'idCantDigitosDocIden')"
-                                             value="#{documentController.viSicdocu.numDocu}" styleClass="form-control"/>
+                                             value="#{documentController.viSicdocu.codIdenClieprov}" styleClass="form-control"/>
                             </div>
-                        </h:panelGroup>                        
-                        <h:outputLabel value=""/>
-                        <h:outputLabel value=""/>                        
-                        
-                        <h:outputLabel value="Docu. Identidad Cliente/Proveedor:"/>
-                        <h:inputText styleClass="form-control" value="#{documentController.viSicdocu.codIdenClieprov}" />
+                        </h:panelGroup>
                         <h:outputLabel value="Cliente/Proveedor:"/>
                         <h:inputText styleClass="form-control" value="#{documentController.viSicdocu.desPersClieprov}" />
                         <h:outputLabel value=""/>
                         <h:outputLabel value=""/>
 
                         <h:outputLabel value="Fecha Desde:"/>
-                        <h:inputText value="#{documentController.desFecDesde}" styleClass="form-control datepicker" />
+                        <h:inputText value="#{documentController.desFecDesde}" styleClass="form-control datepicker"/>
                         <h:outputLabel value="Fecha Hasta:"/>
                         <h:inputText value="#{documentController.desFecHasta}" styleClass="form-control datepicker" />
                         
@@ -177,11 +178,11 @@
                         <h:column>
                             
                             <h:commandLink onclick="return fnAnulDocu(#{item.idDocu})" >
-                                <span class="glyphicon glyphicon-trash"></span>                                
+                                <span class="glyphicon glyphicon-trash" data-toggle="tooltip" title="Anular"></span>                                
                             </h:commandLink>
                             &nbsp;                           
                             <h:commandLink action="#{documentController.editAction(item)}">
-                                <span class="glyphicon glyphicon-info-sign"></span>
+                                <span class="glyphicon glyphicon-info-sign" data-toggle="tooltip" title="Ver Detalle"></span>
                             </h:commandLink>                           
                         </h:column>
                     </h:dataTable>

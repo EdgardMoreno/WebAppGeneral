@@ -20,22 +20,27 @@
         <h:outputStylesheet name="/css/customizer.css"/>
         <h:outputStylesheet name="/css/jquery-confirm-3.3.css"/>
         <h:outputStylesheet name="/css/jquery.fancybox-2.1.7.css"/>
-        <h:outputStylesheet name="/datepicker/css/datepicker.css"/><!--DatePicker -->
+        
+        <h:outputStylesheet name="/css/sb-admin-2.css"/>
+        
 
 <!--<link rel="stylesheet" href="#{request.contextPath}/faces/resources/css/bootstrap-theme.min.css"/>-->        
 
         <!--JAVASCRIPT-->        
         <script src="#{request.contextPath}/faces/resources/js/jquery-3.2.1.min.js"></script>
         <script src="#{request.contextPath}/faces/resources/js/bootstrap.min.js"></script>
-        <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js" />
+        <script src="#{request.contextPath}/faces/resources/js/jquery-ui.js" />
 
         
-        <script src="#{request.contextPath}/faces/resources/datepicker/js/formatDatePicker.js"></script>
-        <script src="#{request.contextPath}/faces/resources/datepicker/js/bootstrap-datepicker.js"></script>
+        
         <script src="#{request.contextPath}/faces/resources/js/jquery.fancybox-2.1.7.js"></script>
         <script src="#{request.contextPath}/faces/resources/js/jquery-confirm-3.3.js"></script>
-
         <script src="#{request.contextPath}/faces/resources/js/customizerJS.js"></script>
+        
+        <!--Gestor de iconos -->
+        <script src="#{request.contextPath}/faces/resources/js/fontawesome/fontawesome-all.js"></script>
+        
+        
 
         <title>Facelets Template</title>
 
@@ -67,6 +72,12 @@
         {
             window.history.forward();
         }
+        
+        /*Funcion de Jquery para el datePicker*/
+        $(function(){
+            $(".datepicker" ).datepicker();
+        });
+        
     </script>
 
     <body onLoad="noBack();" onpageshow="if (event.persisted) noBack();" onUnload="">
@@ -86,13 +97,13 @@
                         <li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="#">Cuadre Caja<span class="caret"></span></a>
                             <ul class="dropdown-menu">                                
                                 <li>
-                                    <h:commandLink value="Cuadrar Caja" action="#{masterPageController.redirect()}">
+                                    <h:commandLink id="idMenuCloseBox" value="Cuadrar Caja" action="#{masterPageController.redirect()}">
                                         <f:param name="paramTituloPagina" value="Cuadre Caja" />
                                         <f:param name="paramNombrePagina" value="cajaCuadre" />                                    
                                     </h:commandLink>
                                 </li>
                                 <li>
-                                    <h:commandLink value="Reporte de Cuadre" action="#{masterPageController.redirect()}">
+                                    <h:commandLink id="idMenuBoxReport" value="Reporte de Cuadre" action="#{masterPageController.redirect()}">
                                         <f:param name="paramTituloPagina" value="Reporte de Caja Diaria" />
                                         <f:param name="paramNombrePagina" value="cajaCuadreListar" />                                    
                                     </h:commandLink>
@@ -102,8 +113,8 @@
                         </li>
                         
                         <li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="#">Productos<span class="caret"></span></a>
-                            <ul class="dropdown-menu">
-                                <li><a href="#{request.contextPath}/faces/productoMantenimiento.xhtml?flgExternalPage=true">Consultar / Registrar</a></li>
+                            <ul class="dropdown-menu">                              
+                                <li> <h:commandLink id="idMenuRegisterProduct" value="Consultar / Registrar" action="productoMantenimiento.xhtml?flgExternalPage=true"/></li>
                                 <!--<li><a href="#{request.contextPath}/faces/actualizarPrecios.xhtml">Actualizar Precios</a></li>-->
                             </ul>
                         </li>
@@ -112,7 +123,7 @@
                             <ul class="dropdown-menu">
                                 <!--<li><a href="#{request.contextPath}/faces/popups/popupPersonaRegistrar.xhtml">Registrar Cliente</a></li>-->
                                 <li>                                
-                                    <h:commandLink value="Reporte de Clientes" action="#{masterPageController.redirect()}" >
+                                    <h:commandLink id="idMenuCustomerReport" value="Reporte de Clientes" action="#{masterPageController.redirect()}" >
                                         <f:param name="paramTituloPagina" value="Reporte de Clientes" />
                                         <f:param name="paramNombrePagina" value="personaListar" />
                                         <f:param name="paramCodTRolpers" value="VI_SICTROLCLIENTE" />
@@ -125,7 +136,7 @@
                             <ul class="dropdown-menu">
                                 <!--<li><a href="#{request.contextPath}/faces/popups/popupPersonaRegistrar.xhtml">Registrar Proveedor</a></li>-->
                                 <li>                                
-                                    <h:commandLink value="Reporte de Proveedores" action="#{masterPageController.redirect()}" >
+                                    <h:commandLink id="idMenuProviderReport" value="Reporte de Proveedores" action="#{masterPageController.redirect()}" >
                                         <f:param name="paramTituloPagina" value="Reporte de Proveedores" />
                                         <f:param name="paramNombrePagina" value="personaListar" />
                                         <f:param name="paramCodTRolpers" value="VI_SICTROLPROVEEDOR" />
@@ -149,7 +160,7 @@
                                         <f:param name="paramTituloPagina" value="Reporte de Compras" />
                                         <f:param name="paramNombrePagina" value="documentosListar" />
                                         <f:param name="paramCodSClaseeven" value="VI_SICSCLASEEVENCOMPRA" />
-                                        <f:param name="paramCodTRolpers" value="VI_SICTROLCLIENTE" />
+                                        <f:param name="paramCodTRolpers" value="VI_SICTROLPROVEEDOR" />
                                     </h:commandLink>
                                 </li>
                             </ul>
@@ -158,7 +169,7 @@
                         <li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="#">Ventas<span class="caret"></span></a>
                             <ul class="dropdown-menu">
                                 <li>
-                                    <h:commandLink value="Registrar Venta" action="#{masterPageController.redirect()}" >
+                                    <h:commandLink id="idMenuSaleRegist" value="Registrar Venta" action="#{masterPageController.redirect()}" >
                                         <f:param name="paramTituloPagina" value="Registrar Venta" />
                                         <f:param name="paramNombrePagina" value="compraRegistrar" />
                                         <f:param name="paramCodSClaseeven" value="VI_SICSCLASEEVENVENTA" />
@@ -166,7 +177,7 @@
                                     </h:commandLink>
                                 </li>
                                 <li>
-                                    <h:commandLink value="Reporte de Ventas" action="#{masterPageController.redirect()}" >
+                                    <h:commandLink id="idMenuSaleReport" value="Reporte de Ventas" action="#{masterPageController.redirect()}" >
                                         <f:param name="paramTituloPagina" value="Reporte de Ventas" />
                                         <f:param name="paramNombrePagina" value="documentosListar" />
                                         <f:param name="paramCodSClaseeven" value="VI_SICSCLASEEVENVENTA" />
