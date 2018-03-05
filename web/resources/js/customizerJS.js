@@ -188,9 +188,15 @@ function fnValidateDateDDMMAAAA(fecha){
 
 function fnValidateBiggerDate(fecha){
 
+
     var hoy             = new Date();
-    var fechaFormulario = new Date(fecha);
+    var fechaFormulario = new Date("05-03-2018");
     var message         = "";
+
+    fechaFormulario.toLocaleDateString("es-ES")
+    console.log("hoy: " + hoy);
+    console.log("fechaFormulario: " + fechaFormulario);
+
 
     // Comparamos solo las fechas => no las horas!!
     hoy.setHours(0,0,0,0);

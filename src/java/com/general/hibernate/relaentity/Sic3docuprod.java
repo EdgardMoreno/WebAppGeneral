@@ -22,6 +22,7 @@ public class Sic3docuprod  implements java.io.Serializable {
      private BigDecimal numMtodscto;
      private BigDecimal numCantidad;
      
+     
       /*Agregado*/
      private Integer numIndex;
      private Sic1docu sic1docu;
@@ -122,10 +123,7 @@ public class Sic3docuprod  implements java.io.Serializable {
         this.sic1docu = sic1docu;
     }
 
-
     
-
-
 }
 
 

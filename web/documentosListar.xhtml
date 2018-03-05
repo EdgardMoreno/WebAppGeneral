@@ -30,6 +30,14 @@
                     return false;
                 }
                 
+                function fnCreateOrder(){
+                    val = $("#form\\:idSClaseeven").val();
+                    if(val == "VI_SICSCLASEEVENCOMPRA")
+                        fnRedirectRegisterPurchase();
+                    else
+                        fnRedirectSaleRegister();
+                }
+                
             </script>
                    
         </ui:define>
@@ -94,7 +102,7 @@
                             <p:commandLink actionListener="#{documentController.clearSearch()}" styleClass="btn btn-default" update="form">
                                 <span class="glyphicon glyphicon-erase"></span> Limpiar
                             </p:commandLink>
-                            <p:commandLink styleClass="btn btn-default" onclick="fnRedirectRegisterPurchase()">
+                            <p:commandLink styleClass="btn btn-default" onclick="fnCreateOrder()">
                                 <span class="glyphicon glyphicon-new-window"></span> Nuevo
                             </p:commandLink>
                         </h:panelGroup>
@@ -107,6 +115,8 @@
                     <!-- *********************************** -->
                     <label class="ocultarObjeto" >ID_Docu_seleccionado</label>
                     <h:inputText id="idDocuSelected" value="#{documentController.idDocuSelected}" styleClass="ocultarObjeto" />
+                    <label class="ocultarObjeto" >CODSCLASEEVEN</label>
+                    <h:inputText id="idSClaseeven" value="#{documentController.codSClaseeven}" styleClass="ocultarObjeto" />
                     
                     
                     <!-- ********************************** -->

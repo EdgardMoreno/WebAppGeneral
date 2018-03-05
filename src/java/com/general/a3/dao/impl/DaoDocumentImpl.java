@@ -360,6 +360,7 @@ public class DaoDocumentImpl implements Serializable{
 
                             sp.addParameter(new InParameter("X_ID_DOCU",        Types.INTEGER, sic3docuprod.getId().getIdDocu()));
                             sp.addParameter(new InParameter("X_ID_PROD",        Types.INTEGER, sic3docuprod.getId().getIdProd()));                            
+                            sp.addParameter(new InParameter("X_NUM_ITEM",        Types.INTEGER, sic3docuprod.getId().getNumItem()));
                             sp.addParameter(new InParameter("X_ID_TRELADOCU",   Types.INTEGER, intIdTreladocu));
                             //Persona Juridica
                             sp.addParameter(new InParameter("X_FEC_DESDE",      Types.INTEGER, strFecDesde));
@@ -483,6 +484,7 @@ public class DaoDocumentImpl implements Serializable{
         if(id_docu!= null){
             
             criteria.add(Restrictions.eq("id.idDocu",id_docu));
+            criteria.addOrder(Order.asc("id.numItem"));
             list = criteria.list();
             
             for (Sic3docuprod obj : list){

@@ -52,6 +52,7 @@ public class DocumentController implements Serializable{
     
     private String desTituloPagina;
     private String codTRolpers;
+    private String codSClaseeven;
     
     private BigDecimal idDocuSelected;
     
@@ -171,6 +172,14 @@ public class DocumentController implements Serializable{
     public void setIdDocuSelected(BigDecimal idDocuSelected) {
         this.idDocuSelected = idDocuSelected;
     }
+
+    public String getCodSClaseeven() {
+        return codSClaseeven;
+    }
+
+    public void setCodSClaseeven(String codSClaseeven) {
+        this.codSClaseeven = codSClaseeven;
+    }
     
     
     
@@ -248,8 +257,10 @@ public class DocumentController implements Serializable{
             String codTRolpersTmp      = (String)flash.get("paramCodTRolpers");
             
             /*Codigo que determinara si la operacion es una COMPRA O VENTA*/
-            if (codSClaseeven != null)
+            if (codSClaseeven != null){
                 this.viSicdocu.setCodSclaseeven(codSClaseeven);
+                this.codSClaseeven = codSClaseeven;
+            }
             else
                 throw new CustomizerException("No se cargo la sub clase del evento.");
             

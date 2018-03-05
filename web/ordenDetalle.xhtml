@@ -113,11 +113,12 @@
                                      columnClasses = "table_style_id,
                                                       table_style_code,
                                                       table_style_description,
-                                                      table_style_price,
-                                                      table_style_amount">
+                                                      table_style_price_small,
+                                                      table_style_amount,
+                                                      table_style_price_small">
 
                             <h:column headerClass="table_style_id">
-                                <f:facet name="header">No.</f:facet>#{item.numIndex}
+                                <f:facet name="header">No.</f:facet>#{item.id.numItem}
                             </h:column>                            
                             <h:column headerClass="table_style_code">
                                 <f:facet name="header">CODIGO</f:facet>#{item.sic1prod.codProd}
@@ -133,7 +134,15 @@
                             </h:column>
                             <h:column id="idTableAmount" headerClass="table_style_amount">
                                 <f:facet name="header">CANTIDAD</f:facet>#{item.numCantidad}
-                            </h:column>                           
+                            </h:column>
+                            
+                            <h:column headerClass="table_style_price">
+                                <div >
+                                    <h:outputLabel value="S/." />
+                                    <f:facet name="header">TOTAL</f:facet>#{item.numValor * item.numCantidad}
+                                </div>
+                            </h:column>
+                            
                         </h:dataTable>
 
                     </h:panelGrid>
@@ -222,7 +231,7 @@
                                 <td class="compra_totales_label">
                                     <h:outputLabel value="Descuento:"/>
                                 </td>
-                                <td class="compra_totales_text">
+                                <td class="compra_totales_text" style="color: red">
                                     <h:outputLabel value="S/." />
                                     <h:outputLabel value="#{orderController.sic1docu.numMtodscto}" />
                                 </td>

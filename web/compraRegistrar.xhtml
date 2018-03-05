@@ -350,7 +350,13 @@
                                      id="idTableDetOrder"
                                      width="100%"
                                      styleClass = "table-bordered"                                         
-                                     columnClasses = "table_style_id,table_style_code,table_style_description,table_style_price,table_style_amount,table_style_action">
+                                     columnClasses = "table_style_id
+                                                     ,table_style_code
+                                                     ,table_style_description
+                                                     ,table_style_price_small
+                                                     ,table_style_amount
+                                                     ,table_style_price_small
+                                                     ,table_style_action">
 
                             <h:column headerClass="table_style_id">
                                 <f:facet name="header">No.</f:facet>#{item.numIndex}
@@ -361,15 +367,25 @@
                             <h:column headerClass="table_style_description">
                                 <f:facet name="header">DESCRIPCION</f:facet>#{item.sic1prod.desProd}
                             </h:column>
+                            
                             <h:column id="idTablePrice" headerClass="table_style_price">
                                 <div >
                                     <h:outputLabel value="S/." />
                                     <f:facet name="header">PRECIO</f:facet>#{item.numValor}
                                 </div>
                             </h:column>
+                            
                             <h:column id="idTableAmount" headerClass="table_style_amount">
                                 <f:facet id="eeeee" name="header">CANTIDAD</f:facet>#{item.numCantidad}
                             </h:column>
+                            
+                            <h:column headerClass="table_style_price">
+                                <div >
+                                    <h:outputLabel value="S/." />
+                                    <f:facet name="header">TOTAL</f:facet>#{item.numValor * item.numCantidad}
+                                </div>
+                            </h:column>
+                            
                             <h:column headerClass="table_style_action">
                                 <f:facet name="header">ACCION</f:facet>
                                 <h:commandLink actionListener="#{orderController.deleteAction(item.numIndex)}" >                                              
@@ -414,7 +430,7 @@
                                                      value="#{orderController.sic1docu.idModapago}" 
                                                      styleClass="form-control">
                                         <f:selectItems value="#{orderController.itemsPayMode}" var="c" itemValue="#{c.idGeneral}" itemLabel="#{c.desGeneral}"/>
-                                        <f:ajax execute="idPayMode" render="form:pnTotals idLabelTipotarjeta idTextTipotarjeta idLabelMtoTarjeta idMtoTarjeta" event="change" listener="#{orderController.payModeValueChange}" />
+                                        <f:ajax execute="idPayMode" render="form:pnTotals idLabelTipotarjeta idTextTipotarjeta idLabelMtoTarjeta idMtoTarjeta numMtoefectivo" event="change" listener="#{orderController.payModeValueChange}" />
                                     </h:selectOneMenu>
                                 </td>
                             </tr>

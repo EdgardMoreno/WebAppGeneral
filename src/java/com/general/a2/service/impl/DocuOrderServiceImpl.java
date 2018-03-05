@@ -274,7 +274,7 @@ public class DocuOrderServiceImpl implements Serializable, DocumentService{
             session = HibernateUtil.getSessionFactory().openSession();
             sic1idendocu = daoDocumentImpl.getById(session, id);
             
-            /*Se obtiene los productos*/
+            /*Se obtiene la LISTA DE PRODUCTOS*/
             List<Sic3docuprod> list = daoDocumentImpl.getRelaDocuProdByIdDocu(session, id);
             sic1idendocu.getSic1docu().setLstSic3docuprod(list);
             

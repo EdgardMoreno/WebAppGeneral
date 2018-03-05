@@ -35,6 +35,7 @@ import com.general.util.beans.Constantes;
 import com.general.util.beans.UtilClass;
 import com.general.util.exceptions.CustomizerException;
 import com.general.util.exceptions.ValidationException;
+import java.math.BigInteger;
 import java.text.ParseException;
 import javax.faces.context.FacesContext;
 import javax.faces.context.Flash;
@@ -372,24 +373,35 @@ public class OrderController implements Serializable{
     public void addItem() throws CustomizerException{
         
         System.out.println("Agregar Item");
-        /*ID*/
-        Sic3docuprodId id = new Sic3docuprodId();
-        id.setIdProd(this.sic1prod.getIdProd());
         
-        this.sic3docuprod.setSic1prod(this.sic1prod);
-        this.sic3docuprod.setId(id);
-        
+        /*Se agrega un producto que se ha editado*/
         if(this.indexTabla>=0){
+            
+            int item = this.indexTabla + 1;
+            
             Sic3docuprod obj = this.lstSic3docuprod.get(this.indexTabla);
             this.lstSic3docuprod.remove(obj);
-            this.sic3docuprod.setNumIndex(this.indexTabla + 1);
+            this.sic3docuprod.setNumIndex(item);
+            this.sic3docuprod.getId().setNumItem(item);
             this.sic3docuprod.getNumValor().setScale(2,BigDecimal.ROUND_HALF_UP );
             this.lstSic3docuprod.add(this.indexTabla, sic3docuprod);
             
         }
+        /*Se agrega un nuevo item*/
         else{
-            this.sic3docuprod.setNumIndex(this.lstSic3docuprod.size()+1);
-            this.lstSic3docuprod.add(sic3docuprod);
+            /*AGREGAR ID*/
+            
+            int item = this.lstSic3docuprod.size() + 1;
+            
+            Sic3docuprodId id = new Sic3docuprodId();
+            id.setIdProd(this.sic1prod.getIdProd());
+            id.setNumItem(item);
+
+            this.sic3docuprod.setSic1prod(this.sic1prod);
+            this.sic3docuprod.setId(id);
+            this.sic3docuprod.setNumIndex(item);
+            
+            this.lstSic3docuprod.add(this.sic3docuprod);
         }       
        
         this.recalculateTotals();
@@ -485,6 +497,7 @@ public class OrderController implements Serializable{
         try{
             
             double numTotalPrice = 0;
+            boolean flgTarjeta = false;
             boolean flgErrorDescuento = false;
             
             BigDecimal numDescuento = this.sic1docu.getNumMtodscto();
@@ -501,30 +514,18 @@ public class OrderController implements Serializable{
             double numCargoTarjeta = 0;
             for(Sic1general obj : this.itemsPayMode){
                 if(this.sic1docu.getIdModapago().equals(obj.getIdGeneral())){
-                    if(obj.getNumValor() != null)
+                    if(obj.getNumValor() != null){
                         numCargoTarjeta = obj.getNumValor().doubleValue()/100;
+                        flgTarjeta = true;
+                    }
                 }
             }
             numTotalPrice = numTotalPrice + (numTotalPrice * numCargoTarjeta);
             
-            
-            /***************************************/
-            /**PRECIO DEL PRODUCTO NO INCLUYE  IGV*/
-            /***************************************/
-            /*Los precios de los productos no incluyen IGV: Algunos proveedores su precio no incluye IGV
-             Cuando Precio:
-                - Incluye IGV: La sumatoria de precio de todos los productos va en el TOTAL de la FACTURA/BOLETA 
-                - Incluye NO IGV: La sumatoria de precio de todos los productos va en el SUB-TOTAL de la FACTURA/BOLETA
-            */            
-            /*Por defecto el precio ya incluye IGV, peri si no incluye IVG, entonces se suma el IGV, con esto igual se obtiene el MONTO TOTAL DE LA OPERACION*/            
-            if (this.flgPrecioSinIGV){
-                numTotalPrice = numTotalPrice + numTotalPrice*Constantes.CONS_VALUE_IGV;
-            }
-            
-            
             /*******************/
-            /**DESCUENTO***/
-            /*******************/
+            /**DESCUENTO *******/
+            /*******************/         
+
             /*El descuento no debe ser mayor al IMPORTE TOTAL*/
             if (numDescuento != null && numDescuento.doubleValue() > numTotalPrice){
                 numDescuento = new BigDecimal(0);
@@ -533,6 +534,20 @@ public class OrderController implements Serializable{
             /*En caso haya descuento se resta del importe total*/
             if (numDescuento!= null && numDescuento.doubleValue() <= numTotalPrice)
                 numTotalPrice = numTotalPrice - numDescuento.doubleValue();
+            
+            
+            /***************************************/
+            /**PRECIO DEL PRODUCTO NO INCLUYE  IGV*/
+            /***************************************/
+            /*Los precios de los productos no incluyen IGV: Algunos proveedores su precio no incluye IGV
+             Cuando Precio:
+                - Incluye IGV: La sumatoria de precio de todos los productos va en el TOTAL de la FACTURA/BOLETA 
+                - No Incluye IGV: La sumatoria de precio de todos los productos va en el SUB-TOTAL de la FACTURA/BOLETA
+            */            
+            /*Por defecto el precio ya incluye IGV, peri si no incluye IVG, entonces se suma el IGV, con esto igual se obtiene el MONTO TOTAL DE LA OPERACION*/            
+            if (this.flgPrecioSinIGV){                
+                numTotalPrice = numTotalPrice + numTotalPrice*Constantes.CONS_VALUE_IGV;
+            }
             
             /**************************/
             /**SE CALCULA LOS TOTALES**/
@@ -576,6 +591,14 @@ public class OrderController implements Serializable{
                 this.sic1docu.setNumMtoefectivo(new BigDecimal(0).setScale(2,BigDecimal.ROUND_HALF_UP));
             }
             
+            if(flgTarjeta){
+                this.sic1docu.setNumMtotarjeta(this.sic1docu.getNumMtoTotal());
+                this.sic1docu.setNumMtoefectivo(new BigDecimal("0.00"));
+            }
+            else{
+                this.sic1docu.setNumMtoefectivo(this.sic1docu.getNumMtoTotal());
+                this.sic1docu.setNumMtotarjeta(new BigDecimal("0.00"));
+            }
             
         }catch(ValidationException ex){
             UtilClass.addErrorMessage(ex.getMessage());
@@ -618,13 +641,12 @@ public class OrderController implements Serializable{
                     si.setValue(obj.getIdGeneral());
                     this.itemsTypeCard.add(si);
                 }
-                
-                this.recalculateTotals();
-                
             }else{
                 this.itemsTypeCard.clear();
                 this.sic1docu.setNumMtotarjeta(new BigDecimal(0));
             }
+            
+            this.recalculateTotals();
         
         } catch(Exception ex) {
             throw new CustomizerException(ex.getMessage());
@@ -862,7 +884,8 @@ public class OrderController implements Serializable{
                 else
                     this.sic1docu.setNumMtotarjeta(new BigDecimal("0.00"));
                 
-                
+                /*Se obtiene si el precio incluye o no IGV*/
+                this.flgPrecioSinIGV = this.sic1docu.getFlgPrecsinIGV()==1?true:false;
                 
                 /*Marcado el check PENDIENTE POR RECOGER*/
                 if(this.sic1docu.getCodEstadocu().equalsIgnoreCase(Constantes.CONS_COD_ESTAPORRECOGER))

@@ -1,6 +1,63 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project-private xmlns="http://www.netbeans.org/ns/project-private/1">
-    <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="31">
+    <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="33">
+        <file>
+            <url>src/java/com/general/a1/controller/PersonController.java</url>
+            <bookmark id="11">
+                <name/>
+                <line>329</line>
+                <key/>
+            </bookmark>
+        </file>
+        <file>
+            <url>src/java/com/general/a3/dao/impl/DaoDocumentImpl.java</url>
+            <bookmark id="9">
+                <name/>
+                <line>59</line>
+                <key/>
+            </bookmark>
+            <bookmark id="33">
+                <name/>
+                <line>493</line>
+                <key/>
+            </bookmark>
+        </file>
+        <file>
+            <url>src/java/com/general/a1/controller/DocumentController.java</url>
+            <bookmark id="27">
+                <name/>
+                <line>201</line>
+                <key/>
+            </bookmark>
+            <bookmark id="28">
+                <name/>
+                <line>228</line>
+                <key/>
+            </bookmark>
+        </file>
+        <file>
+            <url>src/java/com/general/a1/controller/OrderController.java</url>
+            <bookmark id="22">
+                <name/>
+                <line>484</line>
+                <key/>
+            </bookmark>
+            <bookmark id="31">
+                <name/>
+                <line>636</line>
+                <key/>
+            </bookmark>
+            <bookmark id="18">
+                <name/>
+                <line>694</line>
+                <key/>
+            </bookmark>
+            <bookmark id="32">
+                <name/>
+                <line>739</line>
+                <key/>
+            </bookmark>
+        </file>
         <file>
             <url>web/personaMantenimiento.xhtml</url>
             <bookmark id="13">
@@ -19,71 +76,6 @@
             <bookmark id="10">
                 <name/>
                 <line>373</line>
-                <key/>
-            </bookmark>
-        </file>
-        <file>
-            <url>src/java/com/general/a1/controller/DocumentController.java</url>
-            <bookmark id="27">
-                <name/>
-                <line>192</line>
-                <key/>
-            </bookmark>
-            <bookmark id="28">
-                <name/>
-                <line>219</line>
-                <key/>
-            </bookmark>
-        </file>
-        <file>
-            <url>web/productoRegistrar.xhtml</url>
-            <bookmark id="1">
-                <name/>
-                <line>142</line>
-                <key/>
-            </bookmark>
-        </file>
-        <file>
-            <url>src/java/com/general/a3/dao/impl/DaoDocumentImpl.java</url>
-            <bookmark id="9">
-                <name/>
-                <line>59</line>
-                <key/>
-            </bookmark>
-            <bookmark id="6">
-                <name/>
-                <line>177</line>
-                <key/>
-            </bookmark>
-            <bookmark id="29">
-                <name/>
-                <line>287</line>
-                <key/>
-            </bookmark>
-        </file>
-        <file>
-            <url>src/java/com/general/a1/controller/OrderController.java</url>
-            <bookmark id="22">
-                <name/>
-                <line>472</line>
-                <key/>
-            </bookmark>
-            <bookmark id="31">
-                <name/>
-                <line>613</line>
-                <key/>
-            </bookmark>
-            <bookmark id="18">
-                <name/>
-                <line>672</line>
-                <key/>
-            </bookmark>
-        </file>
-        <file>
-            <url>src/java/com/general/a1/controller/PersonController.java</url>
-            <bookmark id="11">
-                <name/>
-                <line>329</line>
                 <key/>
             </bookmark>
         </file>
@@ -116,27 +108,35 @@
             </bookmark>
             <bookmark id="24">
                 <name/>
-                <line>472</line>
+                <line>488</line>
                 <key/>
             </bookmark>
             <bookmark id="30">
                 <name/>
-                <line>539</line>
+                <line>555</line>
                 <key/>
             </bookmark>
             <bookmark id="20">
                 <name/>
-                <line>638</line>
+                <line>654</line>
                 <key/>
             </bookmark>
             <bookmark id="19">
                 <name/>
-                <line>713</line>
+                <line>729</line>
                 <key/>
             </bookmark>
             <bookmark id="17">
                 <name/>
-                <line>713</line>
+                <line>729</line>
+                <key/>
+            </bookmark>
+        </file>
+        <file>
+            <url>web/productoRegistrar.xhtml</url>
+            <bookmark id="1">
+                <name/>
+                <line>142</line>
                 <key/>
             </bookmark>
         </file>
