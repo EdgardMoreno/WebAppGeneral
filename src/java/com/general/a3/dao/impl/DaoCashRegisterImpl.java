@@ -9,7 +9,7 @@ import com.general.hibernate.entity.Sic1idenpers;
 import com.general.hibernate.entity.Sic1usuario;
 import com.general.hibernate.temp.Sic4cuaddiario;
 import com.general.hibernate.temp.Sic4cuaddiarioId;
-import com.general.hibernate1.ViSiccuaddiario;
+import com.general.hibernate.views.ViSiccuaddiario;
 import com.general.util.beans.UtilClass;
 import java.math.BigDecimal;
 import java.util.ArrayList;

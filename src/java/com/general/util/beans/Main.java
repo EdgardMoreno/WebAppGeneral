@@ -7,38 +7,32 @@ package com.general.util.beans;
 
 import com.general.a1.controller.PersonController;
 import com.general.a2.service.impl.CashRegisterServiceImpl;
-import com.general.a2.service.impl.DocuOrderServiceImpl;
-import com.general.interfac.dao.DaoSic1general;
+
 import com.general.a3.dao.impl.DaoPersonImpl;
 import com.general.a3.dao.impl.DaoProductImpl;
-import com.general.a3.dao.impl.DaoSic1generalImp;
+
 import com.general.hibernate.entity.HibernateUtil;
-import com.general.hibernate.entity.Sic1docu;
+
 import com.general.hibernate.entity.Sic1general;
 import com.general.hibernate.entity.Sic1idenpers;
 import com.general.hibernate.entity.Sic1idenpersId;
 import com.general.hibernate.entity.Sic1pers;
-import com.general.a2.service.impl.PersonServiceImpl;
-import com.general.a2.service.impl.ProductServiceImpl;
 import com.general.a2.service.impl.Sic1generalServiceImpl;
 import com.general.a3.dao.impl.DaoCashRegisterImpl;
 import com.general.a3.dao.impl.DaoDocumentImpl;
 import com.general.a3.dao.impl.DaoLoginImpl;
-import com.general.a3.dao.impl.DaoUserImpl;
+
 import com.general.hibernate.entity.Sic1idendocu;
 import com.general.hibernate.entity.Sic1persindi;
 import com.general.hibernate.entity.Sic1persorga;
-import com.general.hibernate.entity.Sic1prod;
-import com.general.hibernate.views.ViSicdocu;
-import com.general.hibernate.views.ViSicestageneral;
+
 import com.general.hibernate.views.ViSicpers;
 import com.general.hibernate.views.ViSicprod;
 import com.general.hibernate.entity.Sic1usuario;
 import com.general.hibernate.temp.Sic4cuaddiario;
 import com.general.hibernate.temp.Sic4cuaddiarioId;
-import com.general.hibernate1.ViSiccuaddiario;
+import com.general.hibernate.views.ViSiccuaddiario;
 import com.general.util.dao.DaoFuncionesUtil;
-import java.io.File;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;

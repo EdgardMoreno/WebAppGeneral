@@ -8,7 +8,7 @@ package com.general.a1.controller;
 import com.general.a2.service.impl.CashRegisterServiceImpl;
 import com.general.hibernate.temp.Sic4cuaddiario;
 import com.general.hibernate.temp.Sic4cuaddiarioId;
-import com.general.hibernate1.ViSiccuaddiario;
+import com.general.hibernate.views.ViSiccuaddiario;
 import com.general.security.SessionUtils;
 import com.general.util.beans.Constantes;
 import com.general.util.beans.UtilClass;

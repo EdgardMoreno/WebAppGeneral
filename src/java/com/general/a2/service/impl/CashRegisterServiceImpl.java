@@ -9,7 +9,7 @@ import com.general.a3.dao.impl.DaoCashRegisterImpl;
 import com.general.hibernate.entity.HibernateUtil;
 import com.general.hibernate.temp.Sic4cuaddiario;
 import com.general.hibernate.temp.Sic4cuaddiarioId;
-import com.general.hibernate1.ViSiccuaddiario;
+import com.general.hibernate.views.ViSiccuaddiario;
 import com.general.util.beans.Constantes;
 import com.general.util.beans.UtilClass;
 import com.general.util.dao.DaoFuncionesUtil;

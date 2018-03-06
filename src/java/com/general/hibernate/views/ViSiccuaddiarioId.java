@@ -1,4 +1,4 @@
-package com.general.hibernate1;
+package com.general.hibernate.views;
 // Generated 24/02/2018 12:10:06 PM by Hibernate Tools 4.3.1
 
 
