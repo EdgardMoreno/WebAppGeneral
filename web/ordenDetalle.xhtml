@@ -8,7 +8,7 @@
 
     <f:metadata>        
         <f:viewParam name="titulo" value="#{orderController.desTituloPagina}"/>
-        <f:event type="preRenderView" listener="#{orderController.getParamsExternalPage}"/>
+        <f:event type="preRenderView" listener="#{orderController.loadOrderDetails}"/>
     </f:metadata>
 
     <ui:composition template="./templates/templatePrincipal.xhtml">
@@ -82,7 +82,7 @@
                         </tr>
                         <tr>                        
                             <td class="style_label">Fecha:</td>
-                            <td class="style_content">${orderController.sic1docu.fecCreacion}</td>
+                            <td class="style_content">${orderController.sic1docu.fecDesde}</td>
                         </tr>                        
                         <tr>
                             <td class="style_label">DNI/RUC:</td>

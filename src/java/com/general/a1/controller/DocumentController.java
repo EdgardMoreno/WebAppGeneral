@@ -56,6 +56,10 @@ public class DocumentController implements Serializable{
     
     private BigDecimal idDocuSelected;
     
+    public void DocumentController(){
+        System.out.println("Aqui");
+    }
+    
     @PostConstruct
     public void init() {
         

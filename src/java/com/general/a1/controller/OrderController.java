@@ -35,7 +35,6 @@ import com.general.util.beans.Constantes;
 import com.general.util.beans.UtilClass;
 import com.general.util.exceptions.CustomizerException;
 import com.general.util.exceptions.ValidationException;
-import java.math.BigInteger;
 import java.text.ParseException;
 import javax.faces.context.FacesContext;
 import javax.faces.context.Flash;
@@ -591,13 +590,16 @@ public class OrderController implements Serializable{
                 this.sic1docu.setNumMtoefectivo(new BigDecimal(0).setScale(2,BigDecimal.ROUND_HALF_UP));
             }
             
-            if(flgTarjeta){
-                this.sic1docu.setNumMtotarjeta(this.sic1docu.getNumMtoTotal());
-                this.sic1docu.setNumMtoefectivo(new BigDecimal("0.00"));
-            }
-            else{
-                this.sic1docu.setNumMtoefectivo(this.sic1docu.getNumMtoTotal());
-                this.sic1docu.setNumMtotarjeta(new BigDecimal("0.00"));
+            /*Solo se evalua cuando es un nuevo registro*/
+            if (this.sic1docu.getIdDocu() == null){
+                if(flgTarjeta){
+                    this.sic1docu.setNumMtotarjeta(this.sic1docu.getNumMtoTotal());
+                    this.sic1docu.setNumMtoefectivo(new BigDecimal("0.00"));
+                }
+                else{
+                    this.sic1docu.setNumMtoefectivo(this.sic1docu.getNumMtoTotal());
+                    this.sic1docu.setNumMtotarjeta(new BigDecimal("0.00"));
+                }
             }
             
         }catch(ValidationException ex){
@@ -799,7 +801,7 @@ public class OrderController implements Serializable{
     public void getParamsExternalPage(ComponentSystemEvent event) throws CustomizerException{
 
         if(!FacesContext.getCurrentInstance().isPostback()){
-        
+            
             Flash flash = FacesContext.getCurrentInstance().getExternalContext().getFlash();
 
             String tituloPagina     = (String)flash.get("paramTituloPagina");
@@ -898,4 +900,88 @@ public class OrderController implements Serializable{
             }        
         }
     }
+    
+    
+    /* Metodo que se ejecuta cuando es invocado desde una pagina externa, se llama desde desde el tag <f:metadata> ubicado en la
+     * página XHTML
+     */
+    public void loadOrderDetails(ComponentSystemEvent event) throws CustomizerException{
+
+        if(!FacesContext.getCurrentInstance().isPostback()){
+            
+            Flash flash = FacesContext.getCurrentInstance().getExternalContext().getFlash();
+
+            String tituloPagina     = (String)flash.get("paramTituloPagina");
+            BigDecimal idDocu       = (BigDecimal)flash.get("paramIdDocu");  
+            String codSClaseevenTmp    = (String)flash.get("paramCodSClaseeven");            
+            
+            System.out.println("tituloPagina:" + tituloPagina);             
+            System.out.println("idDocu:" + idDocu);
+            System.out.println("codSClaseevenTmp:" + codSClaseevenTmp);
+
+            if (tituloPagina != null)
+                this.desTituloPagina = tituloPagina;
+            
+            /*OBTENER LOS DATOS DE LA ORDEN*/
+            if (idDocu != null && idDocu.intValue() > 0 ){
+                
+                /*Verificar si es una venta*/
+                if (codSClaseevenTmp != null) {
+                    if (codSClaseevenTmp.equalsIgnoreCase(Constantes.CONS_COD_SCLASEEVEN_VENTA))
+                        this.flgIsSale = true;
+                }else
+                    throw new CustomizerException("No se cargo la sub clase del evento.");
+                
+                /*La FACTURA o BOLETA no se puede editar*/
+                this.editFields = false;
+
+                /*Se obtiene los datos de la orden*/
+                Sic1idendocu sic1idendocu = orderServiceImpl.getOrderById(idDocu);
+
+                /*Se obtiene los datos del Cliente/Proveedor*/
+                PersonServiceImpl personServiceImpl = new PersonServiceImpl();
+                Sic1idenpers sic1idenpers           = personServiceImpl.getById(sic1idendocu.getSic1docu().getIdPersexterno());
+
+                /*Seteando en las variables para que se visualice los datos en la pantalla*/
+                this.sic1docu           = sic1idendocu.getSic1docu();
+                this.sic1pers           = sic1idenpers.getSic1pers();
+                this.sic1idenpersId     = sic1idenpers.getId();
+                this.lstSic3docuprod    = sic1idendocu.getSic1docu().getLstSic3docuprod();
+                
+                /*Recalculando el Nro. item de la tabla detalle de productos*/
+                for(int i = 0; i < this.lstSic3docuprod.size(); i++){
+                    this.lstSic3docuprod.get(i).setNumIndex(i+1);
+                }
+                
+                /*Formateando Montos*/
+                if (this.sic1docu.getNumMtodscto()!= null)
+                    this.sic1docu.getNumMtodscto().setScale(2,BigDecimal.ROUND_HALF_UP);
+                else
+                    this.sic1docu.setNumMtodscto(new BigDecimal("0.00"));
+                
+                if (this.sic1docu.getNumMtoefectivo()!= null)
+                    this.sic1docu.getNumMtoefectivo().setScale(2,BigDecimal.ROUND_HALF_UP);
+                else
+                    this.sic1docu.setNumMtoefectivo(new BigDecimal("0.00"));
+                
+                if (this.sic1docu.getNumMtotarjeta()!= null)
+                    this.sic1docu.getNumMtotarjeta().setScale(2,BigDecimal.ROUND_HALF_UP);
+                else
+                    this.sic1docu.setNumMtotarjeta(new BigDecimal("0.00"));
+                
+                /*Se obtiene si el precio incluye o no IGV*/
+                this.flgPrecioSinIGV = this.sic1docu.getFlgPrecsinIGV()==1?true:false;
+                
+                /*Marcado el check PENDIENTE POR RECOGER*/
+                if(this.sic1docu.getCodEstadocu().equalsIgnoreCase(Constantes.CONS_COD_ESTAPORRECOGER))
+                    this.flgPorRecoger = true;
+
+                this.recalculateTotals();
+                
+                /*Cargar el catalogo de Tipo de Tarjeta*/
+                this.payModeValueChange();
+            }        
+        }
+    }
+    
 }

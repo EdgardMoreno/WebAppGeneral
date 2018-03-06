@@ -35,7 +35,7 @@
                 tr?mite.</comment>
       </column>
     </property>
-    <property name="fecDesde" type="date">
+    <property name="fecDesde" type="timestamp">
       <column length="7" name="FEC_DESDE">
         <comment>Fecha de inicio de vigencia del documento.</comment>
       </column>

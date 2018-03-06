@@ -652,6 +652,25 @@ function fnShowPopupCreateEditPerson(idPers) {
 /********************** PANTALLA: LISTAR DOCUMENTOS *********************************************************/
 /************************************************************************************************************/
 
+/*(NO SE LLEGO A USAR) Funcion que muestra en un PopUP el detalle de la orden */
+function fnShowOrderDetail(idDocu, titulo) {
+
+    console.log("idDocu:" + idDocu);
+    console.log("titulo:" + titulo);
+    
+
+    if (idDocu > 0){
+
+        //Se sobreescribe la propiedad HREF
+        $("#linkDialog").attr("href", "faces/ordenDetalle.xhtml?paramIdDocu=" + idDocu + "&paramTituloPagina=" + titulo );
+        $("#linkDialog").click(); //Origina que llame a la función de FancyBOX y que muestre la URL especificada.
+
+    }
+
+    return false;            
+    
+};
+
 
 /************************************************************************************************************/
 /********************** PANTALLA: CUADRE CAJA ***************************************************************/
