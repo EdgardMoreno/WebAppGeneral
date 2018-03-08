@@ -109,7 +109,7 @@
                             </h:column>
 
                             <h:column>
-                                <p:commandLink action="#{productController.editAction(productController.listProducts.indexOf(item) + 1)}" oncomplete="fnChangeTab(2)" update="form">
+                                <p:commandLink action="#{productController.editAction(productController.listProducts.indexOf(item))}" oncomplete="fnChangeTab(2)" update="form">
                                     <span class="glyphicon glyphicon-pencil" data-toggle="tooltip" title="Editar"></span>
                                 </p:commandLink>
 

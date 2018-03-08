@@ -216,6 +216,8 @@ public class ProductController implements Serializable{
             //Se llena el control oculto con el identificado del nuevo producto
             this.idProd = Integer.valueOf(result);
             
+            this.flgEditProd = false;
+            
             
             this.sic1prod = new Sic1prod();
             UtilClass.addInfoMessage(Constantes.CONS_SUCCESS_MESSAGE);
