@@ -32,7 +32,7 @@ import org.primefaces.model.StreamedContent;
  */
 @ManagedBean
 @ViewScoped
-public class InventoryController {
+public class Kardex {
     
     private static final String FILE_NAME = "C:\\ARCHIVOS\\Libro2.xlsx";
     private StreamedContent file;
@@ -72,18 +72,18 @@ public class InventoryController {
             }
         }
 
-        try {
+        try {            
             
-            FileOutputStream outputStream = new FileOutputStream(FILE_NAME);
-            workbook.write(outputStream);
+            FacesContext fc = FacesContext.getCurrentInstance();
+            HttpServletResponse response = (HttpServletResponse) fc.getExternalContext().getResponse();
+            response.reset();
+            response.setContentType("application/vnd.ms-excel");
+            response.setHeader("Content-Disposition", "attachment; filename=\"Demo.xlsx");            
+            workbook.write(response.getOutputStream());
             workbook.close();
             
-            outputStream.flush();
-            outputStream.close();
-            
-            InputStream stream = new FileInputStream(new File(FILE_NAME));
-//            
-            file = new DefaultStreamedContent(stream, "application/xls", "downloaded_optimus.xlsx");
+            fc.responseComplete();
+
             
         } catch (FileNotFoundException e) {
             e.printStackTrace();

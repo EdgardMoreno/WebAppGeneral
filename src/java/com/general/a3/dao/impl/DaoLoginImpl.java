@@ -9,17 +9,11 @@ import com.general.hibernate.entity.Sic1idenpers;
 import com.general.hibernate.entity.Sic1usuario;
 import com.general.util.beans.UtilClass;
 import java.io.Serializable;
-import java.math.BigDecimal;
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.List;
 import org.hibernate.Criteria;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.criterion.Restrictions;
-import org.hibernate.jdbc.ReturningWork;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
