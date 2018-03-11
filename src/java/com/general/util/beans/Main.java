@@ -5,6 +5,7 @@
  */
 package com.general.util.beans;
 
+import com.general.a1.controller.KardexController;
 import com.general.a1.controller.PersonController;
 import com.general.a2.service.impl.CashRegisterServiceImpl;
 
@@ -19,6 +20,7 @@ import com.general.hibernate.entity.Sic1idenpersId;
 import com.general.hibernate.entity.Sic1pers;
 import com.general.a2.service.impl.Sic1generalServiceImpl;
 import com.general.a3.dao.impl.DaoCashRegisterImpl;
+import com.general.a3.dao.impl.DaoDocuKardexImpl;
 import com.general.a3.dao.impl.DaoDocumentImpl;
 import com.general.a3.dao.impl.DaoLoginImpl;
 
@@ -46,6 +48,7 @@ import java.sql.Connection;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.internal.SessionImpl;
 
 /**
  *
@@ -110,6 +113,17 @@ public class Main {
 //         System.out.println("Comision:" + DaoFuncionesUtil.FNC_SICOBTCOMISION(cnConexion, 211.7, 46112, 46114));
 //         
 //         /**/
+
+
+        /*OBTENER PLANTILLA KARDEX*/
+        if (true){ 
+        
+//            DaoDocuKardexImpl dao = new DaoDocuKardexImpl();
+//            dao.getKardexByNumPeri(((SessionImpl)session).connection(), 201705);
+
+            KardexController controller = new KardexController();
+            controller.downloadTemplate();
+        }
 
         /*OBTENER CUADRE CAJA*/
         System.out.println("Date Time:" + UtilClass.getCurrentDateTime());

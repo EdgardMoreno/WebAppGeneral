@@ -27,6 +27,7 @@ public class Sic1prod  implements java.io.Serializable {
      private Sic1pers sic1pers;
      private BigDecimal numCantidad;
      private String desFecRegistro;
+     private String desStipoprod;
      
     
 
@@ -146,6 +147,14 @@ public class Sic1prod  implements java.io.Serializable {
         this.desFecRegistro = desFecRegistro;
     }
 
+    public String getDesStipoprod() {
+        return desStipoprod;
+    }
+
+    public void setDesStipoprod(String desStipoprod) {
+        this.desStipoprod = desStipoprod;
+    }    
+    
     public String toString(){
         return "idProd: " + this.idProd + 
                " desProd: " + this.desProd +

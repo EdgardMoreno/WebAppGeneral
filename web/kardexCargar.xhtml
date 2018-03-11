@@ -6,160 +6,119 @@
       xmlns:p="http://primefaces.org/ui"
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets"  >
 
-    <f:metadata>        
-        <f:viewParam name="titulo" value="#{cashRegisterController.desTituloPagina}"/>
-        <f:event type="preRenderView" listener="#{cashRegisterController.getParamsExternalPage}"/>
-    </f:metadata>
 
     <ui:composition template="./templates/templatePrincipal.xhtml">
 
         <ui:define name="header">
 
-            <script>
 
-
-            </script>
-
-            <style>
-
-              
-                            
-
-                table{
-                    font-family: Verdana;
-                    font-size: 10px;
-                }
-
-                th{
-                    background-color: #222222;
-                    font-weight: bolder;
-                    text-align: center;
-                    color: white;
-                }
-
-                .total{
-                    background-color: white;                    
-                    text-align: right;
-                    padding:2px 0px 2px 3px;
-                    font-weight: bold;
-                }
-                .superTotal{
-                    background-color: #167F92;
-                    font-weight: bolder;
-                    text-align: right;
-                    color: white;
-                    padding: 3px;
-                }
-
-                .superTotal_valor{
-                    background-color: #167F92;
-                    font-weight: bolder;
-                    text-align: right;
-                    color: white;
-                    padding: 3px;
-                    font-size: 11px;
-                }
-
-                .separadorColu{
-                    width: 0.5em;
-                    border: 0px;
-                    background-color: white;
-                }                
-
-                .separadorFila{
-                    height: 0.5em;
-                    border: 0px;
-                    background-color: white;
-                }                    
-
-                .left{
-                    text-align: left;
-                }
-
-                .right{
-                    text-align: right;
-                }
-
-                .center{
-                    text-align: center;
-                }
-
-                .denominacion{                    
-                    text-align: right;
-                    padding-right: 3px;
-                }
-
-                .valor{text-align: right; width: 65px; padding-right: 3px; margin: 0px; font-weight: bold;}
-                .cantidad{background-color: white; text-align: center; width: 75px; padding: 0px; margin: 0px;}
-                .gasto{ color: red;}
-                .sobraFalta{ font-size: 14px; 
-                            background-color: #167F92;
-                            font-weight: bolder;
-                            text-align: right;
-                            color: white;
-                            padding: 3px;}
-                
-                            
-                input, select, textarea{
-                    color: blue;
-                }
-                
-                input[type="text"], textarea {
-
-                    background-color : #FAFFBD; 
-
-                  }
-
-
-            </style>
-            
             <script>
                 /*Funcion que permite validar el formulario al grabar*/
-                function fnValidateForm(){                    
-                    fnShowDialogConfirm("form\\:idBtnGrabar", "Se procederá a cerrar caja, los datos ya no podrán ser modificados. ¿Seguro que desea continuar?" ); // -> Se pasa como parametro el ID del boton que tiene el metodo actionListener
+                function fnValidateForm() {
+                    fnShowDialogConfirm("form\\:idBtnGrabar", "Se procederá a cerrar caja, los datos ya no podrán ser modificados. ¿Seguro que desea continuar?"); // -> Se pasa como parametro el ID del boton que tiene el metodo actionListener
                     return false;
                 }
-                
-               
-                
+
             </script>
 
         </ui:define>
 
-        <ui:define name="content">            
+        <ui:define name="content">
 
-            <div class="container">
-                
-                <div id="divResultadoValidacion"/>
 
-                <p:growl id="message" showDetail="true" />
+                <div class="container">
 
-                <div class="page-header" >
-                    <h3>${cashRegisterController.desTituloPagina}</h3>
-                </div>
+                    <div id="divResultadoValidacion"/>
 
-                <table >
-                    <tr>
-                        <td style="text-align: right; font-weight: bold; font-size: 11px; padding: 3px" >Fecha de Apertura:</td>
-                        <td style="text-align: left; font-size: 11px; padding: 3px">${cashRegisterController.box.fecApertura}</td>
-                    </tr>
-                    <tr>
-                        <td style="text-align: right; font-weight: bold; font-size: 11px; padding: 3px">Vendedor:</td>
-                        <td style="text-align: left; font-size: 11px; padding: 3px">#{cashRegisterController.desPersCajero}</td>
-                    </tr>
-                </table>
-                <br/>
-                <div class="col-xs-10">
-                    <i class="fas fa-cloud-download-alt fa-3x"></i>
-                    <h:commandLink value=" Descargar Kardex" actionListener="#{kardex.downloadTemplate()}"/>                                        
-                </div>
+                    <p:growl id="message" showDetail="true" />
 
-                <!-- ****************************************** -->
-                <!-- EFECTIVO -->
-                <!-- ****************************************** -->
-                
-              
-            </div>
+                    <div class="page-header" >
+                        <h3>Cargar Inventario</h3>
+                    </div>
+
+                    <table border="1">
+                        <tr>
+                            <td colspan="2">
+                                <div class="col-xs-10">
+                                    <i class="fas fa-cloud-download-alt fa-3x"></i>
+                                    <h:commandLink value=" Descargar Plantilla" actionListener="#{kardexController.downloadTemplate()}"/>
+                                </div>
+                            </td>                                
+                        </tr>
+                        <tr>
+                            <td style="padding-top: 15px">
+                                <h:inputFile id="file" value="#{kardexController.uploadFile}"/>                            
+                            </td>
+                            <td style="padding: 15px 5px 0px">
+                                <h:commandButton value="Cargar" styleClass="btn btn-success">
+                                    <f:ajax execute="file" render="idTblProducts message" listener="#{kardexController.loadFile}" />
+                                </h:commandButton>
+                            </td>
+                        </tr>    
+                    </table>
+
+                    <!-- ********************************** -->
+                    <!-- DETALLE DEL DOCUMENTO -->
+                    <!-- *********************************** -->
+                    <br/>
+                    <h:dataTable id="idTblProducts" 
+                                 var="item"                                  
+                                 value="#{kardexController.lstUploadKardex}"                                  
+                                 styleClass="table-bordered"
+                                 columnClasses="table_style_id,
+                                                table_style_code,
+                                                table_style_description_medium,
+                                                table_style_code,
+                                                table_style_amount
+                                                table_style_amount,
+                                                table_style_amount,
+                                                table_style_amount,
+                                                table_style_amount">                        
+
+                        <h:column>
+                            <f:facet name="header">No.</f:facet>#{kardexController.lstUploadKardex.indexOf(item) + 1}
+                        </h:column>
+
+                        <h:column>
+                            <f:facet name="header">Cod.Producto</f:facet>#{item.sic1prod.codProd}
+                        </h:column>
+
+                        <h:column>
+                            <f:facet name="header">Desc. Producto</f:facet>#{item.sic1prod.desProd}
+                        </h:column>
+                        
+                        <h:column>
+                            <f:facet name="header">Tipo</f:facet>#{item.sic1prod.desStipoprod}
+                        </h:column>
+
+                        <h:column>
+                            <f:facet name="header">Cant. Inicial</f:facet>#{item.numCantini}
+                        </h:column>
+
+                        <h:column>
+                            <f:facet name="header">Cant. Ingresada</f:facet>#{item.numCantingr}
+                        </h:column>
+
+                        <h:column>
+                            <f:facet name="header">Cant. Saliente</f:facet>#{item.numCantsali}
+                        </h:column>
+
+                        <h:column>
+                            <f:facet name="header">Stock</f:facet>#{item.numCantstock}
+                        </h:column>
+
+                        <h:column>
+                            <f:facet name="header">Stock Ingresado</f:facet>#{item.numCantstock}
+                        </h:column>
+
+                    </h:dataTable>                    
+                    
+                    <h:commandLink id="idBtnGrabar" value="Grabar inventario" style="display: none">
+                        <f:ajax execute="idTblProducts" render="idTblProducts" listener="#{kardexController.save()}" />
+                    </h:commandLink>
+
+
+                </div>       
 
         </ui:define>
     </ui:composition>

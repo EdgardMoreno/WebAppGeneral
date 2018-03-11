@@ -19,6 +19,7 @@
     <!--<mapping class="com.memorynotfound.hibernate.DateAndTime"/>-->
     <!-- manage automatic database creation -->
     <!--   <property name="hibernate.hbm2ddl.auto">create-drop</property>-->
+    
     <mapping resource="com/general/hibernate/relaentity/Sic3docuesta.hbm.xml"/>
     <mapping resource="com/general/hibernate/relaentity/Sic3docudocu.hbm.xml"/>
     <mapping resource="com/general/hibernate/entity/Sic1general.hbm.xml"/>
@@ -36,8 +37,7 @@
     <mapping resource="com/general/hibernate/entity/Sic1lugardire.hbm.xml"/>
     <mapping resource="com/general/hibernate/entity/Sic1pers.hbm.xml"/>
     <mapping resource="com/general/hibernate/entity/Sic1lugar.hbm.xml"/>
-    <mapping resource="com/general/hibernate/views/ViSicdocu.hbm.xml"/>
-    <mapping resource="com/general/hibernate1/Sic7estarol.hbm.xml"/>
+    <mapping resource="com/general/hibernate/views/ViSicdocu.hbm.xml"/>    
     <mapping resource="com/general/hibernate/views/ViSicestageneral.hbm.xml"/>
     <mapping resource="com/general/hibernate/views/ViSicpers.hbm.xml"/>
     <mapping resource="com/general/hibernate/relaentity/Sic3persdocu.hbm.xml"/>
@@ -47,5 +47,6 @@
     <mapping resource="com/general/hibernate/relaentity/Sic3docuprod.hbm.xml"/>
     <mapping resource="com/general/hibernate/temp/Sic4cuaddiario.hbm.xml"/>
     <mapping resource="com/general/hibernate/views/ViSiccuaddiario.hbm.xml"/>
+    <mapping resource="com/general/hibernate1/Sic1docukardex.hbm.xml"/>
   </session-factory>
 </hibernate-configuration>

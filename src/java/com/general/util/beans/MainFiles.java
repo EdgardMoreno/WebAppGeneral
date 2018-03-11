@@ -5,6 +5,7 @@
  */
 package com.general.util.beans;
 
+import com.general.a3.dao.impl.DaoDocuKardexImpl;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -29,7 +30,10 @@ public class MainFiles {
     public static void main(String[] args) throws IOException {
         // TODO code application logic here
         MainFiles obj = new MainFiles();
-        obj.downloadTemplate();
+        //obj.downloadTemplate();
+        
+        
+        DaoDocuKardexImpl dao = new DaoDocuKardexImpl();
     }
     
     
