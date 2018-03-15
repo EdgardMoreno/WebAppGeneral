@@ -31,7 +31,6 @@ import org.hibernate.HibernateException;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.hibernate.jdbc.ReturningWork;
-import org.hibernate.jdbc.Work;
 
 /**
  *
@@ -55,9 +54,6 @@ public class DaoProductImpl implements Serializable{
         try {
             
             System.out.println("************* REGISTRAR PRODUCTO*************" + sic1prod);
-            
-            
-            
             
             String result = session.doReturningWork(new ReturningWork<String>() {
                 @Override

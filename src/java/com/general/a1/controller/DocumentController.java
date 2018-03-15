@@ -240,8 +240,8 @@ public class DocumentController implements Serializable{
     public void anulDocu() throws CustomizerException{        
         try{            
             System.out.println("id_docu:" + this.getIdDocuSelected());
-            documentServiceImpl.relateDocuEsta( this.getIdDocuSelected()
-                                               ,Constantes.CONS_COD_ESTADOCUCOMPROBANTE
+            documentServiceImpl.relateDocuEsta(this.getIdDocuSelected()
+                                               ,Constantes.CONS_COD_ESTADOCU_COMPROBANTE
                                                ,Constantes.CONS_COD_ESTAANULADO);
             this.filterDocuments();
 

@@ -45,6 +45,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import java.sql.Connection;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -65,6 +67,11 @@ public class Main {
         SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
         Session session = sessionFactory.openSession();
         //Session sessionTemp = sessionFactory.openSession();
+        System.out.println("ejemplo:");
+        
+        
+        DateFormat df = new SimpleDateFormat("yyyyMMddHHmmss");
+        System.out.println("Periodo:" + df.format(new Date()));
         System.out.println("ejemplo:");
         
         if (false) {
@@ -115,8 +122,15 @@ public class Main {
 //         /**/
 
 
-        /*OBTENER PLANTILLA KARDEX*/
         if (true){ 
+        
+            DaoDocuKardexImpl dao = new DaoDocuKardexImpl();
+            dao.getKardexLastPeriActi(session);
+        }
+
+
+        /*OBTENER PLANTILLA KARDEX*/
+        if (false){ 
         
 //            DaoDocuKardexImpl dao = new DaoDocuKardexImpl();
 //            dao.getKardexByNumPeri(((SessionImpl)session).connection(), 201705);

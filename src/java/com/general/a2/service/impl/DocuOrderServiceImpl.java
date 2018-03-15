@@ -94,7 +94,7 @@ public class DocuOrderServiceImpl implements Serializable, DocumentService{
                 
                 BigDecimal intIdTRolEsta  = DaoFuncionesUtil.FNC_SICOBTIDGEN(((SessionImpl) session).connection()
                                                                                 , Constantes.CONS_COD_TIPOROLESTA
-                                                                                , Constantes.CONS_COD_ESTADOCUCOMPROBANTE);
+                                                                                , Constantes.CONS_COD_ESTADOCU_COMPROBANTE);
                 
                 BigDecimal intIdEsta      = DaoFuncionesUtil.FNC_SICOBTIDGEN(((SessionImpl) session).connection()
                                                                                 , Constantes.CONS_COD_ESTA

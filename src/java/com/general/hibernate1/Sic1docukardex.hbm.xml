@@ -43,6 +43,6 @@
             <column name="NUM_CANTSTOCK" precision="5">
                 <comment>Indica la cantidad Final en el periodo correspondiente</comment>
             </column>
-        </property>
+        </property>        
     </class>
 </hibernate-mapping>

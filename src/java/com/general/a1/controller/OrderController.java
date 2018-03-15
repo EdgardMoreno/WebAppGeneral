@@ -786,7 +786,7 @@ public class OrderController implements Serializable{
         
         try{        
             System.out.println("Finalizar Orden Pendiente: "  + this.sic1docu.getIdDocu());
-            this.orderServiceImpl.relateDocuEsta(this.sic1docu.getIdDocu(), Constantes.CONS_COD_ESTADOCUCOMPROBANTE, Constantes.CONS_COD_ESTAFINALIZADO);
+            this.orderServiceImpl.relateDocuEsta(this.sic1docu.getIdDocu(), Constantes.CONS_COD_ESTADOCU_COMPROBANTE, Constantes.CONS_COD_ESTAFINALIZADO);
             this.flgPorRecoger = false;        
 
             UtilClass.addInfoMessage("La orden se finalizó correctamente.");

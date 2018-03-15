@@ -75,7 +75,8 @@ public class Constantes {
     /*CODIGO DE TIPO ROL DE ESTADOS*/
     public static String CONS_COD_TIPOROLESTA       = "VI_SICTROLESTA";    
         /*CODIGOS*/
-        public static String CONS_COD_ESTADOCUCOMPROBANTE      = "VI_SICESTADOCUCOMPROBANTE";
+        public static String CONS_COD_ESTADOCU_COMPROBANTE  = "VI_SICESTADOCUCOMPROBANTE";
+        public static String CONS_COD_ESTADOCU_INFORME      = "VI_SICESTADOCUINF";
         
     /*CODIGO DE ESTADOS*/
     public static String CONS_COD_ESTA              = "VI_SICESTA";
@@ -85,13 +86,21 @@ public class Constantes {
         public static String CONS_COD_ESTAANULADO          = "VI_SICESTAANULADO";
         public static String CONS_COD_ESTAELIMINADO        = "VI_SICESTAELIM";
         public static String CONS_COD_ESTACREADO           = "VI_SICESTACREA";
-        public static String CONS_COD_ESTACERRADO           = "VI_SICESTACERR";
+        public static String CONS_COD_ESTACERRADO          = "VI_SICESTACERR";
+        public static String CONS_COD_ESTAPENDIENTE        = "VI_SICESTAPEND";
         
     /*CODIGO DE SUB CLASE DE EVENTO*/
-    public static String CONS_COD_SCLASEEVEN        = "VI_SICSCLASEEVEN";
+    public static String CONS_COD_SCLASEEVEN            = "VI_SICSCLASEEVEN";
         /*CODIGOS*/
-        public static String CONS_COD_SCLASEEVEN_VENTA      = "VI_SICSCLASEEVENVENTA";
-        public static String CONS_COD_SCLASEEVEN_COMPRA     = "VI_SICSCLASEEVENCOMPRA";
+        public static String CONS_COD_SCLASEEVEN_VENTA              = "VI_SICSCLASEEVENVENTA";
+        public static String CONS_COD_SCLASEEVEN_COMPRA             = "VI_SICSCLASEEVENCOMPRA";
+        public static String CONS_COD_SCLASEEVEN_CTRL_INVENTARIO    = "VI_SICSCLASEEVENCTRLINVENT";
+        
+
+    /*CODIGO DE SUB TIPO DE DOCUMENTO*/
+    public static String CONS_COD_STIPODOCU            = "VI_SICSTIPODOCU";        
+        /*CODIGOS*/
+        public static String CONS_COD_STIPODOCU_SINDOCU            = "VI_SICSINDOCU";
     
     /*MENSAJES*/
     public static String CONS_SUCCESS_MESSAGE = "Se grabó con éxito";
