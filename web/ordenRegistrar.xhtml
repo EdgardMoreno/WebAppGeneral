@@ -155,6 +155,7 @@
                     var razonSocial = document.getElementById("form:razonSocial").value;
                     //var detItems    = document.getElementById("form:idTableDetOrder").rows.length;
                     var numMtoTotal = $("#form\\:numMtoTotal").text();
+                    var tipoProducto = document.getElementById("form:idPayMode").selectedIndex;
 
                     numMtoTotal = Number(numMtoTotal);
 
@@ -169,7 +170,7 @@
                         FlgError = true;
                     }else{
                         /*Validar fecha mayor a la actual*/
-                        var msj = fnValidateBiggerDate(fecRegistro);
+                        var msj = fnValidateDateGreaterThanToday(fecRegistro);
                         if (msj.length > 0){
                             arrMessages.push(msj);
                             FlgError = true;
@@ -183,6 +184,11 @@
 
                     if (numMtoTotal == 0) {
                         arrMessages.push("Falta ingresar productos a la orden.");
+                        FlgError = true;
+                    }
+                    
+                    if (tipoProducto == 0) {
+                        arrMessages.push("Seleccione la forma de pago.");
                         FlgError = true;
                     }
 
@@ -325,12 +331,27 @@
                                                  onkeypress="return fnAllowOnlyNumbers(event)"
                                                  value="#{orderController.sic3docuprod.numCantidad }" />
                                 </div>
+                            </td>                      
+                        </tr>
+                        <tr>                            
+                            <td class="compra_panelGrid_1">                                
+                                <h:outputLabel value="Descuento:"/>                                
                             </td>
+                            <td class="compra_panelGrid_2">                                
+                                <div class="input-group mb-2 mb-sm-0">
+                                    <div class="input-group-addon">S/.</div>
+                                    <h:inputText id="idDescuento" styleClass="form-control"
+                                                 autocomplete="off"
+                                                 value="#{orderController.sic3docuprod.numMtodscto}"
+                                                 onkeypress="return fnAllowOnlyDecimalNumbers(event)"
+                                                 onblur="formatDecimal_2(this)"/>
+                                </div>                                
+                            </td>   
                             <td class="compra_panelGrid_3">
                                 <p:commandLink actionListener="#{orderController.addItem()}"                                               
                                                onstart="return fnValiteAddProduct()"
                                                styleClass="btn btn-default"
-                                               update="form:pnDetOrder,codigoProducto,descProducto,costoUnitario,cantidad,form:pnTotals" >
+                                               update="form:pnDetOrder,codigoProducto,descProducto,costoUnitario,idDescuento,cantidad,form:pnTotals,idMtoTarjeta,numMtoefectivo" >
                                     <span class="glyphicon glyphicon-plus"></span>Agregar
                                 </p:commandLink>
                             </td>
@@ -352,38 +373,62 @@
                                      styleClass = "table-bordered"                                         
                                      columnClasses = "table_style_id
                                                      ,table_style_code
-                                                     ,table_style_description
+                                                     ,table_style_description_medium
                                                      ,table_style_price_small
+                                                     ,table_style_price_small_discount
                                                      ,table_style_amount
-                                                     ,table_style_price_small
+                                                     ,table_style_price_7x
                                                      ,table_style_action">
 
                             <h:column headerClass="table_style_id">
                                 <f:facet name="header">No.</f:facet>#{item.numIndex}
-                            </h:column>                            
+                            </h:column> 
+                            
                             <h:column headerClass="table_style_code">
                                 <f:facet name="header">CODIGO</f:facet>#{item.sic1prod.codProd}
                             </h:column>
-                            <h:column headerClass="table_style_description">
+                            
+                            <h:column headerClass="table_style_description_medium">
                                 <f:facet name="header">DESCRIPCION</f:facet>#{item.sic1prod.desProd}
                             </h:column>
                             
-                            <h:column id="idTablePrice" headerClass="table_style_price">
+                            <h:column  headerClass="table_style_price">
                                 <div >
                                     <h:outputLabel value="S/." />
                                     <f:facet name="header">PRECIO</f:facet>#{item.numValor}
                                 </div>
                             </h:column>
                             
-                            <h:column id="idTableAmount" headerClass="table_style_amount">
-                                <f:facet id="eeeee" name="header">CANTIDAD</f:facet>#{item.numCantidad}
+                            <h:column headerClass="table_style_price_small_discount">
+                                <div >
+                                    <h:outputLabel value="S/." />
+                                    <f:facet name="header">DSCTO</f:facet>#{item.numMtodscto}
+                                </div>
                             </h:column>
                             
-                            <h:column headerClass="table_style_price">
+                            <h:column id="idTableAmount" headerClass="table_style_amount">
+                                <f:facet  name="header">CANTIDAD</f:facet>#{item.numCantidad}
+                                
+                                 <f:facet name="footer">
+                                    <div class="table_style_total_amount">
+                                        #{orderController.numSumItemsAmount}
+                                    </div>
+                                </f:facet> 
+                                
+                            </h:column>
+                            
+                            <h:column headerClass="table_style_price_7x">
                                 <div >
                                     <h:outputLabel value="S/." />
                                     <f:facet name="header">TOTAL</f:facet>#{item.numValor * item.numCantidad}
                                 </div>
+                                
+                                <f:facet name="footer">
+                                    <div class="table_style_total_price">
+                                        <h:outputLabel value="S/." />
+                                        #{orderController.numSumItemsPrice}
+                                    </div>
+                                </f:facet>                                
                             </h:column>
                             
                             <h:column headerClass="table_style_action">
@@ -396,6 +441,8 @@
                                     <span class="glyphicon glyphicon-pencil"></span>
                                 </h:commandLink>
                             </h:column>
+                           
+                            
                         </h:dataTable>
 
                     </h:panelGrid>
@@ -429,6 +476,7 @@
                                     <h:selectOneMenu id="idPayMode" 
                                                      value="#{orderController.sic1docu.idModapago}" 
                                                      styleClass="form-control">
+                                        <f:selectItem itemValue="-1" itemLabel="-- Seleccione --" />
                                         <f:selectItems value="#{orderController.itemsPayMode}" var="c" itemValue="#{c.idGeneral}" itemLabel="#{c.desGeneral}"/>
                                         <f:ajax execute="idPayMode" render="form:pnTotals idLabelTipotarjeta idTextTipotarjeta idLabelMtoTarjeta idMtoTarjeta numMtoefectivo" event="change" listener="#{orderController.payModeValueChange}" />
                                     </h:selectOneMenu>
@@ -468,7 +516,7 @@
                                                     styleClass="form-control"
                                                     value="#{orderController.sic1docu.numMtotarjeta}"                                                
                                                     onkeypress="return fnAllowOnlyDecimalNumbers(event)">
-                                                <f:ajax execute="@this" event="blur" render="form:pnTotals message numMtoefectivo numMtotarjeta" listener="#{orderController.recalculateTotals()}" />
+                                                <f:ajax execute="@this" event="blur" render="form:pnTotals message numMtoefectivo numMtotarjeta" listener="#{orderController.recalculateTotals(false)}" />
                                                 </h:inputText>
                                             </div>
                                         </h:panelGroup>
@@ -487,7 +535,7 @@
                                             styleClass="form-control"
                                             value="#{orderController.sic1docu.numMtoefectivo}"
                                             onkeypress="return fnAllowOnlyDecimalNumbers(event)">
-                                            <f:ajax execute="@this" event="blur" render="form:pnTotals message numMtoefectivo" listener="#{orderController.recalculateTotals()}" />
+                                            <f:ajax execute="@this" event="blur" render="form:pnTotals message numMtoefectivo" listener="#{orderController.recalculateTotals(false)}" />
                                         </h:inputText>
                                     </div>
                                 </td>
@@ -501,20 +549,11 @@
                             
                             <tr>
                                 <td class="compra_totales_label">
-                                    <h:outputLabel value="Descuento:"/>
+                                    <h:outputLabel value="Total Descuento:"/>
                                 </td>
-                                <td class="compra_totales_text">
-                                    <div class="input-group mb-1 mb-sm-0">
-                                        <div class="input-group-addon">S/.</div>
-                                        <h:inputText id="numMtodscto" autocomplete="off"
-                                                     styleClass="form-control"
-                                                     style="color: red"
-                                                     value="#{orderController.sic1docu.numMtodscto}"
-                                                     onkeypress="return fnAllowOnlyDecimalNumbers(event)"
-                                                     >
-                                            <f:ajax execute="@this" event="blur" render="form:pnTotals message" listener="#{orderController.recalculateTotals()}" />
-                                        </h:inputText>
-                                    </div>
+                                <td class="compra_totales_text">                                    
+                                    <h:outputLabel value="S/." />
+                                    <h:outputLabel value="#{orderController.sic1docu.numMtodscto}" />
                                 </td>
                             </tr>
                             <tr style="height: 10px">
@@ -554,7 +593,7 @@
                                 <td colspan="2" style="text-align: center; color: white">
                                     <h:panelGroup rendered="#{!orderController.flgIsSale}">
                                         <h:selectBooleanCheckbox value="#{orderController.flgPrecioSinIGV}" >
-                                            <f:ajax execute="@this" event="change" render="form:pnTotals message" listener="#{orderController.recalculateTotals()}" />
+                                            <f:ajax execute="@this" event="change" render="form:pnTotals message" listener="#{orderController.recalculateTotals(false)}" />
                                         </h:selectBooleanCheckbox>
                                         <h:outputLabel value="PRECIO NO INCLUYE I.G.V." />
                                     </h:panelGroup>

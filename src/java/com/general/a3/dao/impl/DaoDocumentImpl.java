@@ -643,7 +643,7 @@ public class DaoDocumentImpl implements Serializable{
             }
 
             if(flgFilter == 1){
-                criteria.addOrder(Order.desc("codSerie")).addOrder(Order.desc("numDocu"));
+                criteria.addOrder(Order.desc("fecDesde")).addOrder(Order.desc("codSerie")).addOrder(Order.desc("numDocu"));
                 lstResult = criteria.list();    
             }
 

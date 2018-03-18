@@ -271,6 +271,8 @@ public class PersonController implements Serializable{
     public void clearSearch(){
         viSicpers = new ViSicpers();
         lstPersonas = new ArrayList();
+        
+        viSicpers.setCodTrolpers(this.codTRolpers);
     }
     
     public void newPerson(){
@@ -318,6 +320,7 @@ public class PersonController implements Serializable{
         sic1idenpersId = new Sic1idenpersId();
         sic1persindi = new Sic1persindi();
         sic1persorga = new Sic1persorga();
+        
     }
     
      
@@ -460,6 +463,9 @@ public class PersonController implements Serializable{
                     sic1persorga    = obj.getSic1pers().getSic1persorga();
                 else
                     sic1persorga = new Sic1persorga();
+                
+                if(sic1persindi.getFecNaci() != null)
+                    this.desFecNaci = UtilClass.convertDateToString(sic1persindi.getFecNaci());
                 /**/
                 //sic1lugar       = new Sic1lugar();
             }

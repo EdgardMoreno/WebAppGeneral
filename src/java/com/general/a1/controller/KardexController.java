@@ -49,7 +49,7 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 @ViewScoped
 public class KardexController {
     
-    private static final String FILE_NAME = "C:\\ARCHIVOS\\plantKardex.xlsx";
+    private static final String FILE_NAME = "E:\\ARCHIVOS\\plantKardex.xlsx";
     private static final int FILA_INI_EXCEL = 5;
     private Part uploadFile;
     private List<Sic1docukardex> lstUploadKardex;
@@ -108,7 +108,7 @@ public class KardexController {
     public void downloadTemplate() throws IOException, CustomizerException {
         
         try {
-            
+            System.out.println("Present Project Directory : "+ System.getProperty("user.dir"));
             DocuKardexServiceImpl service = new DocuKardexServiceImpl();
             List<Sic1docukardex> listKardex = service.getKardexByNumPeri(Integer.valueOf(this.period));
 
@@ -364,7 +364,7 @@ public class KardexController {
 
             
         }catch (ValidationException ex ){
-            UtilClass.addInfoMessage(ex.getMessage());
+            UtilClass.addErrorMessage(ex.getMessage());
         }catch (Exception ex ){
             throw new CustomizerException(ex.getMessage());
         }

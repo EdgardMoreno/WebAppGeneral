@@ -112,10 +112,11 @@
                                      styleClass = "table-bordered"                                         
                                      columnClasses = "table_style_id,
                                                       table_style_code,
-                                                      table_style_description,
+                                                      table_style_description_medium,
                                                       table_style_price_small,
+                                                      table_style_price_small_discount,
                                                       table_style_amount,
-                                                      table_style_price_small">
+                                                      table_style_price_7x">
 
                             <h:column headerClass="table_style_id">
                                 <f:facet name="header">No.</f:facet>#{item.id.numItem}
@@ -123,7 +124,7 @@
                             <h:column headerClass="table_style_code">
                                 <f:facet name="header">CODIGO</f:facet>#{item.sic1prod.codProd}
                             </h:column>
-                            <h:column headerClass="table_style_description">
+                            <h:column headerClass="table_style_description_medium">
                                 <f:facet name="header">DESCRIPCION</f:facet>#{item.sic1prod.desProd}
                             </h:column>
                             <h:column id="idTablePrice" headerClass="table_style_price">
@@ -132,15 +133,37 @@
                                     <f:facet name="header">PRECIO</f:facet>#{item.numValor}
                                 </div>
                             </h:column>
-                            <h:column id="idTableAmount" headerClass="table_style_amount">
-                                <f:facet name="header">CANTIDAD</f:facet>#{item.numCantidad}
-                            </h:column>
                             
-                            <h:column headerClass="table_style_price">
+                            <h:column  headerClass="table_style_price_small_discount">
                                 <div >
                                     <h:outputLabel value="S/." />
-                                    <f:facet name="header">TOTAL</f:facet>#{item.numValor * item.numCantidad}
+                                    <f:facet name="header">DSCTO</f:facet>#{item.numMtodscto}
                                 </div>
+                            </h:column>
+                            
+                            <h:column id="idTableAmount" headerClass="table_style_amount">
+                                <f:facet name="header">CANTIDAD</f:facet>#{item.numCantidad}
+                                
+                                <f:facet name="footer">
+                                    <div class="table_style_total_amount">
+                                        #{orderController.numSumItemsAmount}
+                                    </div>
+                                </f:facet> 
+                                
+                            </h:column>
+                            
+                            <h:column headerClass="table_style_price_7x">
+                                <div>
+                                    <h:outputLabel value="S/." />
+                                    <f:facet name="header">TOTAL</f:facet>#{item.numValor * item.numCantidad}
+                                </div>                                
+                                
+                                <f:facet name="footer">
+                                    <div class="table_style_total_price">
+                                        <h:outputLabel value="S/." />
+                                        #{orderController.numSumItemsPrice}
+                                    </div>
+                                </f:facet>                                
                             </h:column>
                             
                         </h:dataTable>
@@ -207,8 +230,10 @@
                                     </h:panelGroup>
                                 </td>
                                 <td class="compra_totales_text">
-                                    <h:outputLabel value="S/." />
-                                    <h:outputLabel value="#{orderController.sic1docu.numMtotarjeta}" />
+                                    <h:panelGroup rendered="#{not empty orderController.itemsTypeCard}">
+                                        <h:outputLabel value="S/." />
+                                        <h:outputLabel value="#{orderController.sic1docu.numMtotarjeta}" />
+                                    </h:panelGroup>
                                 </td>
                             </tr>
                             <tr>

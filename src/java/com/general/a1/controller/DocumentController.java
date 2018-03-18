@@ -227,7 +227,7 @@ public class DocumentController implements Serializable{
         Flash flash = FacesContext.getCurrentInstance().getExternalContext().getFlash();
         flash.clear();
         flash.put("paramIdDocu", obj.getIdDocu());
-        flash.put("paramTituloPagina", "VER DETALLE " + obj.getDesSclaseeven() + ": " + obj.getDesStipodocu() + " " + obj.getCodIden());
+        flash.put("paramTituloPagina", "VER DETALLE " + obj.getDesSclaseeven() + ": " + obj.getDesStipodocu() + " " + obj.getCodSerie() + "-" + obj.getNumDocu());
         flash.put("paramCodTRolpers", this.codTRolpers );
         flash.put("paramCodSClaseeven", obj.getCodSclaseeven());
         

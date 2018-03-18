@@ -174,12 +174,16 @@ and open the template in the editor.
 .table_style_description { width: 40%; text-align: left;}
 .table_style_price_small_discount { width: 5em; text-align: right; padding: 4px; color: red}
 .table_style_price_small { width: 4em; text-align: right; padding: 4px; color: blue}
+.table_style_price_7x { width: 7em; text-align: right; padding: 4px; color: blue}
 .table_style_price { width: 7em; text-align: right; padding: 4px;}
+.table_style_total_price { text-align: right; padding-right: 4px; color: blue}
 .table_style_amount { width: 3em; text-align: center;}
 .table_style_amount_x5 { width: 5em; text-align: center;}
 .table_style_date { width: 6em; text-align: center;}
 .table_style_date_2 { width: 8em; text-align: center;}
 .table_style_action { width: 4em; text-align: center;}
+
+.table_style_total_amount { text-align: center; color: blue}
 
 .red{
  color: red;   

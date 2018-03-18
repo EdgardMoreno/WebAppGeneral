@@ -74,6 +74,9 @@ public class OrderController implements Serializable{
     private String codTRolpers;
     private String codSClaseeven;
     
+    private BigDecimal numSumItemsPrice;
+    private BigDecimal numSumItemsAmount;
+    
     private List<Sic1prod> lstProducts;
     
     private String msjValidation;
@@ -101,7 +104,8 @@ public class OrderController implements Serializable{
             orderServiceImpl        = new DocuOrderServiceImpl();
            
             desFecRegistro          = UtilClass.getCurrentDay();
-            indexTabla              = -1;            
+            indexTabla              = -1;
+            
             
             /*Persona*/            
             sic1pers                = new Sic1pers();
@@ -117,6 +121,14 @@ public class OrderController implements Serializable{
             sic1docu.setNumIgv(new BigDecimal("0.00"));
             sic1docu.setNumMtoTotal(new BigDecimal("0.00"));
             sic1docu.setNumMtovuelto(new BigDecimal("0.00"));
+            sic1docu.setNumMtodscto(new BigDecimal("0.00"));
+            
+            
+            numSumItemsPrice = new BigDecimal("0.00");
+            numSumItemsAmount = new BigDecimal("0");
+            
+            
+            
             
             
             /*Data*/
@@ -265,10 +277,7 @@ public class OrderController implements Serializable{
     public void setCodSClaseeven(String codSClaseeven) {
         this.codSClaseeven = codSClaseeven;
     }
-
-    
-    
-    
+   
 
     public boolean isFlgPrecioSinIGV() {
         return flgPrecioSinIGV;
@@ -284,6 +293,22 @@ public class OrderController implements Serializable{
 
     public void setEditFields(boolean editFields) {
         this.editFields = editFields;
+    }
+
+    public BigDecimal getNumSumItemsPrice() {
+        return numSumItemsPrice;
+    }
+
+    public void setNumSumItemsPrice(BigDecimal numSumItemsPrice) {
+        this.numSumItemsPrice = numSumItemsPrice;
+    }
+
+    public BigDecimal getNumSumItemsAmount() {
+        return numSumItemsAmount;
+    }
+
+    public void setNumSumItemsAmount(BigDecimal numSumItemsAmount) {
+        this.numSumItemsAmount = numSumItemsAmount;
     }
     
     
@@ -312,14 +337,16 @@ public class OrderController implements Serializable{
             List<Sic1general> lstSic1general = sic1generalServiceImpl.listByCod_ValorTipoGeneral_Sic1general(listCat);
             for(Sic1general obj : lstSic1general){                
                 /*Valor Por Defecto*/
-                if(obj.getCodValorgeneral().equalsIgnoreCase("VI_SICEFECTIVO")){
+                /*if(obj.getCodValorgeneral().equalsIgnoreCase("VI_SICEFECTIVO")){
                     sic1docu.setIdModapago(obj.getIdGeneral());                    
-                }
+                }*/
                 
                 obj.setDesGeneral(obj.getDesGeneral() + " (" + obj.getNumValor() + "%)");
                 
                 this.itemsPayMode.add(obj);
             }
+            /*Valor Por Defecto*/
+            sic1docu.setIdModapago(new BigDecimal(-1)); 
             
             /*Limpiar el catalogo de tipo de tarjea*/
             itemsTypeCard  = new ArrayList();
@@ -355,8 +382,19 @@ public class OrderController implements Serializable{
         for(int i=0 ; i < lstSic3docuprod.size() ; i++){
             lstSic3docuprod.get(i).setNumIndex(i+1);
         }
-        this.indexTabla   = -1;
-        this.recalculateTotals();
+        this.indexTabla   = -1;        
+       
+        /*Calcular Footer de la tabla*/
+        this.numSumItemsPrice = new BigDecimal("0.00");
+        this.numSumItemsAmount = new BigDecimal("0");
+        for(Sic3docuprod obj :  lstSic3docuprod){
+            if (obj.getNumValor()!=null){
+                this.numSumItemsPrice = this.numSumItemsPrice.add(obj.getNumValor().multiply(obj.getNumCantidad()));
+                this.numSumItemsAmount = this.numSumItemsAmount.add(obj.getNumCantidad());
+            }
+        }
+        
+        this.recalculateTotals(true);
         
         
     }
@@ -377,12 +415,23 @@ public class OrderController implements Serializable{
         if(this.indexTabla>=0){
             
             int item = this.indexTabla + 1;
-            
-            Sic3docuprod obj = this.lstSic3docuprod.get(this.indexTabla);
+            Sic3docuprod obj  = this.lstSic3docuprod.get(indexTabla);
             this.lstSic3docuprod.remove(obj);
+            
+            Sic3docuprodId id = new Sic3docuprodId();
+            id.setIdProd(this.sic1prod.getIdProd());
+            id.setNumItem(item);
+            
+            this.sic3docuprod.setSic1prod(this.sic1prod);
+            this.sic3docuprod.setId(id);
+            
             this.sic3docuprod.setNumIndex(item);
-            this.sic3docuprod.getId().setNumItem(item);
+            //this.sic3docuprod.getId().setNumItem(item);
             this.sic3docuprod.getNumValor().setScale(2,BigDecimal.ROUND_HALF_UP );
+            
+             if(this.sic3docuprod.getNumMtodscto() == null)
+                this.sic3docuprod.setNumMtodscto(new BigDecimal("0.00"));
+            
             this.lstSic3docuprod.add(this.indexTabla, sic3docuprod);
             
         }
@@ -399,11 +448,25 @@ public class OrderController implements Serializable{
             this.sic3docuprod.setSic1prod(this.sic1prod);
             this.sic3docuprod.setId(id);
             this.sic3docuprod.setNumIndex(item);
+            if(this.sic3docuprod.getNumMtodscto() == null)
+                this.sic3docuprod.setNumMtodscto(new BigDecimal("0.00"));
             
             this.lstSic3docuprod.add(this.sic3docuprod);
-        }       
+        }
        
-        this.recalculateTotals();
+        /*Calcular Footer de la tabla*/
+        this.numSumItemsPrice = new BigDecimal("0.00");
+        this.numSumItemsAmount = new BigDecimal("0");        
+        for(Sic3docuprod obj :  lstSic3docuprod){
+            if (obj.getNumValor()!=null){
+                this.numSumItemsPrice = this.numSumItemsPrice.add(obj.getNumValor().multiply(obj.getNumCantidad()));
+                this.numSumItemsAmount = this.numSumItemsAmount.add(obj.getNumCantidad());
+            }
+        }
+        
+      
+        this.recalculateTotals(true);
+        
         
         /*Limipiar objetos*/
         this.sic3docuprod = new Sic3docuprod();
@@ -433,7 +496,7 @@ public class OrderController implements Serializable{
         System.out.println("Producto:" + this.sic1prod.getCodProd());        
         String strCodProd = this.sic1prod.getCodProd();        
         //
-        if (strCodProd != null && strCodProd.trim().length() >= 3 ){
+        if (strCodProd != null && strCodProd.trim().length() >= 2 ){
             this.sic1prod.setIdProd(null);
             this.sic1prod.setDesProd(null);
             ProductServiceImpl productServiceImpl = new ProductServiceImpl();
@@ -491,35 +554,30 @@ public class OrderController implements Serializable{
 //        this.sic1idenpersSelected = (Sic1idenpers) event.getObject();
 //    }
     
-    public void recalculateTotals() throws CustomizerException{
+    public void recalculateTotals(boolean flgPayModeChange) throws CustomizerException{
         
         try{
             
-            double numTotalPrice = 0;
+            double numTotalPrice = 0;            
             boolean flgTarjeta = false;
             boolean flgErrorDescuento = false;
+            BigDecimal numDescuento = new BigDecimal(0);
+            this.sic1docu.setNumMtovuelto(new BigDecimal("0.00"));
             
-            BigDecimal numDescuento = this.sic1docu.getNumMtodscto();
             
             /*Se obtiene el precio total: Sumando el precio * cantidad de cada producto*/
             for(Sic3docuprod obj : this.lstSic3docuprod){
-                numTotalPrice += obj.getNumValor().doubleValue() * obj.getNumCantidad().doubleValue();
+                
+                System.out.println("mtoDescuento:" + obj.getNumMtodscto());
+                System.out.println("Cantidad:" + obj.getNumCantidad());
+                
+                numTotalPrice       += obj.getNumValor().doubleValue() * obj.getNumCantidad().doubleValue();
+                if (obj.getNumMtodscto() != null)
+                    numDescuento = numDescuento.add(obj.getNumMtodscto().multiply(obj.getNumCantidad()));
             }
-            
-            /*******************/
-            /**PAGO CON TARJETA*/
-            /*******************/
-            /*Se obtiene cargo adicional en caso se haya configurado*/
-            double numCargoTarjeta = 0;
-            for(Sic1general obj : this.itemsPayMode){
-                if(this.sic1docu.getIdModapago().equals(obj.getIdGeneral())){
-                    if(obj.getNumValor() != null){
-                        numCargoTarjeta = obj.getNumValor().doubleValue()/100;
-                        flgTarjeta = true;
-                    }
-                }
-            }
-            numTotalPrice = numTotalPrice + (numTotalPrice * numCargoTarjeta);
+            System.out.println("numDescuento:" + numDescuento);
+            numDescuento = numDescuento.setScale(2, BigDecimal.ROUND_HALF_UP);
+            this.sic1docu.setNumMtodscto(numDescuento);
             
             /*******************/
             /**DESCUENTO *******/
@@ -533,6 +591,24 @@ public class OrderController implements Serializable{
             /*En caso haya descuento se resta del importe total*/
             if (numDescuento!= null && numDescuento.doubleValue() <= numTotalPrice)
                 numTotalPrice = numTotalPrice - numDescuento.doubleValue();
+            
+            
+            /*******************/
+            /**PAGO CON TARJETA*/
+            /*******************/
+            /*Se obtiene cargo adicional en caso se haya configurado*/
+            double numCargoTarjeta = 0;
+            for(Sic1general obj : this.itemsPayMode){
+                if(this.sic1docu.getIdModapago().equals(obj.getIdGeneral())){
+                    if(obj.getNumValor() != null && obj.getNumValor().doubleValue() > 0){
+                        numCargoTarjeta = obj.getNumValor().doubleValue()/100;
+                        flgTarjeta = true;
+                    }
+                }
+            }
+            numTotalPrice = numTotalPrice + (numTotalPrice * numCargoTarjeta);
+            
+            
             
             
             /***************************************/
@@ -553,13 +629,43 @@ public class OrderController implements Serializable{
             /**************************/
             this.sic1docu.setNumSubtotal(new BigDecimal(numTotalPrice/(1+Constantes.CONS_VALUE_IGV)).setScale(2, BigDecimal.ROUND_HALF_UP));
             this.sic1docu.setNumIgv(new BigDecimal(this.sic1docu.getNumSubtotal().doubleValue() * Constantes.CONS_VALUE_IGV).setScale(2, BigDecimal.ROUND_HALF_UP));
-            this.sic1docu.setNumMtoTotal(new BigDecimal(numTotalPrice).setScale(2, BigDecimal.ROUND_HALF_UP));
-            
-            
+            //this.sic1docu.setNumMtoTotal(new BigDecimal(numTotalPrice).setScale(2, BigDecimal.ROUND_HALF_UP));
+            this.sic1docu.setNumMtoTotal(this.sic1docu.getNumSubtotal().add(sic1docu.getNumIgv()).setScale(2, BigDecimal.ROUND_HALF_UP));
             
             if (flgErrorDescuento){
                 this.sic1docu.setNumMtodscto(numDescuento);//Se setea a 0 cuando el monto a descontar es mayor al importe total.
                 throw new ValidationException("El descuento no puede ser mayor al importe Total.");
+            }
+            
+             /*Limpiando los campos segun la FORMA DE PAGO seleccionada*/
+            if(this.flgIsSale && flgPayModeChange ){
+                for(Sic1general obj : this.itemsPayMode){
+                   if (obj.getIdGeneral().compareTo(sic1docu.getIdModapago()) == 0)
+                       if(obj.getCodValorgeneral().equalsIgnoreCase("VI_SICEFECTIVO"))
+                           this.sic1docu.setNumMtotarjeta(new BigDecimal("0.00"));
+                       else
+                           this.sic1docu.setNumMtoefectivo(new BigDecimal("0.00"));
+               }
+            }
+            
+            /*Calculando los campos de MTOEFECTIVO Y MTO TARJETA segun la forma de pago seleccionada*/
+            if (this.flgIsSale && numTotalPrice > 0){
+                for(Sic1general obj : this.itemsPayMode){
+                    if (obj.getIdGeneral().compareTo(sic1docu.getIdModapago()) == 0){
+                        if(obj.getCodValorgeneral().equalsIgnoreCase("VI_SICEFECTIVO")){
+                            if(flgPayModeChange || (this.sic1docu.getNumMtoefectivo() != null && this.sic1docu.getNumMtoefectivo().compareTo(new BigDecimal(0))== 0)){
+                                this.sic1docu.setNumMtoefectivo(this.sic1docu.getNumMtoTotal());
+                                break;
+                            }
+                        }
+                        else if(obj.getCodValorgeneral().contains("VI_SICTARJ")){
+                            if(flgPayModeChange || (this.sic1docu.getNumMtotarjeta()!= null && this.sic1docu.getNumMtotarjeta().compareTo(new BigDecimal(0))== 0)){
+                                this.sic1docu.setNumMtotarjeta(this.sic1docu.getNumMtoTotal());
+                                break;
+                            }
+                        }
+                    }
+                }
             }
             
             /********************/
@@ -569,12 +675,12 @@ public class OrderController implements Serializable{
             if (this.flgIsSale && numTotalPrice > 0){
                 /*Dando formato a 2 decimales*/
                 if (this.sic1docu.getNumMtotarjeta() == null){
-                    this.sic1docu.setNumMtotarjeta(new BigDecimal(0).setScale(2,BigDecimal.ROUND_HALF_UP));
+                    this.sic1docu.setNumMtotarjeta(new BigDecimal("0.00").setScale(2,BigDecimal.ROUND_HALF_UP));
                 }else{
                     this.sic1docu.getNumMtotarjeta().setScale(2,BigDecimal.ROUND_HALF_UP);
                 }
                 if (this.sic1docu.getNumMtoefectivo() == null){
-                    this.sic1docu.setNumMtoefectivo(new BigDecimal(0).setScale(2,BigDecimal.ROUND_HALF_UP));
+                    this.sic1docu.setNumMtoefectivo(new BigDecimal("0.00").setScale(2,BigDecimal.ROUND_HALF_UP));
                 }
                 else
                     this.sic1docu.getNumMtoefectivo().setScale(2,BigDecimal.ROUND_HALF_UP);
@@ -586,12 +692,12 @@ public class OrderController implements Serializable{
                 }else
                     this.sic1docu.setNumMtovuelto(new BigDecimal(0).setScale(2,BigDecimal.ROUND_HALF_UP));
             }else{
-                this.sic1docu.setNumMtotarjeta(new BigDecimal(0).setScale(2,BigDecimal.ROUND_HALF_UP));
-                this.sic1docu.setNumMtoefectivo(new BigDecimal(0).setScale(2,BigDecimal.ROUND_HALF_UP));
+                this.sic1docu.setNumMtotarjeta(new BigDecimal("0.00").setScale(2,BigDecimal.ROUND_HALF_UP));
+                this.sic1docu.setNumMtoefectivo(new BigDecimal("0.00").setScale(2,BigDecimal.ROUND_HALF_UP));
             }
             
             /*Solo se evalua cuando es un nuevo registro*/
-            if (this.sic1docu.getIdDocu() == null){
+            /*if (this.sic1docu.getIdDocu() == null){
                 if(flgTarjeta){
                     this.sic1docu.setNumMtotarjeta(this.sic1docu.getNumMtoTotal());
                     this.sic1docu.setNumMtoefectivo(new BigDecimal("0.00"));
@@ -600,7 +706,7 @@ public class OrderController implements Serializable{
                     this.sic1docu.setNumMtoefectivo(this.sic1docu.getNumMtoTotal());
                     this.sic1docu.setNumMtotarjeta(new BigDecimal("0.00"));
                 }
-            }
+            }*/
             
         }catch(ValidationException ex){
             UtilClass.addErrorMessage(ex.getMessage());
@@ -626,6 +732,8 @@ public class OrderController implements Serializable{
                 }
             }
             
+           
+            
             System.out.println("idRelSec:" + idRelSec);
             /*Si tiene un catalogo anidado se procede a obtenerlo*/
             if (idRelSec > 0){
@@ -648,7 +756,9 @@ public class OrderController implements Serializable{
                 this.sic1docu.setNumMtotarjeta(new BigDecimal(0));
             }
             
-            this.recalculateTotals();
+            /*Solo se ejecuta cuando se registrar una nueva venta*/
+            if (this.sic1docu.getIdDocu() == null)
+                this.recalculateTotals(true);
         
         } catch(Exception ex) {
             throw new CustomizerException(ex.getMessage());
@@ -726,7 +836,8 @@ public class OrderController implements Serializable{
 
                 /**************** Guardar Documento ************************/
                 //Codiden
-                String strCodigo = this.sic1docu.getCodSerie().trim() + "-" + this.sic1docu.getNumDocu();
+                String strCodigo = this.sic1docu.getIdStipodocu() + "." + /*ID de FACTURA O BOLETA*/
+                                    this.sic1docu.getCodSerie().trim() + "-" + this.sic1docu.getNumDocu();
                 Sic1idendocu sic1idendocu = new Sic1idendocu();
                 sic1idendocu.setCodIden(strCodigo);
                 //this.sic1docu.setSic1idendocu(sic1idendocu);
@@ -771,7 +882,10 @@ public class OrderController implements Serializable{
                 sic1docu.setNumMtoTotal(new BigDecimal("0.00"));
                 sic1docu.setNumMtovuelto(new BigDecimal("0.00"));
                 
-                this.loadCatalogs();                
+                numSumItemsPrice = new BigDecimal("0.00");
+                numSumItemsAmount = new BigDecimal("0");
+                
+                this.loadCatalogs();
             }
 
         } catch (ValidationException ex){
@@ -893,7 +1007,7 @@ public class OrderController implements Serializable{
                 if(this.sic1docu.getCodEstadocu().equalsIgnoreCase(Constantes.CONS_COD_ESTAPORRECOGER))
                     this.flgPorRecoger = true;
 
-                this.recalculateTotals();
+                this.recalculateTotals(false);
                 
                 /*Cargar el catalogo de Tipo de Tarjeta*/
                 this.payModeValueChange();
@@ -953,6 +1067,17 @@ public class OrderController implements Serializable{
                     this.lstSic3docuprod.get(i).setNumIndex(i+1);
                 }
                 
+                 /*Calcular Footer de la tabla*/
+                this.numSumItemsPrice = new BigDecimal("0.00");
+                this.numSumItemsAmount = new BigDecimal("0");
+                for(Sic3docuprod obj :  lstSic3docuprod){
+                    if (obj.getNumValor()!=null){
+                        this.numSumItemsPrice = this.numSumItemsPrice.add(obj.getNumValor().multiply(obj.getNumCantidad()));
+                        this.numSumItemsAmount = this.numSumItemsAmount.add(obj.getNumCantidad());
+                    }
+                }
+                
+                
                 /*Formateando Montos*/
                 if (this.sic1docu.getNumMtodscto()!= null)
                     this.sic1docu.getNumMtodscto().setScale(2,BigDecimal.ROUND_HALF_UP);
@@ -976,7 +1101,7 @@ public class OrderController implements Serializable{
                 if(this.sic1docu.getCodEstadocu().equalsIgnoreCase(Constantes.CONS_COD_ESTAPORRECOGER))
                     this.flgPorRecoger = true;
 
-                this.recalculateTotals();
+                this.recalculateTotals(false);
                 
                 /*Cargar el catalogo de Tipo de Tarjeta*/
                 this.payModeValueChange();

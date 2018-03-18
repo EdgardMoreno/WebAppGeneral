@@ -213,6 +213,40 @@ function fnValidateBiggerDate(fecha){
     return message;
 }
 
+function fnValidateDateGreaterThanToday(fecha){
+    
+    console.log("fecha: " + fecha);
+    var message  = "";
+    valuesStart  = fecha.split("/");
+    
+
+    // Verificamos que la fecha no sea posterior a la actual
+    var dateStart = new Date(valuesStart[2],(valuesStart[1]-1),valuesStart[0]);
+    var hoy       = new Date();
+
+    if(dateStart>hoy){
+        console.log("Fecha mayor que la actual");
+        message = "Ingrese fecha menor o igual a la actual.";
+    }
+     return message;
+}
+
+
+function fnValidateFechaMayorQue(fechaInicial,fechaFinal){
+
+    valuesStart=fechaInicial.split("/");
+    valuesEnd=fechaFinal.split("/");
+
+    // Verificamos que la fecha no sea posterior a la actual
+    var dateStart=new Date(valuesStart[2],(valuesStart[1]-1),valuesStart[0]);
+    var dateEnd=new Date(valuesEnd[2],(valuesEnd[1]-1),valuesEnd[0]);
+    if(dateStart>=dateEnd)
+    {
+        return 0;
+    }
+    return 1;
+}
+
 /******************************************************************************************************/
 /**************** MENSAJE DE VALIDACION ***************************************************************/
 /*Funcion que muestra el error*/

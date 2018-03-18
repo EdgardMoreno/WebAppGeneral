@@ -75,7 +75,7 @@
         
         /*Funcion de Jquery para el datePicker*/
         $(function(){
-            $(".datepicker" ).datepicker();
+            $(".datepicker" ).datepicker({dateFormat: 'dd/mm/yy'});
         });
         
     </script>
@@ -93,24 +93,6 @@
                     </div>
                     <ul class="nav navbar-nav">
                         <li class="active"><a href="#{request.contextPath}/faces/index.xhtml">Inicio</a></li>
-                        
-                        <li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="#">Cuadre Caja<span class="caret"></span></a>
-                            <ul class="dropdown-menu">                                
-                                <li>
-                                    <h:commandLink id="idMenuCloseBox" value="Cuadrar Caja" action="#{masterPageController.redirect()}">
-                                        <f:param name="paramTituloPagina" value="Cuadre Caja" />
-                                        <f:param name="paramNombrePagina" value="cajaCuadre" />                                    
-                                    </h:commandLink>
-                                </li>
-                                <li>
-                                    <h:commandLink id="idMenuBoxReport" value="Reporte de Cuadre" action="#{masterPageController.redirect()}">
-                                        <f:param name="paramTituloPagina" value="Reporte de Caja Diaria" />
-                                        <f:param name="paramNombrePagina" value="cajaCuadreListar" />                                    
-                                    </h:commandLink>
-                                </li>
-                                
-                            </ul>
-                        </li>
                         
                         <li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="#">Productos<span class="caret"></span></a>
                             <ul class="dropdown-menu">                              
@@ -201,6 +183,24 @@
                                     <h:commandLink id="idMenuInvenReport" value="Reporte de Inventario" action="#{masterPageController.redirect()}" >
                                         <f:param name="paramTituloPagina" value="Reporte de Ventas" />
                                         <f:param name="paramNombrePagina" value="kardexListar" />                                        
+                                    </h:commandLink>
+                                </li>
+                                
+                            </ul>
+                        </li>
+                        
+                        <li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="#">Cuadre Caja<span class="caret"></span></a>
+                            <ul class="dropdown-menu">                                
+                                <li>
+                                    <h:commandLink id="idMenuCloseBox" value="Cuadrar Caja" action="#{masterPageController.redirect()}">
+                                        <f:param name="paramTituloPagina" value="Cuadre Caja" />
+                                        <f:param name="paramNombrePagina" value="cajaCuadre" />                                    
+                                    </h:commandLink>
+                                </li>
+                                <li>
+                                    <h:commandLink id="idMenuBoxReport" value="Reporte de Cuadre" action="#{masterPageController.redirect()}">
+                                        <f:param name="paramTituloPagina" value="Reporte de Caja Diaria" />
+                                        <f:param name="paramNombrePagina" value="cajaCuadreListar" />                                    
                                     </h:commandLink>
                                 </li>
                                 

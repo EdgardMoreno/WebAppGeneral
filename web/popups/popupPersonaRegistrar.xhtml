@@ -38,8 +38,8 @@
 
         <script>
             
-            $( function() {
-               $(".datepicker").datepicker();
+            $( function() {               
+               $(".datepicker" ).datepicker({dateFormat: 'dd/mm/yy'});
             });
 
             $(document).ready(function () {
@@ -48,7 +48,7 @@
                 fnHidePersJur();
 
                 //Setear por defecto Genero MASCULINO
-                document.forms['form']['form:sorGenero'][0].checked = true;
+                //document.forms['form']['form:sorGenero'][0].checked = true;
 
                 //INVOCACION PAGINA EXTERNA: se bloquea el campo del DNI/RUC
                 var flgParam = $("#form\\:idFlgPaginaExterna").val();
@@ -145,11 +145,11 @@
                  valorTipoPersona = document.forms['form']['form:cboTipoPersona'][1].value;
                  }*/
 
-                if (document.forms['form']['form:sorGenero'][0].checked == true) {
+                /*if (document.forms['form']['form:sorGenero'][0].checked == true) {
                     genero = document.forms['form']['form:sorGenero'][0].value;
                 } else if (document.forms['form']['form:sorGenero'][1].checked == true) {
                     genero = document.forms['form']['form:sorGenero'][1].value;
-                }
+                }*/
 
 
                 if (docuIden.length == 0) {
@@ -187,10 +187,10 @@
                             flgError = true;
                         }*/
 
-                        if (genero == -1) {
+                        /*if (genero == -1) {
                             arrMessages.push("Se debe especificar el género.");
                             flgError = true;
-                        }
+                        }*/
                     }
                 }
 
