@@ -14,6 +14,7 @@ import com.general.hibernate.views.ViSicdocu;
 import com.general.hibernate.relaentity.Sic3docuprod;
 import com.general.interfac.service.DocumentService;
 import com.general.util.beans.Constantes;
+import com.general.util.beans.UtilClass;
 import java.io.Serializable;
 import java.util.List;
 import com.general.util.dao.DaoFuncionesUtil;
@@ -51,23 +52,77 @@ public class DocuOrderServiceImpl implements Serializable, DocumentService{
         String strIdDocuResult  = null;
         Transaction tx          = null;
         BigDecimal numMtoComision;
+        boolean flgNuevoRegistro = false;
+        boolean flgSinComprobante = false;
         
         try{
-            Sic1docu sic1docu = sic1idendocu.getSic1docu();
+                       
             
-            if ( sic1docu.getCodSerie() == null || sic1docu.getCodSerie().isEmpty()) 
-                throw new ValidationException("Número de serie inválido");
+            Sic1docu sic1docu = sic1idendocu.getSic1docu();            
             
-            if ( sic1docu.getNumDocu() == null || sic1docu.getNumDocu().intValue() <= 0) 
-                throw new ValidationException("Número del Documento inválido");
+            /*OBTENER SI SE ESTA EDITANDO O REGISTRANDO UN NUEVO DOCUMENTO*/
+            if (sic1docu.getIdDocu() == null)
+                flgNuevoRegistro = true;
+            
+            BigDecimal idStipodocuSinDocu = DaoFuncionesUtil.FNC_SICOBTIDGEN(((SessionImpl) session).connection()
+                                                                                , Constantes.CONS_COD_STIPODOCU
+                                                                                , Constantes.CONS_COD_STIPODOCU_SINDOCU);
+            
+            /*Se valida si el SUBTIPO DE DOCUMENTO es SIN DOCUMENTO, es decir la operacion NO TIENE COMPROBANTE*/
+            if (sic1docu.getIdStipodocu().compareTo(idStipodocuSinDocu) == 0){
+                flgSinComprobante = true;
+                sic1idendocu.getSic1docu().setCodSerie(null);
+                sic1idendocu.getSic1docu().setNumDocu(null);
+            }
+            
+            BigDecimal intIdSClaseEven = DaoFuncionesUtil.FNC_SICOBTIDGEN(((SessionImpl) session).connection()
+                                                                                , Constantes.CONS_COD_SCLASEEVEN
+                                                                                , sic1docu.getCodSclaseeven());
+
+            System.out.println("ID_STIPODOCU_SINDOCU:" + idStipodocuSinDocu);
+            System.out.println("ID_STIPODOCU:" + sic1docu.getIdStipodocu());
+
+            /*En caso en la operacion NO EXISTA COMPROBANTE la generación del COD_IDEN es diferente*/
+            if (flgSinComprobante){                
+                /*Solo se crea el nuevo COD_IDEN cuando es un nuevo registro, en el caso que se este editante el COD_IDEN ya viene 
+                en el objeto "sic1idendocu" que se pasa como parametro*/
+                if (flgNuevoRegistro){
+                    /*Se Genera el COD_IDEN*/
+                    String strCodigo =  intIdSClaseEven + "."  +
+                                        sic1docu.getIdStipodocu() + "." +
+                                        UtilClass.getCurrentTime_YYYYMMDDHHMISS();
+                    sic1idendocu.setCodIden(strCodigo);
+                }
                 
+            }else{
+                
+                if ( sic1docu.getCodSerie() == null || sic1docu.getCodSerie().isEmpty())
+                    throw new ValidationException("Número de Serie inválido");
+
+                if ( sic1docu.getNumDocu() == null || sic1docu.getNumDocu().intValue() <= 0) 
+                    throw new ValidationException("Número de Correlativo inválido");
+                
+                /*Se genera un nuevo COD_IDEN cuando es un nuevo registro, en el caso que se este editante el COD_IDEN ya viene 
+                  en el objeto "sic1idendocu" que se pasa como parametro*/
+                if (flgNuevoRegistro){
+                   String strCodigo = intIdSClaseEven + "."  + 
+                                       sic1docu.getIdStipodocu() + "." + 
+                                           sic1docu.getCodSerie().trim() + "-" + sic1docu.getNumDocu();
+                   sic1idendocu.setCodIden(strCodigo);
+                }
+            }
+
             session = HibernateUtil.getSessionFactory().openSession();
 
-            /*VALIDAR SI EXISTE DOCUMENTO: Cuando se crea un nuevo documento el ID_DOCU es nulo. Se verifica que no exista*/
-                if(sic1docu.getIdDocu() == null ){
-                    boolean exist = daoDocumentImpl.verifyByCodiden(session, sic1idendocu.getCodIden());
-                    if (exist){
-                        throw new ValidationException("El Número del comprobante ingresado ya existe.");
+            /*VALIDAR SI YA EXISTE EL DOCUMENTO QUE SE PRETENDE REGISTRAR*/            
+                if(flgNuevoRegistro){
+                    /*Para los comprobantes SIN DOCUMENTO no se realiza la validacion
+                        ya que esto siempre es un correlativo*/
+                    if(!flgSinComprobante){
+                        boolean exist = daoDocumentImpl.verifyByCodiden(session, sic1idendocu.getCodIden());
+                        if (exist){
+                            throw new ValidationException("El Número del comprobante ingresado ya existe.");
+                        }
                     }
                 }
 
@@ -88,9 +143,7 @@ public class DocuOrderServiceImpl implements Serializable, DocumentService{
                                                                                 , Constantes.CONS_COD_TIPOROLPERS
                                                                                 , Constantes.CONS_COD_NOAPLICA);
                 
-                BigDecimal intIdSClaseEven = DaoFuncionesUtil.FNC_SICOBTIDGEN(((SessionImpl) session).connection()
-                                                                                , Constantes.CONS_COD_SCLASEEVEN
-                                                                                , sic1docu.getCodSclaseeven());                
+                
                 
                 BigDecimal intIdTRolEsta  = DaoFuncionesUtil.FNC_SICOBTIDGEN(((SessionImpl) session).connection()
                                                                                 , Constantes.CONS_COD_TIPOROLESTA

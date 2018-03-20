@@ -60,6 +60,11 @@ public class UtilClass implements Serializable{
         return df.format(new Date());
     }
     
+    public static String getCurrentTime_YYYYMMDDHHMISS(){
+        DateFormat df = new SimpleDateFormat("yyyyMMddHHmmss");
+        return df.format(new Date());
+    }
+    
     public static BigDecimal convertDateToNumber(Date value){
         DateFormat df = new SimpleDateFormat("yyyyMMdd");
         return new BigDecimal(df.format(value));

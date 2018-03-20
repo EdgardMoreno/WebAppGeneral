@@ -62,12 +62,17 @@ public class Main {
 
     public static void main(String[] args) throws Exception {
 
+        
+        System.out.println("valor: " + UtilClass.getCurrentTime_YYYYMMDDHHMISS());
+        
         Connection cnConexion = null;
 
         SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
         Session session = sessionFactory.openSession();
         //Session sessionTemp = sessionFactory.openSession();
         System.out.println("ejemplo:");
+        
+        
         
         
         DateFormat df = new SimpleDateFormat("yyyyMMddHHmmss");

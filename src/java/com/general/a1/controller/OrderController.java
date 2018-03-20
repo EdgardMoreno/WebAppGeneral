@@ -328,6 +328,7 @@ public class OrderController implements Serializable{
             List<String> listCat = new ArrayList<>();
             listCat.add("VI_SICFACTURA");
             listCat.add("VI_SICBOLETA");
+            listCat.add("VI_SICSINDOCU");
             System.out.println("HiberNate:" + HibernateUtil.getSessionFactory().isClosed());
             this.itemSTipoDocu = sic1generalServiceImpl.listByCod_STipoDocu_SelectItem(listCat);
             
@@ -836,13 +837,15 @@ public class OrderController implements Serializable{
 
                 /**************** Guardar Documento ************************/
                 //Codiden
-                String strCodigo = this.sic1docu.getIdStipodocu() + "." + /*ID de FACTURA O BOLETA*/
-                                    this.sic1docu.getCodSerie().trim() + "-" + this.sic1docu.getNumDocu();
-                Sic1idendocu sic1idendocu = new Sic1idendocu();
-                sic1idendocu.setCodIden(strCodigo);
+//                String strCodigo = this.sic1docu.getIdStipodocu() + "." + /*ID de FACTURA O BOLETA*/
+//                                    this.sic1docu.getCodSerie().trim() + "-" + this.sic1docu.getNumDocu();
+//                Sic1idendocu sic1idendocu = new Sic1idendocu();
+//                sic1idendocu.setCodIden(strCodigo);
                 //this.sic1docu.setSic1idendocu(sic1idendocu);
+                
+                Sic1idendocu sic1idendocu = new Sic1idendocu();
 
-                this.sic1docu.setDesDocu("Compra Nro. " + strCodigo);
+                //this.sic1docu.setDesDocu("Compra Nro. " + strCodigo);
                 this.sic1docu.setIdPers(SessionUtils.getUserId()); //Login
                 this.sic1docu.setIdPersexterno(idPers);
                 this.sic1docu.setFecDesde(UtilClass.convertStringToDate(this.desFecRegistro));

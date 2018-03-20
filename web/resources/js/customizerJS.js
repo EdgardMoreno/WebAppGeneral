@@ -494,31 +494,41 @@ function fnValiteVoucherHeader() {
     var numDocumento = document.getElementById("form:numDocumento").value;
     var somTipoDocu = document.getElementById("form:somTipoDocu").selectedIndex;
 
+    var valTipoDocu =  $("#form\\:somTipoDocu").find('option:selected').text(); 
+
+    console.log($("#form\\:somTipoDocu").find('option:selected').text());
+
+
     console.log("codSerie:" + codSerie);
     //console.log("numDocumento:" + numDocumento + " sdf:" + somTipoDocu.selectedIndex);
 
     var FlgError = false;
     var arrMessages = [];
 
-    if (somTipoDocu == 0) {
-        arrMessages.push("Seleccione el Tipo de Documento de la Orden.");
-        FlgError = true;
-    }
+    /*Si la operacion no tiene COMPROBANTE no se realiza validación*/
+    if (valTipoDocu != 'S/D') {
 
-    if (codSerie.trim().length == 0) {
-        arrMessages.push("Debe ingresar el Nro. de Serie.");
-        FlgError = true;
-    }
+        if (somTipoDocu == 0) {
+            arrMessages.push("Seleccione el Tipo de Documento de la Orden.");
+            FlgError = true;
+        }
 
-    if (codSerie.trim().length > 4) {
-        arrMessages.push("Nro. de Serie no puede ser mayor a 4 digitos.");
-        FlgError = true;
-    }
+        if (codSerie.trim().length == 0) {
+            arrMessages.push("Debe ingresar el Nro. de Serie.");
+            FlgError = true;
+        }
 
-    if (numDocumento.length == 0) {
-        arrMessages.push("Debe ingresar el Correlativo.");
-        FlgError = true;
-    }                   
+        if (codSerie.trim().length > 4) {
+            arrMessages.push("Nro. de Serie no puede ser mayor a 4 digitos.");
+            FlgError = true;
+        }
+
+        if (numDocumento.length == 0) {
+            arrMessages.push("Debe ingresar el Correlativo.");
+            FlgError = true;
+        }                   
+
+    }
 
     var divResu = $("#idDivValidation");
 

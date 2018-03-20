@@ -39,7 +39,7 @@ public class Constantes {
     
     
     /*CODIGO DE TIPO DE IDENTIFICADORES*/
-    public static String CONS_COD_GENERO          = "VI_SICGENERO";
+    public static String CONS_COD_GENERO            = "VI_SICGENERO";
         /*CODIGOS*/
         public static String CONS_COD_GENERO_MASCULINO   = "M";
         public static String CONS_COD_GENERO_FEMENINO    = "F";
@@ -100,7 +100,9 @@ public class Constantes {
     /*CODIGO DE SUB TIPO DE DOCUMENTO*/
     public static String CONS_COD_STIPODOCU            = "VI_SICSTIPODOCU";        
         /*CODIGOS*/
-        public static String CONS_COD_STIPODOCU_SINDOCU            = "VI_SICSINDOCU";
+        public static String CONS_COD_STIPODOCU_SINDOCU             = "VI_SICSINDOCU";
+        public static String CONS_COD_STIPODOCU_FACTURA             = "VI_SICFACTURA";
+        public static String CONS_COD_STIPODOCU_BOLETA              = "VI_SICBOLETA";
     
     /*MENSAJES*/
     public static String CONS_SUCCESS_MESSAGE = "Se grabó con éxito";
