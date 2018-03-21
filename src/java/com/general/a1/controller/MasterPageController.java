@@ -47,11 +47,13 @@ public class MasterPageController {
         /*Se obtiene los parametros vinculados a los links*/
         String tituloPagina  = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("paramTituloPagina");
         String nombrePagina  = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("paramNombrePagina");
+        String codClaseeven = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("paramCodClaseeven");
         String codSClaseeven = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("paramCodSClaseeven");
         String codTRolpers   = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("paramCodTRolpers");
         
         System.out.println("tituloPagina: " + tituloPagina);
         System.out.println("nombrePagina: " + nombrePagina);
+        System.out.println("codClaseeven: " + codClaseeven);
         System.out.println("codSClaseeven: " + codSClaseeven);
         System.out.println("paramCodTRolpers: " + codTRolpers);
         
@@ -97,7 +99,8 @@ public class MasterPageController {
         Flash flash = FacesContext.getCurrentInstance().getExternalContext().getFlash();
         flash.clear();
         flash.put("paramTituloPagina", tituloPagina);
-        flash.put("paramCodSClaseeven", codSClaseeven);
+        flash.put("paramCodClaseeven", codClaseeven);
+        flash.put("paramCodSClaseeven", codSClaseeven);        
         flash.put("paramCodTRolpers", codTRolpers);
         flash.setKeepMessages(true);
         

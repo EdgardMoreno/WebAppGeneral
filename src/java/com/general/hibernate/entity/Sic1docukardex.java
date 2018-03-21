@@ -1,4 +1,4 @@
-package com.general.hibernate1;
+package com.general.hibernate.entity;
 // Generated 11/03/2018 11:19:20 AM by Hibernate Tools 4.3.1
 
 

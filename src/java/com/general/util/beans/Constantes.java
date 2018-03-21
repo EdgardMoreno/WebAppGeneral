@@ -89,6 +89,11 @@ public class Constantes {
         public static String CONS_COD_ESTACERRADO          = "VI_SICESTACERR";
         public static String CONS_COD_ESTAPENDIENTE        = "VI_SICESTAPEND";
         
+    /*CODIGO DE CLASE DE EVENTO*/
+    public static String CONS_COD_CLASEEVEN                = "VI_SICCLASEEVEN";
+        /*CODIGOS*/
+        public static String CONS_COD_CLASEEVEN_GASTOS              = "VI_SICGASTOS";
+    
     /*CODIGO DE SUB CLASE DE EVENTO*/
     public static String CONS_COD_SCLASEEVEN            = "VI_SICSCLASEEVEN";
         /*CODIGOS*/

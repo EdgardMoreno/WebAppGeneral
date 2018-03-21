@@ -9,6 +9,7 @@ import com.general.hibernate.entity.HibernateUtil;
 import com.general.hibernate.entity.Sic1general;
 import com.general.hibernate.entity.Sic1stipodocu;
 import com.general.hibernate.views.ViSicestageneral;
+import com.general.hibernate1.Sic1sclaseeven;
 import com.general.util.dao.DaoFuncionesUtil;
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -141,5 +142,19 @@ public class DaoSic1generalImp implements Serializable{
         }
 
         return lst;        
-    }    
+    } 
+    
+    public List<Sic1sclaseeven> getCataSClaseEven(Session session, BigDecimal idClaseeven) throws SQLException, Exception {
+        List<Sic1sclaseeven> lst = null;
+        try{
+            session = HibernateUtil.getSessionFactory().openSession();            
+            lst = session.createCriteria(Sic1sclaseeven.class).add(Restrictions.eq("idClaseeven", idClaseeven)).list();
+            
+        }catch(Exception ex){
+            throw new Exception(ex.getMessage());
+        }
+            
+        return lst;
+    }
+    
 }

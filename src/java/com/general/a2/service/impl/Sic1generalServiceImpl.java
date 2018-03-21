@@ -6,10 +6,13 @@
 package com.general.a2.service.impl;
 
 import com.general.a3.dao.impl.DaoSic1generalImp;
+import com.general.hibernate.entity.HibernateUtil;
 import com.general.hibernate.entity.Sic1general;
 import com.general.hibernate.entity.Sic1stipodocu;
 import com.general.hibernate.views.ViSicestageneral;
+import com.general.hibernate1.Sic1sclaseeven;
 import com.general.util.beans.Constantes;
+import com.general.util.dao.DaoFuncionesUtil;
 import com.general.util.exceptions.CustomizerException;
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -17,6 +20,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import javax.faces.model.SelectItem;
+import org.hibernate.Session;
+import org.hibernate.internal.SessionImpl;
 
 /**
  *
@@ -155,6 +160,40 @@ public class Sic1generalServiceImpl implements Serializable{
         ViSicestageneral obj = new ViSicestageneral();
         obj.setCodTrolesta("VI_SICESTADOCUCOMPROBANTE");
         return daoSic1generalImp.getCataEstaRol(obj);
+        
+    }
+    
+    /*CATALOGO DE GASTOS*/
+    public List<SelectItem> getCataSpend( ) throws Exception{
+        
+        
+        List<SelectItem> lstResult = new ArrayList(); 
+        Session session = null;
+        try{
+            session = HibernateUtil.getSessionFactory().openSession();
+            
+            BigDecimal idClaseeven = DaoFuncionesUtil.FNC_SICOBTIDGEN(((SessionImpl) session).connection()
+                                                                                , Constantes.CONS_COD_CLASEEVEN
+                                                                                , Constantes.CONS_COD_CLASEEVEN_GASTOS);
+            
+            List<Sic1sclaseeven> list = daoSic1generalImp.getCataSClaseEven(session, idClaseeven);                        
+        
+            SelectItem si;
+            for(Sic1sclaseeven obj : list){
+                si = new SelectItem();
+                si.setLabel(obj.getDesSclaseeven());
+                si.setValue(obj.getIdClaseeven());
+                lstResult.add(si);
+            }
+            
+        }catch(Exception ex){
+            throw new Exception(ex.getMessage());
+        }finally{
+            if(session != null)
+                session.close();
+        }
+        
+        return lstResult;
         
     }
     

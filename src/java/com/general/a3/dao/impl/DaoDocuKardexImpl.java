@@ -6,7 +6,7 @@
 package com.general.a3.dao.impl;
 
 import com.general.hibernate.entity.Sic1prod;
-import com.general.hibernate1.Sic1docukardex;
+import com.general.hibernate.entity.Sic1docukardex;
 import conexionbd.InParameter;
 import conexionbd.OutParameter;
 import conexionbd.StoredProcedure;

@@ -41,5 +41,5 @@ Contributor(s):
 -->
 <hibernate-reverse-engineering>
   <schema-selection match-schema="SICDBA"/>
-  <table-filter match-name="SIC1DOCUKARDEX"/>
+  <table-filter match-name="SIC1SCLASEEVEN"/>
 </hibernate-reverse-engineering>

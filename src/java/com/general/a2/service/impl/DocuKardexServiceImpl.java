@@ -11,7 +11,7 @@ import com.general.hibernate.entity.HibernateUtil;
 import com.general.hibernate.entity.Sic1idendocu;
 import com.general.hibernate.relaentity.Sic3docuesta;
 import com.general.hibernate.relaentity.Sic3docuestaId;
-import com.general.hibernate1.Sic1docukardex;
+import com.general.hibernate.entity.Sic1docukardex;
 import com.general.util.beans.Constantes;
 import com.general.util.dao.DaoFuncionesUtil;
 import com.general.util.exceptions.CustomizerException;

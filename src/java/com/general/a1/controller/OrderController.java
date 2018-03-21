@@ -67,6 +67,7 @@ public class OrderController implements Serializable{
     private List<SelectItem> itemSTipoDocu  = new ArrayList();
     private List<Sic1general> itemsPayMode   = new ArrayList();
     private List<SelectItem> itemsTypeCard  = new ArrayList();
+    private List<SelectItem> itemsSpend  = new ArrayList(); /*Catalogo de Gastos*/
     
     private String desFecRegistro;
     private Integer indexTabla;
@@ -97,6 +98,7 @@ public class OrderController implements Serializable{
         System.out.println("day+ " + day);
         
         try{
+            
             this.editFields         = true;
             msjValidation           = "";
             lstProducts             = new ArrayList();
@@ -126,9 +128,6 @@ public class OrderController implements Serializable{
             
             numSumItemsPrice = new BigDecimal("0.00");
             numSumItemsAmount = new BigDecimal("0");
-            
-            
-            
             
             
             /*Data*/
@@ -310,9 +309,15 @@ public class OrderController implements Serializable{
     public void setNumSumItemsAmount(BigDecimal numSumItemsAmount) {
         this.numSumItemsAmount = numSumItemsAmount;
     }
-    
-    
-    
+
+    public List<SelectItem> getItemsSpend() {
+        return itemsSpend;
+    }
+
+    public void setItemsSpend(List<SelectItem> itemsSpend) {
+        this.itemsSpend = itemsSpend;
+    }
+        
     /******************************************************************************/
     /****** METODOS ***************************************************************/
     /******************************************************************************/
@@ -323,6 +328,10 @@ public class OrderController implements Serializable{
             
             this.itemSTipoDocu.clear();
             this.itemsPayMode.clear();
+            this.itemsSpend.clear();
+            
+            /*Cargar Catalogo: GASTOS*/
+            this.itemsSpend = sic1generalServiceImpl.getCataSpend();
             
             /*Cargar Catalogo: STIPODOCU*/            
             List<String> listCat = new ArrayList<>();
@@ -353,7 +362,7 @@ public class OrderController implements Serializable{
             itemsTypeCard  = new ArrayList();
             
             
-        }catch(CustomizerException ex){
+        }catch(Exception ex){
             throw new CustomizerException(ex.getMessage());
         }
     }
@@ -1109,6 +1118,22 @@ public class OrderController implements Serializable{
                 /*Cargar el catalogo de Tipo de Tarjeta*/
                 this.payModeValueChange();
             }        
+        }
+    }
+    
+    /* Metodo que se ejecuta cuando es invocado desde una pagina externa, se llama desde desde el tag <f:metadata> ubicado en la
+     * página XHTML
+     */
+    public void loadRegisterSpend(ComponentSystemEvent event) throws CustomizerException{
+        
+        if(!FacesContext.getCurrentInstance().isPostback()){
+            
+            Flash flash = FacesContext.getCurrentInstance().getExternalContext().getFlash();
+
+            String tituloPagina = (String)flash.get("paramTituloPagina");
+            
+            if (tituloPagina != null)
+                this.desTituloPagina = tituloPagina;
         }
     }
     
