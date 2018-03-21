@@ -155,7 +155,14 @@
                     var razonSocial = document.getElementById("form:razonSocial").value;
                     //var detItems    = document.getElementById("form:idTableDetOrder").rows.length;
                     var numMtoTotal = $("#form\\:numMtoTotal").text();
-                    var tipoProducto = document.getElementById("form:idPayMode").selectedIndex;
+                    
+                    console.log("Elemento:" + document.getElementById("form:idPayMode"));
+                    
+                    var tipoProducto = document.getElementById("form:idPayMode");
+                    var idTipoProducto = 99;
+                    
+                    if (tipoProducto != null)
+                        idTipoProducto = tipoProducto.selectedIndex;
 
                     numMtoTotal = Number(numMtoTotal);
 
@@ -187,7 +194,7 @@
                         FlgError = true;
                     }
                     
-                    if (tipoProducto == 0) {
+                    if (idTipoProducto == 0) {
                         arrMessages.push("Seleccione la forma de pago.");
                         FlgError = true;
                     }

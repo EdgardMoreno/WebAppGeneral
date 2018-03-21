@@ -57,7 +57,7 @@ public class DocuOrderServiceImpl implements Serializable, DocumentService{
         
         try{
                        
-            
+            session = HibernateUtil.getSessionFactory().openSession();
             Sic1docu sic1docu = sic1idendocu.getSic1docu();            
             
             /*OBTENER SI SE ESTA EDITANDO O REGISTRANDO UN NUEVO DOCUMENTO*/
@@ -96,23 +96,22 @@ public class DocuOrderServiceImpl implements Serializable, DocumentService{
                 
             }else{
                 
-                if ( sic1docu.getCodSerie() == null || sic1docu.getCodSerie().isEmpty())
+                if ( sic1docu.getCodSerie() == null || sic1docu.getCodSerie().isEmpty() )
                     throw new ValidationException("Número de Serie inválido");
 
-                if ( sic1docu.getNumDocu() == null || sic1docu.getNumDocu().intValue() <= 0) 
+                if ( sic1docu.getNumDocu() == null || sic1docu.getNumDocu().intValue() <= 0 )
                     throw new ValidationException("Número de Correlativo inválido");
                 
                 /*Se genera un nuevo COD_IDEN cuando es un nuevo registro, en el caso que se este editante el COD_IDEN ya viene 
                   en el objeto "sic1idendocu" que se pasa como parametro*/
                 if (flgNuevoRegistro){
-                   String strCodigo = intIdSClaseEven + "."  + 
-                                       sic1docu.getIdStipodocu() + "." + 
-                                           sic1docu.getCodSerie().trim() + "-" + sic1docu.getNumDocu();
-                   sic1idendocu.setCodIden(strCodigo);
+                    String strCodigo =  sic1docu.getIdPersexterno().toString() + "." +
+                                        intIdSClaseEven + "."  + 
+                                        sic1docu.getIdStipodocu() + "." + 
+                                        sic1docu.getCodSerie().trim() + "-" + sic1docu.getNumDocu();
+                    sic1idendocu.setCodIden(strCodigo);
                 }
             }
-
-            session = HibernateUtil.getSessionFactory().openSession();
 
             /*VALIDAR SI YA EXISTE EL DOCUMENTO QUE SE PRETENDE REGISTRAR*/            
                 if(flgNuevoRegistro){

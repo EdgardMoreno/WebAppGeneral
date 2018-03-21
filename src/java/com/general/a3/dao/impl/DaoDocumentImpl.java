@@ -69,6 +69,7 @@ public class DaoDocumentImpl implements Serializable{
                     String strFecDesde = null;
                     String strFecHasta = null;
                     String valor = null;
+                    Integer idModapago = null;
 
                     BigDecimal intIdTipoIden;                    
 
@@ -104,7 +105,15 @@ public class DaoDocumentImpl implements Serializable{
                         String codSerie = null;
                         if (sic1docu.getCodSerie()!=null && sic1docu.getCodSerie().trim().length()>0)
                             codSerie = sic1docu.getCodSerie().trim().toUpperCase();
-                                
+                        
+                        System.out.println("DOCU: " + sic1docu.getIdModapago());
+                        
+                        if (sic1docu.getIdModapago() != null && sic1docu.getIdModapago().intValue() == -1) {
+                            idModapago = null;
+                        }else {
+                            idModapago = sic1docu.getIdModapago().intValue();
+                        }
+
                         System.out.println("FecCreacion: " + strFecCreacion);
 
                         StoredProcedure sp = new StoredProcedure("PKG_SICMANTDOCU.PRC_SICCREADOCU");
@@ -119,7 +128,7 @@ public class DaoDocumentImpl implements Serializable{
                         sp.addParameter(new InParameter("X_ID_STIPODOCU",       Types.INTEGER, sic1docu.getIdStipodocu()));
                         sp.addParameter(new InParameter("X_ID_PERS",            Types.INTEGER, sic1docu.getIdPers()));
 
-                        sp.addParameter(new InParameter("X_ID_MODAPAGO",        Types.INTEGER, sic1docu.getIdModapago()== new BigDecimal(-1)?null:sic1docu.getIdModapago()));
+                        sp.addParameter(new InParameter("X_ID_MODAPAGO",        Types.INTEGER, idModapago ));
                         sp.addParameter(new InParameter("X_ID_TIPOTARJETA",     Types.INTEGER, sic1docu.getIdTipotarjeta() == new BigDecimal(-1)?null:sic1docu.getIdTipotarjeta()));
                         sp.addParameter(new InParameter("X_NUM_MTOTARJETA",     Types.NUMERIC, sic1docu.getNumMtotarjeta()));
                         sp.addParameter(new InParameter("X_NUM_MTOCOMI",        Types.NUMERIC, sic1docu.getNumMtocomi()));
