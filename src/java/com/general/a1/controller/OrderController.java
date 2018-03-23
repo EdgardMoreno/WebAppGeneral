@@ -564,6 +564,14 @@ public class OrderController implements Serializable{
 //        this.sic1idenpersSelected = (Sic1idenpers) event.getObject();
 //    }
     
+    public void loadTotals(){
+        if (sic1docu.getNumMtoTotal() != null && sic1docu.getNumMtoTotal().intValue() > 0){
+            this.sic1docu.setNumSubtotal(new BigDecimal(sic1docu.getNumMtoTotal().doubleValue()/(1+Constantes.CONS_VALUE_IGV)).setScale(2, BigDecimal.ROUND_HALF_UP));
+            this.sic1docu.setNumIgv(new BigDecimal(this.sic1docu.getNumSubtotal().doubleValue()* Constantes.CONS_VALUE_IGV).setScale(2, BigDecimal.ROUND_HALF_UP));        
+            this.sic1docu.setNumMtoTotal(this.sic1docu.getNumSubtotal().add(sic1docu.getNumIgv()).setScale(2, BigDecimal.ROUND_HALF_UP));
+        }
+    }
+    
     public void recalculateTotals(boolean flgPayModeChange) throws CustomizerException{
         
         try{
@@ -775,6 +783,92 @@ public class OrderController implements Serializable{
         }
     }
    
+    public void saveSpend() throws CustomizerException{
+        
+        String strResult;
+        String strMessage = null;
+        this.msjValidation = "";
+        try {
+            
+            System.out.println("COD_SERIE: " + this.sic1docu.getCodSerie());
+            System.out.println("NUM_DOCU: " + this.sic1docu.getNumDocu());
+            System.out.println("ID_STIPODOCU: " + this.sic1docu.getIdStipodocu());
+            
+            System.out.println("ID_DOCU: " + this.sic1docu.getIdDocu());
+            System.out.println("MONTO TOTAL: " + this.sic1docu.getNumMtoTotal());
+            
+            System.out.println("COD_IDEN: " + this.sic1idenpersId.getCodIden());
+            System.out.println("FECHA: " + this.desFecRegistro);
+            System.out.println("IGV: " + this.sic1docu.getNumIgv());
+            System.out.println("SUB TOTAL: " + this.sic1docu.getNumSubtotal());
+            System.out.println("PRECION SIN IGV: " + this.flgPrecioSinIGV);
+            
+            if (false){
+                this.msjValidation = "<UL type = 'square'><LI>" + strMessage + "</LI></UL>";
+                System.out.println("ERRROR: " + this.msjValidation);
+                 UtilClass.addErrorMessage("holaaa");
+            }
+            else {
+            
+                BigDecimal idPers = this.sic1pers.getIdPers();                
+                
+                System.out.println("ID_PERS CLIENTE/PROVEEDOR: " + idPers);
+
+                if ( idPers.intValue() <= 0  ){
+                    strMessage = "Falta ingresar el Cliente o Proveedor relacionado a la orden.";                    
+                    throw new ValidationException(strMessage);
+                }                
+                
+                Sic1idendocu sic1idendocu = new Sic1idendocu();
+
+                //this.sic1docu.setDesDocu("Compra Nro. " + strCodigo);
+                this.sic1docu.setIdPers(SessionUtils.getUserId()); //Login
+                this.sic1docu.setIdPersexterno(idPers);
+                this.sic1docu.setFecDesde(UtilClass.convertStringToDate(this.desFecRegistro));
+                this.sic1docu.setFlgPrecsinIGV(this.flgPrecioSinIGV==true?1:0);
+                this.sic1docu.setCodSclaseeven(this.codSClaseeven);
+
+                /*Codigo del estado*/
+                if (this.flgPorRecoger){
+                    this.sic1docu.setCodEstadocu(Constantes.CONS_COD_ESTAPORRECOGER);
+                }else
+                    this.sic1docu.setCodEstadocu(Constantes.CONS_COD_ESTAFINALIZADO);
+
+                /*Guardar Orden*/
+                System.out.println("Guardando Orden");
+                //orderServiceImpl = new DocuOrderServiceImpl();
+                sic1idendocu.setSic1docu(sic1docu);
+                strResult = orderServiceImpl.insert(sic1idendocu);
+                System.out.println("Documento:" + strResult);
+
+                UtilClass.addInfoMessage(Constantes.CONS_SUCCESS_MESSAGE);
+
+                /*Limpiar Objetos*/
+                this.sic1docu = new Sic1docu();
+                this.sic1idenpersId = new Sic1idenpersId();
+                this.sic1pers = new Sic1pers();
+                
+                this.desFecRegistro = UtilClass.getCurrentDay();
+                this.flgPorRecoger = false;
+                
+                sic1docu.setNumSubtotal(new BigDecimal("0.00"));
+                sic1docu.setNumIgv(new BigDecimal("0.00"));
+                sic1docu.setNumMtoTotal(new BigDecimal("0.00"));
+                
+                this.loadCatalogs();
+            }
+
+        } catch (ValidationException ex){
+            UtilClass.addErrorMessage(ex.getMessage());            
+        }catch (CustomizerException ex) {
+            throw new CustomizerException(ex.getMessage());
+        }catch (Exception ex) {
+            throw new CustomizerException(ex.getMessage());
+        }
+        
+        
+        
+    }
     
     public void saveOrder() throws CustomizerException, ParseException{
         

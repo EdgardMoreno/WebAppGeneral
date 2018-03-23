@@ -169,7 +169,7 @@ public class DocuOrderServiceImpl implements Serializable, DocumentService{
 
             /*GUARDAR DETALLE DE PRODUCTOS*/
                 List<Sic3docuprod> lstSic3docuprod = sic1docu.getLstSic3docuprod();
-                int index = 0;
+                int index = 0;                
                 
                 while(index < lstSic3docuprod.size()){
                     lstSic3docuprod.get(index).getId().setIdDocu(new BigDecimal(strIdDocuResult));

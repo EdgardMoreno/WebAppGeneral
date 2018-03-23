@@ -147,7 +147,7 @@ public class DaoSic1generalImp implements Serializable{
     public List<Sic1sclaseeven> getCataSClaseEven(Session session, BigDecimal idClaseeven) throws SQLException, Exception {
         List<Sic1sclaseeven> lst = null;
         try{
-            session = HibernateUtil.getSessionFactory().openSession();            
+            session = HibernateUtil.getSessionFactory().openSession();
             lst = session.createCriteria(Sic1sclaseeven.class).add(Restrictions.eq("idClaseeven", idClaseeven)).list();
             
         }catch(Exception ex){
