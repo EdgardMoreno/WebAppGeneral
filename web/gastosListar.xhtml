@@ -1,0 +1,185 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:a="http://xmlns.jcp.org/jsf/passthrough"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"  >
+    
+    <f:metadata>        
+        <f:viewParam name="titulo" value="#{documentController.desTituloPagina}"/>
+        <f:event type="preRenderView" listener="#{documentController.loadSpendReport}"/>
+    </f:metadata>
+    
+    <ui:composition template="./templates/templatePrincipal.xhtml">
+        
+        <ui:define name="header">
+            
+            <script>
+                
+                /*Funcion que permite anular el documento*/
+                function fnAnulDocu(idDocu){
+                    /*Valor del IDDOCU obtenido de la fila de la tabla se setear temporalmemte
+                     * en un INPUTTEXT para que luego se llamado desde el Managed Bean*/
+                    console.log("idDocu:" + idDocu);
+                    $("#form\\:idDocuSelected").val(idDocu);
+                    
+                    var message = "¿Está seguro de anular el documento seleccionado?";
+                    fnShowDialogConfirm('form\\:idBtnAnulDocu', message);
+                    return false;
+                }
+                
+                function fnCreateOrder(){
+                    fnRedirectRegisterSpend();
+                }
+                
+            </script>
+                   
+        </ui:define>
+        
+        <ui:define name="content">            
+                
+                <div class="container">
+                    
+                    <div class="page-header" >
+                        <h3>${documentController.desTituloPagina}</h3>
+                    </div>
+
+                    <h:panelGrid columns="6" style="width:85%"
+                                 columnClasses="td-label-1, td-content-1, td-label-1, td-content-1, td-label-1, td-content-1">
+
+                        <h:outputLabel value="Tipo Documento:"/>
+                        <h:selectOneMenu id="somTipoDocu" value="#{documentController.viSicdocu.idStipodocu}" style="width:100%" styleClass="form-control">
+                            <f:selectItem itemLabel="-- Todos --" itemValue="-1" />
+                            <f:selectItems value="#{documentController.itemSTipoDocu}" />
+                        </h:selectOneMenu>
+                        <h:outputLabel value="Cod. Serie:"/>
+                        <h:inputText styleClass="form-control" value="#{documentController.viSicdocu.codSerie}"  />
+                        <h:outputLabel value="Creador:"/>
+                        <h:inputText styleClass="form-control" value="#{documentController.viSicdocu.desPersCreador}"  style="width:150%"/>
+                        
+                        
+                        <h:outputLabel value="Estado:"/>
+                        <h:selectOneMenu value="#{documentController.viSicdocu.idStipodocu}" style="width:100%" styleClass="form-control">
+                            <f:selectItem itemLabel="-- Todos --" itemValue="-1" />
+                            <f:selectItems value="#{documentController.itemsEstaRol}" var="c" itemValue="#{c.idEsta}" itemLabel="#{c.desEsta}" />
+                        </h:selectOneMenu>                        
+                        <h:outputLabel value="Correlativo:"/>                        
+                            <h:inputText autocomplete="off"                                                                                          
+                                         value="#{documentController.viSicdocu.numDocu}" styleClass="form-control"/>                        
+                        <h:outputLabel value=""/>
+                        <h:outputLabel value=""/>                        
+                        
+                        <h:outputLabel value="Docu. Identidad Cliente/Proveedor:"/>
+                        <h:panelGroup>
+                            <div class="input-group mb-2 mb-sm-0">
+                                <div id="idCantDigitosDocIden" class="input-group-addon">0</div>
+                                <h:inputText id="numDocuIden" autocomplete="off"                                                 
+                                             onkeypress="return fnAllowOnlyNumbers(event)"
+                                             onkeyup="fnCountLength(this.value,'idCantDigitosDocIden')"
+                                             value="#{documentController.viSicdocu.codIdenClieprov}" styleClass="form-control"/>
+                            </div>
+                        </h:panelGroup>
+                        <h:outputLabel value="Cliente/Proveedor:"/>
+                        <h:inputText styleClass="form-control" value="#{documentController.viSicdocu.desPersClieprov}" />
+                        <h:outputLabel value=""/>
+                        <h:outputLabel value=""/>
+
+                        <h:outputLabel value="Fecha Desde:"/>
+                        <h:inputText value="#{documentController.desFecDesde}" styleClass="form-control datepicker"/>
+                        <h:outputLabel value="Fecha Hasta:"/>
+                        <h:inputText value="#{documentController.desFecHasta}" styleClass="form-control datepicker" />
+                        
+                        <h:commandLink actionListener="#{documentController.filterDocuments()}" styleClass="btn btn-default">
+                            <span class="glyphicon glyphicon-search"></span> Buscar
+                        </h:commandLink>
+                        <h:panelGroup>
+                            <p:commandLink actionListener="#{documentController.clearSearch()}" styleClass="btn btn-default" update="form">
+                                <span class="glyphicon glyphicon-erase"></span> Limpiar
+                            </p:commandLink>
+                            <p:commandLink styleClass="btn btn-default" onclick="fnCreateOrder()">
+                                <span class="glyphicon glyphicon-new-window"></span> Nuevo
+                            </p:commandLink>
+                        </h:panelGroup>
+
+                    </h:panelGrid>
+                    <br/>
+                    
+                    <!-- ********************************** -->
+                    <!-- ELEMENTOS OCULTOS -->
+                    <!-- *********************************** -->
+                    <label class="ocultarObjeto" >ID_Docu_seleccionado</label>
+                    <h:inputText id="idDocuSelected" value="#{documentController.idDocuSelected}" styleClass="ocultarObjeto" />
+                    <label class="ocultarObjeto" >CODSCLASEEVEN</label>
+                    <h:inputText id="idSClaseeven" value="#{documentController.codSClaseeven}" styleClass="ocultarObjeto" />
+                    
+                    
+                    <!-- ********************************** -->
+                    <!-- LISTA DE DOCUMENTOS -->
+                    <!-- *********************************** -->
+                    
+                    <h:dataTable id="idTblDocuments" 
+                                 var="item" 
+                                 width="100%"
+                                 value="#{documentController.lstViSicdocus}"                                  
+                                 styleClass="table-bordered"
+                                 columnClasses="table_style_id,
+                                                table_style_date,               
+                                                table_style_code,                                                
+                                                table_style_description_small,
+                                                table_style_description_small,
+                                                table_style_code_small,
+                                                table_style_price_small,                                                
+                                                table_style_code_small,
+                                                table_style_action">                        
+
+                        <h:column>
+                            <f:facet name="header">No.</f:facet>#{documentController.lstViSicdocus.indexOf(item) + 1}
+                        </h:column>
+                        
+                         <h:column>
+                            <f:facet name="header">Fec. Registro</f:facet>#{item.fecDesde}
+                        </h:column>
+                        
+                        <h:column>
+                            <f:facet name="header">Evento</f:facet>#{item.desDocu}
+                        </h:column>
+                        
+                        <h:column>
+                            <f:facet name="header">Cliente/Proveedor</f:facet>#{item.desPersClieprov}
+                        </h:column>
+                        
+                        <h:column>
+                            <f:facet name="header">Descripción</f:facet>#{item.desNotas}
+                        </h:column>
+                        
+                        <h:column>
+                            <f:facet name="header">Estado</f:facet>#{item.desEstadocu}
+                        </h:column>                                                                   
+                     
+                        <h:column>
+                            <f:facet name="header">Total</f:facet>#{item.numMtototal}
+                        </h:column> 
+                        
+                        <h:column>
+                            <f:facet name="header">Responsable</f:facet>#{item.desPersCreador}
+                        </h:column>
+
+                        <h:column>
+                            
+                            <h:commandLink onclick="return fnAnulDocu(#{item.idDocu})" >
+                                <span class="glyphicon glyphicon-trash" data-toggle="tooltip" title="Anular"></span>                                
+                            </h:commandLink>
+                                                                            
+                        </h:column>
+                    </h:dataTable>
+                </div>
+            
+            <h:commandLink id="idBtnAnulDocu" value="Anular Documento" style="display: none">
+                <f:ajax execute="idDocuSelected" render="idTblDocuments" listener="#{documentController.anulDocu()}" />
+            </h:commandLink>
+            
+        </ui:define>
+    </ui:composition>
+</html>

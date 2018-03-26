@@ -100,12 +100,16 @@ public class DaoCashRegisterImpl {
     public Sic4cuaddiario getSummaryOrders(Session session, Sic4cuaddiario obj) throws Exception {
                             
         String sql =                     
-            " SELECT  NVL(SUM(CASE WHEN V1.COD_MODOPAGO = 'VI_SICEFECTIVO' THEN TO_NUMBER(V1.NUM_MTOTOTAL) ELSE 0 END ),0) AS NUM_MTOEFECTIVO " +
-            "        ,NVL(SUM(CASE WHEN V1.COD_MODOPAGO = 'VI_SICTARJDEBITO' THEN TO_NUMBER(V1.NUM_MTOTOTAL) ELSE 0 END),0) AS NUM_MTOTARJDEBI " +
-            "        ,NVL(SUM(CASE WHEN V1.COD_MODOPAGO = 'VI_SICTARJCREDITO' THEN TO_NUMBER(V1.NUM_MTOTOTAL) ELSE 0 END),0) AS NUM_MTOTARJCRED " +                    
-            " FROM VI_SICDOCU V1 " +                
-            " WHERE V1.ID_PERS_CREADOR = :id_pers " +
-            "       AND TO_CHAR(V1.FEC_DESDE,'YYYYMMDD') = :num_peri" ;
+            " SELECT  NVL(SUM(S1.NUM_MTOEFECTIVO),0) AS NUM_MTOEFECTIVO " +
+            "        ,NVL(SUM(CASE WHEN GEN.COD_VALORGENERAL = 'VI_SICTARJDEBITO' THEN TO_NUMBER(S1.NUM_MTOTARJETA) ELSE 0 END),0) AS NUM_MTOTARJDEBI " +
+            "        ,NVL(SUM(CASE WHEN GEN.COD_VALORGENERAL = 'VI_SICTARJCREDITO' THEN TO_NUMBER(S1.NUM_MTOTARJETA) ELSE 0 END),0) AS NUM_MTOTARJCRED " +
+            " FROM SIC1DOCU S1 " +
+            " LEFT JOIN SIC1GENERAL GEN ON GEN.ID_GENERAL = S1.ID_MODAPAGO " +
+            " JOIN SIC3DOCUESTA RELESTA ON RELESTA.ID_DOCU = S1.ID_DOCU " +
+            "                              AND TO_CHAR(RELESTA.FEC_HASTA,'DD/MM/YYYY') = '31/12/2400' " +
+            "                              AND RELESTA.ID_ESTADOCU != PKG_SICCONSGENERAL.FNC_SICOBTIDGEN('VI_SICESTA','VI_SICESTAANULADO') " +
+            " WHERE S1.ID_PERS = :id_pers " + 
+            "       AND TO_CHAR(S1.FEC_DESDE,'YYYYMMDD') = :num_peri" ;
         
         System.out.println("ID_PERS: "  + obj.getId().getIdPers());
         System.out.println("NUM_PERI: " + obj.getId().getNumPeri());        

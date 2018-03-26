@@ -218,7 +218,7 @@ public class DocumentController implements Serializable{
     }
     
     public void clearSearch(){
-        viSicdocu = new ViSicdocu();
+        //viSicdocu = new ViSicdocu();
         lstViSicdocus  = new ArrayList();
     }
     
@@ -278,5 +278,25 @@ public class DocumentController implements Serializable{
             
             this.desTituloPagina = tituloPagina;        
         }
-    }    
+    }
+
+      public void loadSpendReport(ComponentSystemEvent event) throws CustomizerException{
+          
+          if(!FacesContext.getCurrentInstance().isPostback()){
+              
+            Flash flash = FacesContext.getCurrentInstance().getExternalContext().getFlash();        
+            String tituloPagina    = (String)flash.get("paramTituloPagina"); 
+            String codClaseeven    = (String)flash.get("paramCodClaseeven");
+            
+            this.desTituloPagina = tituloPagina;
+            
+            /*Codigo que determinara si la operacion es una COMPRA O VENTA*/
+            if (codClaseeven != null){
+                this.viSicdocu.setCodClaseeven(codClaseeven);                
+            }
+            else
+                throw new CustomizerException("No se cargo la clase del evento.");
+          }
+      }
+    
 }

@@ -129,13 +129,13 @@
                     var razonSocial = document.getElementById("form:razonSocial").value;                    
                     var numMtoTotal = $("#form\\:numMtoTotal").text();
                     
-                    console.log("Elemento:" + document.getElementById("form:idMotivo"));
-                    
-                    var idMotivo = document.getElementById("form:idMotivo");
+                    var motivo = document.getElementById("form:idMotivo");
                     var idMotivo = 99;
                     
-                    if (idMotivo != null)
-                        idMotivo = idMotivo.selectedIndex;
+                    if (motivo != null)
+                        idMotivo = motivo.selectedIndex;
+
+                    console.log("idMotivo" + idMotivo );
 
                     numMtoTotal = Number(numMtoTotal);
 
@@ -241,7 +241,7 @@
                             <td colspan="2" style="padding: 6px"><h:outputLabel value="INGRESAR DATOS PROVEEDOR"/></td>                            
                         </tr>
                         <tr>
-                            <td class="compra_panelGrid_1">
+                            <td class="compra_panelGrid_4">
                                 <h:outputLabel value="Doc. Identidad:*"/>
                             </td>
                             <td class="compra_panelGrid_2">
@@ -263,7 +263,7 @@
                             </td>                            
                         </tr>
                         <tr>
-                            <td class="compra_panelGrid_1">
+                            <td class="compra_panelGrid_4">
                                 <h:outputLabel value="Razón Social:"/>
                             </td>
                             <td class="compra_panelGrid_2">
@@ -273,7 +273,7 @@
                             </td>
                         </tr>
                         <tr>
-                            <td class="compra_panelGrid_1">
+                            <td class="compra_panelGrid_4">
                                 <h:outputLabel value="Motivo:"/>
                             </td>
                             <td class="compra_totales_text">
@@ -285,7 +285,7 @@
                             </td>
                         </tr>
                         <tr>
-                            <td class="compra_panelGrid_1">
+                            <td class="compra_panelGrid_4">
                                 <h:outputLabel value="Descripción:"/>
                             </td>
                             <td class="compra_panelGrid_2">
@@ -296,7 +296,7 @@
                             </td>
                         </tr>                        
                         <tr>
-                            <td class="compra_panelGrid_1">
+                            <td class="compra_panelGrid_4">
                                 <h:outputLabel value="Total:"/>
                             </td>
                             <td class="compra_panelGrid_2">
@@ -450,9 +450,10 @@
                                                         </tr>
                                                     </table>
                                                     <br/>
-                                                    <h:commandLink value="Aceptar" styleClass="btn btn-primary">
+                                                    <h:commandLink value="Aceptar" styleClass="btn btn-primary"
+                                                                   onclick="return fnValiteVoucherHeader()">
                                                         <f:ajax execute="@form" render="@form"
-                                                                listener="#{orderController.saveOrder()}"/>
+                                                                listener="#{orderController.saveSpend()}"/>
                                                     </h:commandLink>
                                                     &nbsp;
                                                     <h:commandLink value="Cancelar"

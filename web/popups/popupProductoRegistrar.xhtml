@@ -27,9 +27,7 @@
         <!--JAVASCRIPT-->
         <script src="#{request.contextPath}/faces/resources/js/jquery-3.2.1.min.js"></script>
         <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js" />
-        <script src="#{request.contextPath}/faces/resources/js/customizerJS.js"></script>
-        <script src="#{request.contextPath}/faces/resources/datepicker/js/bootstrap-datepicker.js"></script>
-        <script src="#{request.contextPath}/faces/resources/datepicker/js/formatDatePicker.js"></script>
+        <script src="#{request.contextPath}/faces/resources/js/customizerJS.js"></script>        
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
         <script src="#{request.contextPath}/faces/resources/js/jquery-confirm-3.3.js"></script>
 
@@ -78,6 +76,7 @@
 
                     <h:outputLabel value="Código Producto:"/>
                     <h:inputText id="codigoProducto"
+                                 autocomplete="off"
                                  styleClass="form-control left"
                                  disabled="#{productController.flgEditProd or productController.paramPageFlgActivo==1?true:false}"
                                  style="width:30%"
@@ -85,6 +84,7 @@
 
                     <h:outputLabel value="Nombre Producto:"/>
                     <h:inputText id="nombreProducto"
+                                 autocomplete="off"
                                  styleClass="form-control left"
                                  style="width:60%"
                                  value="#{productController.sic1prod.desProd}"/>
@@ -101,6 +101,7 @@
                             <div class="input-group-addon">S/.</div>
                             <h:inputText id="precioVenta" styleClass="form-control"
                                          style="width:25%"
+                                         autocomplete="off"
                                          value="#{productController.sic1prod.numPrecio}"
                                          onkeypress="return fnAllowOnlyDecimalNumbers(event)"
                                          onblur="formatDecimal_2(this)"/>
@@ -117,7 +118,8 @@
 
                 <br/>    
                 <div class="offset-sm-2 col-sm-10">                    
-                    <input type="button" id="btnConfirm" value="Grabar" class="btn btn-primary" onclick="return fnValidateForm()"/>
+                    <input type="button" id="btnConfirm" value="Grabar" class="btn btn-primary" 
+                           onclick="return fnValidateProductForm()"/>
                     <input type="button" id="btnConfirm" value="Cancelar" class="btn btn-primary" onclick="parent.$.fancybox.close();"/>
                 </div>
                 

@@ -599,6 +599,11 @@ public class DaoDocumentImpl implements Serializable{
             System.out.println("FecDesde: " + fecDesde);
             System.out.println("FecHasta: " + fecHasta);
 
+            if(obj.getCodClaseeven()!= null && obj.getCodClaseeven().length()> 0){
+                criteria.add(Restrictions.eq("codClaseeven",obj.getCodClaseeven()).ignoreCase());
+                flgFilter = 1;
+            }
+            
             if(obj.getCodSclaseeven()!= null && obj.getCodSclaseeven().length()> 0){
                 criteria.add(Restrictions.eq("codSclaseeven",obj.getCodSclaseeven()).ignoreCase());
                 flgFilter = 1;

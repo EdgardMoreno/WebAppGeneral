@@ -182,7 +182,7 @@ public class Sic1generalServiceImpl implements Serializable{
             for(Sic1sclaseeven obj : list){
                 si = new SelectItem();
                 si.setLabel(obj.getDesSclaseeven());
-                si.setValue(obj.getIdClaseeven());
+                si.setValue(obj.getIdSclaseeven());
                 lstResult.add(si);
             }
             

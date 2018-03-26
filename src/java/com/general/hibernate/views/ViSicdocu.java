@@ -26,6 +26,10 @@ public class ViSicdocu  implements java.io.Serializable {
      private BigDecimal idTrolpersClieprov;
      private String desTrolpersClieprov;
      
+     private BigDecimal idClaseeven;
+     private String codClaseeven;
+     private String desClaseeven;
+     
      private BigDecimal idSclaseeven;
      private String codSclaseeven;
      private String desSclaseeven;
@@ -381,6 +385,32 @@ public class ViSicdocu  implements java.io.Serializable {
     public void setFecHastaesta(Date fecHastaesta) {
         this.fecHastaesta = fecHastaesta;
     }
+
+    public BigDecimal getIdClaseeven() {
+        return idClaseeven;
+    }
+
+    public void setIdClaseeven(BigDecimal idClaseeven) {
+        this.idClaseeven = idClaseeven;
+    }
+
+    public String getCodClaseeven() {
+        return codClaseeven;
+    }
+
+    public void setCodClaseeven(String codClaseeven) {
+        this.codClaseeven = codClaseeven;
+    }
+
+    public String getDesClaseeven() {
+        return desClaseeven;
+    }
+
+    public void setDesClaseeven(String desClaseeven) {
+        this.desClaseeven = desClaseeven;
+    }
+    
+    
 }
 
 

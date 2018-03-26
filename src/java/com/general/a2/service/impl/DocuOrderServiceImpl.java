@@ -75,9 +75,17 @@ public class DocuOrderServiceImpl implements Serializable, DocumentService{
                 sic1idendocu.getSic1docu().setNumDocu(null);
             }
             
-            BigDecimal intIdSClaseEven = DaoFuncionesUtil.FNC_SICOBTIDGEN(((SessionImpl) session).connection()
+            BigDecimal intIdSClaseEven = new BigDecimal(-1);
+            if (sic1docu.getIdSclaseeven() == null){
+                
+                intIdSClaseEven = DaoFuncionesUtil.FNC_SICOBTIDGEN(((SessionImpl) session).connection()
                                                                                 , Constantes.CONS_COD_SCLASEEVEN
                                                                                 , sic1docu.getCodSclaseeven());
+                
+                sic1idendocu.getSic1docu().setIdSclaseeven(intIdSClaseEven);
+            }else
+                intIdSClaseEven = sic1docu.getIdSclaseeven();
+            
 
             System.out.println("ID_STIPODOCU_SINDOCU:" + idStipodocuSinDocu);
             System.out.println("ID_STIPODOCU:" + sic1docu.getIdStipodocu());
@@ -159,7 +167,7 @@ public class DocuOrderServiceImpl implements Serializable, DocumentService{
                 Sic3docuesta sic3docuesta = new Sic3docuesta();
                 sic3docuesta.setId(idEsta);
                 
-                sic1idendocu.getSic1docu().setIdSclaseeven(intIdSClaseEven);
+                
                 sic1idendocu.getSic1docu().setIdTrolpers(intIdTRolPers);
                 sic1idendocu.getSic1docu().setSic3docuesta(sic3docuesta);
                 

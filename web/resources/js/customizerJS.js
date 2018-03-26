@@ -423,7 +423,7 @@ function fnValidateProductForm() {
         return false;
     } else {
         fnHideMessageValidation();
-        //fnShowDialogConfirm("form\\:btnGrabar", ""); // -> Se pasa como parametro el ID del boton que tiene el metodo actionListener
+        fnShowDialogConfirm("form\\:btnGrabar", ""); // -> Se pasa como parametro el ID del boton que tiene el metodo actionListener
         return true;
     }
 }
@@ -590,11 +590,17 @@ function fnCloseIFrame_fromRegisterProduct() {
 /*Funcion que valida los campos antes de agregar un producto*/
 function fnValiteAddProduct() {
     //obteniendo el valor que se puso en campo text del formulario
+    var descProducto = document.getElementById("form:descProducto").value;
     var CodigoProducto = document.getElementById("form:codigoProducto").value;
     var CostoUnitario = document.getElementById("form:costoUnitario").value;
     var Cantidad = document.getElementById("form:cantidad").value;
     var FlgError = false;
     var arrMessages = [];
+
+    if (descProducto.length == 0) {
+        arrMessages.push("Falta seleccionar el producto");
+        FlgError = true;
+    }
 
     if (CodigoProducto.length == 0) {
         arrMessages.push("Debe ingresar el Código del Producto");
@@ -850,4 +856,9 @@ function fnRedirectCloseBox(){
 /*Función que permite ejecutar la opcion que llama a la PANTALLA: REGISTRAR COMPRAS*/
 function fnRedirectBoxReport(){
     $("#form\\:idMenuBoxReport").click();
+};
+
+/*Función que permite ejecutar la opcion que llama a la PANTALLA: REGISTRAR GASTOS*/
+function fnRedirectRegisterSpend(){
+    $("#form\\:idMenuRegisterSpend").click();
 };

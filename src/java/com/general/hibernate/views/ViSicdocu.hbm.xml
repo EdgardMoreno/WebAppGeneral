@@ -39,6 +39,17 @@
       <column length="500" name="DES_TROLPERS_CLIEPROV"/>
     </property>
     
+    <property name="idClaseeven" type="big_decimal">
+      <column name="ID_CLASEEVEN" precision="22" scale="0"/>
+    </property>
+    <property name="codClaseeven" type="string">
+      <column length="250" name="COD_CLASEEVEN"/>
+    </property>
+    <property name="desClaseeven" type="string">
+      <column length="1000" name="DES_CLASEEVEN"/>
+    </property>
+    
+    
     <property name="idSclaseeven" type="big_decimal">
       <column name="ID_SCLASEEVEN" precision="22" scale="0"/>
     </property>
