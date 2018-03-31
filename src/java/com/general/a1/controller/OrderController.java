@@ -621,7 +621,7 @@ public class OrderController implements Serializable{
             /*Se obtiene cargo adicional en caso se haya configurado*/
             double numCargoTarjeta = 0;
             for(Sic1general obj : this.itemsPayMode){
-                if(this.sic1docu.getIdModapago().equals(obj.getIdGeneral())){
+                if(this.sic1docu.getIdModapago() != null && this.sic1docu.getIdModapago().equals(obj.getIdGeneral())){
                     if(obj.getNumValor() != null && obj.getNumValor().doubleValue() > 0){
                         numCargoTarjeta = obj.getNumValor().doubleValue()/100;
                         flgTarjeta = true;
@@ -742,7 +742,8 @@ public class OrderController implements Serializable{
 
             /*Cargar el id del catalogo secundario o anidado*/
             for(Sic1general obj : this.itemsPayMode){
-                if(obj.getIdGeneral().toString().equals(sic1docu.getIdModapago().toString()) && obj.getIdGeneralrelsec() != null ){
+                if(sic1docu.getIdModapago() != null && 
+                        obj.getIdGeneral().toString().equals(sic1docu.getIdModapago().toString()) && obj.getIdGeneralrelsec() != null ){
                     idRelSec = obj.getIdGeneralrelsec().intValue();
                     break;
                 }

@@ -614,11 +614,11 @@ public class DaoDocumentImpl implements Serializable{
                 flgFilter = 1;
             }
             if(obj.getCodIden() != null && obj.getCodIden().trim().length() > 0 ){
-                criteria.add(Restrictions.eq("codIden",obj.getCodIden()));
+                criteria.add(Restrictions.eq("codIden",obj.getCodIden().trim()));
                 flgFilter = 1;
             }
             if(obj.getCodSerie()!= null && obj.getCodSerie().trim().length() > 0 ){
-                criteria.add(Restrictions.eq("codSerie",obj.getCodSerie()));
+                criteria.add(Restrictions.eq("codSerie",obj.getCodSerie().trim()));
                 flgFilter = 1;
             }
             if(obj.getNumDocu() != null && obj.getNumDocu().intValue() > 0){
@@ -637,7 +637,7 @@ public class DaoDocumentImpl implements Serializable{
             }
             
             if(obj.getCodIdenClieprov()!= null && obj.getCodIdenClieprov().trim().length() > 0 ){
-                criteria.add(Restrictions.eq("codIdenClieprov",obj.getCodIdenClieprov()));
+                criteria.add(Restrictions.eq("codIdenClieprov",obj.getCodIdenClieprov().trim()));
                 flgFilter = 1;
             }
             
@@ -652,7 +652,7 @@ public class DaoDocumentImpl implements Serializable{
             }
             
             if(obj.getDesPersCreador()!= null && obj.getDesPersCreador().trim().length() > 0 ){                
-                criteria.add(Restrictions.like("desPersCreador","%" + obj.getDesPersCreador() + "%").ignoreCase());
+                criteria.add(Restrictions.like("desPersCreador","%" + obj.getDesPersCreador().trim() + "%").ignoreCase());
                 flgFilter = 1;
             }
 

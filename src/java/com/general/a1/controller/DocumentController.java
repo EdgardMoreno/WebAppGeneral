@@ -69,8 +69,8 @@ public class DocumentController implements Serializable{
             viSicdocu           = new ViSicdocu();
             lstViSicdocus       = new ArrayList();
             
-            desFecDesde         = UtilClass.getCurrentDay();
-            desFecHasta         = UtilClass.getCurrentDay();
+            /*desFecDesde         = UtilClass.getCurrentDay();
+            desFecHasta         = UtilClass.getCurrentDay();*/
             
         
             /*Cargar Catalogo: STIPODOCU*/
