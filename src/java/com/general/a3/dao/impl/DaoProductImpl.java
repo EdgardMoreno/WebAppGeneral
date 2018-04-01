@@ -261,7 +261,7 @@ public class DaoProductImpl implements Serializable{
         Criteria criteria = session.createCriteria(Sic1prod.class);
        
         if(codProd != null && codProd.trim().length() > 0 ){
-            criteria.add(Restrictions.like("codProd", codProd + "%").ignoreCase());
+            criteria.add(Restrictions.like("codProd", "%" + codProd + "%").ignoreCase());
             flgFilter = 1;
         }
         

@@ -8,6 +8,7 @@ package com.general.a1.controller;
 import com.general.security.SessionUtils;
 import com.general.util.beans.Constantes;
 import com.general.util.beans.UtilClass;
+import java.io.Serializable;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
@@ -20,7 +21,7 @@ import javax.servlet.http.HttpSession;
  */
 @ManagedBean
 @RequestScoped
-public class MasterPageController {
+public class MasterPageController implements Serializable{
     
     public  Constantes constantes;
     public String desLoginUser;

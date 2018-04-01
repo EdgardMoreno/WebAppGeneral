@@ -751,10 +751,10 @@
                             <tbody>
                                 <ui:repeat var="e" value="#{orderController.lstProducts}" varStatus="status">
                                     <tr>
-                                        <td><h:commandLink value="#{e.getCodProd()}"  >
+                                        <td><h:commandLink value="#{e.getCodProd()} --> (#{e.getNumCantstock()})"  >
                                                 <f:ajax execute="pnAutocomplete"  render="form:codigoProducto form:descProducto form:costoUnitario form:pnAutocomplete" listener="#{orderController.selectAutocompleteProduct(e)}"  />
                                             </h:commandLink></td>
-                                        <td>#{e.getDesProd()}</td>
+                                        <td>#{e.getDesProd()}</td>                                        
                                     </tr>
                                 </ui:repeat>
                             </tbody>

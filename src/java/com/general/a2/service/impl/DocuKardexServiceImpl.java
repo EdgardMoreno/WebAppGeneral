@@ -16,6 +16,7 @@ import com.general.util.beans.Constantes;
 import com.general.util.dao.DaoFuncionesUtil;
 import com.general.util.exceptions.CustomizerException;
 import com.general.util.exceptions.ValidationException;
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.List;
 import org.hibernate.Session;
@@ -26,7 +27,7 @@ import org.hibernate.internal.SessionImpl;
  *
  * @author Edgard
  */
-public class DocuKardexServiceImpl {
+public class DocuKardexServiceImpl implements Serializable{
     
     private final DaoDocuKardexImpl daoDocuKardexImpl;
     private Session session;

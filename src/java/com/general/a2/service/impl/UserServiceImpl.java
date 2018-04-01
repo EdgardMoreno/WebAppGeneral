@@ -9,13 +9,14 @@ import com.general.a3.dao.impl.DaoUserImpl;
 import com.general.hibernate.entity.HibernateUtil;
 import com.general.hibernate.entity.Sic1usuario;
 import com.general.util.exceptions.CustomizerException;
+import java.io.Serializable;
 import org.hibernate.Session;
 
 /**
  *
  * @author emoreno
  */
-public class UserServiceImpl {
+public class UserServiceImpl implements Serializable{
     
     private final DaoUserImpl daoUserImpl;
     private Session session;

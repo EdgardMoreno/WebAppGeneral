@@ -22,6 +22,8 @@ public class Sic1prod  implements java.io.Serializable {
      private Date fecDesde;
      private Date fecHasta;
      private BigDecimal numPrecio;
+     private BigDecimal numCantstock;
+     
      private Set sic3proddocus = new HashSet(0);
      
      private Sic1pers sic1pers;
@@ -153,7 +155,17 @@ public class Sic1prod  implements java.io.Serializable {
 
     public void setDesStipoprod(String desStipoprod) {
         this.desStipoprod = desStipoprod;
-    }    
+    } 
+
+    public BigDecimal getNumCantstock() {
+        return numCantstock;
+    }
+
+    public void setNumCantstock(BigDecimal numCantstock) {
+        this.numCantstock = numCantstock;
+    }
+    
+    
     
     public String toString(){
         return "idProd: " + this.idProd + 

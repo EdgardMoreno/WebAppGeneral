@@ -108,10 +108,12 @@ public class DaoDocumentImpl implements Serializable{
                         
                         System.out.println("DOCU: " + sic1docu.getIdModapago());
                         
-                        if (sic1docu.getIdModapago() != null && sic1docu.getIdModapago().intValue() == -1) {
-                            idModapago = null;
-                        }else {
-                            idModapago = sic1docu.getIdModapago().intValue();
+                        if (sic1docu.getIdModapago() != null){ 
+                            if( sic1docu.getIdModapago().intValue() == -1 ) {
+                                    idModapago = null;
+                            }else {
+                                idModapago = sic1docu.getIdModapago().intValue();
+                            }
                         }
 
                         System.out.println("FecCreacion: " + strFecCreacion);

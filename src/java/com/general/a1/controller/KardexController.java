@@ -21,6 +21,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -35,6 +36,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.Part;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -47,7 +49,7 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
  */
 @ManagedBean
 @ViewScoped
-public class KardexController {
+public class KardexController implements Serializable{
     
     private static final String FILE_NAME = "E:\\ARCHIVOS\\plantKardex.xlsx";
     private static final int FILA_INI_EXCEL = 5;
@@ -261,9 +263,13 @@ public class KardexController {
                     System.out.println("ID_PROD: " + cell.getNumericCellValue());
                     prod.setIdProd(new BigDecimal(cell.getNumericCellValue()));
                     
-                    cell = nextRow.getCell(columna++);
-                    System.out.println("COD_PROD:" + cell.getStringCellValue());
-                    prod.setCodProd(cell.getStringCellValue());
+                    //System.out.println("COD_PROD:" + cell.getStringCellValue());
+                    cell = nextRow.getCell(columna++);                    
+                    if (CellType.NUMERIC == cell.getCellTypeEnum()){
+                        prod.setCodProd(String.valueOf(cell.getNumericCellValue()));
+                    }else{
+                        prod.setCodProd(cell.getStringCellValue());
+                    }
                     
                     cell = nextRow.getCell(columna++);
                     System.out.println("DES_PROD:" + cell.getStringCellValue());

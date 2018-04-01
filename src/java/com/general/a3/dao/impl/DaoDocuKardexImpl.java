@@ -10,6 +10,7 @@ import com.general.hibernate.entity.Sic1docukardex;
 import conexionbd.InParameter;
 import conexionbd.OutParameter;
 import conexionbd.StoredProcedure;
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.sql.CallableStatement;
 import java.sql.Connection;
@@ -28,7 +29,7 @@ import org.hibernate.jdbc.Work;
  *
  * @author emoreno
  */
-public class DaoDocuKardexImpl {
+public class DaoDocuKardexImpl implements Serializable{
     
 
 

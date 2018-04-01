@@ -11,6 +11,7 @@ import com.general.hibernate.temp.Sic4cuaddiario;
 import com.general.hibernate.temp.Sic4cuaddiarioId;
 import com.general.hibernate.views.ViSiccuaddiario;
 import com.general.util.beans.UtilClass;
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
@@ -24,7 +25,7 @@ import org.hibernate.criterion.Restrictions;
  *
  * @author emoreno
  */
-public class DaoCashRegisterImpl {
+public class DaoCashRegisterImpl implements Serializable{
     
     
     public DaoCashRegisterImpl(){
