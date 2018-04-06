@@ -111,4 +111,8 @@ public class Constantes {
     
     /*MENSAJES*/
     public static String CONS_SUCCESS_MESSAGE = "Se grabó con éxito";
+    
+    /*MENSAJES EMAIL*/
+    public static String CONS_SUCCESS_EMAIL_MESSAGE = "Se grabó con éxito";
+    public static String CONS_ERROR_EMAIL_MESSAGE = "No se pudo enviar el correo.";
 }

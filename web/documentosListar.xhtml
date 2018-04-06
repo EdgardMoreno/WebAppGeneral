@@ -105,6 +105,9 @@
                             <p:commandLink styleClass="btn btn-default" onclick="fnCreateOrder()">
                                 <span class="glyphicon glyphicon-new-window"></span> Nuevo
                             </p:commandLink>
+                            <h:commandLink styleClass="btn btn-default" actionListener="#{documentController.exportReport()}">
+                                <span class="glyphicon glyphicon-new-window"></span> Exportar
+                            </h:commandLink>                            
                         </h:panelGroup>
 
                     </h:panelGrid>

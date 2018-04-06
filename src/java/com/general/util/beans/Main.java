@@ -35,6 +35,7 @@ import com.general.hibernate.temp.Sic4cuaddiario;
 import com.general.hibernate.temp.Sic4cuaddiarioId;
 import com.general.hibernate.views.ViSiccuaddiario;
 import com.general.util.dao.DaoFuncionesUtil;
+import java.io.File;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
@@ -50,7 +51,6 @@ import java.text.SimpleDateFormat;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.hibernate.internal.SessionImpl;
 
 /**
  *
@@ -61,6 +61,36 @@ public class Main {
     private final static Logger log = LoggerFactory.getLogger(Main.class);
 
     public static void main(String[] args) throws Exception {
+        
+        //UtilClass.stream2file(null, "Reporte.Operaciones.xls");
+ 
+        String destinatario =  "edgardmr07@gmail.com"; //A quien le quieres escribir.
+        String asunto = "Correo de prueba enviado desde Java";
+        String cuerpo = "<b>Esta es una prueba de correo...</b>";
+        String file = "C:\\ARCHIVOS\\ReporteOperaciones.xlsx";
+        
+        String style = "style='text-align: right; font-weight: bold; font-size: 12px; padding: 4px'";
+        cuerpo = "<table>"
+                + "<tr><td colspan='2' style='font-weight: bold; font-size: 12px; padding:5px'>EFECTIVO</td></tr>"
+                + "<tr><td " + style + ">Total Efectivo(Usuario):</td><td>100</td></tr>"
+                + "<tr><td " + style + ">Total Efectivo(Sistema):</td><td>100</td></tr>"
+                + "<tr><td " + style + ">Descuadre:</td><td>100</td></tr>";        
+        cuerpo += "</table>";
+        
+        cuerpo +="</br>";
+        
+        cuerpo += "<table>"
+                + "<tr><td colspan='2' style='font-weight: bold; font-size: 12px; padding:5px'>TARJETA</td></tr>"
+                + "<tr><td " + style + ">Total Tarjeta(Usuario):</td><td>100</td></tr>"
+                + "<tr><td " + style + ">Total Tarjeta(Sistema):</td><td>100</td></tr>"
+                + "<tr><td " + style + ">Descuadre:</td><td>100</td></tr>";
+        cuerpo += "</table>";
+                
+        File attachFile = new File(file);
+        SendEmail email = new SendEmail();
+        email.sendMailSimple(destinatario, asunto, cuerpo);
+        //email.sendMailAttachFile(destinatario, asunto, cuerpo, attachFile);
+
 
         
         System.out.println("valor: " + UtilClass.getCurrentTime_YYYYMMDDHHMISS());

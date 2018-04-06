@@ -13,6 +13,9 @@ import com.general.hibernate.views.ViSicestageneral;
 import com.general.util.beans.Constantes;
 import com.general.util.beans.UtilClass;
 import com.general.util.exceptions.CustomizerException;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -28,6 +31,12 @@ import javax.faces.event.ComponentSystemEvent;
 import javax.faces.model.SelectItem;
 import javax.inject.Named;
 import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletResponse;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -40,7 +49,8 @@ import org.slf4j.LoggerFactory;
 @ViewScoped
 public class DocumentController implements Serializable{
     
-    
+    private static final String FILE_NAME = "C:\\ARCHIVOS\\ReporteOperaciones.xlsx";
+    private static final int FILA_INI_EXCEL = 6;
     private final static Logger log = LoggerFactory.getLogger(DocumentController.class);    
     private DocuOrderServiceImpl documentServiceImpl;
     private List<SelectItem> itemSTipoDocu  = new ArrayList();
@@ -249,6 +259,133 @@ public class DocumentController implements Serializable{
             throw new CustomizerException(e.getMessage());
         }
     }
+    
+    
+    /*Metodo para generar reporte*/
+    public void exportReport() throws IOException, CustomizerException {
+        
+        String nombreReporte = "";
+        
+        try {
+            
+            if(this.desFecDesde != null && this.desFecDesde.trim().length() > 0)
+                viSicdocu.setFecDesde(UtilClass.convertStringToDate(desFecDesde));
+            else
+                viSicdocu.setFecDesde(null);
+            if(this.desFecHasta != null && this.desFecHasta.trim().length() > 0)
+                viSicdocu.setFecHasta(UtilClass.convertStringToDate(desFecHasta));
+            else
+                viSicdocu.setFecHasta(null);
+
+            this.lstViSicdocus = documentServiceImpl.listViSicdocu(viSicdocu);
+            
+            if (lstViSicdocus.size() > 0 ){
+            
+                if (this.codSClaseeven.equalsIgnoreCase("VI_SICSCLASEEVENVENTA")){
+                    nombreReporte = "VENTA";
+                }
+                else if (this.codSClaseeven.equalsIgnoreCase("VI_SICSCLASEEVENCOMPRA")){
+                    nombreReporte = "COMPRA";
+                }
+
+                FileInputStream excelFile = new FileInputStream(new File(FILE_NAME));        
+
+                XSSFWorkbook workbook = new XSSFWorkbook(excelFile);
+                XSSFSheet sheet = workbook.getSheetAt(0);
+
+                /*Imprimir */
+                Row rowStyle = sheet.getRow(0);
+                
+                Row row = sheet.getRow(0);
+                Cell cell = row.getCell(0);
+                cell.setCellValue("REPORTE DE " + nombreReporte);
+                
+
+                row = sheet.getRow(2);
+                cell = row.createCell(1);
+                cell.setCellValue(this.desFecDesde);
+
+                row = sheet.getRow(3);
+                cell = row.createCell(1);
+                cell.setCellValue(this.desFecHasta);
+
+                rowStyle = sheet.getRow(4);
+                int fila = FILA_INI_EXCEL;
+                for (ViSicdocu obj : lstViSicdocus) {
+                    int colNum = 0;
+
+                    row = sheet.createRow(fila++);
+
+                    /*EVENTO*/
+                    cell = row.createCell(colNum++);
+                    cell.setCellValue(obj.getDesDocu());
+
+                    /*FEC_REGISTRO*/
+                    cell = row.createCell(colNum++);
+                    //cell.setCellStyle(rowStyle.getCell(1).getCellStyle());
+                    cell.setCellValue(UtilClass.convertDateToString(obj.getFecDesde()));
+
+                    /*CLIENTE / PROVEEDOR*/
+                    cell = row.createCell(colNum++);
+                    cell.setCellValue(obj.getDesPersClieprov());
+
+                    /*ESTADO*/
+                    cell = row.createCell(colNum++);
+                    cell.setCellValue(obj.getDesEstadocu());
+
+                    /*SUB_TOTAL*/
+                    cell = row.createCell(colNum++);
+                    if (obj.getNumSubtotal() != null)
+                        cell.setCellValue(Double.valueOf(obj.getNumSubtotal().replace(",", ".")));
+
+                    /*I.G.V.*/
+                    cell = row.createCell(colNum++);
+                    if (obj.getNumMtoigv() != null)
+                        cell.setCellValue(Double.valueOf(obj.getNumMtoigv().replace(",", ".")));
+
+                    /*DESCUENTO*/
+                    cell = row.createCell(colNum++);
+                    if (obj.getNumMtodscto() != null)
+                        cell.setCellValue(obj.getNumMtodscto().replace(",", "."));
+
+                    /*TOTAL*/
+                    cell = row.createCell(colNum++);
+                    if (obj.getNumMtototal() != null)
+                        cell.setCellValue(Double.valueOf(obj.getNumMtototal().replace(",", ".")));
+
+                    /*MODO PAGO*/
+                    cell = row.createCell(colNum++);                    
+                    cell.setCellValue(obj.getDesModoPago());
+
+                    /*RESPONSABLE*/
+                    cell = row.createCell(colNum++);
+                    cell.setCellValue(obj.getDesPersCreador());               
+
+                }
+
+                /*Descargar desde la web*/
+                FacesContext fc = FacesContext.getCurrentInstance();
+                HttpServletResponse response = (HttpServletResponse) fc.getExternalContext().getResponse();
+                response.reset();
+                response.setContentType("application/vnd.ms-excel");
+                response.setHeader("Content-Disposition", "attachment; filename=\"Reporte_" + nombreReporte + ".xlsx");
+                workbook.write(response.getOutputStream());
+                workbook.close();
+
+                excelFile.close();
+
+                fc.responseComplete();                
+            }
+            
+        } catch (FileNotFoundException ex) {
+            throw new CustomizerException(ex.getMessage());
+        } catch (IOException ex) {
+            throw new CustomizerException(ex.getMessage());
+        } catch (Exception ex) {
+            throw new CustomizerException(ex.getMessage());
+        }
+    }
+    
     
     /*Metodo que es invocado desde la pagina xhtml: <f:metadata>*/
     public void getParamsExternalPage(ComponentSystemEvent event) throws CustomizerException{

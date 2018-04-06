@@ -147,7 +147,10 @@
                         <h:column>
                             <h:commandLink action="#{cashRegisterController.viewDetail(item)}">
                                 <span class="glyphicon glyphicon-info-sign" data-toggle="tooltip" title="Ver Detalle"></span>
-                            </h:commandLink>                           
+                            </h:commandLink>
+                            <h:commandLink action="#{cashRegisterController.notifyByEmail(item)}">
+                                <span class="glyphicon glyphicon-envelope" data-toggle="tooltip" title="Enviar Correo"></span>
+                            </h:commandLink>
                         </h:column>
                     </h:dataTable>
                     

@@ -400,8 +400,10 @@ public class CashRegisterController implements Serializable{
             
             UtilClass.addInfoMessage(Constantes.CONS_SUCCESS_MESSAGE);
             
+            /*Limpiar Controles*/
             box = new Sic4cuaddiario();
             this.editFields = false;
+            
             
         }catch(ValidationException ex ){
             UtilClass.addErrorMessage(ex.getMessage());
@@ -431,6 +433,20 @@ public class CashRegisterController implements Serializable{
         } catch (Exception e) {
             throw new CustomizerException(e.getMessage());
         }        
+    }
+    
+    public void notifyByEmail(ViSiccuaddiario obj){
+         
+        /****************************************/
+        /*ENVIAR POR CORREO*/
+        /****************************************/
+        try{
+
+
+            UtilClass.addInfoMessage(Constantes.CONS_SUCCESS_EMAIL_MESSAGE);
+        }catch(Exception ex){
+            UtilClass.addErrorMessage(Constantes.CONS_ERROR_EMAIL_MESSAGE + " Detalle: " + ex.getMessage());
+        }
     }
     
     public String viewDetail(ViSiccuaddiario obj){
