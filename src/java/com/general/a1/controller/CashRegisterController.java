@@ -435,18 +435,43 @@ public class CashRegisterController implements Serializable{
         }        
     }
     
-    public void notifyByEmail(ViSiccuaddiario obj){
+    public String notifyByEmail(ViSiccuaddiario obj){
          
         /****************************************/
         /*ENVIAR POR CORREO*/
         /****************************************/
+        
+        String messageBody = "<h3>Resumen de Venta del dia " + obj.getFecCierre() + "</h3>";
+        String desSubject = "Resumen de la venta " + obj.getFecCierre();
+        
         try{
 
+            String style = "style='text-align: right; font-weight: bold; font-size: 12px; padding: 4px'";
+            messageBody = "<table>"
+                        + "<tr><td colspan='2' style='font-weight: bold; font-size: 12px; padding:5px'>EFECTIVO</td></tr>"
+                        + "<tr><td " + style + ">Total Efectivo(Usuario):</td><td>" + obj.getNumEfectTotal() + "</td></tr>"
+                        + "<tr><td " + style + ">Total Efectivo(Sistema):</td><td>" + obj.getNumEfectTotalSistema() + "</td></tr>"
+                        + "<tr><td " + style + ">Descuadre:</td><td>" + obj.getNumEfectSobraFalta() + "</td></tr>";
+            messageBody += "</table>";
 
-            UtilClass.addInfoMessage(Constantes.CONS_SUCCESS_EMAIL_MESSAGE);
+            messageBody +="</br>";
+
+            messageBody += "<table>"
+                        + "<tr><td colspan='2' style='font-weight: bold; font-size: 12px; padding:5px'>TARJETA</td></tr>"
+                        + "<tr><td " + style + ">Total Tarjeta(Usuario):</td><td>" + obj.getNumTarjeTotal() + "</td></tr>"
+                        + "<tr><td " + style + ">Total Tarjeta(Sistema):</td><td>" + obj.getNumEfectTotalSistema() + "</td></tr>"
+                        + "<tr><td " + style + ">Descuadre:</td><td>" + obj.getNumTarjeSobraFalta() + "</td></tr>";
+            messageBody += "</table>";
+
+            //UtilClass.addInfoMessage(Constantes.CONS_SUCCESS_EMAIL_MESSAGE);
+            
         }catch(Exception ex){
             UtilClass.addErrorMessage(Constantes.CONS_ERROR_EMAIL_MESSAGE + " Detalle: " + ex.getMessage());
         }
+        
+        /*Dando formato de objeto*/
+        String result = "{'desSubject':'" + desSubject + "', 'messageBody':'" + messageBody + "'}";
+        return result;
     }
     
     public String viewDetail(ViSiccuaddiario obj){

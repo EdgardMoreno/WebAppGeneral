@@ -29,6 +29,16 @@
                     return false;
                 }
                 
+                
+                function fnShowSendMailForm(valor){
+                    console.log('Valor:' + valor);
+                    
+                    var myobj = JSON.parse(valor);
+                    alert(myobj.messageBody); // 'world'
+                    
+                    return false;
+                }
+                
             </script>
                    
         </ui:define>
@@ -148,7 +158,7 @@
                             <h:commandLink action="#{cashRegisterController.viewDetail(item)}">
                                 <span class="glyphicon glyphicon-info-sign" data-toggle="tooltip" title="Ver Detalle"></span>
                             </h:commandLink>
-                            <h:commandLink action="#{cashRegisterController.notifyByEmail(item)}">
+                            <h:commandLink onclick="return fnShowSendMailForm('#{cashRegisterController.notifyByEmail(item)}')">
                                 <span class="glyphicon glyphicon-envelope" data-toggle="tooltip" title="Enviar Correo"></span>
                             </h:commandLink>
                         </h:column>

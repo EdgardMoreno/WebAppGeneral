@@ -6,7 +6,10 @@
     xmlns:f="http://xmlns.jcp.org/jsf/core"
     xmlns:p="http://primefaces.org/ui" >
 
-    <f:metadata>        
+    <f:metadata>
+        <f:viewParam name="paramDesRecipients" value="#{emailController.desRecipients}"/>
+        <f:viewParam name="paramSubject" value="#{emailController.desSubject}"/>
+        <f:viewParam name="paramExternalPage" value="#{emailController.paramPageFlgActivo}"/>
         <f:event type="preRenderView" listener="#{emailController.loadPage}"/>
     </f:metadata>
 
@@ -161,13 +164,18 @@
                                         <div class="col-lg-12 col-md-12 col-sm-12">
                                             <h:inputTextarea id="idMessageBody" style="resize:vertical;" rows="6" value="${emailController.desMessage}"/>
                                         </div>
-                                    </div>                                    
+                                    </div>
                                 </div>
                                 <div class="panel-footer" style="margin-bottom:-14px;">
                                     <h:commandButton class="btn btn-success" value="Enviar" onclick="return fnValidateEmailForm()" actionListener="#{emailController.send()}"/>
-                                    <input type="reset" class="btn btn-danger" value="Limpiar" />
+                                    <h:commandButton class="btn btn-danger" value="Limpiar">
+                                        <f:ajax execute="@form" rendered="@form" listener="#{emailController.clear()}" />
+                                    </h:commandButton>
                                     <button style="float: right;" type="button" class="btn btn-default btn-close" data-dismiss="modal">Close</button>
                                 </div>
+                                
+                                <a id="linkDialog" href="#" class="iframe"  style="display:none"/>
+                                
                             </div>
                         </div>
                     </div>                    

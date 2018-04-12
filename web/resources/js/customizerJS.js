@@ -276,7 +276,7 @@ function fnHideMessageValidation(){
     
 };
 
-/************************************************************************/
+/*****************************************************************************/
 /********************** MESSAGES POPUP****************************************/
 
 /*Funcion para mostrar un popup de tipo INFORMATIVO*/
@@ -722,6 +722,22 @@ function fnShowOrderDetail(idDocu, titulo) {
 };
 
 
+function fnShowPopupSendEmail(messageBody) {
+
+    console.log("messageBody:" + messageBody);
+    
+            
+    //Se sobreescribe la propiedad HREF
+    $("#linkDialog").attr("href", "faces/popups/popupSendEmail.xhtml?paramExternalPage=1&messageBody=" + messageBody);
+    $("#linkDialog").click(); //Origina que llame a la función de FancyBOX y que muestre la URL especificada.
+    
+
+    return false;
+            
+    
+};
+
+
 /************************************************************************************************************/
 /********************** PANTALLA: CUADRE CAJA ***************************************************************/
 /************************************************************************************************************/
@@ -862,3 +878,6 @@ function fnRedirectBoxReport(){
 function fnRedirectRegisterSpend(){
     $("#form\\:idMenuRegisterSpend").click();
 };
+
+
+/**********************************************************************************/

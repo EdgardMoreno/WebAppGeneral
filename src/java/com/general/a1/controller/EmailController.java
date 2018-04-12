@@ -28,6 +28,8 @@ public class EmailController {
     private String desMessage;
     private Part uploadFile;
     
+    private int paramPageFlgActivo = 0;
+    
     /*PROPIEDADES*/
 
     public String getDesRecipients() {
@@ -61,6 +63,15 @@ public class EmailController {
     public void setUploadFile(Part uploadFile) {
         this.uploadFile = uploadFile;
     }
+
+    public int getParamPageFlgActivo() {
+        return paramPageFlgActivo;
+    }
+
+    public void setParamPageFlgActivo(int paramPageFlgActivo) {
+        this.paramPageFlgActivo = paramPageFlgActivo;
+    }
+    
     
     
     /*METODOS*/
@@ -78,7 +89,7 @@ public class EmailController {
             
             email.sendMailAttachFile(this.desRecipients.trim(), this.desSubject.trim(), this.desMessage, attachFile);
             
-            uploadFile = null;
+            uploadFile    = null;
             desRecipients = null;
             desSubject    = null;
             desMessage    = null;
@@ -89,8 +100,19 @@ public class EmailController {
         }
     }
     
+    public void clear(){
+        uploadFile    = null;
+        desRecipients = null;
+        desSubject    = null;
+        desMessage    = null;
+    }
+    
+    
     public void loadPage(ComponentSystemEvent event) throws CustomizerException{
         
-        
+        System.out.println("paramPageFlgActivo: " + this.paramPageFlgActivo);
+        System.out.println("desRecipients: " + this.desRecipients );
+        System.out.println("desSubject: " + this.desSubject);
+
     }
 }
