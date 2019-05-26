@@ -7,7 +7,7 @@ package com.general.a1.controller;
 
 import com.general.hibernate.entity.Sic1prod;
 import com.general.a2.service.impl.ProductServiceImpl;
-import com.general.a2.service.impl.Sic1generalServiceImpl;
+import com.general.a2.service.impl.MaestroCatalogoServiceImpl;
 import com.general.hibernate.entity.Sic1general;
 import com.general.hibernate.views.ViSicprod;
 import com.general.util.beans.Constantes;
@@ -18,11 +18,10 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import javax.annotation.PostConstruct;
-import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ViewScoped;
+import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
-import javax.faces.model.SelectItem;
+import javax.faces.event.ComponentSystemEvent;
 import javax.inject.Named;
 import org.primefaces.context.RequestContext;
 import org.slf4j.Logger;
@@ -34,12 +33,12 @@ import org.slf4j.LoggerFactory;
  */
 @Named
 @ManagedBean
-@ViewScoped
+@SessionScoped
 public class ProductController implements Serializable{    
     
     private final static Logger log = LoggerFactory.getLogger(ProductController.class);        
     
-    private List<SelectItem> items = new ArrayList();
+    private List<Sic1general> items = new ArrayList();
     private List<ViSicprod> listProducts;
     private ViSicprod viSicprod;
     private Sic1prod sic1prod;
@@ -49,6 +48,8 @@ public class ProductController implements Serializable{
     private boolean flgEditProd;
     private int paramPageFlgActivo = 0;
     private int idProd = 0;
+    
+    private String desTituloPagina;
     
     @PostConstruct
     public void init() {
@@ -62,16 +63,16 @@ public class ProductController implements Serializable{
         
             List<String> list = new ArrayList<>();
             list.add("VI_SICSTIPOPROD");
-            Sic1generalServiceImpl sic1generalServiceImpl = new Sic1generalServiceImpl();
-            List<Sic1general> lstSic1general = sic1generalServiceImpl.listByCod_ValorTipoGeneral_Sic1general(list);
+            MaestroCatalogoServiceImpl sic1generalServiceImpl = new MaestroCatalogoServiceImpl();
+            this.items = sic1generalServiceImpl.listByCod_ValorTipoGeneral_Sic1general(list);
 
-            SelectItem si;
-            for(Sic1general obj : lstSic1general){
-                si = new SelectItem();
-                si.setLabel(obj.getDesGeneral());
-                si.setValue(obj.getIdGeneral());
-                this.items.add(si);                
-            }
+//            SelectItem si;
+//            for(Sic1general obj : lstSic1general){
+//                si = new SelectItem();
+//                si.setLabel(obj.getDesGeneral());
+//                si.setValue(obj.getIdGeneral());
+//                this.items.add(si);                
+//            }
             
         }catch(Exception ex){
             System.out.println("Error:" + ex.getMessage());
@@ -106,11 +107,11 @@ public class ProductController implements Serializable{
         this.sic1prod = sic1prod;
     }
     
-    public List<SelectItem> getItems() {
+    public List<Sic1general> getItems() {
         return items;
     }
     
-    public void setItems(List<SelectItem> items) {
+    public void setItems(List<Sic1general> items) {
         this.items = items;
     }
 
@@ -136,6 +137,14 @@ public class ProductController implements Serializable{
 
     public void setIdProd(int idProd) {
         this.idProd = idProd;
+    }
+
+    public String getDesTituloPagina() {
+        return desTituloPagina;
+    }
+
+    public void setDesTituloPagina(String desTituloPagina) {
+        this.desTituloPagina = desTituloPagina;
     }
 
 
@@ -208,20 +217,54 @@ public class ProductController implements Serializable{
         
         try{
             
-            ProductServiceImpl productServiceImpl = new ProductServiceImpl();
-            String result = productServiceImpl.insert(this.sic1prod);
+            String codStipoprodsele = "";
+            String desStipoprodsele = "";
+            String desError = "";
+            boolean flgNuevoRegistro = true;
             
-            System.out.println("idProd: " + result);
+            if(this.sic1prod.getIdProd()!=null)
+                flgNuevoRegistro = false;
             
-            //Se llena el control oculto con el identificado del nuevo producto
-            this.idProd = Integer.valueOf(result);
+             /*Obtener el tipo de gasto seleccionado*/
+            for(Sic1general s : this.items){
+                if(this.sic1prod.getIdStipoprod().intValue() == s.getIdGeneral().intValue()){
+                    codStipoprodsele = s.getCodValorgeneral();
+                    desStipoprodsele = s.getDesGeneral();
+                }
+            }
             
-            this.flgEditProd = false;
+            if(flgNuevoRegistro && (codStipoprodsele.equals(Constantes.CONS_COD_STIPOPROD_VINILCORTE) || 
+                                    codStipoprodsele.equals(Constantes.CONS_COD_STIPOPROD_STICKER) || 
+                                    codStipoprodsele.equals(Constantes.CONS_COD_STIPOPROD_CATALOGO) ||
+                                    codStipoprodsele.equals(Constantes.CONS_COD_STIPOPROD_PEGAMENTO))){
+                if(sic1prod.getCodProdint()!= null && !sic1prod.getCodProdint().isEmpty())
+                    desError = "Para la categoria " + desStipoprodsele.toUpperCase() + " no es necesario especificar el CODIGO INTERNO.";
+            }else{
+                //Si no es un nuevo registro se tiene que validar que tenga codigo interno tambien
+                if(sic1prod.getCodProdint()== null || sic1prod.getCodProdint().isEmpty())
+                    desError = "Se debe ingresar el código del Producto Interno.";
+                else if(sic1prod.getCodProdint().length() < 3)
+                    desError = "El Código del Producto Interno debe tener mas de 2 caracteres.";                
+            }
             
-            
-            this.sic1prod = new Sic1prod();
-            UtilClass.addInfoMessage(Constantes.CONS_SUCCESS_MESSAGE);
-        
+
+            if(!desError.isEmpty())
+                UtilClass.addErrorMessage(desError);
+            else{
+                
+                ProductServiceImpl productServiceImpl = new ProductServiceImpl();
+                String result = productServiceImpl.insert(this.sic1prod);
+
+                System.out.println("idProd: " + result);
+
+                //Se llena el control oculto con el identificado del nuevo producto
+                this.idProd = Integer.valueOf(result);
+                this.flgEditProd = false;
+                this.sic1prod = new Sic1prod();
+                
+                UtilClass.addInfoMessage(Constantes.CONS_SUCCESS_MESSAGE);
+            }
+
         }catch(ValidationException ex){
             UtilClass.addErrorMessage(ex.getMessage());
         }catch(CustomizerException ex){            
@@ -232,5 +275,28 @@ public class ProductController implements Serializable{
     public void calc(){
         
     }
+    
+    public void getParamsExternalPage(ComponentSystemEvent event) throws CustomizerException{
+        
+        if(!FacesContext.getCurrentInstance().isPostback()){
+            /*Metodo 1: Se obtiene los parametros que son enviados por la url con fancyBox. Por ejemplo cuando
+            se quiere registrar una nueva persona desde la pantalla del Registro COMPRA/VENTA*/
+            System.out.println("paramPageFlgActivo: " + this.paramPageFlgActivo);
+            System.out.println("codProd: " + this.sic1prod.getCodProd());
+            
+            String codProd = this.sic1prod.getCodProd();
+            
+            if(codProd != null && codProd.trim().length() > 0){
+                ProductServiceImpl productServiceImpl = new ProductServiceImpl();
+                this.sic1prod = productServiceImpl.getByCod(this.sic1prod.getCodProd());
+                this.flgEditProd = true;
+            }else{
+                sic1prod = new Sic1prod();
+                this.flgEditProd = false;
+                this.paramPageFlgActivo = 0;
+            }
+            
+        }
+    }   
     
 }

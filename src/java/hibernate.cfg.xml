@@ -46,7 +46,10 @@
     <mapping resource="com/general/hibernate/relaentity/Sic3docuprod.hbm.xml"/>
     <mapping resource="com/general/hibernate/temp/Sic4cuaddiario.hbm.xml"/>
     <mapping resource="com/general/hibernate/views/ViSiccuaddiario.hbm.xml"/>
-    <mapping resource="com/general/hibernate/entity/Sic1docukardex.hbm.xml"/>    
-    <mapping resource="com/general/hibernate1/Sic1sclaseeven.hbm.xml"/>
+    <mapping resource="com/general/hibernate/entity/Sic1docukardex.hbm.xml"/>
+    <mapping resource="com/general/hibernate/entity/Sic1sclaseeven.hbm.xml"/>
+    <mapping resource="com/general/hibernate/temp/Sic4publcanal.hbm.xml"/>	
+    <mapping resource="com/general/hibernate/entity/Sic7persrol.hbm.xml"/>      
+    <mapping resource="com/general/hibernate1/Sic1docufacturadorsunat.hbm.xml"/>
   </session-factory>
 </hibernate-configuration>

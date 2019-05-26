@@ -37,6 +37,27 @@ public class DaoFuncionesUtil implements Serializable{
 
             result =  call.getBigDecimal(1);
         
+        }catch(SQLException ex){
+            throw new Exception(ex.getMessage());
+        }
+        return result;
+        
+    } 
+    
+    public static String FNC_SICOBTCODGEN(Connection conexion, String X_COD_VALORTIPOGENERAL, BigDecimal X_ID_GENERAL) throws Exception {
+        
+        String result;
+        
+        try{
+        
+            CallableStatement call = conexion.prepareCall("{ ? = call PKG_SICCONSGENERAL.FNC_SICOBTCODGEN(?,?) }");
+            call.registerOutParameter( 1, Types.VARCHAR ); // or whatever it is
+            call.setString(2, X_COD_VALORTIPOGENERAL);
+            call.setBigDecimal(3, X_ID_GENERAL);
+            call.execute();
+
+            result =  call.getString(1);
+        
         }catch(Exception ex){
             throw new Exception(ex.getMessage());
         }
@@ -112,6 +133,32 @@ public class DaoFuncionesUtil implements Serializable{
         
     }
     
+    
+    /*--------------------------------------------------------------------------------------------------------------
+    --DESCRIPCION:   FUNCION GENERICA QUE RETORNA EL INDENTIFICADOR PRINCIPAL.
+    --PARAMETROS:    X_DES_IDEN(VARIABLE DE INGRESO QUE CONTIENE PARTE DEL NOMBRE DE LA TABLA)
+    --               X_ID_TIPOIDEN(VARIABLE DE INGRESO QUE CONTIENE EL TIPO DE IDENTIFICADOR PRINCIPAL)
+    --               X_COD_IDEN(VARIABLE DE INGRESO QUE CONTIENE EL CODIGO DE IDENTIFICACION)
+    -------------------------------------------------------------------------------------------------------------- */
+    public static String FNC_SICCONVNROLETRAFINAL(    Connection cnConexion
+                                                        , BigDecimal X_NUMERO ) throws SQLException, Exception{
+        
+        String result = null;
+        try{
+           
+            CallableStatement call = cnConexion.prepareCall("{ ? = call PKG_SICCONSGENERAL.FNC_SICCONVNROLETRAFINAL(?) }");
+            call.registerOutParameter( 1, Types.VARCHAR ); // or whatever it is
+            call.setBigDecimal(2, X_NUMERO);
+            call.execute();
+            
+            result = call.getString(1);
+            
+        }catch(Exception ex){            
+            throw new Exception(ex.getMessage());
+        }
+        return result; // propagate this back to enclosing class
+        
+    }
     
     
     /*public static Integer FNC_SICOBTIDGEN(Session session, String X_COD_VALORTIPOGENERAL, String X_COD_VALORGENERAL){

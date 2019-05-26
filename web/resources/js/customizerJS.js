@@ -261,8 +261,10 @@ function fnShowMessageValidation(arrMessage){
 
     var panel = document.getElementById("divResultadoValidacion");          
     //console.log("obj:" + panel);
-    panel.className = "messageValidation";
-    panel.style.display = "inline-block";
+    //panel.className = "messageValidation";
+    panel.className = "alert alert-danger";
+    panel.role = "alert";
+    //panel.style.display = "inline-block";
     panel.innerHTML = resultado;        
    
 };
@@ -286,13 +288,13 @@ function fnShowInfoMessage(message){
         columnClass: 'col-md-4 col-md-offset-4', //Tamano de la ventana
         title: 'Informaci&oacuten',
         content: ''  + message,
-        type: 'blue',
+        type: 'green',
         typeAnimated: true,
         draggable: true, //Animacion para que vibre
         animation: 'scaleX',
         closeAnimation: 'scaleX',
-        theme: 'supervan',
-        backgroundDismissAnimation: 'glow',
+        //theme: 'supervan',
+        //backgroundDismissAnimation: 'glow',
         buttons: {                            
             Cerrar: {
                 text: 'Cerrar',
@@ -385,6 +387,7 @@ function fnValidateProductForm() {
     console.log("Product -> fnValidateProductForm" );
     //obteniendo el valor que se puso en campo text del formulario                    
     var CodigoProducto  = document.getElementById("form:codigoProducto").value;
+    //var CodProdInterno  = document.getElementById("form:codigoProductoInterno").value;
     var NombreProducto  = document.getElementById("form:nombreProducto").value;
     var TipoProducto    = document.getElementById("form:somTipoProducto").selectedIndex;
     var PrecioVenta     = document.getElementById("form:precioVenta").value;
@@ -401,6 +404,16 @@ function fnValidateProductForm() {
         arrMessages.push("El C&oacutedigo del Producto debe tener mas de 2 caracteres.");
         FlgError = true;
     }
+    
+//    if (CodProdInterno.length == 0) {
+//        arrMessages.push("Se debe ingresar el C&oacutedigo del Producto Interno.");
+//        FlgError = true;
+//    }
+//
+//     if (CodProdInterno.length < 3) {
+//        arrMessages.push("El C&oacutedigo del Producto Interno debe tener mas de 2 caracteres.");
+//        FlgError = true;
+//    }
 
     if (NombreProducto.length == 0) {
         arrMessages.push("Se debe ingresar el Nombre del Producto.");        
@@ -481,77 +494,79 @@ function fnShowPopupCreateProduct(){
         $("#linkDialog").click(); //Origina que llame a la función de FancyBOX y que muestre la URL especificada.                        
     }
     
-    
-        
+    return false;
+};    
+
+/*Se llama a la función de FancyBOX para que muestre la URL especificada.*/
+function fnShowPopupCreateProduct_2(codProd){
+    console.log("codProd:" + codProd);
+    $("#linkDialog").attr("href", "faces/popups/popupProductoRegistrar.xhtml?paramCodProd=" + codProd + "&paramExternalPage=1");
+    $("#linkDialog").click(); //Origina que llame a la función de FancyBOX y que muestre la URL especificada.                            
     
     return false;
-};                
+};  
 
 /*Funcion que permite validar en ingreso del nro de serie y correlativo*/
 function fnValiteVoucherHeader() {
 
     var codSerie = document.getElementById("form:codSerie").value;
-    var numDocumento = document.getElementById("form:numDocumento").value;
-    var somTipoDocu = document.getElementById("form:somTipoDocu").selectedIndex;
+//    var numDocumento = document.getElementById("form:numDocumento").value;
+//    var somTipoDocu = document.getElementById("form:somTipoDocu").selectedIndex;
+//
+//    var valTipoDocu =  $("#form\\:somTipoDocu").find('option:selected').text(); 
+//
+//    console.log($("#form\\:somTipoDocu").find('option:selected').text());    
+//
+//    var FlgError = false;
+//    var arrMessages = [];
+//
+//    /*Si la operacion no tiene COMPROBANTE no se realiza validación*/
+//    if (valTipoDocu != 'S/D') {
+//
+//        if (somTipoDocu == 0) {
+//            arrMessages.push("Seleccione el Tipo de Documento de la Orden.");
+//            FlgError = true;
+//        }
+//
+//        if (codSerie.trim().length == 0) {
+//            arrMessages.push("Debe ingresar el Nro. de Serie.");
+//            FlgError = true;
+//        }
+//
+//        if (codSerie.trim().length > 4) {
+//            arrMessages.push("Nro. de Serie no puede ser mayor a 4 digitos.");
+//            FlgError = true;
+//        }
+//
+//        if (numDocumento.length == 0) {
+//            arrMessages.push("Debe ingresar el Número del comprobante.");
+//            FlgError = true;
+//        }                   
 
-    var valTipoDocu =  $("#form\\:somTipoDocu").find('option:selected').text(); 
-
-    console.log($("#form\\:somTipoDocu").find('option:selected').text());
-
-
-    console.log("codSerie:" + codSerie);
-    //console.log("numDocumento:" + numDocumento + " sdf:" + somTipoDocu.selectedIndex);
-
-    var FlgError = false;
-    var arrMessages = [];
-
-    /*Si la operacion no tiene COMPROBANTE no se realiza validación*/
-    if (valTipoDocu != 'S/D') {
-
-        if (somTipoDocu == 0) {
-            arrMessages.push("Seleccione el Tipo de Documento de la Orden.");
-            FlgError = true;
-        }
-
-        if (codSerie.trim().length == 0) {
-            arrMessages.push("Debe ingresar el Nro. de Serie.");
-            FlgError = true;
-        }
-
-        if (codSerie.trim().length > 4) {
-            arrMessages.push("Nro. de Serie no puede ser mayor a 4 digitos.");
-            FlgError = true;
-        }
-
-        if (numDocumento.length == 0) {
-            arrMessages.push("Debe ingresar el Correlativo.");
-            FlgError = true;
-        }                   
-
-    }
-
-    var divResu = $("#idDivValidation");
-
-    if (FlgError) {
-
-        var resultado = '<UL type = "square">';
-        for (var i in arrMessages) {
-            resultado += '<LI>' + arrMessages[i] + '</LI>';
-        }
-        resultado += '</UL>';
-
-        console.log("resultado:" + resultado);
-
-        divResu.html(resultado);
-        divResu.css("display", "inline-block");
-
-        return false;
-
-    } else {
-        divResu.html("");
-        divResu.css("display", "none");
-        return true;
-    }
+//    }
+//
+//    var divResu = $("#idDivValidation");
+//
+//    if (FlgError) {
+//
+//        var resultado = '<UL type = "square">';
+//        for (var i in arrMessages) {
+//            resultado += '<LI>' + arrMessages[i] + '</LI>';
+//        }
+//        resultado += '</UL>';
+//
+//        console.log("resultado:" + resultado);
+//
+//        divResu.html(resultado);
+//        divResu.css("display", "inline-block");
+//
+//        return false;
+//
+//    } else {
+//        divResu.html("");
+//        divResu.css("display", "none");
+//        return true;
+//    }
 };
 
 /*Función que se ejecuta durante el ciclo de vida de la llamada AJAX.
@@ -569,6 +584,7 @@ function fnAjaxListenPersonSearch(data) {
                 var codTRolpers = document.getElementById("idCodTRolpers").value;
                 var numDocuIden = document.getElementById("form:numDocuIden").value;
                 console.log("codTRolpers: " + codTRolpers);
+                console.log("numDocuIden: " + numDocuIden);
                 //Se sobreescribe la propiedad HREF
                 $("#linkDialog").attr("href", "faces/popups/popupPersonaRegistrar.xhtml?paramExternalPage=1&paramCodIden=" + numDocuIden + "&paramCodTRolpers=" + codTRolpers + "&paramNuevoRegistro=false");
                 $("#linkDialog").click(); //Origina que llame a la función de FancyBOX y que muestre la URL especificada.
@@ -578,8 +594,25 @@ function fnAjaxListenPersonSearch(data) {
     }
 };
 
+
+ /*Función que se ejecuta durante el ciclo de vida de la llamada AJAX.
+ *PERMITE INDICAR QUE LA OPERACION TERMIMÓ CON EXITO*/
+function fnAjaxListenFinProcesoEnviado(data) {
+
+    switch (data.status) {
+        case "success":
+            fnShowInfoMessage("Operacion termino con exito.");
+            break;
+    }
+}
+
+
 function fnCloseIFrame_fromRegisterPerson() {
     $("#form\\:btnSearchPerson").click();
+};
+
+function fnCloseIFrame_fromAnularDocumento() {
+    $("#form\\:btnSearchDocuments").click();
 };
 
 function fnCloseIFrame_fromRegisterProduct() {
@@ -663,6 +696,20 @@ function fnValidarDescuento(obj){
         return false;
     }
 }*/
+                            
+/************************************************************************************************************/
+/********************** PANTALLA: REGISTRAR CONFIGURACION PARAMETROS SUNAR **********************************/
+/************************************************************************************************************/
+
+function fnShowPopupConfParamFacturadorSunat() {
+        
+    //Se sobreescribe la propiedad HREF
+    $("#linkDialog").attr("href", "faces/popups/popupConfigParamFacturador.xhtml?");
+    $("#linkDialog").click(); //Origina que llame a la función de FancyBOX y que muestre la URL especificada.
+
+    return false;
+    
+};
 
 /************************************************************************************************************/
 /********************** PANTALLA: REGISTRAR PERSONA *********************************************************/
@@ -680,7 +727,7 @@ function fnShowPopupCreateEditPerson(idPers) {
         if (codTRolpers.length > 0) {
             
             //Se sobreescribe la propiedad HREF
-            $("#linkDialog").attr("href", "faces/popups/popupPersonaRegistrar.xhtml?paramExternalPage=1&paramCodIden=" + numDocuIden + "&paramCodTRolpers=" + codTRolpers +"&paramNuevoRegistro=true");
+            $("#linkDialog").attr("href", "faces/popups/popupPersonaRegistrar.xhtml?paramExternalPage=1&paramCodIden=" + numDocuIden + "&paramCodTRolpers=" + codTRolpers +"&paramNuevoRegistro=true&paramIdPers=" + idPers);
             $("#linkDialog").click(); //Origina que llame a la función de FancyBOX y que muestre la URL especificada.            
            
         }
@@ -695,6 +742,27 @@ function fnShowPopupCreateEditPerson(idPers) {
 
     return false;
             
+    
+};
+
+
+/************************************************************************************************************/
+/********************** PANTALLA: ANULAR DOCUMENTO *********************************************************/
+/************************************************************************************************************/
+
+function fnShowPopupAnularDocumento(idDocu) {
+
+    console.log("idDocu:" + idDocu);
+
+   if (idDocu > 0){
+
+        //Se sobreescribe la propiedad HREF
+        $("#linkDialog").attr("href", "faces/popups/popupAnularDocumento.xhtml?paramIdDocu=" + idDocu);
+        $("#linkDialog").click(); //Origina que llame a la función de FancyBOX y que muestre la URL especificada.
+
+    }
+
+    return false;            
     
 };
 
@@ -785,13 +853,13 @@ function fnValidateIndexForm(){
     var FlgError = false;
     var arrMessages = [];
 
-    if (mtoApertura.trim().length == 0) {
-        arrMessages.push("Debe ingresar un monto para la apertura.");
-        FlgError = true;
-    }else if (Number(mtoApertura) < 50){
-        arrMessages.push("El monto m&iacutenimo para aperturar caja es de S/100.00");
-        FlgError = true;
-    }
+//    if (mtoApertura.trim().length == 0) {
+//        arrMessages.push("Debe ingresar un monto para la apertura.");
+//        FlgError = true;
+//    }else if (Number(mtoApertura) < 50){
+//        arrMessages.push("El monto m&iacutenimo para aperturar caja es de S/100.00");
+//        FlgError = true;
+//    }
 
     var divResu = $("#idDivValidation");
 
@@ -856,7 +924,7 @@ function fnRedirectCustomerReport(){
 
 /*Función que permite ejecutar la opcion que llama a la PANTALLA: REGISTRAR COMPRAS*/
 function fnRedirectRegisterProduct(){
-    $("#form\\:idMenuRegisterProduct").click();
+    $("#form\\:idMenuReporteProductos").click();
 };
 
 /*Función que permite ejecutar la opcion que llama a la PANTALLA: REGISTRAR COMPRAS*/
@@ -878,6 +946,8 @@ function fnRedirectBoxReport(){
 function fnRedirectRegisterSpend(){
     $("#form\\:idMenuRegisterSpend").click();
 };
+
+
 
 
 /**********************************************************************************/

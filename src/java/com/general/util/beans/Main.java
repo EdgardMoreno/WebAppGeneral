@@ -18,11 +18,13 @@ import com.general.hibernate.entity.Sic1general;
 import com.general.hibernate.entity.Sic1idenpers;
 import com.general.hibernate.entity.Sic1idenpersId;
 import com.general.hibernate.entity.Sic1pers;
-import com.general.a2.service.impl.Sic1generalServiceImpl;
+import com.general.a2.service.impl.MaestroCatalogoServiceImpl;
+import com.general.a2.service.impl.ReportServiceImpl;
 import com.general.a3.dao.impl.DaoCashRegisterImpl;
 import com.general.a3.dao.impl.DaoDocuKardexImpl;
 import com.general.a3.dao.impl.DaoDocumentImpl;
 import com.general.a3.dao.impl.DaoLoginImpl;
+import com.general.a3.dao.impl.DaoMaestroCatalogoImpl;
 
 import com.general.hibernate.entity.Sic1idendocu;
 import com.general.hibernate.entity.Sic1persindi;
@@ -34,6 +36,8 @@ import com.general.hibernate.entity.Sic1usuario;
 import com.general.hibernate.temp.Sic4cuaddiario;
 import com.general.hibernate.temp.Sic4cuaddiarioId;
 import com.general.hibernate.views.ViSiccuaddiario;
+import com.general.hibernate.views.ViSicdocu;
+import com.general.util.dao.ConexionBD;
 import com.general.util.dao.DaoFuncionesUtil;
 import java.io.File;
 import java.math.BigDecimal;
@@ -62,53 +66,118 @@ public class Main {
 
     public static void main(String[] args) throws Exception {
         
-        //UtilClass.stream2file(null, "Reporte.Operaciones.xls");
- 
-        String destinatario =  "edgardmr07@gmail.com"; //A quien le quieres escribir.
-        String asunto = "Correo de prueba enviado desde Java";
-        String cuerpo = "<b>Esta es una prueba de correo...</b>";
-        String file = "C:\\ARCHIVOS\\ReporteOperaciones.xlsx";
         
-        String style = "style='text-align: right; font-weight: bold; font-size: 12px; padding: 4px'";
-        cuerpo = "<table>"
-                + "<tr><td colspan='2' style='font-weight: bold; font-size: 12px; padding:5px'>EFECTIVO</td></tr>"
-                + "<tr><td " + style + ">Total Efectivo(Usuario):</td><td>100</td></tr>"
-                + "<tr><td " + style + ">Total Efectivo(Sistema):</td><td>100</td></tr>"
-                + "<tr><td " + style + ">Descuadre:</td><td>100</td></tr>";        
-        cuerpo += "</table>";
+        System.out.println(String.format("%03d", 10));
         
-        cuerpo +="</br>";
+        String codProd = "/ysvg/";
+        System.out.println("Codigo: " + codProd.substring(0, 1));
+        System.out.println("Codigo: " + codProd.substring(1));
         
-        cuerpo += "<table>"
-                + "<tr><td colspan='2' style='font-weight: bold; font-size: 12px; padding:5px'>TARJETA</td></tr>"
-                + "<tr><td " + style + ">Total Tarjeta(Usuario):</td><td>100</td></tr>"
-                + "<tr><td " + style + ">Total Tarjeta(Sistema):</td><td>100</td></tr>"
-                + "<tr><td " + style + ">Descuadre:</td><td>100</td></tr>";
-        cuerpo += "</table>";
+        if(true){
+            DaoDocumentImpl objDao = new DaoDocumentImpl();
+            ViSicdocu objVi = new ViSicdocu();
+            objVi.setNumDocuunido("f001-4");
+            objVi.setCodEsta(Constantes.CONS_COD_ESTAFINALIZADO);
+            objDao.listViSicdocu(objVi);
+            System.out.println("");
                 
-        File attachFile = new File(file);
-        SendEmail email = new SendEmail();
-        email.sendMailSimple(destinatario, asunto, cuerpo);
-        //email.sendMailAttachFile(destinatario, asunto, cuerpo, attachFile);
-
-
+        }
         
-        System.out.println("valor: " + UtilClass.getCurrentTime_YYYYMMDDHHMISS());
+        if(false){
+            Impresion pr = new Impresion();
+            pr.descargarComprobantePDFJasper(1254,"F001-225");
+            System.out.println("fin");
+        }
         
-        Connection cnConexion = null;
-
+        if(false){
+            Impresion pr = new Impresion();
+            pr.imprimirVoucherVentaJasper(2598);
+            System.out.println("fin");
+        }
+      
+        
         SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
         Session session = sessionFactory.openSession();
-        //Session sessionTemp = sessionFactory.openSession();
-        System.out.println("ejemplo:");
+        if(false){
+            DaoCashRegisterImpl objs = new DaoCashRegisterImpl();
+            objs.listarCierresDiarios("04/05/2019", "04/05/2019");
+        }
         
         
+        if(false){
+            Connection cnConexion       = ConexionBD.obtConexion();
+            String letras = DaoFuncionesUtil.FNC_SICCONVNROLETRAFINAL(cnConexion, new BigDecimal(74.06));
+            System.out.println("letras:" + letras );
+        }
+                
         
+        if(true){
+            String[] arrCodigos = new String[2];
+            arrCodigos[0] = "'VI_SICFACTURA'";
+            arrCodigos[1] = "'VI_SICBOLETA'";
+            System.out.println(String.join("," , arrCodigos ));
+            System.out.println("");
+//            DaoMaestroCatalogoImpl objDao = new DaoMaestroCatalogoImpl();
+//            objDao.obtComprobantesPagoXCodigos(arrCodigos);            
+            
+            
+        }        
         
-        DateFormat df = new SimpleDateFormat("yyyyMMddHHmmss");
-        System.out.println("Periodo:" + df.format(new Date()));
-        System.out.println("ejemplo:");
+        if(false){
+            Impresion pr = new Impresion();
+            pr.imprimirComprobantePagoArchivoTexto(new BigDecimal(2357));
+            System.out.println("fin");
+        }
         
+        if(false){           
+            ReportServiceImpl objService = new ReportServiceImpl();
+            objService.getTotalSales(201809, 1);
+        }
+        
+        //UtilClass.stream2file(null, "Reporte.Operaciones.xls");
+ 
+        if(false){            
+        
+            String destinatario =  "edgardmr07@gmail.com"; //A quien le quieres escribir.
+            String asunto = "Correo de prueba enviado desde Java";
+            String cuerpo = "<b>Esta es una prueba de correo...</b>";
+            String file = "C:\\ARCHIVOS\\ReporteOperaciones.xlsx";
+
+            String style = "style='text-align: right; font-weight: bold; font-size: 12px; padding: 4px'";
+            cuerpo = "<table>"
+                    + "<tr><td colspan='2' style='font-weight: bold; font-size: 12px; padding:5px'>EFECTIVO</td></tr>"
+                    + "<tr><td " + style + ">Total Efectivo(Usuario):</td><td>100</td></tr>"
+                    + "<tr><td " + style + ">Total Efectivo(Sistema):</td><td>100</td></tr>"
+                    + "<tr><td " + style + ">Descuadre:</td><td>100</td></tr>";        
+            cuerpo += "</table>";
+
+            cuerpo +="</br>";
+
+            cuerpo += "<table>"
+                    + "<tr><td colspan='2' style='font-weight: bold; font-size: 12px; padding:5px'>TARJETA</td></tr>"
+                    + "<tr><td " + style + ">Total Tarjeta(Usuario):</td><td>100</td></tr>"
+                    + "<tr><td " + style + ">Total Tarjeta(Sistema):</td><td>100</td></tr>"
+                    + "<tr><td " + style + ">Descuadre:</td><td>100</td></tr>";
+            cuerpo += "</table>";
+
+            File attachFile = new File(file);
+            SendEmail email = new SendEmail();
+            email.sendMailSimple(destinatario, asunto, cuerpo);
+            //email.sendMailAttachFile(destinatario, asunto, cuerpo, attachFile);
+
+            System.out.println("valor: " + UtilClass.getCurrentTime_YYYYMMDDHHMISS());
+
+            Connection cnConexion = null;
+
+           
+            //Session sessionTemp = sessionFactory.openSession();
+            System.out.println("ejemplo:");                
+
+            DateFormat df = new SimpleDateFormat("yyyyMMddHHmmss");
+            System.out.println("Periodo:" + df.format(new Date()));
+            System.out.println("ejemplo:");
+        
+        }
         if (false) {
             try{
 
@@ -157,7 +226,7 @@ public class Main {
 //         /**/
 
 
-        if (true){ 
+        if (false){ 
         
             DaoDocuKardexImpl dao = new DaoDocuKardexImpl();
             dao.getKardexLastPeriActi(session);
@@ -187,10 +256,10 @@ public class Main {
         }
         
         /*CUADRE DIARIO: OBTENER TOTALES DE EFECTIVO Y TARJETA */
-         if (true){             
+         if (false){             
             System.out.println("Fecha:" + UtilClass.getCurrentTime_YYYYMMDD());
             CashRegisterServiceImpl service = new CashRegisterServiceImpl();
-            Sic4cuaddiario obj = service.getById(new BigDecimal(3), new BigDecimal("20180225"));
+            Sic4cuaddiario obj = service.obtenerDatosApertura(new BigDecimal(3), new BigDecimal("20180225"));
             System.out.println("Sic4cuaddiario: " + obj);
             
         }
@@ -207,7 +276,7 @@ public class Main {
         }
 
         /*VALIDAR USUARIO*/        
-        if (true) {
+        if (false) {
             DaoLoginImpl daoObj = new DaoLoginImpl();
             Sic1usuario obj = new Sic1usuario();
             obj.setCodUsuario("emoreno");
@@ -227,7 +296,7 @@ public class Main {
         /////---- OBTENER LOS PRODUCTOS RELACIONADOS AL DOCUMENTO
         if (false) {
             DaoDocumentImpl obj = new DaoDocumentImpl();
-            obj.getRelaDocuProdByIdDocu(session , new BigDecimal(28331));
+            obj.obtProductosXidDocu(new BigDecimal(28331));
         }
         
         /////---- OBTENER EL CODIGO DEL ULTIMO ESTADO DEL DOCUMENTO
@@ -310,103 +379,9 @@ public class Main {
             ViSicpers obj = new ViSicpers();
             obj.setCodIden("43390561");
             daoPersonImpl.listViSicPers(session, obj);
-        }
+        }     
 
-        Sic1generalServiceImpl sic1generalService;
-        List<String> listCatTipoIden = new ArrayList<>();
-        listCatTipoIden.add("RUC");
-        listCatTipoIden.add("MIGRADOCU:000247-2003");
-        //sic1generalService = new Sic1generalServiceImpl(cnConexion);            
-        //List<Sic1general> lstSic1general1 = sic1generalService.listByCod_ValorGeneral(listCatTipoIden);
 
-//         session.reconnect(con);
-//        StatelessSession statelessSession = HibernateUtil.getSessionFactory().openStatelessSession();
-        //SessionFactory sessionFactory = null;
-        //StatelessSession statelessSession =  sessionFactory.openStatelessSession(cnConexion);
-        //Session session = sb.connection(connection).openSession();
-        //cnConexion = ((SessionImpl)session).connection();
-        //Session session = ((Session)con). ;
-        System.out.println(cnConexion.isClosed());
-
-        ClassPathXmlApplicationContext ctx = new ClassPathXmlApplicationContext("classpath:/spring.xml");
-        //Llama con SPRING
-        //if (1==1) {
-
-        PersonController personaController = (PersonController) ctx.getBean(PersonController.class);
-        //Sic1pers sic1pers2 = (Sic1pers)ctx.getBean(Sic1pers.class);
-        //List<Sic1pers> list3 = personaController.getObtenerPersonas();
-
-//        for (Sic1pers per : list3) {
-//            System.out.println("antes");
-//            //Sic1pers sic1Pers = per.getDesPers()
-//            System.out.println(per.getDesPers());
-//        }
-        //}
-
-        /**
-         * ***PRUEBA DE CATALOGOS***
-         */
-        Sic1generalServiceImpl sic1generalServiceImpl = (Sic1generalServiceImpl) ctx.getBean(Sic1generalServiceImpl.class);
-        List<String> listCat = new ArrayList<>();
-        listCat.add("RUC");
-        listCat.add("DNI");
-        List<Sic1general> lstSic1general = sic1generalServiceImpl.listByCod_ValorGeneral_Sic1general(listCat);
-
-        for (Sic1general obj : lstSic1general) {
-            System.out.println("Nombre:" + obj.getDesGeneral());
-        }
-
-        /**
-         * *****************GRABAR EN CASCADA****************
-         */
-        Sic1pers sic1pers = new Sic1pers();
-        Sic1idenpers sic1idenpers = new Sic1idenpers();
-        Sic1idenpersId sic1idenpersId = new Sic1idenpersId();
-
-        //SIC1PERS
-        sic1pers.setIdPers(new BigDecimal("2509"));
-        sic1pers.setDesPers("Usuario Ejemplo");
-        sic1pers.setIdTipopers(new BigDecimal("1"));
-        sic1pers.setIdTipodomi(new BigDecimal("4576"));
-
-        //SIC1IDENPERS
-        sic1idenpersId.setIdTipoiden(new BigDecimal("124"));
-        sic1idenpersId.setCodIden("43390561");
-
-        sic1idenpers.setId(sic1idenpersId);
-        //sic1idenpers.setIdPers(new BigDecimal("2509"));
-        sic1idenpers.setFecDesde(new Date());
-        sic1idenpers.setFecHasta(new Date());
-
-        Set<Sic1idenpers> lstSic1idenpers = new HashSet<>();
-        lstSic1idenpers.add(sic1idenpers);
-
-        sic1pers.setSic1idenpers(lstSic1idenpers);
-
-        //Llamada convencional
-        PersonController personaController2 = (PersonController) ctx.getBean(PersonController.class);
-        //PersonaServiceImpl personaServiceImpl = ctx.getBean(PersonaServiceImpl.class);
-        //Sic1pers sic1pers2 = (Sic1pers)ctx.getBean(Sic1pers.class);
-        //personaController2.agregarPersona();
-
-//            PersonaServiceImpl personaService = new PersonaServiceImpl();
-//            personaService.setDaoPersona(new DaoPersonaImpl());
-//            personaService.insert(sic1pers);
-        //****************** LISTAR *************************
-//        List<Sic1pers> list = personaService.list();
-//
-//        for(Sic1pers per : list){
-//            System.out.println("antes");
-//            //Sic1pers sic1Pers = per.getDesPers()
-//            System.out.println(per.getDesPers());
-//            
-//            //Convertir SET -> LIST
-//            List<Sic1docu> mapValueList = new ArrayList<Sic1docu>(per.getSic1docus());
-//            
-//            for(Sic1docu docu : mapValueList){                
-//                System.out.println("Docuemnto:" + docu.getDesDocu());
-//            }
-//        }
     }
 
 }

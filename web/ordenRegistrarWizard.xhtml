@@ -1,0 +1,189 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"      
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets" >
+
+    <!--<f:metadata>        
+        <f:viewParam name="titulo" value="#{orderController.desTituloPagina}"/>
+        <f:event type="preRenderView" listener="#{orderController.loadOrderDetails}"/>
+    </f:metadata>-->
+
+    <ui:composition template="./WEB-INF/facelets/templates/templatePrincipal.xhtml">
+
+        <ui:define name="header">
+
+            <link rel="stylesheet" href="#{request.contextPath}/faces/resources/assets/css/gsdk-bootstrap-wizard.css"/>
+
+            <!--   Core JS Files   -->
+            <script src="#{request.contextPath}/faces/resources/assets/js/jquery.bootstrap.wizard.js"></script>
+            <!--  Plugin for the Wizard -->
+            <script src="#{request.contextPath}/faces/resources/assets/js/gsdk-bootstrap-wizard.js"></script>
+            <!--  More information about jquery.validate here: http://jqueryvalidation.org/	 -->
+            <script src="#{request.contextPath}/faces/resources/assets/js/jquery.validate.min.js"></script>            
+
+
+            <style>
+
+            </style>
+
+            <script>
+                
+                function fnChangeTab(option) {
+                                      
+
+                    if (option == 1) {
+                        $('[href="#location"]').tab('show');
+                    } else if (option == 2) {
+                        $('[href="#facilities"]').tab('show');
+                    }
+
+                    return false;
+                }
+
+            </script>
+        </ui:define>
+
+        <ui:define name="content">
+
+            <div class="container"> 
+
+                <div id="divResultadoValidacion"></div>
+
+                <p:growl id="message" showDetail="true" />               
+
+                <!--  Wizard container -->
+
+                <div class="card wizard-card" data-color="blue" id="wizard">
+
+                    <!-- You can switch ' data-color="green" '  with one of the next bright colors: "blue", "green", "orange", "red"          -->
+                    
+                    <div class="wizard-header">
+                        <h3>
+                            <b>REGISTRAR COMPRA </b><br/>
+                            <small>A partir de una Orden de Compra</small>
+                        </h3>
+                    </div>                        
+                        
+                    <div class="wizard-navigation">
+                        <ul>
+                            <li><a href="#location" data-toggle="tab">Buscar Orden Compra</a></li>
+                            <li><a href="#facilities" data-toggle="tab">Registrar Compra</a></li>
+                            <li><a href="#description" data-toggle="tab">Forma de Pago</a></li>
+                        </ul>
+                    </div>
+
+                    <div class="tab-content">
+                        <div class="tab-pane" id="location">
+                            <div class="row">
+
+                                <div class="row" style="margin-left: 5px">
+                                    <div class="form-group col-md-2">
+                                        <h:outputLabel value="Nro. Nota de Pedido:"/>
+                                        <h:inputText id="nroNotaPedido" styleClass="form-control" autocomplete="off"
+                                                     onkeypress="return fnAllowOnlyNumbers(event)" value="#{documentController.numNotaPedido}" />
+                                    </div>                                                
+
+                                    <div class="form-group col-md-2">
+                                        <label>&nbsp;&nbsp;</label>
+                                        <div>
+                                            <h:commandButton styleClass="btn btn-primary" value="Buscar" >
+                                                <f:ajax execute="nroNotaPedido"  render="dtDocumentos message" listener="#{documentController.buscarOrdenes()}" />
+                                            </h:commandButton>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>                                                                                        
+
+                            <div class="row" style="margin-left: 5px">
+
+                                <!-- ********************************** -->
+                                <!-- LISTA DE PERSONAS --> 
+                                <!-- *********************************** -->                        
+
+                                <p:dataTable                                                        
+                                    id="dtDocumentos" var="item" 
+                                    value="#{documentController.lstViSicdocus}" rows="10" style="margin-bottom:20px; width:98%"
+                                    paginator="true"
+                                    paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                    rowsPerPageTemplate="10,20">                                                        
+
+                                    <p:column headerText="No." width="10">
+                                        <h:outputText value="#{documentController.lstViSicdocus.indexOf(item) + 1}" />
+                                    </p:column>
+
+                                    <p:column headerText="Tipo Documento" width="100">
+                                        <h:outputText value="#{item.desStipodocu}" />
+                                    </p:column>
+
+                                    <p:column headerText="Nro. Documento" width="110">
+                                        <h:outputText value="#{item.codSerie}-#{item.numDocu}" />
+                                    </p:column>
+
+                                    <p:column headerText="Fecha Registro" width="90">
+                                        <h:outputText value="#{item.fecDesde}" />
+                                    </p:column>
+
+                                    <p:column headerText="Razón Social" >
+                                        <h:outputText value="#{item.desPersClieprov}" />
+                                    </p:column>
+
+                                    <p:column headerText="Total" width="70">
+                                        <h:outputText value="S/.#{item.numMtototal}" />
+                                    </p:column>
+
+                                    <p:column headerText="Estado" width="100">
+                                        <h:outputText value="#{item.desEstadocu}" />
+                                    </p:column>
+                                    
+                                    <p:column headerText="Sucursal" width="100">
+                                        <h:outputText value="#{item.desSucursal}" />
+                                    </p:column>
+
+                                    <p:column headerText="" width="100">
+                                        <h:commandButton value="Seleccionar" >
+                                        </h:commandButton>
+                                    </p:column>
+
+                                    <f:facet name="paginatorTopLeft">
+                                        <p:commandButton type="button" icon="fa fa-sync" />
+                                    </f:facet>
+
+                                    <f:facet name="paginatorBottomRight">
+                                        <p:commandButton type="button" icon="fa fa-cloud-upload" />
+                                    </f:facet>
+                                </p:dataTable>
+                            </div>
+                        </div>
+
+                        <div class="tab-pane" id="facilities">
+                            <h4 class="info-text">Tell us more about facilities. </h4>
+                            
+                        </div>
+                        <div class="tab-pane" id="description">
+                            <div class="row">
+                                <h4 class="info-text"> Drop us a small description. </h4>
+                                
+                            </div>
+                        </div>
+                    </div>
+                    <div class="wizard-footer">
+                        <div class="pull-right">
+
+                        </div>
+                        <div class="pull-left">
+                            
+                        </div>
+                        <div class="clearfix"></div>
+                    </div>
+
+                    
+                </div>
+
+            </div>
+
+        </ui:define>
+    </ui:composition>
+</html>

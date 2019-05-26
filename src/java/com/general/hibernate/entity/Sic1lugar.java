@@ -17,6 +17,7 @@ public class Sic1lugar  implements java.io.Serializable {
      private BigDecimal idTipolugar;
      private String codCodiauto;
      private String desDireccion;
+     private String codSerie;
      private Sic1lugardire sic1lugardireByIdLugar;
      private Set sic3lugarperses = new HashSet(0);
      private Set sic1lugardiresForIdDistrito = new HashSet(0);
@@ -75,6 +76,15 @@ public class Sic1lugar  implements java.io.Serializable {
     public void setDesDireccion(String desDireccion) {
         this.desDireccion = desDireccion;
     }
+
+    public String getCodSerie() {
+        return codSerie;
+    }
+
+    public void setCodSerie(String codSerie) {
+        this.codSerie = codSerie;
+    }        
+    
     public Sic1lugardire getSic1lugardireByIdLugar() {
         return this.sic1lugardireByIdLugar;
     }

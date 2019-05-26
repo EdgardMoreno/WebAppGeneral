@@ -28,5 +28,8 @@
     <property name="codEmail" type="string">
       <column length="2000" name="COD_EMAIL"/>
     </property>
+    <property name="idSucursal" type="integer">
+      <column name="ID_SUCURSAL" precision="5" scale="0"/>
+    </property>
   </class>
 </hibernate-mapping>

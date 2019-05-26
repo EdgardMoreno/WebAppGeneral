@@ -22,17 +22,24 @@ public class Sic3docuprod  implements java.io.Serializable {
      private BigDecimal numMtodscto;
      private BigDecimal numCantidad;
      
+     /*Se agrega temporalmente*/
+     private BigDecimal numCantidadEMZA;
+     
      
       /*Agregado*/
      private Integer numIndex;
      private Sic1docu sic1docu;
+     private Boolean flgNuevo;
+     private Boolean flgSeleccionado;
 
     public Sic3docuprod() {
+        this.flgNuevo = false;
+        this.flgSeleccionado = true;
     }
 
 	
     public Sic3docuprod(Sic3docuprodId id) {
-        this.id = id;
+        this.id = id;        
     }
     public Sic3docuprod(Sic3docuprodId id, BigDecimal idTreladocu, Date fecHasta, String desNotas, BigDecimal numValor, BigDecimal numMtodscto, BigDecimal numCantidad, Sic1prod sic1prod) {
        this.id = id;
@@ -59,10 +66,7 @@ public class Sic3docuprod  implements java.io.Serializable {
 
     public void setSic1prod(Sic1prod sic1prod) {
         this.sic1prod = sic1prod;
-    }
-    
-    
-    
+    }      
     
     public BigDecimal getIdTreladocu() {
         return this.idTreladocu;
@@ -123,6 +127,32 @@ public class Sic3docuprod  implements java.io.Serializable {
         this.sic1docu = sic1docu;
     }
 
+    public Boolean getFlgNuevo() {
+        return flgNuevo;
+    }
+
+    public void setFlgNuevo(Boolean flgNuevo) {
+        this.flgNuevo = flgNuevo;
+    }
+
+    public BigDecimal getNumCantidadEMZA() {
+        return numCantidadEMZA;
+    }
+
+    public void setNumCantidadEMZA(BigDecimal numCantidadEMZA) {
+        this.numCantidadEMZA = numCantidadEMZA;
+    }
+
+    public Boolean getFlgSeleccionado() {
+        return flgSeleccionado;
+    }
+
+    public void setFlgSeleccionado(Boolean flgSeleccionado) {
+        this.flgSeleccionado = flgSeleccionado;
+    }
+
+    
+    
     
 }
 

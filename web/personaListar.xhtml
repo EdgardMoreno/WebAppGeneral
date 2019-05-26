@@ -5,14 +5,9 @@
       xmlns:f="http://xmlns.jcp.org/jsf/core"
       xmlns:p="http://primefaces.org/ui"
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
-      >
-
-    <f:metadata>        
-        <f:viewParam name="titulo" value="#{personController.desTituloPagina}"/>
-        <f:event type="preRenderView" listener="#{personController.getParamsExternalPage}"/>
-    </f:metadata>
+      >  
     
-    <ui:composition template="./templates/templatePrincipal.xhtml">
+    <ui:composition template="./WEB-INF/facelets/templates/templatePrincipal.xhtml">
 
         <ui:define name="header">
 
@@ -55,8 +50,8 @@
                 <p:growl id="message" showDetail="true" />
 
                 <br/>
-                <h:panelGrid columns="7" style="width:100%"
-                             columnClasses="td-label-1, td-content-1, td-label-1, td-content-1, td-label-1, td-content-1, td-content-1" >
+                <h:panelGrid columns="6" style="width:100%"
+                             columnClasses="td-label-1, td-content-1, td-label-1, td-content-1, td-label-1, td-content-1" >
 
                     <h:outputLabel value="Doc. Identidad:"/>
                     <h:panelGroup>
@@ -67,20 +62,27 @@
                                  onkeyup="fnCountLength(this.value,'idCantDigitosDocIden')"
                                  value="#{personController.viSicpers.codIden}" />
                         </div>
-                    </h:panelGroup>                     
-                    
+                    </h:panelGroup>
                     <h:outputLabel value="Nombre/Razón Social:"/>
                     <h:inputText styleClass="form-control" value="#{personController.viSicpers.desPers}" />
+                    <h:outputLabel value=""/>
+                    <h:outputLabel value=""/>
+                    
                     <h:outputLabel value="Tipo Documento:"/>
                     <h:selectOneMenu value="#{personController.viSicpers.idTipoiden}" styleClass="form-control" >
                         <f:selectItem itemLabel="-- Todos --" itemValue="-1" />
                         <f:selectItems value="#{personController.itemsTipoIden}" />
+                    </h:selectOneMenu>                    
+                    <h:outputLabel value="Tipo Persona:"/>
+                    <h:selectOneMenu value="#{personController.viSicpers.idTipopers}" styleClass="form-control" >
+                        <f:selectItem itemLabel="-- Todos --" itemValue="-1" />
+                        <f:selectItems value="#{personController.itemsTipoPers}" />
                     </h:selectOneMenu>
-
+                    
+                    <h:outputLabel value=""/>
                     <h:panelGroup>                        
-                            <h:commandLink styleClass="btn btn-default">
-                                <span class="glyphicon glyphicon-search"></span> Buscar
-                                <f:ajax execute="@form" render="tblPersons" listener="#{personController.filterPersons()}" />
+                            <h:commandLink styleClass="btn btn-default" actionListener="#{personController.filterPersons()}">
+                                <span class="glyphicon glyphicon-search"></span> Buscar                                
                             </h:commandLink>
                             <br/>
                             <h:commandLink styleClass="btn btn-default" onclick="return fnShowPopupCreateEditPerson(0)">
@@ -91,12 +93,6 @@
                                 <f:ajax render="@form" listener="#{personController.clearSearch()}" />
                             </h:commandLink>                        
                     </h:panelGroup>
-
-                    <h:outputLabel value="Tipo Persona:"/>
-                    <h:selectOneMenu value="#{personController.viSicpers.idTipopers}" styleClass="form-control" >
-                        <f:selectItem itemLabel="-- Todos --" itemValue="-1" />
-                        <f:selectItems value="#{personController.itemsTipoPers}" />
-                    </h:selectOneMenu>
 
                 </h:panelGrid>
                 
@@ -118,49 +114,66 @@
                 <!-- ********************************** -->
                 
                 <br/>
-                <h:dataTable id="tblPersons" var="item" 
-                             width="100%"
-                             value="#{personController.lstPersonas}"
-                             styleClass="table-bordered"
-                             columnClasses="table_style_id, table_style_code, table_style_date,
-                                            table_style_description_medium, table_style_code, table_style_code, 
-                                            table_style_code, table_style_action"
-                             >
-
-                    <h:column>
-                        <f:facet name="header">No.</f:facet>#{personController.lstPersonas.indexOf(item) + 1}
-                    </h:column>
-
-                    <h:column>
-                        <f:facet name="header">Fec. Registro</f:facet>#{item.fecCreacion}
-                    </h:column>
+                <div class="row">
                     
-                    <h:column>
-                        <f:facet name="header">Documento Identidad</f:facet>#{item.codIden}
-                    </h:column>
-                    
-                    <h:column>
-                        <f:facet name="header">Nombre Completo</f:facet>#{item.desPers}
-                    </h:column>                    
+                    <p:dataTable
+                        id="tblPersons" var="item" 
+                        value="#{personController.lstPersonas}" rows="30" style="margin-bottom:20px"
+                        paginator="true"
+                        paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown} {Exporters}"
+                        rowsPerPageTemplate="30,50">
 
-                    <h:column>
-                        <f:facet name="header">Tipo Documento</f:facet>#{item.desTipoiden}
-                    </h:column>
+                        <f:facet name="{Exporters}">
+                            <h:commandLink>
+                                <p:graphicImage name="/img/excel.png" width="24"/>
+                                <p:dataExporter type="xls" target="tblPersons" fileName="RptPersonas" />
+                            </h:commandLink>
+                        </f:facet>
 
-                    <h:column>
-                        <f:facet name="header">Tipo de persona</f:facet>#{item.desTipopers}
-                    </h:column>
-                    
-                    <h:column>
-                        <f:facet name="header">Rol</f:facet>#{item.desTrolpers}
-                    </h:column>                   
+                        <p:column headerText="No." width="20" style="padding: 1px;text-align: center">
+                            <h:outputText value="#{personController.lstPersonas.indexOf(item) + 1}" />
+                        </p:column>
 
-                    <h:column>
-                        <h:commandLink onclick="return fnShowPopupCreateEditPerson(#{item.idPers})" >
-                            <span class="glyphicon glyphicon-pencil" data-toggle="tooltip" title="Editar"></span>
-                        </h:commandLink>
-                    </h:column>
-                </h:dataTable>
+                        <p:column headerText="FECHA REGISTRO" width="100" style="text-align: center">
+                            <h:outputText value="#{item.fecCreacion}" />
+                        </p:column>
+
+                        <p:column headerText="TIPO DOCUMENTO" width="100">
+                            <h:outputText value="#{item.desTipoiden}" />
+                        </p:column>
+                        
+                        <p:column headerText="DOC. IDENTIDAD" width="120">
+                            <h:outputLabel value="#{item.codIden}"/>
+                        </p:column>                        
+                        
+                        <p:column headerText="NOMBRE COMPLETO" >
+                            <h:outputLabel value="#{item.desPers}" />
+                        </p:column>
+                        
+                        <p:column headerText="TIPO PERSONA" width="90" style="text-align: center">
+                            <h:outputText value="#{item.desTipopers}" />
+                        </p:column>
+
+                        <p:column headerText="ROL" width="90">
+                            <h:outputText value="#{item.desTrolpers}"/>
+                        </p:column>
+
+                        <p:column headerText="" width="20" style="padding: 1px" exportable="false">
+                            <h:commandLink onclick="return fnShowPopupCreateEditPerson(#{item.idPers})" >
+                                <span class="glyphicon glyphicon-pencil" data-toggle="tooltip" title="Editar"></span>
+                            </h:commandLink>
+                        </p:column>
+
+                        <f:facet name="paginatorTopLeft">
+                            <p:commandButton type="button" icon="fa fa-sync" />
+                        </f:facet>
+
+                        <f:facet name="paginatorBottomRight">
+                            <p:commandButton type="button" icon="fa fa-cloud-upload" />
+                        </f:facet>
+                    </p:dataTable>
+
+                </div>   
 
                 <p:confirmDialog global="true" showEffect="fade" hideEffect="fade" header="Confirmar">
                     <p:commandButton value="Yes" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />

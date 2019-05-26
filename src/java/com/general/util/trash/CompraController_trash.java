@@ -14,7 +14,7 @@ import com.general.hibernate.entity.Sic1pers;
 import com.general.hibernate.entity.Sic1persindi;
 import com.general.hibernate.entity.Sic1persorga;
 import com.general.a2.service.impl.PersonServiceImpl;
-import com.general.a2.service.impl.Sic1generalServiceImpl;
+import com.general.a2.service.impl.MaestroCatalogoServiceImpl;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.sql.Connection;
@@ -48,7 +48,7 @@ public class CompraController_trash implements Serializable{
     
     private PersonService personaService;
     
-    private Sic1generalServiceImpl sic1generalService;
+    private MaestroCatalogoServiceImpl sic1generalService;
     
     private Sic1pers sic1pers;
     private Sic1idenpers sic1idenpers;

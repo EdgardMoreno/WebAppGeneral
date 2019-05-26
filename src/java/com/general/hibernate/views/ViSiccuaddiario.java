@@ -10,6 +10,7 @@ public class ViSiccuaddiario implements java.io.Serializable {
 
     private ViSiccuaddiarioId id;
     private String desPers;
+    private String codUsuario;
     private String fecApertura;
     private String fecCierre;
     private String numEfectDenomTotal;
@@ -32,6 +33,10 @@ public class ViSiccuaddiario implements java.io.Serializable {
     private BigDecimal idEsta;
     private String codEsta;
     private String desEsta;
+    
+    private Integer idSucursal;
+    private String desLugar;
+    private String desDireccion;
 
     public ViSiccuaddiario() {
     }
@@ -78,6 +83,14 @@ public class ViSiccuaddiario implements java.io.Serializable {
         this.desPers = desPers;
     }
 
+    public String getCodUsuario() {
+        return codUsuario;
+    }
+
+    public void setCodUsuario(String codUsuario) {
+        this.codUsuario = codUsuario;
+    }   
+    
     public String getFecApertura() {
         return fecApertura;
     }
@@ -254,7 +267,30 @@ public class ViSiccuaddiario implements java.io.Serializable {
     public void setDesEsta(String desEsta) {
         this.desEsta = desEsta;
     }
-    
+
+    public Integer getIdSucursal() {
+        return idSucursal;
+    }
+
+    public void setIdSucursal(Integer idSucursal) {
+        this.idSucursal = idSucursal;
+    }
+
+    public String getDesLugar() {
+        return desLugar;
+    }
+
+    public void setDesLugar(String desLugar) {
+        this.desLugar = desLugar;
+    }
+
+    public String getDesDireccion() {
+        return desDireccion;
+    }
+
+    public void setDesDireccion(String desDireccion) {
+        this.desDireccion = desDireccion;
+    }     
     
 
     public boolean equals(Object other) {

@@ -14,6 +14,9 @@
     <property name="desPers" type="string">
       <column length="250" name="DES_PERS"/>
     </property>
+    <property name="codUsuario" type="string">
+      <column length="100" name="COD_USUARIO"/>
+    </property>
     <property name="fecApertura" type="string">
       <column length="25" name="FEC_APERTURA"/>
     </property>
@@ -79,6 +82,17 @@
     </property>
     <property name="desEsta" type="string">
       <column length="500" name="DES_ESTA"/>
+    </property>    
+    
+    <property name="idSucursal" type="integer">
+      <column name="ID_SUCURSAL" precision="5" scale="0"/>
     </property>
+    <property name="desLugar" type="string">
+      <column length="200" name="DES_LUGAR"/>
+    </property>
+    <property name="desDireccion" type="string">
+      <column length="700" name="DES_DIRECCION"/>
+    </property>
+    
   </class>
 </hibernate-mapping>

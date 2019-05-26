@@ -11,20 +11,22 @@ import com.general.hibernate.temp.Sic4cuaddiarioId;
 import com.general.hibernate.views.ViSiccuaddiario;
 import com.general.security.SessionUtils;
 import com.general.util.beans.Constantes;
+import com.general.util.beans.SendEmail;
 import com.general.util.beans.UtilClass;
 import com.general.util.exceptions.CustomizerException;
 import com.general.util.exceptions.ValidationException;
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.math.BigInteger;
+
 import java.util.ArrayList;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ViewScoped;
+import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
-import javax.faces.context.Flash;
-import javax.faces.event.ComponentSystemEvent;
+
+
+import javax.mail.MessagingException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -33,7 +35,7 @@ import org.slf4j.LoggerFactory;
  * @author emoreno
  */
 @ManagedBean
-@ViewScoped
+@SessionScoped
 public class CashRegisterController implements Serializable{
     
     private final static Logger log = LoggerFactory.getLogger(CashRegisterController.class);
@@ -54,9 +56,11 @@ public class CashRegisterController implements Serializable{
     private BigDecimal numCalcuDenom0_05;
     
     private String desTotalVentas;
+    private String desTotalEfectivo;
     private String desFecDesde;
     private String desFecHasta;
     
+    private List<Sic4cuaddiario> lstCierresDiarios;
     private List<ViSiccuaddiario> listViDayBox;
     private ViSiccuaddiario viDayBox;
     
@@ -89,6 +93,7 @@ public class CashRegisterController implements Serializable{
             this.setNumCalcuDenom0_05(new BigDecimal(valIni).setScale(2));
             
             this.desTotalVentas = "S/ 0.00";
+            this.desTotalEfectivo = "S/ 0.00";
             
         }catch(Exception ex){
             System.out.println("Error:" + ex.getMessage());
@@ -119,10 +124,8 @@ public class CashRegisterController implements Serializable{
 
     public void setDesPersCajero(String desPersCajero) {
         this.desPersCajero = desPersCajero;
-    }
+    }    
     
-    
-
     public BigDecimal getNumCalcuDenom0200() {
         return numCalcuDenom0200;
     }
@@ -267,10 +270,21 @@ public class CashRegisterController implements Serializable{
         this.editFields = editFields;
     }
 
-    
+    public String getDesTotalEfectivo() {
+        return desTotalEfectivo;
+    }
 
-    
-    
+    public void setDesTotalEfectivo(String desTotalEfectivo) {
+        this.desTotalEfectivo = desTotalEfectivo;
+    }
+
+    public List<Sic4cuaddiario> getLstCierresDiarios() {
+        return lstCierresDiarios;
+    }
+
+    public void setLstCierresDiarios(List<Sic4cuaddiario> lstCierresDiarios) {
+        this.lstCierresDiarios = lstCierresDiarios;
+    }       
 
     /*METODOS*/
     public void calculate(){
@@ -340,7 +354,7 @@ public class CashRegisterController implements Serializable{
             this.box.setNumEfectTotal(box.getNumEfectApertCaja().add(box.getNumEfectDenomTotal()).setScale(2,BigDecimal.ROUND_HALF_UP));        
 
             /*CALCULAR: TOTAL EFECTIVO DEL SISTEMA*/
-            box.setNumEfectTotalSistema(box.getNumEfectTotalGastoSiste().add(box.getNumEfectTotalVentaSiste()).setScale(2, BigDecimal.ROUND_HALF_UP));
+            box.setNumEfectTotalSistema((box.getNumEfectTotalVentaSiste()).setScale(2, BigDecimal.ROUND_HALF_UP));
             System.out.println("TOTAL EFECTIVO DEL SISTEMA:" + box.getNumEfectTotalSistema());
 
             /*CALCULAR: EFECTIVO SOBRANTE / FALTANTE*/
@@ -360,13 +374,21 @@ public class CashRegisterController implements Serializable{
 
             /*CALCULAR: TARJETA SOBRANTE / FALTANTE*/
             box.setNumTarjeSobraFalta(box.getNumTarjeTotal().subtract(box.getNumTarjeTotalSiste()).setScale(2,BigDecimal.ROUND_HALF_UP ));
+            
+            /****************************************************/
+            /*** CALCULO DE TRANSFERENCIA Y DEPOSITOS ***********/
+            /****************************************************/
+            
+            if(box.getNumTranDepoTotal() == null)
+                box.setNumTranDepoTotal(new BigDecimal("0.00"));
 
             /***********************************/
             /*** TOTAL VENTAS ******************/
             /***********************************/
 
-            this.desTotalVentas = "S/" + box.getNumEfectTotalSistema().add(box.getNumTarjeTotalSiste()).toString();
-            this.box.setNumTotalVenta(box.getNumEfectTotalSistema().add(box.getNumTarjeTotalSiste()));
+            this.desTotalVentas = "S/" + box.getNumEfectTotalSistema().add(box.getNumTarjeTotalSiste()).add(box.getNumTranDepoTotalSiste()).toString();
+            this.desTotalEfectivo = "S/" + box.getNumEfectTotalSistema().add(box.getNumEfectApertCaja()).subtract(box.getNumEfectTotalGastoSiste()).toString();
+            this.box.setNumTotalVenta(box.getNumEfectTotalSistema().add(box.getNumTarjeTotalSiste()).add(box.getNumTranDepoTotalSiste()));
 
         }catch(Exception ex){
             UtilClass.addErrorMessage("Lo datos no se ingresaron correctamente, favor verificar.");
@@ -375,30 +397,46 @@ public class CashRegisterController implements Serializable{
     }
     
     public void save() throws CustomizerException{
+        
         System.out.println("valor:" + box.getNumEfectTotal());
         
         try{
             
-            if (Math.abs(this.box.getNumEfectSobraFalta().doubleValue()) > 15){
+            if (Math.abs(this.box.getNumEfectSobraFalta().doubleValue()) > 5){
                 throw new ValidationException("La diferencia de Sobrante / Faltante en Efectivo es mayor al permitido ");
             }
-            if (Math.abs(this.box.getNumTarjeSobraFalta().doubleValue()) > 15){
+            if (Math.abs(this.box.getNumTarjeSobraFalta().doubleValue()) > 0){
                 throw new ValidationException("La diferencia de Sobrante / Faltante en Tarjeta es mayor al permitido ");
+            }            
+            
+            if(this.box.getNumTranDepoTotal()== null)
+                this.box.setNumTranDepoTotal(new BigDecimal("0.00"));
+                        
+            if (this.box.getNumTranDepoTotal().subtract(this.box.getNumTranDepoTotalSiste()).intValue() != 0){
+                throw new ValidationException("Hay diferencias en las ventas por Transferencia y Depósito.");
             }
             
             CashRegisterServiceImpl service = new CashRegisterServiceImpl();
             
             Sic4cuaddiarioId id = new Sic4cuaddiarioId();
-            id.setIdPers(SessionUtils.getUserId()); //Ira el ID_PERS DEL USUARIO LOGUEADO
+            id.setIdPers(SessionUtils.getUserId()); //Ira el ID_PERS DEL USUARIO LOGUEADO            
             id.setNumPeri(new BigDecimal(UtilClass.getCurrentTime_YYYYMMDD()));
             
             box.setId(id);
-            service.close(box);
-            
+            box.setIdSucursal(SessionUtils.getIdSucursal());
+            service.cerrarCaja(box);
+
             /*Actualizando el nuevo estado de la caja en la Session*/
-            SessionUtils.setCodEstaCaja(Constantes.CONS_COD_ESTACERRADO);            
+            SessionUtils.setCodEstaCaja(Constantes.CONS_COD_ESTACERRADO);
             
             UtilClass.addInfoMessage(Constantes.CONS_SUCCESS_MESSAGE);
+            
+            /*Mandando correo notificando cierre de caja*/
+            try{
+                this.notifyByEmail(box);
+            }catch(Exception e){
+                System.out.println("Error al enviar email:" + e.getMessage());
+            }
             
             /*Limpiar Controles*/
             box = new Sic4cuaddiario();
@@ -407,123 +445,189 @@ public class CashRegisterController implements Serializable{
             
         }catch(ValidationException ex ){
             UtilClass.addErrorMessage(ex.getMessage());
-        }catch(Exception ex ){
+        }catch(CustomizerException ex ){
             throw new CustomizerException(ex.getMessage());
         }
     }
     
-    public void filter() throws CustomizerException{        
+    public void filter() throws CustomizerException, Exception{        
         
          try {
 
             CashRegisterServiceImpl service = new CashRegisterServiceImpl();
-             
-            if(this.desFecDesde != null && this.desFecDesde.trim().length() > 0)
-                viDayBox.setFecApertura(desFecDesde);
-            else
-                 viDayBox.setFecApertura(null);
-            
-            if(this.desFecHasta != null && this.desFecHasta.trim().length() > 0)
-                viDayBox.setFecCierre(desFecHasta);
-            else
-                viDayBox.setFecCierre(null);
-
-            this.listViDayBox = service.listViSiccuaddiario(viDayBox);  
-            
-        } catch (Exception e) {
+            this.lstCierresDiarios = service.listarCierresDiarios(this.desFecDesde, this.desFecHasta);            
+                        
+        } catch (CustomizerException e) {
             throw new CustomizerException(e.getMessage());
         }        
     }
     
-    public String notifyByEmail(ViSiccuaddiario obj){
-         
-        /****************************************/
-        /*ENVIAR POR CORREO*/
-        /****************************************/
-        
-        String messageBody = "<h3>Resumen de Venta del dia " + obj.getFecCierre() + "</h3>";
-        String desSubject = "Resumen de la venta " + obj.getFecCierre();
+    public void notifyByEmail(Sic4cuaddiario obj){         
         
         try{
 
-            String style = "style='text-align: right; font-weight: bold; font-size: 12px; padding: 4px'";
-            messageBody = "<table>"
-                        + "<tr><td colspan='2' style='font-weight: bold; font-size: 12px; padding:5px'>EFECTIVO</td></tr>"
-                        + "<tr><td " + style + ">Total Efectivo(Usuario):</td><td>" + obj.getNumEfectTotal() + "</td></tr>"
-                        + "<tr><td " + style + ">Total Efectivo(Sistema):</td><td>" + obj.getNumEfectTotalSistema() + "</td></tr>"
-                        + "<tr><td " + style + ">Descuadre:</td><td>" + obj.getNumEfectSobraFalta() + "</td></tr>";
-            messageBody += "</table>";
-
-            messageBody +="</br>";
-
-            messageBody += "<table>"
-                        + "<tr><td colspan='2' style='font-weight: bold; font-size: 12px; padding:5px'>TARJETA</td></tr>"
-                        + "<tr><td " + style + ">Total Tarjeta(Usuario):</td><td>" + obj.getNumTarjeTotal() + "</td></tr>"
-                        + "<tr><td " + style + ">Total Tarjeta(Sistema):</td><td>" + obj.getNumEfectTotalSistema() + "</td></tr>"
-                        + "<tr><td " + style + ">Descuadre:</td><td>" + obj.getNumTarjeSobraFalta() + "</td></tr>";
-            messageBody += "</table>";
-
-            //UtilClass.addInfoMessage(Constantes.CONS_SUCCESS_EMAIL_MESSAGE);
+                String destinatario =  Constantes.CONS_DES_EMAIL_DESTINATARIO; //A quien le quieres escribir.
+                String asunto = Constantes.CONS_DES_AMBIENTESISTEMA + " NOTIFICACION DE CIERRE CAJA (" + obj.getFecCierre() + ")";
+                String cuerpo = "";     
+                
+                String stylePrincipal = "style='font-weight: bold; font-size: 12px; padding:5px; background-color:" + Constantes.CONS_COD_COLORTABLA + "'";
+                String stylePrincipaltTotal = "style='font-weight: bold; font-size: 12px; padding:5px; background-color:" + Constantes.CONS_COD_COLORTABLATOTAL + "'";
+                String style = "style='text-align: right; font-weight: bold; font-size: 12px; padding: 2px'";
             
-        }catch(Exception ex){
+                cuerpo = "<table>"
+                                + "<tr>"
+                                    + "<td " + style + ">Usuario:</td>"
+                                    + "<td>" + SessionUtils.getUserName() + "</td>" 
+                                + "</tr>"
+                                + "<tr>"
+                                    + "<td " + style + ">Periodo:</td>"
+                                    + "<td>" + obj.getId().getNumPeri() + "</td>"
+                                + "</tr>";
+                cuerpo += "</table><br/>";
+
+                style = "style='text-align: right; font-weight: bold; font-size: 12px; padding: 4px'";
+                
+                cuerpo += "<table width=\"400\" border=\"1\" cellpadding=\"5\" cellspacing=\"0\" style=\"border-collapse:collapse;\">"
+                        
+                /*APERTURA CAJA*/                        
+                        + "<tr><td colspan='2' " + stylePrincipal + ">APERTURA CAJA</td></tr>"
+                        + "<tr " + style + "><td>CAJA INICIAL:</td><td> S/." + obj.getNumEfectApertCaja()+ "</td></tr>"
+                        
+                /*EFECTIVO*/
+                        + "<tr><td colspan='2' " + stylePrincipal + ">VENTA EFECTIVO</td></tr>"
+                        + "<tr " + style + "><td>TOTAL EFECTIVO:</td><td> S/." + obj.getNumEfectTotalVentaSiste() + "</td></tr>"                        
+                        + "<tr " + style + "><td>Descuadre:</td><td> S/." + obj.getNumEfectSobraFalta() + "</td></tr>"
+
+                /*TARJETA*/
+                        + "<tr><td colspan='2' " + stylePrincipal + ">VENTA TARJETA</td></tr>"
+                        + "<tr " + style + "><td>TOTAL TARJETA:</td><td> S/." + obj.getNumTarjeTotalSiste()+ "</td></tr>"
+                        + "<tr " + style + "><td>Descuadre:</td><td> S/." + obj.getNumTarjeSobraFalta()+ "</td></tr>"
+                        
+                /*TRANFERENCIA DEPOSITO*/
+                        + "<tr><td colspan='2' " + stylePrincipal + ">VENTA TRANS/DEPOSITO</td></tr>"
+                        + "<tr " + style + "><td>TOTAL TRANS/DEPO:</td><td> S/." + obj.getNumTranDepoTotalSiste()+ "</td></tr>"
+                        
+                /*GASTO EFECTIVO*/  
+                        + "<tr><td colspan='2' " + stylePrincipal + ">GASTOS EFECTIVO</td></tr>"                        
+                        + "<tr " + style + "><td>TOTAL GASTOS:</td><td> S/." + obj.getNumEfectTotalGastoSiste() + "</td></tr>"
+
+                /*TOTAL VENTA*/
+                        + "<tr><td colspan='2' " + stylePrincipaltTotal + ">TOTAL VENTA</td></tr>"
+                        + "<tr " + style + "><td>TOTAL VENTAS(EFECT + TARJ + TRANS/DEPO):</td><td> S/." + obj.getNumEfectTotalVentaSiste().add(obj.getNumTarjeTotalSiste()).add(obj.getNumTranDepoTotalSiste()) + "</td></tr>"
+                
+                /*TOTAL EFECTIVO: VENTA EFECTIVO - GASTO EFECTIVO*/  
+                        + "<tr><td colspan='2' " + stylePrincipaltTotal + ">TOTAL EFECTIVO CAJA</td></tr>" 
+                        + "<tr " + style + "><td>TOTAL EFCTIVO EN CAJA:</td><td> S/." + obj.getNumEfectApertCaja().add(obj.getNumEfectTotalVentaSiste()).subtract(obj.getNumEfectTotalGastoSiste()) + "</td></tr>";
+                
+                cuerpo += "</table><br/>";
+
+                SendEmail email = new SendEmail();
+                email.sendMailSimple(destinatario, asunto, cuerpo);
+
+            UtilClass.addInfoMessage(Constantes.CONS_SUCCESS_EMAIL_MESSAGE);
+            
+        }catch(MessagingException ex){
             UtilClass.addErrorMessage(Constantes.CONS_ERROR_EMAIL_MESSAGE + " Detalle: " + ex.getMessage());
-        }
-        
-        /*Dando formato de objeto*/
-        String result = "{'desSubject':'" + desSubject + "', 'messageBody':'" + messageBody + "'}";
-        return result;
+        }       
+    
     }
     
-    public String viewDetail(ViSiccuaddiario obj){
+    public String obtFormatoEmail(String numEfectTotalVentaSiste
+                                  ,String numEfectTotalGastoSiste) throws CustomizerException, Exception{        
         
-        Flash flash = FacesContext.getCurrentInstance().getExternalContext().getFlash();
-        flash.clear();
-        flash.put("paramExternalPage", "1");
-        flash.put("paramIdPers", obj.getId().getIdPers());
-        flash.put("paramDesPersCajero", obj.getDesPers());
-        flash.put("paramNumPeri", obj.getId().getNumPeri());
-        flash.put("paramTituloPagina", "VER CUADRE DE CAJA: " + obj.getFecApertura().substring(0, 9) );
+        String cuerpo;
         
-        flash.setKeepMessages(true);
+        try{
+                       
+            //METODO AUN SIN UTILIZAR, SERVIRA PARA UNIFICAR UN SOLO FORMATO
+
+            String style = "style='text-align: right; font-weight: bold; font-size: 12px; padding: 4px'";
+            String stylePrincipal = "style='font-weight: bold; font-size: 12px; padding:5px; background-color:" + Constantes.CONS_COD_COLORTABLA + "'";
+            
+            cuerpo = "<table border='1'>"
+                    + "<tr><td colspan='2' " + stylePrincipal + ">EFECTIVO</td></tr>"
+                    + "<tr><td " + style + ">TOTAL EFECTIVO:</td><td>" + this.box.getNumEfectTotalVentaSiste() + "</td></tr>"
+                    + "<tr><td " + style + ">TOTAL GASTO EFECTIVO:</td><td>" + this.box.getNumEfectTotalGastoSiste() + "</td></tr>"
+                    + "<tr><td " + style + ">TOTAL EFECTIVO(EFEC - GAST):</td><td>" + this.desTotalEfectivo + "</td></tr>"
+                    + "<tr><td " + style + ">Descuadre:</td><td> S/." + box.getNumEfectSobraFalta() + "</td></tr>";
+            cuerpo += "</table><br/>";
+
+            /*TARJETA*/
+            cuerpo += "<table border='1'>"
+                    + "<tr><td colspan='2'  " + stylePrincipal + ">TARJETA</td></tr>"
+                    + "<tr><td " + style + ">TOTAL TARJETA:</td><td>" + this.box.getNumTarjeTotalSiste()+ "</td></tr>"
+                    + "<tr><td " + style + ">Descuadre:</td><td> S/." + this.box.getNumTarjeSobraFalta()+ "</td></tr>";
+            cuerpo += "</table><br/>";
+
+            /*TOTAL VENTA*/
+            cuerpo += "<table border='1'>"
+                    + "<tr><td colspan='2' " + stylePrincipal + ">TOTAL VENTA</td></tr>"
+                    + "<tr><td " + style + ">TOTAL VENTA:</td><td>" + (this.box.getNumEfectTotalVentaSiste().doubleValue() + this.box.getNumTarjeTotalSiste().doubleValue()) + "</td></tr>";
+            cuerpo += "</table><br/>";
+
+        }catch(Exception ex ){
+            throw new Exception(ex.getMessage());
+        }
         
-        return "cajaCuadre?faces-redirect=true";
+        return cuerpo;
+    }
+    
+    public String viewDetail(Sic4cuaddiario obj) throws CustomizerException{        
+
+        String desTitulo = "VER CUADRE DE CAJA: " + obj.getFecApertura();
         
+        FacesContext context = FacesContext.getCurrentInstance();
+        CashRegisterController objController = context.getApplication().evaluateExpressionGet(context, "#{cashRegisterController}", CashRegisterController.class);
+        objController.cargarDatosPagina(obj.getId().getNumPeri()
+                                       ,obj.getId().getIdPers()
+                                       ,obj.getSic1usuario().getCodUsuario()
+                                       ,desTitulo
+                                       ,obj.getSic3docuesta().getCodEsta() );
+                
+        return "cajaCuadre?faces-redirect=true";        
         
     }
     
     /*Metodo que es invocado desde la pagina xhtml: <f:metadata>*/
-    public void getParamsExternalPage(ComponentSystemEvent event) throws CustomizerException{
+    //public void getParamsExternalPage(ComponentSystemEvent event) throws CustomizerException{
+    public void cargarDatosPagina( BigDecimal numPeri
+                                  ,BigDecimal idPers
+                                  ,String desPersCajeroLocal
+                                  ,String desTituloPagina
+                                  ,String codEsta) throws CustomizerException{
         
-        if(!FacesContext.getCurrentInstance().isPostback()){
+        //if(!FacesContext.getCurrentInstance().isPostback()){
             
-            Flash flash = FacesContext.getCurrentInstance().getExternalContext().getFlash();        
-            String externalPage     = (String)flash.get("paramExternalPage");
-            String tituloPagina     = (String)flash.get("paramTituloPagina"); 
-            BigDecimal idPers       = (BigDecimal)flash.get("paramIdPers");
-            String desPersCajeroTmp    = (String)flash.get("paramDesPersCajero");
-            BigDecimal numPeri      = (BigDecimal)flash.get("paramNumPeri");
+            //Flash flash = FacesContext.getCurrentInstance().getExternalContext().getFlash();        
+            //String externalPage     = (String)flash.get("paramExternalPage");
+            //String tituloPagina     = (String)flash.get("paramTituloPagina"); 
+            //BigDecimal idPers       = (BigDecimal)flash.get("paramIdPers");
+            //String desPersCajeroTmp    = (String)flash.get("paramDesPersCajero");
+            //BigDecimal numPeri      = (BigDecimal)flash.get("paramNumPeri");
             
-            System.out.println("externalPage: " + externalPage);
-            System.out.println("tituloPagina: " + tituloPagina);
+            //System.out.println("externalPage: " + externalPage);
+            //System.out.println("tituloPagina: " + tituloPagina);
             System.out.println("idPers: " + idPers);
-            System.out.println("desPersCajero: " + desPersCajeroTmp);
+            //System.out.println("desPersCajero: " + desPersCajeroTmp);
             System.out.println("numPeri: " + numPeri);
             
             
-            this.desTituloPagina = tituloPagina;
+            this.desTituloPagina = desTituloPagina;
             
             /*Se evalua si se llama de una pagina externa*/
-            if (externalPage != null && externalPage.equals("1")){
+            if (numPeri.intValue() > 0){
                 
                 this.editFields = false;
-                this.desPersCajero = desPersCajeroTmp;
+                this.desPersCajero = desPersCajeroLocal;
                 
                 /*OBTENER LOS DATOS DE LA CAJA DIARIA QUE SE QUIERE VER SU DETALLE*/
-                if (numPeri != null && numPeri.intValue() > 0 && 
-                    idPers != null && idPers.intValue() > 0){
+                if (idPers != null && idPers.intValue() > 0){
                 
                     CashRegisterServiceImpl service = new CashRegisterServiceImpl();
-                    this.box = service.getById(idPers, numPeri);
+                    if(codEsta!= null && codEsta.equalsIgnoreCase(Constantes.CONS_COD_ESTACERRADO))
+                        this.box = service.obtenerDatosPeriodoCerrado(idPers, numPeri);
+                    else
+                        this.box = service.obtenerDatosApertura(idPers, numPeri);
                     
                     this.calculate();
                     
@@ -539,7 +643,7 @@ public class CashRegisterController implements Serializable{
                 this.desPersCajero = SessionUtils.getUserCompleteName();
                 
                 CashRegisterServiceImpl service = new CashRegisterServiceImpl();
-                this.box = service.getById(SessionUtils.getUserId(), new BigDecimal(UtilClass.getCurrentTime_YYYYMMDD()));
+                this.box = service.obtenerDatosApertura(SessionUtils.getUserId(), new BigDecimal(UtilClass.getCurrentTime_YYYYMMDD()));
 
                 if (box == null)
                     box = new Sic4cuaddiario();
@@ -569,7 +673,7 @@ public class CashRegisterController implements Serializable{
                 if(box.getNumEfectTotalVentaSiste() == null)
                     box.setNumEfectTotalVentaSiste(new BigDecimal(val).setScale(2));
                 
-                box.setNumEfectTotalGastoSiste(new BigDecimal(val).setScale(2));
+                //box.setNumEfectTotalGastoSiste(new BigDecimal(val).setScale(2));
                 box.setNumEfectTotalSistema(box.getNumEfectTotalVentaSiste().setScale(2));
 
                 /*EFECTIVO: SOBRANTE / FALTANTE*/
@@ -587,6 +691,6 @@ public class CashRegisterController implements Serializable{
                 /*TARJETA: SOBRANTE / FALTANTE*/
                 box.setNumTarjeSobraFalta(new BigDecimal(val).setScale(2));
             }
-        }
+        //}
     }
 }

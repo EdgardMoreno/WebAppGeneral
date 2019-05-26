@@ -147,7 +147,7 @@ public class DaoPersonImpl implements Serializable{
                             sp.addParameter(new InParameter("X_ID_ESTACIVIL", Types.INTEGER, intIdEstaCivil));
                             
                             sp.addParameter(new InParameter("COD_EMAIL", Types.VARCHAR, sic1pers.getCodEmail()));
-                            sp.addParameter(new InParameter("DES_DISTRITO", Types.VARCHAR, sic1pers.getDesDistrito()));
+                            sp.addParameter(new InParameter("DES_DIRECCION", Types.VARCHAR, sic1pers.getDesDireccion()));
 
                             sp.addParameter(new InParameter("X_DES_TELFFIJO", Types.VARCHAR, null));
                             sp.addParameter(new InParameter("X_DES_TELFCELU", Types.VARCHAR, sic1pers.getCodNumtele()));
@@ -244,9 +244,18 @@ public class DaoPersonImpl implements Serializable{
     
     public Sic1idenpers getByCodiden(Session session, String codIden) throws Exception{
         
-        Sic1idenpers sic1idenpers = (Sic1idenpers)session.createCriteria(Sic1idenpers.class).add(Restrictions.eq("id.codIden", codIden)).uniqueResult();
-        if (sic1idenpers != null)
-            Hibernate.initialize(sic1idenpers.getSic1pers());
+        Sic1idenpers sic1idenpers = null;
+        try{        
+            Criteria criteria = session.createCriteria(Sic1idenpers.class).add(Restrictions.eq("id.codIden", codIden));                     
+        if(criteria != null){                    
+            sic1idenpers = (Sic1idenpers)criteria.uniqueResult();
+            if (sic1idenpers != null)
+                Hibernate.initialize(sic1idenpers.getSic1pers());
+            }
+        }catch(Exception ex){
+            throw new Exception(ex.getMessage());
+        }
+        
         return sic1idenpers;
     }
     

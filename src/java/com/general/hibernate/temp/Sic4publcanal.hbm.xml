@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 29/08/2018 05:15:19 PM by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+  <class name="com.general.hibernate.temp.Sic4publcanal" optimistic-lock="version" schema="SICDBA" table="SIC4PUBLCANAL">
+    <composite-id class="com.general.hibernate.temp.Sic4publcanalId" name="id">
+      <key-property name="numPeri" type="big_decimal">
+        <column name="NUM_PERI" precision="22" scale="0"/>
+      </key-property>
+      <key-property name="idPublcanal" type="big_decimal">
+        <column name="ID_PUBLCANAL" precision="22" scale="0"/>
+      </key-property>
+    </composite-id>
+    <property name="idPers" type="big_decimal">
+      <column name="ID_PERS" not-null="true" precision="22" scale="0">
+        <comment>Contiene el identificador del usuario que realizó el registro</comment>
+      </column>
+    </property>
+    <property name="fecCreacion" type="timestamp">
+      <column length="7" name="FEC_CREACION"/>
+    </property>
+    <property name="numPuntos" type="big_decimal">
+      <column name="NUM_PUNTOS" precision="22" scale="0">
+        <comment>Contiene la cantidad de puntos relacionados al canal</comment>
+      </column>
+    </property>
+  </class>
+</hibernate-mapping>

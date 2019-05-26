@@ -16,6 +16,8 @@ public class Sic1stipodocu  implements java.io.Serializable {
      private BigDecimal idTipodocu;
      private BigDecimal flgVigencia;
      private BigDecimal idTrolesta;
+     private String codPrefcpe;
+     private String codSunat;
 
     public Sic1stipodocu() {
     }
@@ -76,10 +78,23 @@ public class Sic1stipodocu  implements java.io.Serializable {
     public void setIdTrolesta(BigDecimal idTrolesta) {
         this.idTrolesta = idTrolesta;
     }
+    
+    public String getCodPrefcpe() {
+        return codPrefcpe;
+    }
 
+    public void setCodPrefcpe(String codPrefcpe) {
+        this.codPrefcpe = codPrefcpe;
+    }
 
+    public String getCodSunat() {
+        return codSunat;
+    }
 
-
+    public void setCodSunat(String codSunat) {
+        this.codSunat = codSunat;
+    }   
+    
 }
 
 

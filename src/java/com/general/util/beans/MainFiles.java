@@ -5,6 +5,7 @@
  */
 package com.general.util.beans;
 
+import com.general.a2.service.impl.ComprobantePagoService;
 import com.general.a3.dao.impl.DaoDocuKardexImpl;
 import java.io.File;
 import java.io.FileInputStream;
@@ -29,11 +30,20 @@ public class MainFiles {
      */
     public static void main(String[] args) throws IOException {
         // TODO code application logic here
-        MainFiles obj = new MainFiles();
-        //obj.downloadTemplate();
-        
-        
-        DaoDocuKardexImpl dao = new DaoDocuKardexImpl();
+        try {
+            MainFiles obj = new MainFiles();
+            //obj.downloadTemplate();
+
+            DaoDocuKardexImpl dao = new DaoDocuKardexImpl();
+
+            //Imprimir la factura electronica
+            ComprobantePagoService objService = new ComprobantePagoService();
+            //objService.generarArchivosFacturacion(2247,null,null);
+            objService.listarComprobantesPendienteEnvio(null, null, null);
+            System.out.println("fin");
+        }catch(Exception ex){
+            System.out.println("Error:" + ex.getMessage());
+        }
     }
     
     

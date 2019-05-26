@@ -25,15 +25,14 @@ import javax.mail.internet.MimeMultipart;
  * @author emoreno
  */
 public class SendEmail {
-
-    private String remitente = "ventas.deco.stylos@gmail.com";  //Para la dirección nomcuenta@gmail.com                                
+    
 
     public void sendMailAttachFile(String recipients, String subject, String messageBody, File attachFile) throws MessagingException {
 
         Properties props = System.getProperties();
         props.put("mail.smtp.host", "smtp.gmail.com");  //El servidor SMTP de Google
-        props.put("mail.smtp.user", remitente);
-        props.put("mail.smtp.clave", "emp.deco");    //La clave de la cuenta
+        props.put("mail.smtp.user", Constantes.CONS_DES_EMAIL_REMITENTE);
+        props.put("mail.smtp.clave", Constantes.CONS_DES_EMAIL_REMITENTE_PWD);    //La clave de la cuenta
         props.put("mail.smtp.auth", "true");    //Usar autenticación mediante usuario y clave
         props.put("mail.smtp.starttls.enable", "true"); //Para conectar de manera segura al servidor SMTP
         props.put("mail.smtp.port", "587"); //El puerto SMTP seguro de Google
@@ -42,7 +41,7 @@ public class SendEmail {
         MimeMessage message = new MimeMessage(session);
 
         try {
-            message.setFrom(new InternetAddress(remitente));
+            message.setFrom(new InternetAddress(Constantes.CONS_DES_EMAIL_REMITENTE));
             
             String recipient[]  = recipients.split(";");
             for (int i=0; i < recipient.length; i++){
@@ -66,7 +65,7 @@ public class SendEmail {
             message.setContent(multipart);
             
             Transport transport = session.getTransport("smtp");
-            transport.connect("smtp.gmail.com", remitente, "emp.deco");
+            transport.connect("smtp.gmail.com", Constantes.CONS_DES_EMAIL_REMITENTE, Constantes.CONS_DES_EMAIL_REMITENTE_PWD);
             transport.sendMessage(message, message.getAllRecipients());
             transport.close();
         }
@@ -75,12 +74,12 @@ public class SendEmail {
         }
     }
     
-    public void sendMailSimple(String recipients, String subject, String messageBody) throws MessagingException {
+    public void sendMailSimple(String destinatario, String subject, String messageBody) throws MessagingException {
 
         Properties props = System.getProperties();
         props.put("mail.smtp.host", "smtp.gmail.com");  //El servidor SMTP de Google
-        props.put("mail.smtp.user", remitente);
-        props.put("mail.smtp.clave", "emp.deco");    //La clave de la cuenta
+        props.put("mail.smtp.user", Constantes.CONS_DES_EMAIL_REMITENTE);
+        props.put("mail.smtp.clave", Constantes.CONS_DES_EMAIL_REMITENTE_PWD);    //La clave de la cuenta
         props.put("mail.smtp.auth", "true");    //Usar autenticación mediante usuario y clave
         props.put("mail.smtp.starttls.enable", "true"); //Para conectar de manera segura al servidor SMTP
         props.put("mail.smtp.port", "587"); //El puerto SMTP seguro de Google
@@ -90,9 +89,9 @@ public class SendEmail {
 
         try {
             
-            message.setFrom(new InternetAddress(remitente));
+            message.setFrom(new InternetAddress(Constantes.CONS_DES_EMAIL_REMITENTE));
             
-            String recipient[]  = recipients.split(";");
+            String recipient[]  = destinatario.split(";");
             for (int i=0; i < recipient.length; i++){
                 if (recipient[i].trim().length() > 0)
                     message.addRecipients(Message.RecipientType.TO, recipient[i]);   //Se podrían añadir varios de la misma manera
@@ -102,7 +101,7 @@ public class SendEmail {
             //message.setText(cuerpo);
             message.setContent(messageBody, "text/html");
             Transport transport = session.getTransport("smtp");
-            transport.connect("smtp.gmail.com", remitente, "emp.deco");
+            transport.connect("smtp.gmail.com", Constantes.CONS_DES_EMAIL_REMITENTE, Constantes.CONS_DES_EMAIL_REMITENTE_PWD);
             transport.sendMessage(message, message.getAllRecipients());
             transport.close();
         }
@@ -115,7 +114,7 @@ public class SendEmail {
 
         Properties props = System.getProperties();
         props.put("mail.smtp.host", "smtp.gmail.com");  //El servidor SMTP de Google
-        props.put("mail.smtp.user", remitente);
+        props.put("mail.smtp.user", Constantes.CONS_DES_EMAIL_REMITENTE);
         props.put("mail.smtp.clave", "emp.deco");    //La clave de la cuenta
         props.put("mail.smtp.auth", "true");    //Usar autenticación mediante usuario y clave
         props.put("mail.smtp.starttls.enable", "true"); //Para conectar de manera segura al servidor SMTP
@@ -125,7 +124,7 @@ public class SendEmail {
         MimeMessage message = new MimeMessage(session);
 
         try {
-            message.setFrom(new InternetAddress(remitente));
+            message.setFrom(new InternetAddress(Constantes.CONS_DES_EMAIL_REMITENTE));
             
             String recipient[]  = recipients.split(";");
             for (int i=0; i < recipient.length; i++){
@@ -149,7 +148,7 @@ public class SendEmail {
             message.setContent(multipart);
             
             Transport transport = session.getTransport("smtp");
-            transport.connect("smtp.gmail.com", remitente, "emp.deco");
+            transport.connect("smtp.gmail.com", Constantes.CONS_DES_EMAIL_REMITENTE, Constantes.CONS_DES_EMAIL_REMITENTE_PWD);
             transport.sendMessage(message, message.getAllRecipients());
             transport.close();
         }

@@ -1,0 +1,142 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"      
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"  >
+    
+    <ui:composition template="./WEB-INF/facelets/templates/templatePrincipal.xhtml">
+        
+        <ui:define name="header">
+            
+            <script>
+                
+            </script>
+                   
+        </ui:define>
+        
+        <ui:define name="content">
+                
+                <div class="container">
+                    
+                    <p:growl id="message" showDetail="true" />
+                    
+                    <div class="page-header">
+                        <h3>#{kardexController.desTituloPagina}</h3>
+                    </div>
+                    
+                    <br/>
+                    <div class="row">
+                            
+                        <div class="form-group col-md-2">
+                            <h:outputLabel value="CODIGO PRODUCTO:"/>
+                            <h:inputText id="codProd" autocomplete="off" value="#{kardexController.strCodprod}" styleClass="form-control" />
+                        </div>
+                        
+                        <div class="form-group col-md-2">
+                            <h:outputLabel value="FECHA DESDE:"/>
+                            <h:inputText autocomplete="off" value="#{kardexController.strFecDesde}" styleClass="form-control datepicker"/>
+                        </div>
+
+                        <div class="form-group col-md-2">
+                            <h:outputLabel value="FECHA HASTA:"/>
+                            <h:inputText autocomplete="off" value="#{kardexController.strFecHasta}" styleClass="form-control datepicker"/>
+                        </div>                        
+
+                        <div class="form-group col-md-2">
+                            <label>&nbsp;&nbsp;</label>
+                            <div>
+                                <h:commandButton styleClass="btn btn-primary" value="Buscar" actionListener="#{kardexController.generarRptKardexResumen()}" />
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+
+                        <!-- ********************************** -->
+                        <!-- LISTA DE PERSONAS --> 
+                        <!-- *********************************** -->                        
+                        *Nota: En los TOTALES no se considera las NOTAS DE VENTA.
+                        <p:dataTable                            
+                            id="dtOperaciones" var="item" 
+                            value="#{kardexController.lstKardexResumen}" rows="50" style="margin-bottom:20px"
+                            paginator="true"
+                            paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown} {Exporters}"
+                            rowsPerPageTemplate="50,80">
+
+                            <f:facet name="{Exporters}">
+                                <h:commandLink>
+                                    <p:graphicImage name="/img/excel.png" width="24"/>
+                                    <p:dataExporter type="xls" target="dtOperaciones" fileName="RptOperacionesXProducto" />
+                                </h:commandLink>
+
+                                <h:commandLink>
+                                    <p:graphicImage name="/img/pdf.png" width="24"/>
+                                    <p:dataExporter type="pdf" target="dtOperaciones" fileName="RptOperacionesXProducto"/>
+                                </h:commandLink>
+
+                            </f:facet>
+
+                            <p:column headerText="No." width="18">
+                                <h:outputText value="#{kardexController.lstKardexResumen.indexOf(item) + 1}" />
+                            </p:column>
+                            
+                            <p:column headerText="COD. PROD." width="90">
+                                <h:commandLink value="#{item.detPurchase.sic1prod.codProd}" action="#{kardexController.obtMovimientosProducto(item.detPurchase.sic1prod.codProd)}"/>
+                            </p:column>
+
+                            <p:column headerText="TIPO PROD." width="120" style="text-align: center">
+                                <h:outputText value="#{item.detPurchase.sic1prod.desStipoprod}" />
+                            </p:column>
+                            
+                            <p:column headerText="DES. PRODUCTO">
+                                <h:outputText value="#{item.detPurchase.sic1prod.desProd}" />
+                            </p:column>
+
+                            <p:column headerText="CANTIDAD COMPRADA (EMR)" width="90" style="text-align: center">
+                                <h:outputText value="#{item.detPurchase.numCantidad}" />
+                            </p:column>
+                            
+                            <p:column headerText="CANTIDAD COMPRADA (EMZA)" width="90" style="text-align: center">
+                                <h:outputText value="#{item.detPurchase.numCantidadEMZA}" />
+                            </p:column>
+
+                            <p:column headerText="UTL. OPER. (COMPRA)" width="90" style="text-align: center">
+                                <h:outputText value="#{item.detPurchase.id.fecDesde}" />
+                            </p:column>
+
+                            <p:column headerText="CANTIDAD VENDIDA" width="90" style="text-align: center">
+                                <h:outputText value="#{item.detSale.numCantidad}" />
+                            </p:column>
+
+                            <p:column headerText="UTL. OPER. (VENTA)" width="90" style="text-align: center">
+                                <h:outputText value="#{item.detSale.id.fecDesde}" />
+                            </p:column>
+
+                            <p:column headerText="STOCK (EMR)" width="80" style="text-align: center">
+                                <h:outputText value="#{item.detPurchase.numCantidad - item.detSale.numCantidad}" />
+                            </p:column>
+
+                            <p:column headerText="STOCK CALCULADO" width="90" style="text-align: center">
+                                <h:outputText value="#{(item.detPurchase.numCantidad + item.detPurchase.numCantidadEMZA) - item.detSale.numCantidad}" />
+                            </p:column>
+
+                            <p:column headerText="STOCK SISTEMA" width="75" style="color: blue; text-align: center">
+                                <h:outputText value="#{item.detPurchase.sic1prod.numCantstock}" />
+                            </p:column>
+
+                            <f:facet name="paginatorTopLeft">
+                                <p:commandButton type="button" icon="fa fa-sync" />
+                            </f:facet>
+
+                            <f:facet name="paginatorBottomRight">
+                                <p:commandButton type="button" icon="fa fa-cloud-upload" />
+                            </f:facet>
+                        </p:dataTable>
+                        
+                    </div>                    
+                </div>
+        </ui:define>
+    </ui:composition>
+</html>

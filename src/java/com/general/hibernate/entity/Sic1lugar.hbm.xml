@@ -30,6 +30,11 @@
         <comment>Descripcion de la Direccion sin codigo HTML (Solo Aplica para las Salas)</comment>
       </column>
     </property>
+    <property name="codSerie" type="string">
+      <column length="30" name="COD_SERIE">
+        <comment>Codigo que se utilizará en la SERIE del comprobante de pago, para distinguir de que sucursal fue generado.</comment>
+      </column>
+    </property>    
     <one-to-one class="com.general.hibernate.entity.Sic1lugardire" name="sic1lugardireByIdLugar"/>
     <set fetch="select" inverse="true" lazy="true" name="sic3lugarperses" table="SIC3LUGARPERS">
       <key>

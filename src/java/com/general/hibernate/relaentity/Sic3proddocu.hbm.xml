@@ -14,7 +14,7 @@
       <key-property name="idTrelaprod" type="big_decimal">
         <column name="ID_TRELAPROD" precision="22" scale="0"/>
       </key-property>
-      <key-property name="fecDesde" type="date">
+      <key-property name="fecDesde" type="timestamp">
         <column length="7" name="FEC_DESDE"/>
       </key-property>
     </composite-id>

@@ -18,6 +18,11 @@
         <comment>Contiene un valor constante que permite localizar a un producto(Codigo de Autorizacion).</comment>
       </column>
     </property>
+    <property name="codProdint" type="string">
+      <column length="250" name="COD_PRODINT" not-null="true" unique="true">
+        <comment>Contiene el codigo interno del producto</comment>
+      </column>
+    </property>
     <property name="desProdcome" type="string">
       <column length="4000" name="DES_PRODCOME">
         <comment>Contiene la descripci?n comercial del producto.</comment>

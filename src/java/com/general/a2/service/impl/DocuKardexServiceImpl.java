@@ -12,7 +12,9 @@ import com.general.hibernate.entity.Sic1idendocu;
 import com.general.hibernate.relaentity.Sic3docuesta;
 import com.general.hibernate.relaentity.Sic3docuestaId;
 import com.general.hibernate.entity.Sic1docukardex;
+import com.general.hibernate.relaentity.Sic3docuprod;
 import com.general.util.beans.Constantes;
+import com.general.util.beans.Reporte;
 import com.general.util.dao.DaoFuncionesUtil;
 import com.general.util.exceptions.CustomizerException;
 import com.general.util.exceptions.ValidationException;
@@ -57,7 +59,7 @@ public class DocuKardexServiceImpl implements Serializable{
                 
                 BigDecimal intIdSClaseEven = DaoFuncionesUtil.FNC_SICOBTIDGEN(((SessionImpl) session).connection()
                                                                                 , Constantes.CONS_COD_SCLASEEVEN
-                                                                                , sic1idendocu.getSic1docu().getCodSclaseeven());
+                                                                                , sic1idendocu.getSic1docu().getSic1sclaseeven().getCodSclaseeven());
                 
                 BigDecimal intIdTRolEsta  = DaoFuncionesUtil.FNC_SICOBTIDGEN(((SessionImpl) session).connection()
                                                                                 , Constantes.CONS_COD_TIPOROLESTA
@@ -147,5 +149,17 @@ public class DocuKardexServiceImpl implements Serializable{
             session.close();
         }  
         return list;
+    }
+    
+    
+    /** REPORTE KARDEX RESUMEN: Lista todas la entradas y salidas de los productos
+     * @param objDocuprod: Recibe los parametros de Producto y Documento
+     * @return 
+     * @throws java.lang.Exception 
+     */
+    public List<Reporte> obtKardexResumen(Sic3docuprod objDocuprod) throws Exception{
+        
+        DaoDocuKardexImpl objDao = new DaoDocuKardexImpl();
+        return objDao.obtKardexResumen(objDocuprod);
     }
 }

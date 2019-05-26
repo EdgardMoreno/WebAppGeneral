@@ -42,6 +42,9 @@
       <column name="NUM_CANTSTOCK" precision="5">
         <comment>Indica la cantidad Final en el periodo correspondiente</comment>
       </column>
+    </property>    
+    <property name="idSucursal" type="integer">
+      <column name="ID_SUCURSAL" precision="5" scale="0"/>
     </property>
   </class>
 </hibernate-mapping>

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 21/03/2018 05:22:13 PM by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+  <class name="com.general.hibernate.entity.Sic1sclaseeven" optimistic-lock="version" schema="SICDBA" table="SIC1SCLASEEVEN">
+    <comment>Contiene la sub clase de evento: AUTORIZACION DE REGISTRO DE COMERCIALIZADORES RENOVACION DE REGISTRO DE COMERCIALIZADORES MODIFICACION DE REGISTRO DE
+        COMERCIALIZADORES MODEL: APPLICATION_CLASS</comment>
+    <id name="idSclaseeven" type="big_decimal">
+      <column name="ID_SCLASEEVEN" precision="22" scale="0"/>
+      <generator class="assigned"/>
+    </id>
+    <property name="desSclaseeven" type="string">
+      <column length="1000" name="DES_SCLASEEVEN">
+        <comment>Contiene la descripci?n de la sub clase del evento.</comment>
+      </column>
+    </property>
+    <property name="codSclaseeven" type="string">
+      <column length="250" name="COD_SCLASEEVEN" not-null="true" unique="true">
+        <comment>Contiene un valor constante que permite localizar a una sub clase de evento.</comment>
+      </column>
+    </property>
+    <property name="idClaseeven" type="big_decimal">
+      <column name="ID_CLASEEVEN" precision="22" scale="0">
+        <comment>Contiene el identificador de la clase de evento.</comment>
+      </column>
+    </property>
+    <property name="desNotas" type="string">
+      <column length="4000" name="DES_NOTAS">
+        <comment>Contiene las notas generadas producto de la relaci?n.</comment>
+      </column>
+    </property>
+  </class>
+</hibernate-mapping>

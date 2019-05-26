@@ -13,6 +13,7 @@ public class ViSicprod  implements java.io.Serializable {
     private BigDecimal idProd;
      private String codIden;
      private String codProd;
+     private String codProdint;
      private String desProd;
      private String desProdcome;
      private BigDecimal idStipoprod;
@@ -180,6 +181,17 @@ public class ViSicprod  implements java.io.Serializable {
         this.desPersrelaproveedores = desPersrelaproveedores;
     }
 
+    public String getCodProdint() {
+        return codProdint;
+    }
+
+    public void setCodProdint(String codProdint) {
+        this.codProdint = codProdint;
+    }
+    
+    
+    
+    
     public boolean equals(Object other) {
          if ( (this == other ) ) return true;
 		 if ( (other == null ) ) return false;

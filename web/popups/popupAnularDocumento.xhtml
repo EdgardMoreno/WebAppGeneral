@@ -1,0 +1,181 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:h="http://xmlns.jcp.org/jsf/html"
+    xmlns:f="http://xmlns.jcp.org/jsf/core"
+    xmlns:p="http://primefaces.org/ui" >
+
+    <f:metadata>
+        <f:viewParam name="paramIdDocu" value="#{documentController.paramPageIdDocu}"/>
+        <f:event type="preRenderView" listener="#{documentController.getParamsExternalPageAnularDocumento}"/>
+
+    </f:metadata>
+
+    <h:head>
+        <title>Registrar Persona</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <meta charset="utf-8"/>
+
+        <!--CSS STYLE -->        
+        <h:outputStylesheet name="/css/bootstrap.min.css"/>
+        <h:outputStylesheet name="/css/customizer.css"/>
+        <h:outputStylesheet name="/css/jquery-confirm-3.3.css"/>        
+
+        <!--JQUERY-->
+        <script src="#{request.contextPath}/faces/resources/js/jquery-3.2.1.min.js"></script>
+        <script src="#{request.contextPath}/faces/resources/js/customizerJS.js"></script>
+        <script src="#{request.contextPath}/faces/resources/js/jquery-ui.js" />
+
+        <script src="#{request.contextPath}/faces/resources/js/bootstrap.min.js"></script>
+        <script src="#{request.contextPath}/faces/resources/js/jquery-confirm-3.3.js"></script>
+
+        <style>
+
+            .panelIngresoDatosOrden {
+                position:relative;
+                float:left;
+                /*border: 1px solid black;*/
+                width: 71%;
+            }
+                     
+
+            .style_label{text-align: right; font-weight: bold; font-size: 12px; padding: 3px; width: 150px; }
+            .style_content{text-align: left; font-size: 13px; padding: 3px }            
+
+
+
+        </style>
+        
+        <script>
+            function fnValidateForm() {
+                
+                var motivo = document.getElementById("form:idMotivo").value;                
+                var flgError = false;                
+                var arrMessages = [];
+               
+                if (motivo.length == 0) {
+                    arrMessages.push("Se debe ingresar el motivo.");
+                    flgError = true;
+                }
+                
+                if (motivo.length >= 4000) {
+                    arrMessages.push("El texto no puede contener mas de 4000 caracteres.");
+                    flgError = true;
+                }
+
+                //IMPRIMIR RESULTADO
+                if (flgError == true) {
+                    fnShowMessageValidation(arrMessages);
+                    return false;
+                } else {
+                    fnHideMessageValidation();
+                    //fnShowDialogConfirm("form\\:btnGrabar", "" ); // -> Se pasa como parametro el ID del boton que tiene el metodo actionListener
+                    $("#form\\:btnGrabar").click()
+                    return false;
+                }
+            };
+            
+            /*Función que se ejecuta durante el ciclo de vida de la llamada AJAX.
+             *Cierra el IFRAME*/
+            function fnAjaxListenAnularDocumento(data) {
+
+                switch (data.status) {
+                    case "success":                        
+                        var idDocu = $("#form\\:idDocu").val();
+                        if (Number(idDocu) > 0) {
+                            parent.$.fancybox.close();
+                            parent.fnCloseIFrame_fromAnularDocumento();
+                        }
+                        break;
+                    }
+            }
+            
+            
+        </script>
+
+        
+    </h:head>
+    <h:body>
+
+        <div class="container">
+
+            <div id="divResultadoValidacion"></div>
+
+            <h:form id="form">
+
+                <p:growl id="message" showDetail="true" />
+
+                <div class="page-header" >
+                    <h3>ANULAR: ${documentController.sic1docu.numDocuunido}</h3>
+                    <big style="color: blue">IMPORTANTE: Para ANULAR el comprobante, este no debe haber sido entregado al Cliente.</big>
+                </div>
+
+                <!-- ****************************************************************************** -->
+                <!-- PANEL PARA INGRESO DE DATOS DE LA ORDEN -->
+                <!-- ****************************************************************************** -->
+
+                <div class="panelIngresoDatosOrden">
+
+                    <table>
+                       
+                        <tr>                        
+                            <td class="style_label">Operación.:</td>
+                            <td class="style_content">${documentController.sic1docu.sic1sclaseeven.desSclaseeven}</td>
+                        </tr>
+                        <tr>                        
+                            <td class="style_label">Tipo Docu.:</td>
+                            <td class="style_content">${documentController.sic1docu.sic1stipodocu.desStipodocu}</td>
+                        </tr>
+                        <tr>                        
+                            <td class="style_label">N° Comprobante:</td>
+                            <td class="style_content">${documentController.sic1docu.codSerie} - ${documentController.sic1docu.numDocu}</td>
+                        </tr>
+                        <tr>                        
+                            <td class="style_label">Fecha:</td>
+                            <td class="style_content">${documentController.sic1docu.fecDesde}</td>
+                        </tr>
+                        <tr>
+                            <td class="style_label">DNI/RUC:</td>
+                            <td class="style_content">#{documentController.sic1idenpersId.codIden}</td>
+                        </tr>
+                        <tr>    
+                            <td class="style_label">Nombre/R.Social:</td>
+                            <td class="style_content">#{documentController.sic1pers.desPers}</td>
+                        </tr>
+                        <tr>
+                            <td class="style_label">
+                                <h:outputLabel value="Motivo:"/>
+                            </td>
+                            <td colspan="2"  class="style_content">
+                                <h:inputTextarea id="idMotivo"                                                 
+                                                 rows="6"
+                                                 cols="35"
+                                                 value="#{documentController.desMotivoAnulacion}" />
+                            </td>
+                        </tr>
+                    </table>                
+                
+                    <h:outputLabel value="idDocu:" styleClass="ocultarObjeto"/>
+                    <h:inputText id="idDocu" value="#{documentController.paramPageIdDocu}" styleClass="ocultarObjeto"/>
+
+                    <!-- ****************************************************************************** -->
+                    <!-- GRABAR -->
+                    <!-- ****************************************************************************** -->
+                    <br/>
+                    <div >
+                        <input type="button" id="btnConfirm" value="Anular" class="btn btn-danger" onclick="return fnValidateForm()"/>
+                        <input type="button" value="Cerrar" class="btn btn-primary" onclick="parent.$.fancybox.close();"/>
+                    </div>
+                
+                </div>
+
+                 <h:commandButton id="btnGrabar" style="display: none">
+                    <f:ajax execute="form" render="message idDocu:" listener="#{documentController.anularDocumento()}" onevent="fnAjaxListenAnularDocumento"/>
+                </h:commandButton>
+
+            </h:form>
+        </div> 
+    </h:body>
+</html>

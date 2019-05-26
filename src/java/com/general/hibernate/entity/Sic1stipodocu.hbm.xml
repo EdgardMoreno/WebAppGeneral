@@ -36,6 +36,17 @@
       <column name="ID_TROLESTA" precision="22" scale="0">
         <comment>Identificador del esquema de estados que utilizara el documento de este tipo</comment>
       </column>
+    </property>    
+    <property name="codPrefcpe" type="string">
+      <column length="5" name="COD_PREFCPE">
+        <comment>Prefijo utilizado para serie en comprobantes electronicos.</comment>
+      </column>
     </property>
+    <property name="codSunat" type="string">
+      <column length="50" name="COD_SUNAT">
+        <comment>Codigo que maneja SUNAT segun el comprobante de pago.</comment>
+      </column>
+    </property>
+    
   </class>
 </hibernate-mapping>

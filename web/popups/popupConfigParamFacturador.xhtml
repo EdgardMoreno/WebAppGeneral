@@ -1,0 +1,88 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:h="http://xmlns.jcp.org/jsf/html"
+    xmlns:f="http://xmlns.jcp.org/jsf/core"
+    xmlns:p="http://primefaces.org/ui" >
+    
+    <f:metadata>        
+        <f:event type="preRenderView" listener="#{reporteSunatController.cargarParametrosConfFacturador}"/>
+        
+    </f:metadata>
+    
+    <h:head>
+        <title>Configurar parametros Facturador SFS</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <meta charset="utf-8"/>
+
+        <!--CSS STYLE -->        
+        <h:outputStylesheet name="/css/bootstrap.min.css"/>
+        <h:outputStylesheet name="/css/customizer.css"/>
+        <h:outputStylesheet name="/css/jquery-confirm-3.3.css"/>        
+
+        <!--JQUERY-->
+        <script src="#{request.contextPath}/faces/resources/js/jquery-3.2.1.min.js"></script>
+        <script src="#{request.contextPath}/faces/resources/js/customizerJS.js"></script>
+        <script src="#{request.contextPath}/faces/resources/js/jquery-ui.js" />
+        
+        <script src="#{request.contextPath}/faces/resources/js/bootstrap.min.js"></script>
+        <script src="#{request.contextPath}/faces/resources/js/jquery-confirm-3.3.js"></script>
+
+
+    </h:head>
+    <h:body>
+
+        <div class="container">
+
+            <div id="divResultadoValidacion"></div>
+
+            <h:form id="form">
+
+                <p:growl id="message" showDetail="true" />
+
+                <div class="container">
+
+                    <div class="page-header" style="text-align: center" >
+                        <img src="#{request.contextPath}/faces/resources/img/sunat.jpg" />
+                        <h3>Configurar Parámetros Facturación</h3>
+                    </div>
+
+                    <br/>                   
+                    
+                    <p:dataTable                            
+                        id="dtConfiguracion" var="item" 
+                        value="#{reporteSunatController.lstConfFacturador}" style="margin-bottom:20px">                        
+
+                        <p:column headerText="Parametro" width="50">
+                            <h:outputText value="#{item.desGeneral}" />
+                        </p:column>
+
+                        <p:column headerText="Valor" width="150">
+                            <h:inputText disabled="#{!reporteSunatController.flgRolAdmin}" autocomplete="off" value="#{item.desValor}" style="width:360px"/>                                        
+                        </p:column>                        
+                        
+                    </p:dataTable>   
+                    
+                    
+                    <br/>
+                    <div class="offset-sm-2 col-sm-10">
+                        <h:commandButton id="btnGrabar" class="btn btn-danger" value="Grabar" rendered="#{reporteSunatController.flgRolAdmin}" >
+                            <f:ajax execute="form" render="message dtConfiguracion" listener="#{reporteSunatController.grabarParametros()}"/>
+                        </h:commandButton>
+                        <input type="button" id="btnConfirm" value="Cerrar" class="btn btn-primary" onclick="parent.$.fancybox.close();"/>
+                    </div>
+                
+                
+                </div>                
+                
+
+                
+
+            </h:form>
+
+        </div> 
+
+    </h:body>
+</html>
