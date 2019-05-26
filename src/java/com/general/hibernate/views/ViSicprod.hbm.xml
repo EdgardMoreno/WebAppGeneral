@@ -13,6 +13,9 @@
       <property name="codProd" type="string">
         <column length="250" name="COD_PROD"/>
       </property>
+      <property name="codProdint" type="string">
+        <column length="250" name="COD_PRODINT"/>
+      </property>
       <property name="desProd" type="string">
         <column length="4000" name="DES_PROD"/>
       </property>

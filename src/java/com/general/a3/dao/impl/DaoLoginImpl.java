@@ -7,8 +7,10 @@ package com.general.a3.dao.impl;
 
 import com.general.hibernate.entity.Sic1idenpers;
 import com.general.hibernate.entity.Sic1usuario;
+import com.general.hibernate.entity.Sic7persrol;
 import com.general.util.beans.UtilClass;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 import org.hibernate.Criteria;
 import org.hibernate.Query;
@@ -72,14 +74,22 @@ public class DaoLoginImpl implements Serializable{
             
             List<Object[]> rows = query.list();
             
+            List<Sic7persrol> lstRoles = new ArrayList<>();
             for(Object[] row : rows){
                 
                 System.out.println("COD_TROLPERS: " + row[0].toString());
                 System.out.println("COD_ESTACAJA: " + (String)row[1]);
                 
-                sic1usuario.setCodTrolpers(row[0].toString());
-                sic1usuario.setCodEstacaja((String)row[1]);                
+                Sic7persrol objRol = new Sic7persrol();
+                objRol.setCodTrolpers(row[0].toString());
+                //sic1usuario.setCodTrolpers(row[0].toString());
+                sic1usuario.setCodEstacaja((String)row[1]);
+                
+                lstRoles.add(objRol);               
+                
             }
+            
+            sic1usuario.setLstSic7persrol(lstRoles);
         }
         return sic1usuario;
     }

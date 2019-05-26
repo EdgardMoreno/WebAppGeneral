@@ -10,9 +10,11 @@ import java.util.Date;
 public class Sic3docuesta  implements java.io.Serializable {
 
 
-     private Sic3docuestaId id;
-     private Date fecHasta;
-     private String desNotas;
+    private Sic3docuestaId id;
+    private Date fecHasta;
+    private String desNotas;
+    private String desEsta;
+    private String codEsta;
 
     public Sic3docuesta() {
     }
@@ -47,6 +49,22 @@ public class Sic3docuesta  implements java.io.Serializable {
     
     public void setDesNotas(String desNotas) {
         this.desNotas = desNotas;
+    }
+
+    public String getDesEsta() {
+        return desEsta;
+    }
+
+    public void setDesEsta(String desEsta) {
+        this.desEsta = desEsta;
+    }
+
+    public String getCodEsta() {
+        return codEsta;
+    }
+
+    public void setCodEsta(String codEsta) {
+        this.codEsta = codEsta;
     }
 
 

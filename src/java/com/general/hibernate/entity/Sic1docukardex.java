@@ -17,7 +17,8 @@ public class Sic1docukardex  implements java.io.Serializable {
      private BigDecimal numCantini;
      private BigDecimal numCantingr;
      private BigDecimal numCantsali;
-     private BigDecimal numCantstock;     
+     private BigDecimal numCantstock;   
+     private Integer idSucursal;
      
      /*Agregado*/
      private Sic1prod sic1prod;
@@ -97,6 +98,16 @@ public class Sic1docukardex  implements java.io.Serializable {
     public void setNumCantstockusu(BigDecimal numCantstockusu) {
         this.numCantstockusu = numCantstockusu;
     }
+
+    public Integer getIdSucursal() {
+        return idSucursal;
+    }
+
+    public void setIdSucursal(Integer idSucursal) {
+        this.idSucursal = idSucursal;
+    }
+    
+    
 }
 
 

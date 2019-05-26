@@ -40,8 +40,8 @@
       </column>
     </property>
     
-    <property name="desDistrito" type="string">
-      <column length="70" name="DES_DISTRITO">
+    <property name="desDireccion" type="string">
+      <column length="2000" name="DES_DIRECCION">
       </column>
     </property>
     

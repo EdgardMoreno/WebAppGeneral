@@ -1,0 +1,224 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"      
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets" >
+    
+
+    <ui:composition template="./WEB-INF/facelets/templates/templatePrincipal.xhtml">
+
+        <ui:define name="header">
+
+            <script>
+
+
+            </script>
+        </ui:define>
+
+        <ui:define name="content">
+
+            <div class="container"> 
+
+                <div id="divResultadoValidacion"></div>
+
+                <p:growl id="message" showDetail="true" />
+
+                    <!-- You can switch ' data-color="green" '  with one of the next bright colors: "blue", "green", "orange", "red"          -->
+                    
+                     <div class="page-header" >
+                         <h3>#{documentController.desTituloPagina}</h3>
+                        <big>A partir de otro documento</big>
+                    </div>
+
+                    
+                    <br/>
+                    <div class="row" style="margin-left: 5px">
+                        <div class="form-group col-md-2">
+                            <h:outputLabel value="Nro. Documento:"/>
+                            <h:inputText id="nroNotaPedido" styleClass="form-control" autocomplete="off"
+                                         value="#{documentController.numDocu}" />
+                        </div>                                                
+
+                        <div class="form-group col-md-2">
+                            <label>&nbsp;&nbsp;</label>
+                            <div>
+                                <h:commandButton styleClass="btn btn-primary" value="Buscar" actionListener="#{documentController.buscarOrdenes()}">                                        
+                                </h:commandButton>
+                            </div>
+                        </div>
+                    </div>
+                    
+              
+
+                <div class="row" style="margin-left: 5px">
+
+                    <!-- ********************************** -->
+                    <!-- LISTA DE ORDENES DE COMPRA --> 
+                    <!-- *********************************** -->                                               
+                    <p:dataTable
+                        id="dtDocumentos" var="item" 
+                        value="#{documentController.lstViSicdocus}" rows="10" style="margin-bottom:20px; width:98%"
+                        rendered="#{!empty documentController.lstViSicdocus}"
+                        paginator="true"
+                        paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                        rowsPerPageTemplate="10,20">                                                        
+
+                        <p:column headerText="No." width="20" style="padding: 1px;text-align: center">
+                            <h:outputText value="#{documentController.lstViSicdocus.indexOf(item) + 1}" />
+                        </p:column>                            
+
+                        <p:column headerText="Tipo Documento" width="100">
+                            <h:outputText value="#{item.desStipodocu}" />
+                        </p:column>
+
+                        <p:column headerText="Nro. Documento" width="110" style="color: blue; text-align: center">
+                            <h:outputLabel value="#{item.codSerie}-#{item.numDocu}" />
+                        </p:column>
+
+                        <p:column headerText="Fecha Registro" width="90">
+                            <h:outputText value="#{item.fecDesde}" />
+                        </p:column>
+
+                        <p:column headerText="Razón Social" >
+                            <h:outputText value="#{item.desPersClieprov}" />
+                        </p:column>
+
+                        <p:column headerText="Total" width="70" style="text-align: right">
+                            <h:outputText value="S/.#{item.numMtototal}" />
+                        </p:column>
+
+                        <p:column headerText="Estado" width="100" style="text-align: center">
+                            <h:outputText value="#{item.desEstadocu}" />
+                        </p:column>
+
+                        <p:column headerText="Sucursal" width="100" style="text-align: center">
+                            <h:outputText value="#{item.desSucursal}" />
+                        </p:column>
+
+                        <p:column headerText="" width="100">
+                            <h:commandButton value="Seleccionar" styleClass="btn btn-info" actionListener="#{documentController.seleccionarOrdenCompra(item)}" >
+                            </h:commandButton>
+                        </p:column>
+
+                        <f:facet name="paginatorTopLeft">
+                            <p:commandButton type="button" icon="fa fa-sync" />
+                        </f:facet>
+
+                        <f:facet name="paginatorBottomRight">
+                            <p:commandButton type="button" icon="fa fa-cloud-upload" />
+                        </f:facet>
+                    </p:dataTable>
+                </div>
+                
+                
+                
+                <div class="row" style="margin-left: 5px">
+
+                    <!-- ********************************** -->
+                    <!-- DOCUMENTO SELECCIONADO --> 
+                    <!-- *********************************** -->                                           
+                    
+
+                    <h:panelGroup rendered="#{!empty documentController.lstViSicdocusTmp}">
+                        
+                        <h3>
+                            Detalle de la Orden:<br/>
+                        </h3>
+                    
+                        <p:dataTable                                                        
+                            id="dtDocumentoSelec" var="item" 
+                            value="#{documentController.lstViSicdocusTmp}" style="margin-bottom:20px; width:85%">                                                        
+
+                            <p:column headerText="No." width="25" style="padding: 1px;text-align: center">
+                                <h:outputText value="#{documentController.lstViSicdocusTmp.indexOf(item) + 1}" />
+                            </p:column>                            
+
+                            <p:column headerText="Tipo Documento" width="180">
+                                <h:outputText value="#{item.desStipodocu}" />
+                            </p:column>
+
+                            <p:column headerText="Nro. Documento" width="110" style="color: blue;font-size: 14px">
+                                <h:outputLabel value="#{item.codSerie}-#{item.numDocu}" />
+                            </p:column>
+
+                            <p:column headerText="Fecha Registro" width="90">
+                                <h:outputText value="#{item.fecDesde}" />
+                            </p:column>
+
+                            <p:column headerText="Razón Social" >
+                                <h:outputText value="#{item.desPersClieprov}" />
+                            </p:column>
+
+                            <p:column headerText="Total" width="75" style="text-align: right">
+                                <h:outputText value="S/.#{item.numMtototal}" />
+                            </p:column>
+
+                            <p:column headerText="Estado" width="100" style="text-align: center">
+                                <h:outputText value="#{item.desEstadocu}" />
+                            </p:column>
+
+                            <p:column headerText="Sucursal" width="180" style="text-align: center">
+                                <h:outputText value="#{item.desSucursal}" />
+                            </p:column>                        
+                        </p:dataTable>
+
+
+                        <h3>
+                            Productos relacionados:<br/>
+                        </h3>
+                        
+                        <p:dataTable                                                        
+                            id="dtProductos" var="item" 
+                            value="#{documentController.lstProducts}" style="margin-bottom:20px; width:70%">                                                        
+
+                            <p:column headerText="No." width="25" style="padding: 1px;text-align: center">
+                                <h:outputText value="#{documentController.lstProducts.indexOf(item) + 1}" />
+                            </p:column>                            
+
+                            <p:column width="25" style="text-align: center">
+                                <h:selectBooleanCheckbox disabled="true" value="#{item.flgSeleccionado}" />
+                            </p:column>
+                            
+                            <p:column headerText="Código" width="110" style="color: blue;font-size: 14px">
+                                <h:outputLabel value="#{item.sic1prod.codProd}" />
+                            </p:column>
+
+                            <p:column headerText="Descripción" >
+                                <h:outputText value="#{item.sic1prod.desProd}" />
+                            </p:column>
+
+                            <p:column headerText="Precio" width="90" style="text-align: right">
+                                <h:outputText value="S/.#{item.numValor}" />
+                            </p:column>
+
+                            <p:column headerText="Descuento" width="90" style="text-align: right">
+                                <h:outputText value="#{item.numMtodscto}" />
+                            </p:column>
+
+                            <p:column headerText="Cantidad" width="75" style="text-align: center">
+                                <h:outputText value="#{item.numCantidad}" />
+                            </p:column>
+
+                            <p:column headerText="Total" width="90" style="text-align: right">
+                                <h:outputText value="S/.#{item.numValor * item.numCantidad}" />
+                            </p:column>
+
+                        </p:dataTable>
+                        
+                        <h:commandButton value="Siguiente &raquo;" styleClass="btn btn-success" action="#{documentController.crearCompraDesdeOC()}" >
+                        </h:commandButton>
+                        
+                    </h:panelGroup>
+                    
+                    
+                   
+                    
+                </div>
+
+            </div> 
+
+        </ui:define>
+    </ui:composition>
+</html>

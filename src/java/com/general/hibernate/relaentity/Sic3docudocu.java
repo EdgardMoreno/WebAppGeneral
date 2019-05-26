@@ -2,6 +2,7 @@ package com.general.hibernate.relaentity;
 // Generated 21/12/2017 04:19:00 PM by Hibernate Tools 4.3.1
 
 
+import com.general.hibernate.entity.Sic1docu;
 import java.util.Date;
 
 /**
@@ -13,6 +14,9 @@ public class Sic3docudocu  implements java.io.Serializable {
      private Sic3docudocuId id;
      private Date fecHasta;
      private String desNotas;
+     
+     /*Agregado*/
+     private Sic1docu sic1docurel;
 
     public Sic3docudocu() {
     }
@@ -49,7 +53,15 @@ public class Sic3docudocu  implements java.io.Serializable {
         this.desNotas = desNotas;
     }
 
+    public Sic1docu getSic1docurel() {
+        return sic1docurel;
+    }
 
+    public void setSic1docurel(Sic1docu sic1docurel) {
+        this.sic1docurel = sic1docurel;
+    }
+
+    
 
 
 }

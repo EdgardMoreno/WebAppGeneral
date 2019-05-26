@@ -43,26 +43,7 @@ public class DocuCashBox implements Serializable, DocumentService{
     public String relateDocuDocu(Sic3docudocu obj) throws ValidationException, CustomizerException {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
-
-    @Override
-    public String relateDocuEsta(Sic3docuesta obj) throws ValidationException, CustomizerException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public String relateDocuPers(List<Sic3docupers> list) throws ValidationException, CustomizerException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public Sic1idendocu getById(BigDecimal id) throws ValidationException, CustomizerException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public Sic1idendocu getByCodIden(String cod) throws ValidationException, CustomizerException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
+   
 
     @Override
     public List<ViSicdocu> listViSicdocu(ViSicdocu obj) throws ValidationException, CustomizerException {

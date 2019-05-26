@@ -2,6 +2,7 @@ package com.general.hibernate.entity;
 // Generated 28/11/2017 03:53:55 PM by Hibernate Tools 4.3.1
 
 
+import com.general.hibernate.relaentity.Sic3proddocu;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.HashSet;
@@ -16,18 +17,24 @@ public class Sic1prod  implements java.io.Serializable {
      private BigDecimal idProd;
      private String desProd;
      private String codProd;
+     private String codProdint;
      private String desProdcome;
      private BigDecimal idStipoprod;
      private String codIden;
      private Date fecDesde;
      private Date fecHasta;
      private BigDecimal numPrecio;
+     private BigDecimal numCantstock;
+     
      private Set sic3proddocus = new HashSet(0);
      
      private Sic1pers sic1pers;
      private BigDecimal numCantidad;
      private String desFecRegistro;
-     private String desStipoprod;
+//     private String codStipoprod;
+//     private String desStipoprod;
+     private Sic3proddocu sic3proddocu;
+     private Sic1general sic1stipoprod;
      
     
 
@@ -69,7 +76,15 @@ public class Sic1prod  implements java.io.Serializable {
     public String getCodProd() {
         return this.codProd;
     }
-    
+
+    public String getCodProdint() {
+        return codProdint;
+    }
+
+    public void setCodProdint(String codProdint) {
+        this.codProdint = codProdint;
+    }
+       
     public void setCodProd(String codProd) {
         this.codProd = codProd;
     }
@@ -145,15 +160,33 @@ public class Sic1prod  implements java.io.Serializable {
 
     public void setDesFecRegistro(String desFecRegistro) {
         this.desFecRegistro = desFecRegistro;
+    } 
+
+    public BigDecimal getNumCantstock() {
+        return numCantstock;
     }
 
-    public String getDesStipoprod() {
-        return desStipoprod;
+    public void setNumCantstock(BigDecimal numCantstock) {
+        this.numCantstock = numCantstock;
     }
 
-    public void setDesStipoprod(String desStipoprod) {
-        this.desStipoprod = desStipoprod;
-    }    
+    public Sic3proddocu getSic3proddocu() {
+        return sic3proddocu;
+    }
+
+    public void setSic3proddocu(Sic3proddocu sic3proddocu) {
+        this.sic3proddocu = sic3proddocu;
+    }
+
+    public Sic1general getSic1stipoprod() {
+        return sic1stipoprod;
+    }
+
+    public void setSic1stipoprod(Sic1general sic1stipoprod) {
+        this.sic1stipoprod = sic1stipoprod;
+    }
+    
+    
     
     public String toString(){
         return "idProd: " + this.idProd + 

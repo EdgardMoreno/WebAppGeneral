@@ -17,5 +17,4 @@
         com.general.util.exceptions.CustomExceptionHandlerFactory
       </exception-handler-factory>
     </factory>-->
-    
 </faces-config>

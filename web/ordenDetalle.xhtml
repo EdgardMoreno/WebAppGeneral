@@ -6,12 +6,12 @@
       xmlns:p="http://primefaces.org/ui"
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets" >
 
-    <f:metadata>        
+    <!--<f:metadata>        
         <f:viewParam name="titulo" value="#{orderController.desTituloPagina}"/>
         <f:event type="preRenderView" listener="#{orderController.loadOrderDetails}"/>
-    </f:metadata>
+    </f:metadata>-->
 
-    <ui:composition template="./templates/templatePrincipal.xhtml">
+    <ui:composition template="./WEB-INF/facelets/templates/templatePrincipal.xhtml">
 
         <ui:define name="header">
 
@@ -52,7 +52,16 @@
                 function fnFinishOrder(){
                     fnShowDialogConfirm("form\\:idBtnHideFinishOrder","");
                     return false;
-                }                
+                }
+                
+                /*Funcion que permite Imprimir*/
+                function fnImprimirVoucher() {                    
+                    
+                    var message = "¿Está seguro de IMPRIMIR VOUCHER?";
+                    fnShowDialogConfirm('form\\:btnImprimirVoucher', message);
+                    return false;
+                }                             
+                
 
             </script>
         </ui:define>
@@ -75,6 +84,69 @@
 
                 <div class="panelIngresoDatosOrden">
                     
+                    <div class="form-group subtitulo" >
+                        <h:outputLabel value="DOCUMENTOS RELACIONADOS" rendered="#{not empty orderController.lstViSicdocus}"/>
+                    </div>
+                    
+                    <!-- ********************************** -->
+                    <!-- LISTA DE DOCUMENTOS REFERENCIADOS -->
+                    <!-- *********************************** -->
+                    
+                    <h:dataTable id="idTblDocuments"
+                                 var="item"
+                                 width="100%"
+                                 rendered="#{not empty orderController.lstViSicdocus}"
+                                 value="#{orderController.lstViSicdocus}"
+                                 styleClass="table-bordered"
+                                 columnClasses="table_style_id,
+                                                table_style_code,
+                                                table_style_date,
+                                                table_style_description_medium,
+                                                table_style_code_small,                                                
+                                                table_style_price_small_discount,
+                                                table_style_price_small,
+                                                table_style_code_small,
+                                                table_style_code_small" >
+
+                        <h:column>
+                            <f:facet name="header">No.</f:facet>#{orderController.lstViSicdocus.indexOf(item) + 1}
+                        </h:column>
+                        
+                        <h:column>
+                            <f:facet name="header">Evento</f:facet>#{item.desDocu}
+                        </h:column>
+                        
+                        <h:column>
+                            <f:facet name="header">Fec. Registro</f:facet>#{item.fecDesde}
+                        </h:column>
+                        
+                        <h:column>
+                            <f:facet name="header">Cliente/Proveedor</f:facet>#{item.desPersClieprov}
+                        </h:column>
+                        
+                        <h:column>
+                            <f:facet name="header">Estado</f:facet>#{item.desEstadocu}
+                        </h:column>                       
+                                                
+                        <h:column>
+                            <f:facet name="header">Mto. Pagado</f:facet>#{item.numTotalpagado}
+                        </h:column>
+                        
+                        <h:column>
+                            <f:facet name="header">Total</f:facet>#{item.numMtototal}
+                        </h:column>
+                        
+                        <h:column>
+                            <f:facet name="header">Modo Pago</f:facet>#{item.desModoPago}
+                        </h:column>
+                        
+                        <h:column>
+                            <f:facet name="header">Responsable</f:facet>#{item.desPersCreador}
+                        </h:column>
+                        
+                    </h:dataTable>                    
+                    
+                    <br/>
                     
                     <table >
                         <tr>
@@ -95,7 +167,17 @@
                             <td class="style_content">#{orderController.flgPorRecoger?'SI':'NO'}</td>
                             <td class="style_label">Precio producto incluye IGV?:</td>
                             <td class="style_content">#{orderController.flgPrecioSinIGV?'NO':'SI'}</td>
-                        </tr>                        
+                        </tr>
+                        <tr>
+                            <td class="style_label" style="color: blue">Declarado a SUNAT?:</td>
+                            <td class="style_content" style="color: blue">#{orderController.sic1docu.flgDeclaradosunat==1?'SI':'NO'}</td>
+                        </tr>
+                        <tr>
+                            <td class="style_label">Estado:</td>
+                            <td class="style_content">#{orderController.sic1docu.sic3docuesta.desEsta}</td>
+                            <td class="style_label">Motivo Nulidad:</td>
+                            <td class="style_content">#{orderController.sic1docu.sic3docuesta.desNotas}</td>
+                        </tr>
                     </table>
                    
                     
@@ -167,6 +249,22 @@
                             </h:column>
                             
                         </h:dataTable>
+                        
+                        &nbsp;
+                        <table width="500">
+                            <tr>
+                                <td class="compra_panelGrid_4">
+                                    <h:outputLabel value="Nota:"/>
+                                </td>
+                                <td class="compra_panelGrid_2">
+                                    <h:inputTextarea id="idDescripcion"
+                                                     readonly="true"
+                                                     rows="5"
+                                                     cols="35"
+                                                     value="#{orderController.sic1docu.desNotas }" />
+                                </td>
+                            </tr>
+                        </table>  
 
                     </h:panelGrid>
                 </div>
@@ -189,7 +287,7 @@
                         </tr>
                     </table>
                     
-                    <h:panelGroup rendered="#{orderController.flgIsSale}" >
+                    <h:panelGroup  rendered="#{not empty orderController.itemsPayMode}">
                         <table width="100%" >
                             <tr>
                                 <td class="compra_totales_label">
@@ -202,6 +300,19 @@
                                                      styleClass="form-control">
                                         <f:selectItems value="#{orderController.itemsPayMode}" var="c" itemValue="#{c.idGeneral}" itemLabel="#{c.desGeneral}"/>                                        
                                     </h:selectOneMenu>
+                                </td>
+                            </tr>
+                            
+                            <tr>
+                                <td class="compra_totales_label">
+                                    <h:panelGroup id="idLabelNumVoucher" >
+                                        <h:outputLabel value="Número Voucher(s):" rendered="#{orderController.flgMostrarNumVoucher}"/>
+                                    </h:panelGroup>
+                                </td>
+                                <td class="compra_totales_text">
+                                    <h:panelGroup id="idTextNumVoucher" >
+                                        <h:inputText disabled="true" value="#{orderController.sic1docu.numVoucher}" styleClass="form-control" rendered="#{orderController.flgMostrarNumVoucher}"/>
+                                    </h:panelGroup>
                                 </td>
                             </tr>
 
@@ -226,11 +337,11 @@
                             <tr>
                                 <td class="compra_totales_label">
                                     <h:panelGroup id="idLabelMtoTarjeta" >
-                                        <h:outputLabel value="Mto. Tarjeta:" rendered="#{not empty orderController.itemsTypeCard}" />
+                                        <h:outputLabel value="Mto. Tarjeta:"  />
                                     </h:panelGroup>
                                 </td>
                                 <td class="compra_totales_text">
-                                    <h:panelGroup rendered="#{not empty orderController.itemsTypeCard}">
+                                    <h:panelGroup>
                                         <h:outputLabel value="S/." />
                                         <h:outputLabel value="#{orderController.sic1docu.numMtotarjeta}" />
                                     </h:panelGroup>
@@ -238,7 +349,7 @@
                             </tr>
                             <tr>
                                 <td class="compra_totales_label">
-                                    <h:outputLabel value="Efectivo:"/>
+                                    <h:outputLabel value="Mto. Depo/Efectivo:"/>
                                 </td>
                                 <td class="compra_totales_text">
                                     <h:outputLabel value="S/." />
@@ -246,6 +357,7 @@
                                 </td>
                             </tr>
                         </table>
+                                              
                     </h:panelGroup>                    
 
                     <h:panelGroup id="pnTotals">
@@ -254,7 +366,7 @@
                             
                             <tr>
                                 <td class="compra_totales_label">
-                                    <h:outputLabel value="Descuento:"/>
+                                    <h:outputLabel value="Total Descuento:"/>
                                 </td>
                                 <td class="compra_totales_text" style="color: red">
                                     <h:outputLabel value="S/." />
@@ -311,15 +423,33 @@
 
                 <!-- ****************************************************************************** -->
                 <!-- GRABAR -->
-                <!-- ****************************************************************************** -->
-                <br/>
+                <!-- ****************************************************************************** -->                
                 <div style="margin: 30px 0px" class="offset-sm-2 col-sm-10">
-                    <h:commandLink id="btnFinishOrder"
+                    <h:commandButton id="btnFinishOrder"
                                    value="Finalizar Operación"
-                                   rendered="#{orderController.flgPorRecoger}"
+                                   rendered="false"
                                    styleClass="btn btn-danger"
                                    onclick="return fnFinishOrder()" >
-                    </h:commandLink>
+                    </h:commandButton>
+                </div>
+                
+                <div style="margin: 30px 0px" class="offset-sm-2 col-sm-10">
+                    <h:commandButton 
+                                   value="Imprimir Voucher"                                   
+                                   styleClass="btn btn-primary"
+                                   onclick="return fnImprimirVoucher()" >
+                    </h:commandButton>
+                    &nbsp;
+                    <h:commandButton 
+                                   value="Descargar PDF"                                   
+                                   styleClass="btn btn-primary"
+                                   actionListener="#{orderController.descargarComprobantePDF()}" >
+                    </h:commandButton>
+                    &nbsp;
+                    <h:commandButton value="Anular AUN NO FUNCIONA"                                     
+                                     styleClass="btn btn-danger"
+                                     onclick="return fnShowPopupAnularDocumento(#{orderController.sic1docu.idDocu})" rendered="false">
+                    </h:commandButton>
                 </div>
 
                 <!-- ****************************************************************************** -->
@@ -328,15 +458,14 @@
                 <table class="ocultarObjeto">
                     <tr>
                         <td><label>CodTRolpers:</label></td>
-                        <td><input type="text" id="idCodTRolpers" disabled="true" value="${orderController.codTRolpers}"/></td>
+                        <td><input type="text" id="idCodTRolpers" disabled="true" value="${orderController.codTRolpersExterno}"/></td>
                     </tr>
                     <tr>
                         <td><p:commandLink id="idBtnHideFinishOrder" value="Finalizar Orden" actionListener="#{orderController.finishPendingOrder()}" update="form" /></td>
                     </tr>
                 </table>
-
                 
-                
+                <p:commandButton id="btnImprimirVoucher" value="Imprimir Voucher"  style="display: none" actionListener="#{orderController.imprimirVoucher()}" ajax="false" />
                 
             </div>
 

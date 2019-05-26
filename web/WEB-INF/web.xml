@@ -64,6 +64,10 @@
          <listener-class>com.sun.faces.config.ConfigureListener</listener-class>
     </listener>
     
+    <mime-mapping>
+        <extension>woff2</extension>
+        <mime-type>application/font-woff2</mime-type>
+    </mime-mapping>
     
 
 </web-app>

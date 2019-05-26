@@ -7,18 +7,17 @@
       xmlns:p="http://primefaces.org/ui"
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets" >
 
-    <f:metadata>        
-        <f:viewParam name="titulo" value="#{orderController.desTituloPagina}"/>
-        <f:event type="preRenderView" listener="#{orderController.getParamsExternalPage}"/>
-    </f:metadata>
-
-    <ui:composition template="./templates/templatePrincipal.xhtml">
+    
+    <ui:composition template="./WEB-INF/facelets/templates/templatePrincipal.xhtml">
 
         <ui:define name="header">
 
             <style>
                 
-               
+                textarea {
+                    resize: none;
+                }
+                
                 .autocomplete{
                     position: absolute;
                     background-color: white;
@@ -215,12 +214,35 @@
 
                 }
                 ;
-
                 
-
+                /*Funcion que permite Imprimir*/
+                function fnImprimirVoucher() {                    
+                    
+                    var message = "Se procederá a IMPRIMIR VOUCHER";
+                    fnShowDialogConfirm('form\\:btnImprimirVoucher', message);
+                    return false;
+                }
                 
+                /*Función que se ejecuta durante el ciclo de vida de la llamada AJAX.
+                *Cierra el IFRAME*/
+                function fnAjaxListenImprimirVoucher(data) {                    
+                    
+                    var idDocuImp = document.getElementById("idDocuImpresion");
+                    console.log("idDocuImp " + idDocuImp);                    
+                    if (idDocuImp > 0) {
 
-
+                        switch (data.status) {
+                            case "success":
+                                fnImprimirVoucher();
+                                break;
+                        }                    
+                    }
+                }
+                
+                
+                function ocultarSerie(val){
+                    console.log("Valor:" + val);
+                }
 
             </script>
         </ui:define>
@@ -244,6 +266,60 @@
                 <!-- ****************************************************************************** -->
 
                 <div class="panelIngresoDatosOrden">
+                    
+                    <div class="form-group subtitulo" >
+                        <h:outputLabel value="DOCUMENTOS RELACIONADOS" rendered="#{not empty orderController.lstViSicdocus}"/>
+                    </div>
+                    
+                    <!-- ********************************** -->
+                    <!-- LISTA DE DOCUMENTOS REFERENCIADOS -->
+                    <!-- *********************************** -->
+                    
+                    <p:dataTable                                                        
+                        id="idTblDocuments" var="item" 
+                        rendered="#{not empty orderController.lstViSicdocus}"
+                        value="#{orderController.lstViSicdocus}" 
+                        style="margin-bottom:20px;padding: 0px">                                                        
+
+                        <p:column headerText="No." width="25" style="padding: 1px;text-align: center">
+                            <h:outputText value="#{orderController.lstViSicdocus.indexOf(item) + 1}" />
+                        </p:column>                            
+
+                        <p:column headerText="Evento" width="120" style="color: blue;font-size: 12px;text-align: center">
+                            <h:outputText value="#{item.desDocu}" />
+                        </p:column>
+
+                        <p:column headerText="Fec. Registro" width="90">
+                            <h:outputText value="#{item.fecDesde}" />
+                        </p:column>
+
+                        <p:column headerText="Cliente/Proveedor">
+                            <h:outputText value="#{item.desPersClieprov}" />
+                        </p:column>
+
+                        <p:column headerText="Estado" width="80">
+                            <h:outputText value="#{item.desEstadocu}" />
+                        </p:column>
+
+                        <p:column headerText="Mto. Pagado" width="75" style="text-align: right">
+                            <h:outputText value="S/.#{item.numTotalpagado}" />
+                        </p:column>
+
+                        <p:column headerText="Total" width="80" style="text-align: right">
+                            <h:outputText value="S/.#{item.numMtototal}" />
+                        </p:column>
+
+                        <p:column headerText="Modo Pago" width="110" style="text-align: center">
+                            <h:outputText value="#{item.desModoPago}" />
+                        </p:column>                        
+                        
+                        <p:column headerText="Responsable" width="100" style="text-align: center">
+                            <h:outputText value="#{item.desPersCreador}" />
+                        </p:column>                        
+                    </p:dataTable>                    
+                    
+                    <br/>
+                    
                     <table id="idTableFormOrder">
                         <tr>
                             <td class="compra_panelGrid_1">
@@ -251,11 +327,12 @@
                             <td class="compra_panelGrid_2">
                                 <h:inputText id="fecRegistro" size="10" 
                                              value="#{orderController.desFecRegistro}"
+                                             autocomplete="off"
                                              styleClass="form-control datepicker"
                                              style="font-size:14px;font-weight:bold; z-index: 50 "/></td>
                         </tr>
                         <tr >
-                            <td colspan="2" style="padding: 6px"><h:outputLabel value="DATOS CLIENTE/PROVEEDOR"/></td>                            
+                            <td colspan="5" style="padding: 8px 0px 8px 0px" ><div class="subtitulo"><h:outputLabel value="DATOS CLIENTE/PROVEEDOR"/></div></td>
                         </tr>
                         <tr>
                             <td class="compra_panelGrid_1">
@@ -264,7 +341,8 @@
                             <td class="compra_panelGrid_2">
                                 <div class="input-group mb-2 mb-sm-0">
                                     <div id="idCantDigitosDocIden" class="input-group-addon">0</div>
-                                    <h:inputText id="numDocuIden" autocomplete="off"                                                 
+                                    <h:inputText id="numDocuIden" autocomplete="off"
+                                                 readonly="#{!orderController.flgEditPerson}"
                                                  onkeypress="return fnAllowOnlyNumbers(event)"
                                                  onkeyup="fnCountDigitsCodIden(this)"
                                                  value="#{orderController.sic1idenpersId.codIden}" styleClass="form-control"/>
@@ -272,10 +350,11 @@
                             </td>
                             <td class="compra_panelGrid_3" >
                                 <h:commandLink  id="btnSearchPerson"                                                
+                                                disabled="#{!orderController.flgEditPerson}"
                                                 styleClass="btn btn-default"                                          
                                                 onclick="return fnValidateDocuIden(document.getElementById('form:numDocuIden').value)"> 
                                     <span class="glyphicon glyphicon-new-window"></span>Buscar
-                                    <f:ajax execute="numDocuIden" render="razonSocial" listener="#{orderController.searchPerson()}" onevent="fnAjaxListenPersonSearch" />
+                                    <f:ajax execute="numDocuIden" render="razonSocial itDireccion" listener="#{orderController.searchPerson()}" onevent="fnAjaxListenPersonSearch" />
                                 </h:commandLink>
                             </td>
                             <td class="compra_panelGrid_1">
@@ -288,29 +367,44 @@
                             </td>
                         </tr>
                         <tr>
-                            <td colspan="2" style="padding: 6px"><h:outputLabel value="INGRESAR PRODUCTOS"/></td>                            
+                            <td class="compra_panelGrid_1">
+                                <h:outputLabel value="Dirección:"/>
+                            </td>
+                            <td colspan="4" class="compra_panelGrid_2">
+                                <h:inputText id="itDireccion"
+                                             readonly="true"
+                                             value="#{orderController.sic1pers.desDireccion}" styleClass="form-control"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="5" style="padding: 8px 0px 8px 0px" ><div class="subtitulo"><h:outputLabel value="INGRESAR PRODUCTOS"/></div></td>
                         </tr>
                         <tr>
                             <td class="compra_panelGrid_1">
                                 <h:outputLabel value="Código Producto:"/>
                             </td>
                             <td class="compra_panelGrid_2">
-                                <h:inputText id="codigoProducto"  autocomplete="off" styleClass="form-control" value="#{orderController.sic1prod.codProd}">
+                                <h:inputText id="codigoProducto"  autocomplete="off" styleClass="form-control" value="#{orderController.sic1prod.codProd}" disabled="#{!orderController.flgEditProducts}">
                                     <f:ajax execute="codigoProducto" render="descProducto pnAutocomplete" event="keyup" listener="#{orderController.searchProduct()}"  onevent="fnShowAutocompleteResult" />
                                 </h:inputText>
                             </td>
-                            <td class="compra_panelGrid_3" >                                
-                                    <h:commandLink  id="idCreateProduct" rendered="#{!orderController.flgIsSale}"
-                                                    onclick="return fnShowPopupCreateProduct()"
-                                                    styleClass="btn btn-default"> 
-                                        <span class="glyphicon glyphicon-new-window"></span>Nuevo
-                                    </h:commandLink>                                
+                            <td class="compra_panelGrid_3" >
+                                <h:commandLink  id="idCreateProduct" rendered="#{!orderController.flgIsSale}"
+                                                onclick="return fnShowPopupCreateProduct()"
+                                                disabled="#{!orderController.flgEditProducts}"
+                                                styleClass="btn btn-default"> 
+                                    <span class="glyphicon glyphicon-new-window"></span>Nuevo
+                                </h:commandLink>
                             </td>
                             <td class="compra_panelGrid_1">
                                 <h:outputLabel value="Descripción:"/>
                             </td>
-                            <td class="compra_panelGrid_2">
-                                <h:inputText id="descProducto" disabled="true" styleClass="form-control" value="#{orderController.sic1prod.desProd }" />
+                            <td rowspan="3" >  
+                                <h:inputTextarea id="descProducto"
+                                                 disabled="true"                                                 
+                                                 rows="4"
+                                                 cols="30"                                                 
+                                                 value="#{orderController.sic1prod.desProd}" />
                             </td>
                         </tr>
                         <tr>
@@ -321,6 +415,7 @@
                                 <div class="input-group mb-2 mb-sm-0">
                                     <div class="input-group-addon">S/.</div>
                                     <h:inputText id="costoUnitario" styleClass="form-control"
+                                                 disabled="#{!orderController.flgEditProducts}"
                                                  autocomplete="off"
                                                  value="#{orderController.sic3docuprod.numValor }"
                                                  onkeypress="return fnAllowOnlyDecimalNumbers(event)"
@@ -334,6 +429,7 @@
                                 <div class="input-group mb-2 mb-sm-0">
                                     <div class="input-group-addon">#&nbsp;&nbsp;</div>
                                     <h:inputText id="cantidad" styleClass="form-control"  
+                                                 disabled="#{!orderController.flgEditProducts}"
                                                  autocomplete="off"
                                                  onkeypress="return fnAllowOnlyNumbers(event)"
                                                  value="#{orderController.sic3docuprod.numCantidad }" />
@@ -348,6 +444,8 @@
                                 <div class="input-group mb-2 mb-sm-0">
                                     <div class="input-group-addon">S/.</div>
                                     <h:inputText id="idDescuento" styleClass="form-control"
+                                                 style="color: red"
+                                                 disabled="#{!orderController.flgEditProducts}"
                                                  autocomplete="off"
                                                  value="#{orderController.sic3docuprod.numMtodscto}"
                                                  onkeypress="return fnAllowOnlyDecimalNumbers(event)"
@@ -355,7 +453,8 @@
                                 </div>                                
                             </td>   
                             <td class="compra_panelGrid_3">
-                                <p:commandLink actionListener="#{orderController.addItem()}"                                               
+                                <p:commandLink actionListener="#{orderController.addItem()}" 
+                                               disabled="#{!orderController.flgEditProducts}"
                                                onstart="return fnValiteAddProduct()"
                                                styleClass="btn btn-default"
                                                update="form:pnDetOrder,codigoProducto,descProducto,costoUnitario,idDescuento,cantidad,form:pnTotals,idMtoTarjeta,numMtoefectivo" >
@@ -440,19 +539,42 @@
                             
                             <h:column headerClass="table_style_action">
                                 <f:facet name="header">ACCION</f:facet>
-                                <h:commandLink actionListener="#{orderController.deleteAction(item.numIndex)}" >                                              
-                                    <span class="glyphicon glyphicon-trash"></span>
-                                </h:commandLink>                                
-                                &nbsp;
-                                <h:commandLink actionListener="#{orderController.editAction(item.numIndex)}"  >                                              
-                                    <span class="glyphicon glyphicon-pencil"></span>
-                                </h:commandLink>
+                                <h:panelGroup rendered="#{empty item.id.idDocu}">
+                                    <h:commandLink>                                              
+                                        <span class="glyphicon glyphicon-trash"></span>
+                                        <f:ajax execute="@this" render="@form" listener="#{orderController.deleteAction(item.numIndex)}" />
+                                    </h:commandLink>                                
+                                    &nbsp;
+                                    <h:commandLink >                                              
+                                        <span class="glyphicon glyphicon-pencil"></span>
+                                        <f:ajax execute="@this" render="@form" listener="#{orderController.editAction(item.numIndex)}" />
+                                    </h:commandLink>
+                                </h:panelGroup>                                
                             </h:column>
                            
                             
                         </h:dataTable>
 
                     </h:panelGrid>
+                    &nbsp;
+                    <table width="500">
+                        
+                        <tr>
+                            <td class="compra_panelGrid_4">
+                                <h:outputLabel value="Nota:"/>
+                            </td>
+                            <td class="compra_panelGrid_2">
+                                <h:inputTextarea id="idDescripcion"                                                  
+                                                 rows="4"
+                                                 cols="40"
+                                                 value="#{orderController.sic1docu.desNotas }" />
+                            </td>
+                        </tr> 
+                        
+                    </table> 
+                    
+                    
+                    
                 </div>
 
 
@@ -473,7 +595,7 @@
                         </tr>
                     </table>
 
-                    <h:panelGroup rendered="#{orderController.flgIsSale}" >
+                    <h:panelGroup rendered="#{not empty orderController.itemsPayMode}" >
                         <table width="100%" >
                             <tr>
                                 <td class="compra_totales_label">
@@ -485,8 +607,21 @@
                                                      styleClass="form-control">
                                         <f:selectItem itemValue="-1" itemLabel="-- Seleccione --" />
                                         <f:selectItems value="#{orderController.itemsPayMode}" var="c" itemValue="#{c.idGeneral}" itemLabel="#{c.desGeneral}"/>
-                                        <f:ajax execute="idPayMode" render="form:pnTotals idLabelTipotarjeta idTextTipotarjeta idLabelMtoTarjeta idMtoTarjeta numMtoefectivo" event="change" listener="#{orderController.payModeValueChange}" />
+                                        <f:ajax execute="idPayMode" render="form:pnTotals idLabelTipotarjeta idTextTipotarjeta idLabelMtoTarjeta idMtoTarjeta numMtoefectivo idLabelMtoComiTarjeta idMtoComiTarjeta idLabelNumVoucher idTextNumVoucher" event="change" listener="#{orderController.payModeValueChange}" />
                                     </h:selectOneMenu>
+                                </td>
+                            </tr>
+                            
+                            <tr>
+                                <td class="compra_totales_label">
+                                    <h:panelGroup id="idLabelNumVoucher" >
+                                        <h:outputLabel value="Número Voucher(s):" rendered="#{orderController.flgMostrarNumVoucher}"/>
+                                    </h:panelGroup>
+                                </td>
+                                <td class="compra_totales_text">
+                                    <h:panelGroup id="idTextNumVoucher" >
+                                        <h:inputText value="#{orderController.sic1docu.numVoucher}" autocomplete="off" styleClass="form-control" rendered="#{orderController.flgMostrarNumVoucher}"/>
+                                    </h:panelGroup>
                                 </td>
                             </tr>
 
@@ -523,16 +658,32 @@
                                                     styleClass="form-control"
                                                     value="#{orderController.sic1docu.numMtotarjeta}"                                                
                                                     onkeypress="return fnAllowOnlyDecimalNumbers(event)">
-                                                <f:ajax execute="@this" event="blur" render="form:pnTotals message numMtoefectivo numMtotarjeta" listener="#{orderController.recalculateTotals(false)}" />
+                                                <f:ajax execute="@this" event="blur" render="form:pnTotals message numMtoefectivo numMtotarjeta idLabelMtoComiTarjeta idMtoComiTarjeta" listener="#{orderController.recalculateTotals(false)}" />
                                                 </h:inputText>
                                             </div>
                                         </h:panelGroup>
                                     </h:panelGroup>
                                 </td>
                             </tr>
+                            
                             <tr>
                                 <td class="compra_totales_label">
-                                    <h:outputLabel value="Mto. Efectivo:*"/>
+                                    <h:panelGroup id="idLabelMtoComiTarjeta" >
+                                        <h:outputLabel value="Total Tarjeta (Inc. Comisión):" rendered="#{not empty orderController.itemsTypeCard}" />
+                                    </h:panelGroup>
+                                </td>
+                                <td class="compra_totales_text">
+                                    <h:panelGroup id="idMtoComiTarjeta"  >
+                                        <h:outputLabel value="S/." rendered="#{not empty orderController.itemsTypeCard}"/>
+                                        <h:outputLabel value="#{orderController.numMtoTotalComiTarjeta}" rendered="#{not empty orderController.itemsTypeCard}"/>
+                                    </h:panelGroup>
+                                </td>                                
+                            </tr>
+                            
+                            
+                            <tr style="color: white; border-top: 1px inset #2C3259">
+                                <td class="compra_totales_label">
+                                    <h:outputLabel value="Mto.Depo/Efectivo:"/>
                                 </td>
                                 <td class="compra_totales_text">
                                     <div class="input-group mb-1 mb-sm-0">
@@ -547,6 +698,7 @@
                                     </div>
                                 </td>
                             </tr>
+                            
                         </table>
                     </h:panelGroup>                    
 
@@ -559,8 +711,8 @@
                                     <h:outputLabel value="Total Descuento:"/>
                                 </td>
                                 <td class="compra_totales_text">                                    
-                                    <h:outputLabel value="S/." />
-                                    <h:outputLabel value="#{orderController.sic1docu.numMtodscto}" />
+                                    <h:outputLabel style="color: red" value="S/." />
+                                    <h:outputLabel style="color: red" value="#{orderController.sic1docu.numMtodscto}" />
                                 </td>
                             </tr>
                             <tr style="height: 10px">
@@ -599,7 +751,7 @@
                             <tr>
                                 <td colspan="2" style="text-align: center; color: white">
                                     <h:panelGroup rendered="#{!orderController.flgIsSale}">
-                                        <h:selectBooleanCheckbox value="#{orderController.flgPrecioSinIGV}" >
+                                        <h:selectBooleanCheckbox value="#{orderController.flgPrecioSinIGV}" disabled="#{!orderController.flgEditProducts}">
                                             <f:ajax execute="@this" event="change" render="form:pnTotals message" listener="#{orderController.recalculateTotals(false)}" />
                                         </h:selectBooleanCheckbox>
                                         <h:outputLabel value="PRECIO NO INCLUYE I.G.V." />
@@ -636,13 +788,13 @@
                 <!-- ****************************************************************************** -->
                 <br/>
                 <div style="margin: 30px 0px" class="offset-sm-2 col-sm-10">
-                    <h:commandLink value="Grabar"                                   
-                                   styleClass="btn btn-danger"
+                    <h:commandButton value="Grabar"                                   
+                                   styleClass="btn btn-primary"
                                    onclick="return fnValidateOrderForm()" >
-                    </h:commandLink>
+                    </h:commandButton>
                     &nbsp;
-                    <h:selectBooleanCheckbox value="#{orderController.flgPorRecoger}"></h:selectBooleanCheckbox>
-                    <h:outputLabel value="PENDIENTE DE RECOJO:" />
+                    <h:selectBooleanCheckbox value="#{orderController.flgPorRecoger}" rendered="false"/>
+                    <h:outputLabel value="PENDIENTE DE RECOJO:" rendered="false"/>
 
                 </div>
 
@@ -652,7 +804,8 @@
                 <table class="ocultarObjeto">
                     <tr>
                         <td><label>CodTRolpers:</label></td>
-                        <td><input type="text" id="idCodTRolpers" disabled="true" value="${orderController.codTRolpers}"/></td>
+                        <td><input type="text" id="idCodTRolpers" disabled="true" value="${orderController.codTRolpersExterno}"/></td>
+                        <td><h:inputText id="idDocuImpresion" style="display: none" value="#{orderController.idDocuImpresion}" /></td>
                     </tr>                    
                 </table>
                 <!-- ********************************** -->
@@ -683,24 +836,24 @@
                                                         <tr>
                                                             <td class="compra_panelGrid_1"><h:outputLabel value="Tipo Comprobante:"/></td>
                                                             <td>
-                                                                <h:selectOneMenu id="somTipoDocu" styleClass="form-control"                                                                                 
+                                                                <h:selectOneMenu id="somTipoDocu" styleClass="form-control"
                                                                                  value="#{orderController.sic1docu.idStipodocu}" >
                                                                     <f:selectItem itemValue="-1" itemLabel="-- Seleccionar --" />
-                                                                    <f:selectItems value="#{orderController.itemSTipoDocu}" />
+                                                                    <f:selectItems value="#{orderController.itemSTipoDocu}" var="c" itemValue="#{c.idStipodocu}" itemLabel="#{c.desStipodocu}" />
                                                                 </h:selectOneMenu>
                                                             </td>
                                                         </tr>
                                                         <tr>
-                                                            <td class="compra_panelGrid_1"><h:outputLabel value="Nro. Serie:"/></td>
+                                                            <td class="compra_panelGrid_1"><h:outputLabel value="Serie:"/></td>
                                                             <td class="compra_panelGrid_2">
                                                                 <h:inputText id="codSerie" autocomplete="off"
                                                                              disabled="#{not empty orderController.sic1docu.idDocu}"
-                                                                             class="form-control"                                                 
-                                                                             value="${orderController.sic1docu.codSerie}"  />
+                                                                             class="form-control"
+                                                                             value="${orderController.sic1docu.codSerie}" />
                                                             </td>
                                                         </tr>
                                                         <tr>
-                                                            <td class="compra_panelGrid_1"><h:outputLabel value="Correlativo:"/></td>
+                                                            <td class="compra_panelGrid_1"><h:outputLabel value="Número:"/></td>
                                                             <td class="compra_panelGrid_2">
                                                                 <h:inputText id="numDocumento" autocomplete="off"
                                                                              disabled="#{not empty orderController.sic1docu.idDocu}"
@@ -711,16 +864,21 @@
                                                         </tr>
                                                     </table>
                                                     <br/>
-                                                    <h:commandLink value="Aceptar" styleClass="btn btn-primary"
-                                                                   onclick="return fnValiteVoucherHeader()">
+                                                    <h:commandButton value="Aceptar" styleClass="btn btn-primary" rendered="#{orderController.codSClaseeven=='VI_SICSCLASEEVENVENTA'?true:false}">
+                                                        <f:ajax execute="@form" render="@form"
+                                                                listener="#{orderController.saveOrder()}"
+                                                                onevent="fnAjaxListenImprimirVoucher"/>
+
+                                                    </h:commandButton>
+                                                    <h:commandButton value="Aceptar" styleClass="btn btn-primary" rendered="#{orderController.codSClaseeven=='VI_SICSCLASEEVENVENTA'?false:true}">
                                                         <f:ajax execute="@form" render="@form"
                                                                 listener="#{orderController.saveOrder()}"/>
 
-                                                    </h:commandLink>
+                                                    </h:commandButton>
                                                     &nbsp;
-                                                    <h:commandLink value="Cancelar" 
-                                                                   styleClass="btn btn-primary">
-                                                    </h:commandLink>                                                
+                                                    <h:commandButton value="Cerrar"
+                                                                   styleClass="btn btn-danger">
+                                                    </h:commandButton>                                                
                                                 </div>
 
                                                 </div>
@@ -751,10 +909,11 @@
                             <tbody>
                                 <ui:repeat var="e" value="#{orderController.lstProducts}" varStatus="status">
                                     <tr>
-                                        <td><h:commandLink value="#{e.getCodProd()}"  >
-                                                <f:ajax execute="pnAutocomplete"  render="form:codigoProducto form:descProducto form:costoUnitario form:pnAutocomplete" listener="#{orderController.selectAutocompleteProduct(e)}"  />
+                                        <td><h:commandLink value="#{e.getCodProd()} --> (#{e.getNumCantstock()})"  >
+                                                <f:ajax execute="pnAutocomplete"  render="form:message form:codigoProducto form:descProducto form:costoUnitario form:pnAutocomplete" listener="#{orderController.selectAutocompleteProduct(e)}"  />
                                             </h:commandLink></td>
                                         <td>#{e.getDesProd()}</td>
+                                        <td style="color: blue">#{e.getCodProdint()}</td>
                                     </tr>
                                 </ui:repeat>
                             </tbody>
@@ -767,6 +926,9 @@
                 <h:commandLink  id="btnSearchProduct" style="display:none" >                    
                     <f:ajax execute="codigoProducto" render="codigoProducto descProducto costoUnitario" listener="#{orderController.searchProductByCod()}" />
                 </h:commandLink>
+                <h:commandButton id="btnImprimirVoucher" value="Imprimir Voucher"  style="display: none">
+                    <f:ajax render="message" listener="#{orderController.imprimirVoucher()}"/>
+                </h:commandButton>
                 
             </div>
 

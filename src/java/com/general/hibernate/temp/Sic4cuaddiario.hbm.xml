@@ -163,6 +163,18 @@
       </column>
     </property>
     
+    <property name="numTranDepoTotal" type="big_decimal">
+      <column name="NUM_TRANDEPO_TOTAL" precision="9" scale="3">
+        <comment>Contiene el importe total de ventas por Transferencia o Depósito ingresados por el usuario.</comment>
+      </column>
+    </property>
+    
+    <property name="numTranDepoTotalSiste" type="big_decimal">
+      <column name="NUM_TRANDEPO_TOTAL_SISTE" precision="9" scale="3">
+        <comment>Contiene el importe total de ventas por Transferencia o Depósito registradas en el Sistema.</comment>
+      </column>
+    </property>
+    
     <property name="numTotalVenta" type="big_decimal">
       <column name="NUM_TOTAL_VENTA" precision="9" scale="3">
         <comment>Contiene el total de la ventas: Efectivo + Tarjeta</comment>
@@ -174,5 +186,11 @@
         <comment>Contiene el identificador del estado de la caja</comment>
       </column>
     </property>
+    
+    <property name="idSucursal" type="integer">
+      <column name="ID_SUCURSAL" precision="5" scale="0"/>
+    </property>
+    
+    
   </class>
 </hibernate-mapping>

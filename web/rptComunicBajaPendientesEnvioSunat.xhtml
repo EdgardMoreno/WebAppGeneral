@@ -1,0 +1,150 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"      
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"  >
+    
+    <ui:composition template="./WEB-INF/facelets/templates/templatePrincipal.xhtml">
+        
+        <ui:define name="header">
+            
+            <script>
+                
+                function fnEjecutarFinProceso(){                    
+                    
+                    var message = "¿Está seguro de NOTIFICAR?";
+                    fnShowDialogConfirm('form\\:idBtnNotiFinProc', message);
+                    return false;
+                }
+                
+                /*Ejecutar el boton "Actualizar Resultado"*/
+                function fnEjecutarActuaResultado(){                                        
+                    $("#form\\:idBtnActuResu").click();                    
+                }
+                
+            </script>
+                   
+        </ui:define>
+        
+        <ui:define name="content">
+                
+                <div class="container">
+                    
+                    <p:growl id="message" showDetail="true" />
+                    
+                    <div class="page-header">
+                        <h3>#{reporteSunatController.desTituloPagina}</h3>
+                        <big>Se lista todos los comprobantes de venta que han sido ANULADOS y que aún no se ha notificado su baja a la SUNAT.</big><br/>
+                        * Aplica solo para FACTURAS.
+                    </div>
+                    
+                    <br/>
+                    <div class="row">                            
+                                                
+                        <div class="form-group col-md-2">
+                            <h:outputLabel value="FECHA DESDE:" />
+                            <h:inputText disabled="true" autocomplete="off" value="#{reporteSunatController.strFecDesde}" styleClass="form-control datepicker"/>
+                        </div>
+
+                        <div class="form-group col-md-2">
+                            <h:outputLabel value="FECHA HASTA:"/>
+                            <h:inputText disabled="true" autocomplete="off" value="#{reporteSunatController.strFecHasta}" styleClass="form-control datepicker"/>
+                        </div>                        
+
+                        <div class="form-group col-md-2">
+                            <label>&nbsp;&nbsp;</label>
+                            <div>
+                                <h:commandButton styleClass="btn btn-primary" value="Buscar" >
+                                    <f:ajax render="@form" listener="#{reporteSunatController.listarComunicBajaPendienteEnvio()}"/>
+                                </h:commandButton>
+                            </div>                            
+                        </div>
+                        
+                        <div class="form-group col-md-2">
+                            <label>&nbsp;&nbsp;</label>
+                            <div>
+                                <h:commandButton styleClass="btn btn-warning" value="1. Generar Archivos y Enviar a Facturador SUNAT" onclick="setInterval('fnEjecutarActuaResultado()',30000);">
+                                    <f:ajax render="@form" listener="#{reporteSunatController.generarArchivosComunicBaja()}" />
+                                </h:commandButton>
+                                <h:commandButton style="display: none" id="idBtnActuResu" styleClass="btn btn-success" value="2. Actualizar Resultado" >
+                                    <f:ajax render="@form" listener="#{reporteSunatController.obtenerResultadoComunicBajaDesdeFacturador()}" />
+                                </h:commandButton>                                    
+                                <h:commandButton id="idPaso03" styleClass="btn btn-success" value="2. Finalizar Proceso" title="Genera Backup de archivos enviados" onclick="return fnEjecutarFinProceso()" />
+                            </div>                            
+                        </div>
+                        
+                    </div>
+                    
+                    <div class="row">
+
+                        <!-- ********************************** -->
+                        <!-- LISTA DE PERSONAS --> 
+                        <!-- *********************************** -->                        
+                            
+                        <p:dataTable                            
+                            id="dtOperaciones" var="item" 
+                            value="#{reporteSunatController.lstComunicBaja}" rows="30" style="margin-bottom:20px; font-size: 12px"
+                            paginator="true"                            
+                            paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown} {Exporters}"
+                            rowsPerPageTemplate="30,50">
+
+                            <f:facet name="{Exporters}">
+                                <h:commandLink>
+                                    <p:graphicImage name="/img/excel.png" width="24"/>
+                                    <p:dataExporter type="xls" target="dtOperaciones" fileName="RptOperacionesXProducto" />
+                                </h:commandLink>                                
+                            </f:facet>
+
+                            <p:column headerText="No." width="20" style="padding: 1px;text-align: center">
+                                <h:outputText value="#{reporteSunatController.lstComunicBaja.indexOf(item) + 1}" />
+                            </p:column>
+                           
+                            <p:column headerText="Fecha Operación" width="90" style="text-align: center">
+                                <h:outputText value="#{item.sic1docu.fecDesde}" />
+                            </p:column>
+                            
+                            <p:column headerText="Fecha Anulación" width="90" style="text-align: center">
+                                <h:outputText value="#{item.fecComunicacion}" />
+                            </p:column>
+                            
+                            <p:column headerText="Tipo Documento" width="100" style="text-align: center">
+                                <h:outputText value="#{item.sic1docu.sic1stipodocu.desStipodocu}" />                                        
+                            </p:column>
+                            
+                            <p:column headerText="Nro. Comprobante" width="100" style="text-align: center">
+                                <h:commandLink value="#{item.sic1docu.codSerie} - #{item.sic1docu.numDocu}" action="#{reportController.verDetalleComprobante2(item.sic1docu)}"/>
+                            </p:column>
+                            
+                            <p:column headerText="Motivo Baja" width="350">
+                                <h:commandLink value="#{item.desMotivoBaja}"/>
+                            </p:column>
+                            
+                            <p:column headerText="Estado Sunat" width="160">
+                                <h:commandLink value="#{item.sic1docufactsunat.desSitu}"/>
+                            </p:column>
+                            
+                            <p:column headerText="Observación Sunat">
+                                <h:commandLink value="#{item.sic1docufactsunat.desObse}"/>
+                            </p:column>
+
+                            <f:facet name="paginatorTopLeft">
+                                <p:commandButton type="button" icon="fa fa-sync" />
+                            </f:facet>
+
+                            <f:facet name="paginatorBottomRight">
+                                <p:commandButton type="button" icon="fa fa-cloud-upload" />
+                            </f:facet>
+                        </p:dataTable>
+                        
+                    </div>                    
+                    
+                    <h:commandButton id="idBtnNotiFinProc" value="Ejecutar Fin Proceso" style="display: none">
+                        <f:ajax execute="form" render="@form" listener="#{reporteSunatController.ejecutarFinProceso()}" onevent="fnAjaxListenFinProcesoEnviado"/>
+                    </h:commandButton>
+                    
+                </div>
+        </ui:define>
+    </ui:composition>
+</html>

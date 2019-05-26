@@ -3,6 +3,9 @@ package com.general.hibernate.temp;
 
 
 
+import com.general.hibernate.entity.Sic1lugar;
+import com.general.hibernate.entity.Sic1usuario;
+import com.general.hibernate.relaentity.Sic3docuesta;
 import java.math.BigDecimal;
 import java.util.Date;
 
@@ -43,8 +46,16 @@ public class Sic4cuaddiario  implements java.io.Serializable {
      private BigDecimal numTarjeGastoTotal;
      private BigDecimal numTarjeGastoTotalSiste;
      private BigDecimal numGastoSobraFalta;
+     private BigDecimal numTranDepoTotal;
+     private BigDecimal numTranDepoTotalSiste;
      private BigDecimal numTotalVenta;
      private BigDecimal idEsta;
+     private Integer idSucursal;
+     
+     /*Agregados*/
+     private Sic1usuario sic1usuario;
+     private Sic1lugar sic1lugar;     
+     private Sic3docuesta sic3docuesta;
 
     public Sic4cuaddiario() {
     }
@@ -326,6 +337,55 @@ public class Sic4cuaddiario  implements java.io.Serializable {
         this.numTotalVenta = numTotalVenta;
     }
 
+    public Integer getIdSucursal() {
+        return idSucursal;
+    }
+
+    public void setIdSucursal(Integer idSucursal) {
+        this.idSucursal = idSucursal;
+    }
+
+    public Sic1usuario getSic1usuario() {
+        return sic1usuario;
+    }
+
+    public void setSic1usuario(Sic1usuario sic1usuario) {
+        this.sic1usuario = sic1usuario;
+    }
+
+    public Sic1lugar getSic1lugar() {
+        return sic1lugar;
+    }
+
+    public void setSic1lugar(Sic1lugar sic1lugar) {
+        this.sic1lugar = sic1lugar;
+    }   
+
+    public BigDecimal getNumTranDepoTotal() {
+        return numTranDepoTotal;
+    }
+
+    public void setNumTranDepoTotal(BigDecimal numTranDepoTotal) {
+        this.numTranDepoTotal = numTranDepoTotal;
+    } 
+    
+    public BigDecimal getNumTranDepoTotalSiste() {
+        return numTranDepoTotalSiste;
+    }
+
+    public void setNumTranDepoTotalSiste(BigDecimal numTranDepoTotalSiste) {
+        this.numTranDepoTotalSiste = numTranDepoTotalSiste;
+    }
+
+    public Sic3docuesta getSic3docuesta() {
+        return sic3docuesta;
+    }
+
+    public void setSic3docuesta(Sic3docuesta sic3docuesta) {
+        this.sic3docuesta = sic3docuesta;
+    }    
+    
+    
 }
 
 

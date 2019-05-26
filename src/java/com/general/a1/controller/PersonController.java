@@ -12,7 +12,7 @@ import com.general.hibernate.entity.Sic1pers;
 import com.general.hibernate.entity.Sic1persindi;
 import com.general.hibernate.entity.Sic1persorga;
 import com.general.a2.service.impl.PersonServiceImpl;
-import com.general.a2.service.impl.Sic1generalServiceImpl;
+import com.general.a2.service.impl.MaestroCatalogoServiceImpl;
 import com.general.hibernate.views.ViSicpers;
 import com.general.util.beans.Constantes;
 import com.general.util.beans.UtilClass;
@@ -20,11 +20,12 @@ import com.general.util.exceptions.CustomizerException;
 import com.general.util.exceptions.ValidationException;
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ViewScoped;
+import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.context.Flash;
 import javax.faces.event.ComponentSystemEvent;
@@ -36,13 +37,13 @@ import org.slf4j.LoggerFactory;
 
 @Named
 @ManagedBean
-@ViewScoped
+@SessionScoped
 public class PersonController implements Serializable{
     
     private final static Logger log = LoggerFactory.getLogger(PersonController.class);
     
     private PersonServiceImpl personServiceImpl;
-    private Sic1generalServiceImpl sic1generalServiceImpl;
+    private MaestroCatalogoServiceImpl sic1generalServiceImpl;
     
     
     private ViSicpers viSicpers;
@@ -69,6 +70,43 @@ public class PersonController implements Serializable{
     private String codTRolpers;
     
     public PersonController(){
+        
+        
+//        try{
+//            
+//            viSicpers = new ViSicpers();
+//            
+//            sic1pers = new Sic1pers();
+//            sic1idenpers = new Sic1idenpers();
+//            sic1idenpersId = new Sic1idenpersId();
+//            sic1persindi = new Sic1persindi();
+//            sic1persorga = new Sic1persorga();
+//            sic1lugar = new Sic1lugar();
+//                        
+//            sic1pers.setIdTipopers(new BigDecimal("1"));
+//            
+//            sic1generalServiceImpl = new MaestroCatalogoServiceImpl();
+//            personServiceImpl     = new PersonServiceImpl();
+//
+//            /*CARGAR TIPO DE IDENTIFICADORES*/
+//            List<String> listCatTipoIden = new ArrayList<>();
+//            listCatTipoIden.add("RUC");
+//            listCatTipoIden.add("DNI");
+//            itemsTipoIden = sic1generalServiceImpl.listByCod_ValorGeneral_SelectItem(listCatTipoIden);            
+//            
+//            /*CARGAR TIPO DE PERSONA*/
+//            listCatTipoIden = new ArrayList<>();
+//            listCatTipoIden.add("VI_SICTIPOPERS"); 
+//            itemsTipoPers = sic1generalServiceImpl.listByCod_ValorTipoGeneral_SelectItem(listCatTipoIden);
+//            
+//            /*CARGAR GENERO*/
+//            itemsGeneroPers = sic1generalServiceImpl.getCataGender();           
+//           
+//        
+//        }catch(Exception e){            
+//            System.out.println("Error:" + e.getMessage());
+//        }
+        
     }
     
     @PostConstruct
@@ -87,14 +125,14 @@ public class PersonController implements Serializable{
                         
             sic1pers.setIdTipopers(new BigDecimal("1"));
             
-            sic1generalServiceImpl = new Sic1generalServiceImpl();
+            sic1generalServiceImpl = new MaestroCatalogoServiceImpl();
             personServiceImpl     = new PersonServiceImpl();
 
             /*CARGAR TIPO DE IDENTIFICADORES*/
             List<String> listCatTipoIden = new ArrayList<>();
             listCatTipoIden.add("RUC");
             listCatTipoIden.add("DNI");
-            itemsTipoIden = sic1generalServiceImpl.listByCod_ValorGeneral_SelectItem(listCatTipoIden);            
+            itemsTipoIden = sic1generalServiceImpl.listByCod_ValorGeneral_SelectItem(listCatTipoIden);
             
             /*CARGAR TIPO DE PERSONA*/
             listCatTipoIden = new ArrayList<>();
@@ -403,7 +441,7 @@ public class PersonController implements Serializable{
         
         } catch (ValidationException ex) {
             UtilClass.addErrorMessage(ex.getMessage());
-        } catch (Exception ex) {
+        } catch (CustomizerException | ParseException ex) {
           throw new CustomizerException(ex.getMessage());
         }
     }
@@ -420,20 +458,26 @@ public class PersonController implements Serializable{
             System.out.println("paramPageFlgActivo: " + this.paramPageFlgActivo);
             System.out.println("idPers: " + this.paramPageIdPers );
             System.out.println("codTRolpers: " + this.codTRolpers );
+            System.out.println("codTRolpers: " + this.sic1idenpersId.getCodIden());
+            
             
             /*Metodo 2:Se obtiene los parametros que son enviados utilizando FLASH LIFECYCLE, esto se utiliza en los menus desplegables 
             de la  PAGINA MAESTRA*/
-            Flash flash = FacesContext.getCurrentInstance().getExternalContext().getFlash();
-            String tituloPagina     = (String)flash.get("paramTituloPagina"); 
-            String codTRolpersLocal = (String)flash.get("paramCodTRolpers");
-            String codIdenPers      = (String)flash.get("paramCodIden");
+//            Flash flash = FacesContext.getCurrentInstance().getExternalContext().getFlash();
+//            String tituloPagina     = (String)flash.get("paramTituloPagina"); 
+//            String codTRolpersLocal = (String)flash.get("paramCodTRolpers");
+//            String codIdenPersLocal = (String)flash.get("paramCodIden");
             
+            String tituloPagina = null;
+            String codTRolpersLocal = null;
+            String codIdenPersLocal = null;
             System.out.println("codTRolpers: " + codTRolpersLocal);
-            System.out.println("codIdenPers: " + codIdenPers);
+            System.out.println("codIdenPers: " + codIdenPersLocal);
             System.out.println("tituloPagina: " + tituloPagina);
             
             /*Se consigue el rol */
             codTRolpersLocal = this.codTRolpers==null?codTRolpersLocal:this.codTRolpers;
+            codIdenPersLocal = this.sic1idenpersId.getCodIden()==null?codIdenPersLocal:this.sic1idenpersId.getCodIden();
             
             if (codTRolpersLocal != null){
                 this.viSicpers.setCodTrolpers(codTRolpersLocal);
@@ -468,6 +512,15 @@ public class PersonController implements Serializable{
                     this.desFecNaci = UtilClass.convertDateToString(sic1persindi.getFecNaci());
                 /**/
                 //sic1lugar       = new Sic1lugar();
+            }else{
+                
+                this.sic1pers = new Sic1pers();
+                this.sic1idenpers = new Sic1idenpers();
+                this.sic1idenpersId = new Sic1idenpersId();
+                this.sic1idenpersId.setCodIden(codIdenPersLocal);
+                this.sic1persindi = new Sic1persindi();
+                this.sic1persorga = new Sic1persorga();
+                this.sic1lugar = new Sic1lugar();
             }
         }
     }   

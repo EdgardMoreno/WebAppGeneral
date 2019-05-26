@@ -35,6 +35,11 @@
         <script src="#{request.contextPath}/faces/resources/js/bootstrap.min.js"></script>
         <script src="#{request.contextPath}/faces/resources/js/jquery-confirm-3.3.js"></script>
 
+        <style>                
+            textarea {
+                resize: none;
+            }
+        </style>
 
         <script>
             
@@ -255,7 +260,7 @@
 
         <div class="container">
 
-            <div id="divResultadoValidacion"></div>
+            
 
             <h:form id="form">
 
@@ -266,6 +271,8 @@
                     <div class="page-header" >
                         <h3>Registrar Persona</h3>
                     </div>
+                    
+                    <div id="divResultadoValidacion"></div>
 
                     <br/>
                     <h:panelGrid id="pgFields" columns="4"                                  
@@ -290,12 +297,12 @@
                         <h:outputLabel value="" />
 
                         <h:outputLabel value="Razón Social:*"/>
-                        <h:inputText styleClass="form-control left" id="razonSocial" value="#{personController.sic1persorga.desPersorga}" />
+                        <h:inputText styleClass="form-control left" autocomplete="off" id="razonSocial" value="#{personController.sic1persorga.desPersorga}" />
                         <h:outputLabel value="" />
                         <h:outputLabel value="" />
 
                         <h:outputLabel value="Nombre:*"/>
-                        <h:inputText  styleClass="form-control" id="primerNombre" value="#{personController.sic1persindi.desPrimnomb}" />
+                        <h:inputText  styleClass="form-control" autocomplete="off" id="primerNombre" value="#{personController.sic1persindi.desPrimnomb}" />
                         <h:outputLabel value="" />
                         <h:outputLabel value="" />
                         
@@ -303,23 +310,23 @@
                         <h:selectOneRadio rendered="false" id="sorGenero" value="#{personController.sic1persindi.idGenero}">
                            <f:selectItems value="#{personController.itemsGeneroPers}" />                           
                         </h:selectOneRadio>
-                        <h:outputLabel value="Fecha Nacimiento:"/>
-                        <h:inputText value="#{personController.desFecNaci}" styleClass="form-control datepicker" />
-
                         <h:outputLabel value="Apellido Paterno:*"/>
                         <h:inputText  styleClass="form-control" id="apePaterno" value="#{personController.sic1persindi.desApelpate}" />
+                        
+                        <h:outputLabel value="Fecha Nacimiento:"/>
+                        <h:inputText value="#{personController.desFecNaci}" styleClass="form-control datepicker" />
                         <h:outputLabel value="Apellido Materno:"/>
                         <h:inputText  styleClass="form-control" id="apeMaterno" value="#{personController.sic1persindi.desApelmate}" />
                         
                         <h:outputLabel value="E-mail:"/>
                         <h:inputText styleClass="form-control" value="#{personController.sic1pers.codEmail}" />
-                        <h:outputLabel value="Distrito:"/>
-                        <h:inputText styleClass="form-control" value="#{personController.sic1pers.desDistrito}" />
+                        <h:outputLabel value="Dirección:"/>
+                        <h:inputTextarea rows="4" cols="25"  value="#{personController.sic1pers.desDistrito}" />
                         
-                        <h:outputLabel value="Telefono:"/>
+                        <h:outputLabel value="Teléfono:"/>
                         <h:inputText styleClass="form-control" value="#{personController.sic1pers.codNumtele}" />
                         <h:outputLabel value=""/>
-                        <h:outputLabel value=""/>                        
+                        <h:outputLabel value=""/>
 
                         <h:outputLabel value="idPersona:" styleClass="ocultarObjeto"/>
                         <h:inputText id="idPersona" value="#{personController.sic1pers.idPers}" styleClass="ocultarObjeto"/>
@@ -331,7 +338,7 @@
                     <br/>
                     <div class="offset-sm-2 col-sm-10">
                         <input type="button" id="btnConfirm" value="Grabar" class="btn btn-primary" onclick="return fnValidateForm()"/>
-                        <input type="button" id="btnConfirm" value="Cancelar" class="btn btn-primary" onclick="parent.$.fancybox.close();"/>
+                        <input type="button" id="btnConfirm" value="Cerrar" class="btn btn-danger" onclick="parent.$.fancybox.close();"/>
                     </div>
                 </div>
                 

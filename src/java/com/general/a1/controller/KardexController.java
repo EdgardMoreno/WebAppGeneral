@@ -6,21 +6,26 @@
 package com.general.a1.controller;
 
 import com.general.a2.service.impl.DocuKardexServiceImpl;
+
 import com.general.hibernate.entity.Sic1docu;
 import com.general.hibernate.entity.Sic1idendocu;
 import com.general.hibernate.entity.Sic1prod;
 import com.general.hibernate.entity.Sic1docukardex;
 import com.general.hibernate.entity.Sic1docukardexId;
+import com.general.hibernate.entity.Sic1general;
+import com.general.hibernate.entity.Sic1sclaseeven;
+import com.general.hibernate.relaentity.Sic3docuprod;
 import com.general.security.SessionUtils;
 import com.general.util.beans.Constantes;
+import com.general.util.beans.Reporte;
 import com.general.util.beans.UtilClass;
 import com.general.util.exceptions.CustomizerException;
 import com.general.util.exceptions.ValidationException;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -29,12 +34,13 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ViewScoped;
+import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.Part;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -46,24 +52,33 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
  * @author emoreno
  */
 @ManagedBean
-@ViewScoped
-public class KardexController {
+@SessionScoped
+public class KardexController implements Serializable{
     
-    private static final String FILE_NAME = "E:\\ARCHIVOS\\plantKardex.xlsx";
+    
     private static final int FILA_INI_EXCEL = 5;
     private Part uploadFile;
     private List<Sic1docukardex> lstUploadKardex;
     private String period;
+    private String desTituloPagina;
+    
+    /*Pantalla Reporte KARDEX RESUMEN*/
+    private String strFecDesde;
+    private String strFecHasta;
+    private String strCodprod;
+    private List<Reporte> lstKardexResumen;
 
+    
+    
     public KardexController() throws CustomizerException{
         lstUploadKardex = new ArrayList<>();
         
         try{
         
             DocuKardexServiceImpl service = new DocuKardexServiceImpl();
-            int numPeri = -1;/*service.getKardexLastPeriActi();*/
+            int numPeri = service.getKardexLastPeriActi();
             if ( numPeri < 0){
-                DateFormat df = new SimpleDateFormat("yyyyMM");
+                DateFormat df = new SimpleDateFormat("yyyyMMdd");
                 this.period = df.format(new Date());
             }else
                 this.period = String.valueOf(numPeri);
@@ -98,21 +113,64 @@ public class KardexController {
     public void setPeriod(String period) {
         this.period = period;
     }
+
+    public String getStrFecDesde() {
+        return strFecDesde;
+    }
+
+    public void setStrFecDesde(String strFecDesde) {
+        this.strFecDesde = strFecDesde;
+    }
+
+    public String getStrFecHasta() {
+        return strFecHasta;
+    }
+
+    public void setStrFecHasta(String strFecHasta) {
+        this.strFecHasta = strFecHasta;
+    }
+
+    public String getStrCodprod() {
+        return strCodprod;
+    }
+
+    public void setStrCodprod(String strCodprod) {
+        this.strCodprod = strCodprod;
+    }
+
+    public List<Reporte> getLstKardexResumen() {
+        return lstKardexResumen;
+    }
+
+    public void setLstKardexResumen(List<Reporte> lstKardexResumen) {
+        this.lstKardexResumen = lstKardexResumen;
+    }
+
+    public String getDesTituloPagina() {
+        return desTituloPagina;
+    }
+
+    public void setDesTituloPagina(String desTituloPagina) {
+        this.desTituloPagina = desTituloPagina;
+    }
     
-    /*METODOS*/
     
-    public void triggerChangedFile() { 
+        
+    /*METODOS*/    
+    public void triggerChangedFile() {
         lstUploadKardex.clear();        
-    } 
+    }
     
     public void downloadTemplate() throws IOException, CustomizerException {
         
         try {
-            System.out.println("Present Project Directory : "+ System.getProperty("user.dir"));
-            DocuKardexServiceImpl service = new DocuKardexServiceImpl();
+            
+            String pathFile = FacesContext.getCurrentInstance().getExternalContext().getRealPath(Constantes.CONS_RUTA_RPTFOLDER + "Plantilla_Kardex.xlsx");
+            
+            DocuKardexServiceImpl service = new DocuKardexServiceImpl();            
             List<Sic1docukardex> listKardex = service.getKardexByNumPeri(Integer.valueOf(this.period));
 
-            FileInputStream excelFile = new FileInputStream(new File(FILE_NAME));        
+            FileInputStream excelFile = new FileInputStream(new File(pathFile));        
 
             XSSFWorkbook workbook = new XSSFWorkbook(excelFile);
             XSSFSheet sheet = workbook.getSheetAt(0);
@@ -146,7 +204,7 @@ public class KardexController {
                 
                 /*DES_STIPOPROD*/
                 cell = row.createCell(colNum++);
-                cell.setCellValue(obj.getSic1prod().getDesStipoprod());
+                cell.setCellValue(obj.getSic1prod().getSic1stipoprod().getDesGeneral());
                 
                 /*CANTIDAD INICIAL*/
                 cell = row.createCell(colNum++);
@@ -223,7 +281,7 @@ public class KardexController {
             lstUploadKardex.clear();
             Sic1docukardex kardex; 
             Sic1docukardexId kardexId;
-            Sic1prod prod; 
+            Sic1prod objProd; 
             
             if (uploadFile == null)
                 throw new ValidationException("Se debe cargar un archivo.");
@@ -252,58 +310,64 @@ public class KardexController {
                     
                     
                     kardex = new Sic1docukardex();
-                    prod = new Sic1prod();
+                    objProd = new Sic1prod();
                     kardexId = new Sic1docukardexId();
                     
-                    
-                    
                     Cell cell = nextRow.getCell(columna++);
-                    System.out.println("ID_PROD: " + cell.getNumericCellValue());
-                    prod.setIdProd(new BigDecimal(cell.getNumericCellValue()));
+                    System.out.print("ID_PROD: " + cell.getNumericCellValue());
+                    objProd.setIdProd(new BigDecimal(cell.getNumericCellValue()));
+                    
+                    //System.out.println("COD_PROD:" + cell.getStringCellValue());
+                    cell = nextRow.getCell(columna++);                    
+                    if (CellType.NUMERIC == cell.getCellTypeEnum()){
+                        objProd.setCodProd(String.valueOf(cell.getNumericCellValue()));
+                    }else{
+                        objProd.setCodProd(cell.getStringCellValue());
+                    }
                     
                     cell = nextRow.getCell(columna++);
-                    System.out.println("COD_PROD:" + cell.getStringCellValue());
-                    prod.setCodProd(cell.getStringCellValue());
+                    System.out.print("- DES_PROD:" + cell.getStringCellValue());
+                    objProd.setDesProd(cell.getStringCellValue());
                     
+                    /*DES_STIPOPROD*/                    
+                    Sic1general objStipoprod = new Sic1general();
+                    objStipoprod.setDesGeneral(cell.getStringCellValue());
                     cell = nextRow.getCell(columna++);
-                    System.out.println("DES_PROD:" + cell.getStringCellValue());
-                    prod.setDesProd(cell.getStringCellValue());
+                    objProd.setSic1stipoprod(objStipoprod);
                     
-                    cell = nextRow.getCell(columna++);
-                    System.out.println("DES_STIPOPROD:" + cell.getStringCellValue());
-                    prod.setDesStipoprod(cell.getStringCellValue());
-                    
-                    
-                    kardexId.setNumPeri(new BigDecimal(this.period));
-                    kardexId.setIdProd(prod.getIdProd());
+                    //System.out.print("- Periodo Actual: " + UtilClass.getCurrentTime_YYYYMMDD());
+                    kardexId.setNumPeri(new BigDecimal(UtilClass.getCurrentTime_YYYYMMDD()));
+                    kardexId.setIdProd(objProd.getIdProd());
                     
                     /*Seteando parte de la llave*/
                     kardex.setId(kardexId);
-                    kardex.setSic1prod(prod);
+                    kardex.setSic1prod(objProd);
                     /**/
                     
                     
                     cell = nextRow.getCell(columna++);
-                    System.out.println("CANTIDAD INICIAL:" + cell.getNumericCellValue());
+                    //System.out.println("CANTIDAD INICIAL:" + cell.getNumericCellValue());
                     kardex.setNumCantini(new BigDecimal(cell.getNumericCellValue()));
                     
                     cell = nextRow.getCell(columna++);
-                    System.out.println("CANTIDAD INGRESA:" + cell.getNumericCellValue());
+                    //System.out.println("CANTIDAD INGRESA:" + cell.getNumericCellValue());
                     kardex.setNumCantingr(new BigDecimal(cell.getNumericCellValue()));
                     
                     cell = nextRow.getCell(columna++);
-                    System.out.println("CANTIDAD SALIENTE:" + cell.getNumericCellValue());
+                    //System.out.println("CANTIDAD SALIENTE:" + cell.getNumericCellValue());
                     kardex.setNumCantsali(new BigDecimal(cell.getNumericCellValue()));
                     
                     cell = nextRow.getCell(columna++);
-                    System.out.println("STOCK:" + cell.getNumericCellValue());
+                    //System.out.println("STOCK:" + cell.getNumericCellValue());
                     kardex.setNumCantstock(new BigDecimal(cell.getNumericCellValue()));
                     
                     cell = nextRow.getCell(columna++);
-                    System.out.println("STOCK INGRESADO:" + cell.getNumericCellValue());
+                    //System.out.println("STOCK INGRESADO:" + cell.getNumericCellValue());
                     kardex.setNumCantstockusu(new BigDecimal(cell.getNumericCellValue()));
                     
                     lstUploadKardex.add(kardex);
+                    
+                    System.out.println("");
                 }
             }
             
@@ -324,7 +388,7 @@ public class KardexController {
             
             if (uploadFile == null)
                 throw new ValidationException("Se debe cargar un archivo.");
-            if (lstUploadKardex.size() == 0)
+            if (lstUploadKardex.isEmpty())
                 throw new ValidationException("Se debe cargar el inventario");
             
             /*Se valida que el stock ingresado por el usuario cuadre con el Stock que muestra el sistema*/
@@ -334,7 +398,8 @@ public class KardexController {
                 BigDecimal idProd = obj.getSic1prod().getIdProd();
                 
                 lstUploadKardex.get(filaError).getId().setNumItem(new BigDecimal(this.period));
-                lstUploadKardex.get(filaError).getId().setIdProd(idProd);                
+                lstUploadKardex.get(filaError).getId().setIdProd(idProd);
+                lstUploadKardex.get(filaError).setIdSucursal(SessionUtils.getIdSucursal());
 
                 if(obj.getNumCantstock().intValue() != obj.getNumCantstockusu().intValue()){
                     String mensaje = "Error en fila " + (filaError + 1) + ": el stock ingresado no coincide.";
@@ -350,7 +415,11 @@ public class KardexController {
             Sic1docu sic1docu = new Sic1docu();
             sic1docu.setDesDocu("Control de Inventario. Periodo: " + this.period);
             sic1docu.setIdPers(SessionUtils.getUserId()); //Login
-            sic1docu.setCodSclaseeven(Constantes.CONS_COD_SCLASEEVEN_CTRL_INVENTARIO);
+            
+            Sic1sclaseeven objSclaseeven = new Sic1sclaseeven();
+            objSclaseeven.setCodSclaseeven(Constantes.CONS_COD_SCLASEEVEN_CTRL_INVENTARIO);            
+            sic1docu.setSic1sclaseeven(objSclaseeven);
+            //sic1docu.setCodSclaseeven(Constantes.CONS_COD_SCLASEEVEN_CTRL_INVENTARIO);
             
             sic1idendocu.setSic1docu(sic1docu);
             
@@ -369,4 +438,48 @@ public class KardexController {
             throw new CustomizerException(ex.getMessage());
         }
     }
+    
+    public void generarRptKardexResumen() throws CustomizerException{
+     
+        try{
+            
+            Sic1docu objDocu = new Sic1docu();
+            if(strFecDesde != null && strFecDesde.trim().length() > 0)
+                objDocu.setFecDesde(UtilClass.convertStringToDate(strFecDesde));
+            if(strFecHasta != null && strFecHasta.trim().length() > 0)
+                objDocu.setFecDesde(UtilClass.convertStringToDate(strFecHasta));
+            
+            Sic1prod objProd = new Sic1prod();
+            objProd.setCodProd(this.strCodprod);
+
+            Sic3docuprod objDocuprod = new Sic3docuprod();
+            objDocuprod.setSic1docu(new Sic1docu());
+            objDocuprod.setSic1prod(objProd);
+
+            DocuKardexServiceImpl objService = new DocuKardexServiceImpl();
+            this.lstKardexResumen = objService.obtKardexResumen(objDocuprod);
+            
+            if(this.lstKardexResumen.isEmpty())
+                UtilClass.addErrorMessage("No se obtuvo resultados.");
+
+        }catch (Exception ex ){
+            throw new CustomizerException(ex.getMessage());
+        }        
+    }
+    
+    public String obtMovimientosProducto(String codProd) throws CustomizerException{
+        
+        String strDesTituloPagina = "Movimientos del Producto: " + codProd;
+        
+        FacesContext context = FacesContext.getCurrentInstance();
+        context.getExternalContext().getSessionMap().put("reportController", null);
+        
+        ReportController objController = context.getApplication().evaluateExpressionGet(context, "#{reportController}", ReportController.class);
+        objController.setDesTituloPagina(strDesTituloPagina);
+        objController.setStrCodprod(codProd);
+        objController.obtDetOperacionesXProductos();
+        
+         return "faces/rptOperacionesPorProducto?faces-redirect=true";
+    }
+            
 }

@@ -26,12 +26,8 @@ public interface DocumentService{
     public String update(Sic1idendocu obj) throws ValidationException, CustomizerException;
     public String delete(String id) throws ValidationException, CustomizerException;
     
-    public String relateDocuDocu(Sic3docudocu obj) throws ValidationException, CustomizerException;
-    public String relateDocuEsta(Sic3docuesta obj) throws ValidationException, CustomizerException;
-    public String relateDocuPers(List<Sic3docupers> list) throws ValidationException, CustomizerException;
+    public String relateDocuDocu(Sic3docudocu obj) throws ValidationException, CustomizerException;       
     
-    public Sic1idendocu getById(BigDecimal id) throws ValidationException, CustomizerException;
-    public Sic1idendocu getByCodIden(String cod) throws ValidationException, CustomizerException;
     
     public List<ViSicdocu> listViSicdocu(ViSicdocu obj) throws ValidationException, CustomizerException;
     

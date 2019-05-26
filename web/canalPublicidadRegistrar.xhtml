@@ -1,0 +1,71 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"      
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"  >
+    
+    <ui:composition template="./WEB-INF/facelets/templates/templatePrincipal.xhtml">
+        
+        <ui:define name="header">
+            
+            <script>
+                
+            </script>
+                   
+        </ui:define>
+        
+        <ui:define name="content">
+                
+                <div class="container">
+                    
+                    <div class="page-header">
+                        <h3>Registrar Canal Publicidad</h3>
+                    </div>
+                    
+                    <br/>
+                    
+                    <div class="form-inline">
+                        <div class="form-group">
+                            <h:outputLabel value="FECHA:"/>
+                            &nbsp;
+                            <h:inputText autocomplete="off" value="#{publicidadController.desFecRegistro}" styleClass="form-control datepicker"/>
+                        </div>
+                    </div>
+                    
+                    <div class="row" style="padding: 10px 20px 20px 20px">
+
+                        <!-- ********************************** -->
+                        <!-- LISTA DE PERSONAS --> 
+                        <!-- *********************************** -->                        
+                            
+                        <p:dataTable style="width: 50%"
+                                id="dtExpedientes" var="item"
+                                value="#{publicidadController.lstPublCanal}" >
+
+                                <p:column headerText="Canal" width="100">
+                                    <h:outputText value="#{item.desPublCanal}" />
+                                </p:column>
+
+                                <p:column headerText="Valor" width="20">
+                                    <h:inputText autocomplete="off" value="#{item.numPuntos}" styleClass="form-control" style="width:80px" />
+                                </p:column>                            
+                        </p:dataTable>
+
+                    </div>
+                    <br/>
+                    <div style="margin: 30px 0px" class="offset-sm-2 col-sm-10">
+                        <h:commandButton value="Grabar"                                   
+                                       class="btn btn-primary"
+                                       actionListener="#{publicidadController.grabarCanalPublicidad()}" >
+                        </h:commandButton>
+                    </div>
+                    
+                    
+                    
+                    
+                </div>
+        </ui:define>
+    </ui:composition>
+</html>

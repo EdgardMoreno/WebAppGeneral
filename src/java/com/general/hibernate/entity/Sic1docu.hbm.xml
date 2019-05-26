@@ -92,5 +92,14 @@
     <property name="flgPrecsinIGV" type="integer">
       <column name="FLG_PRECSINIGV" precision="5" scale="0"/>
     </property>
+    <property name="idSucursal" type="integer">
+      <column name="ID_SUCURSAL" precision="5" scale="0"/>
+    </property>
+     <property name="numVoucher" type="string">
+      <column length="400" name="NUM_VOUCHER"/>
+    </property>
+    <property name="flgDeclaradosunat" type="integer">
+      <column name="FLG_DECLARADOSUNAT" precision="5" scale="0"/>
+    </property>
   </class>
 </hibernate-mapping>

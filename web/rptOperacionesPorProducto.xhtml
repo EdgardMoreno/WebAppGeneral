@@ -1,0 +1,145 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"      
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"  >
+    
+    <ui:composition template="./WEB-INF/facelets/templates/templatePrincipal.xhtml">
+        
+        <ui:define name="header">
+            
+            <script>
+                
+            </script>
+                   
+        </ui:define>
+        
+        <ui:define name="content">
+                
+                <div class="container">
+                    
+                    <p:growl id="message" showDetail="true" />
+                    
+                    <div class="page-header">
+                        <h3>Detalle Movimientos por Producto</h3>
+                    </div>
+                    
+                    <br/>
+                    <div class="row">
+                            
+                        <div class="form-group col-md-2">
+                            <h:outputLabel value="CODIGO PRODUCTO:"/>
+                            <h:inputText id="codProd" autocomplete="off" value="#{reportController.strCodprod}" styleClass="form-control" />
+                        </div>
+                        
+                        <div class="form-group col-md-2">
+                            <h:outputLabel value="FECHA DESDE:"/>
+                            <h:inputText autocomplete="off" value="#{reportController.strFecDesde6}" styleClass="form-control datepicker"/>
+                        </div>
+
+                        <div class="form-group col-md-2">
+                            <h:outputLabel value="FECHA HASTA:"/>
+                            <h:inputText autocomplete="off" value="#{reportController.strFecHasta6}" styleClass="form-control datepicker"/>
+                        </div>                        
+
+                        <div class="form-group col-md-2">
+                            <label>&nbsp;&nbsp;</label>
+                            <div>
+                                <h:commandButton styleClass="btn btn-primary" value="Buscar" actionListener="#{reportController.obtDetOperacionesXProductos()}" />
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+
+                        <!-- ********************************** -->
+                        <!-- LISTA DE PERSONAS --> 
+                        <!-- *********************************** -->                        
+                            
+                        <p:dataTable                            
+                            id="dtOperaciones" var="item" 
+                            value="#{reportController.lstDocuprod}" rows="50" style="margin-bottom:20px;font-size: 11px"                            
+                            paginator="true"
+                            paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown} {Exporters}"
+                            rowsPerPageTemplate="50,80">
+
+                            <f:facet name="{Exporters}">
+                                <h:commandLink>
+                                    <p:graphicImage name="/img/excel.png" width="24"/>
+                                    <p:dataExporter type="xls" target="dtOperaciones" fileName="RptOperacionesXProducto" />
+                                </h:commandLink>
+
+                                <h:commandLink>
+                                    <p:graphicImage name="/img/pdf.png" width="24"/>
+                                    <p:dataExporter type="pdf" target="dtOperaciones" fileName="RptOperacionesXProducto"/>
+                                </h:commandLink>
+
+                            </f:facet>
+
+                            <p:column headerText="No." width="10">
+                                <h:outputText value="#{reportController.lstDocuprod.indexOf(item) + 1}" />
+                            </p:column>
+
+                            <p:column headerText="Empresa" width="130">
+                                <h:outputText value="#{item.sic1docu.sic1persexterno.desPers}" />                                        
+                            </p:column>
+
+                            <p:column headerText="Tipo Operación" width="90" style="color: blue; text-align: center" >
+                                <h:outputText value="#{item.sic1docu.sic1sclaseeven.desSclaseeven}" />
+                            </p:column>
+
+                            <p:column headerText="Fecha Operación" width="90" style="text-align: center">
+                                <h:outputText value="#{item.sic1docu.fecDesde}" />
+                            </p:column>
+                            
+                            <p:column headerText="Tipo Documento." width="100" style="text-align: center">
+                                <h:outputText value="#{item.sic1docu.sic1stipodocu.desStipodocu}" />
+                            </p:column>
+
+                            <p:column headerText="Nro. Documento" width="90" style="text-align: center">
+                                <h:commandLink value="#{item.sic1docu.codSerie} - #{item.sic1docu.numDocu}" action="#{reportController.verDetalleComprobante(item)}"/>                                
+                            </p:column>
+
+                            <p:column headerText="Nro. Doc. Relacionado" width="90" style="text-align: center">
+                                <h:outputText value="#{item.sic1docu.sic3docudocu.sic1docurel.numDocuunido}" />
+                            </p:column>
+                            
+                            <p:column headerText="Cod. Producto" width="100" style="text-align: center">
+                                <h:outputText value="#{item.sic1prod.codProd}" />
+                            </p:column>
+                            
+                            <p:column headerText="Producto" >
+                                <h:outputText value="#{item.sic1prod.desProd}" />
+                            </p:column>
+
+                            <p:column headerText="Cantidad" width="70" style="text-align: center">
+                                <h:outputText value="#{item.numCantidad}" />
+                            </p:column>
+
+                            <p:column headerText="Precio" width="70" style="text-align: right">
+                                <h:outputText value="S/.#{item.numValor}" />
+                            </p:column>
+
+                            <p:column headerText="Stock" width="55" style="text-align: center">
+                                <h:outputText value="#{item.sic1prod.numCantstock}" />
+                            </p:column>
+
+                            <p:column headerText="Estado" width="100" style="color: #{item.sic1docu.sic3docuesta.desEsta=='ANULADO'?'red':'black'}">
+                                <h:outputText value="#{item.sic1docu.sic3docuesta.desEsta}" />
+                            </p:column>
+
+                            <f:facet name="paginatorTopLeft">
+                                <p:commandButton type="button" icon="fa fa-sync" />
+                            </f:facet>
+
+                            <f:facet name="paginatorBottomRight">
+                                <p:commandButton type="button" icon="fa fa-cloud-upload" />
+                            </f:facet>
+                        </p:dataTable>                        
+                    </div>                    
+                </div>
+        </ui:define>
+    </ui:composition>
+</html>

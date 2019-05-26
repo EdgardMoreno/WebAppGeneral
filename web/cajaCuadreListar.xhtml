@@ -6,12 +6,12 @@
       xmlns:p="http://primefaces.org/ui"
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets"  >
     
-    <f:metadata>        
+    <!--<f:metadata>        
         <f:viewParam name="titulo" value="#{cashRegisterController.desTituloPagina}"/>        
         <f:event type="preRenderView" listener="#{cashRegisterController.getParamsExternalPage}"/>
-    </f:metadata>
+    </f:metadata>-->
     
-    <ui:composition template="./templates/templatePrincipal.xhtml">
+    <ui:composition template="./WEB-INF/facelets/templates/templatePrincipal.xhtml">
         
         <ui:define name="header">
             
@@ -29,6 +29,16 @@
                     return false;
                 }
                 
+                
+                function fnShowSendMailForm(valor){
+                    console.log('Valor:' + valor);
+                    
+                    var myobj = JSON.parse(valor);
+                    alert(myobj.messageBody); // 'world'
+                    
+                    return false;
+                }
+                
             </script>
                    
         </ui:define>
@@ -38,8 +48,11 @@
                 
                 <div class="container">
                     
+                    
+                    <p:growl id="message" showDetail="true" />
+                    
                     <div class="page-header" >
-                        <h3>${cashRegisterController.desTituloPagina}</h3>
+                        <h3>Reporte de Cierre Diario</h3>
                     </div>
 
                     <h:panelGrid columns="5"
@@ -52,12 +65,13 @@
 
                         
                         <h:outputLabel value="Fecha Desde:"/>
-                        <h:inputText value="#{cashRegisterController.desFecDesde}" styleClass="form-control datepicker" />
+                        <h:inputText id="idFecdesde" value="#{cashRegisterController.desFecDesde}" autocomplete="off" styleClass="form-control datepicker" />
                         <h:outputLabel value="Fecha Hasta:"/>
-                        <h:inputText value="#{cashRegisterController.desFecHasta}" styleClass="form-control datepicker" />
+                        <h:inputText id="idFechasta" value="#{cashRegisterController.desFecHasta}" autocomplete="off" styleClass="form-control datepicker" />
                         
-                        <h:commandLink actionListener="#{cashRegisterController.filter()}" styleClass="btn btn-default">
-                            <span class="glyphicon glyphicon-search"></span> Buscar
+                        <h:commandLink styleClass="btn btn-default" value="Buscar">
+                            <span class="glyphicon glyphicon-search"></span> 
+                            <f:ajax execute="idFecdesde idFechasta" render="message dtOperaciones" listener="#{cashRegisterController.filter()}"/>
                         </h:commandLink>                        
 
                     </h:panelGrid>
@@ -67,89 +81,88 @@
                     <!-- ELEMENTOS OCULTOS -->
                     <!-- *********************************** -->
                    
-                    
-                    
-                    <!-- ********************************** -->
-                    <!-- LISTA DE DOCUMENTOS -->
-                    <!-- *********************************** -->
-                    <h:dataTable id="idTblDocuments" 
-                                 var="item" 
-                                 width="100%"
-                                 value="#{cashRegisterController.listViDayBox}"                                  
-                                 styleClass="table-bordered"
-                                 columnClasses="table_style_id,
-                                                table_style_code,
-                                                table_style_code_small,
-                                                table_style_date_2,
-                                                table_style_date_2,
-                                                table_style_price_small,
-                                                table_style_price_small,                                                
-                                                table_style_price_small,                                                
-                                                table_style_price_small,
-                                                table_style_price_small,
-                                                table_style_price_small,
-                                                table_style_price_small,
-                                                table_style_price_small,
-                                                table_style_action">                        
+                    <p:dataTable                            
+                        id="dtOperaciones" var="item" 
+                        value="#{cashRegisterController.lstCierresDiarios}" rows="30" style="margin-bottom:20px"
+                        paginator="true"
+                        paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown} {Exporters}"
+                        rowsPerPageTemplate="30,50">
 
-                        <h:column>
-                            <f:facet name="header">Nro.</f:facet>#{cashRegisterController.listViDayBox.indexOf(item) + 1}
-                        </h:column>
+                        <f:facet name="{Exporters}">
+                            <h:commandLink>
+                                <p:graphicImage name="/img/excel.png" width="24"/>
+                                <p:dataExporter type="xls" target="dtOperaciones" fileName="RprCierreCaja" />
+                            </h:commandLink>
+                            
+                        </f:facet>
+
+                        <p:column headerText="No." width="20" style="padding: 1px;text-align: center">
+                            <h:outputText value="#{cashRegisterController.lstCierresDiarios.indexOf(item) + 1}" />
+                        </p:column>
+
+                        <p:column headerText="Sucursal" width="105">
+                            <h:outputText value="#{item.sic1lugar.desLugar}" />                                        
+                        </p:column>
                         
-                        <h:column>
-                            <f:facet name="header">Vendedor</f:facet>#{item.desPers}
-                        </h:column>
+                        <p:column headerText="Vendedor" width="90">
+                            <h:outputText value="#{item.sic1usuario.codUsuario}" />                                        
+                        </p:column>
+
+                        <p:column headerText="Estado" width="90">
+                            <h:outputText value="#{item.sic3docuesta.desEsta}" />
+                        </p:column>
+
+                        <p:column headerText="Periodo" width="120" style="text-align: center;color:#{item.numEfectSobraFalta.intValue()==0?'blue':'red'}">
+                            <h:outputText value="#{item.id.numPeri}" />
+                        </p:column>                        
                         
-                        <h:column>
-                            <f:facet name="header">Estado</f:facet>#{item.desEsta}
-                        </h:column>
+                        <p:column headerText="Mto. Ape. Caja" style="text-align: right">
+                            <h:outputText value="S/.#{item.numEfectApertCaja}"/>
+                        </p:column>
                         
-                        <h:column>
-                            <f:facet name="header">Fec. Apertura</f:facet>#{item.fecApertura}
-                        </h:column>
+                        <p:column headerText="Sist. Total Efectivo" style="text-align: right;color: blue">
+                            <h:outputText value="S/.#{item.numEfectTotalSistema}"/>
+                        </p:column>
                         
-                        <h:column>
-                            <f:facet name="header">Fec. Cierre</f:facet>#{item.fecCierre}
-                        </h:column>
+                        <p:column headerText="Sist. Total Tarjetas" style="text-align: right;color: blue">
+                            <h:outputText value="S/.#{item.numTarjeTotalSiste}"/>
+                        </p:column>
                         
-                        <h:column>
-                            <f:facet name="header">Mto. Ape. Caja</f:facet>#{item.numEfectApertCaja}
-                        </h:column>
+                        <p:column headerText="Sist. Total Trans/Depo" style="text-align: right;color: blue">
+                            <h:outputText value="S/.#{item.numTranDepoTotalSiste}"/>
+                        </p:column>
                         
-                        <h:column>
-                            <f:facet name="header">Usu. Cheques / Monedas</f:facet>#{item.numEfectDenomTotal}
-                        </h:column>                        
-                                               
-                        <h:column>
-                            <f:facet name="header">Sist. Total (Efectivo)</f:facet>#{item.numEfectTotalSistema}
-                        </h:column>
+                        <p:column headerText="Sist. Total Gastos" style="text-align: right;color: red">
+                            <h:outputText value="S/.#{item.numEfectTotalGastoSiste}"/>
+                        </p:column>
                         
-                        <h:column>
-                            <f:facet name="header">Descuadre (Efectivo)</f:facet>#{item.numEfectSobraFalta}
-                        </h:column>
+                        <p:column headerText="TOTAL EFECTIVO CAJA" style="text-align: right;color: blue">
+                            <h:outputText value="S/.#{item.numEfectApertCaja + item.numEfectTotalSistema - item.numEfectTotalGastoSiste }"/>
+                        </p:column>
                         
-                        <h:column>
-                            <f:facet name="header">Usu. Total (Tarjeta)</f:facet>#{item.numTarjeTotalSiste}
-                        </h:column>
-                        
-                        <h:column>
-                            <f:facet name="header">Sist. Total (Tarjeta)</f:facet>#{item.numTarjeTotalSiste}
-                        </h:column>
-                        
-                        <h:column>
-                            <f:facet name="header">Descuadre (Tarjeta)</f:facet>#{item.numTarjeSobraFalta}
-                        </h:column>
-                        
-                        <h:column>
-                            <f:facet name="header">Total Venta Dia</f:facet>#{item.numTotalVenta}
-                        </h:column>
-                        
-                        <h:column>
-                            <h:commandLink action="#{cashRegisterController.viewDetail(item)}">
+                        <p:column headerText="" width="20" style="padding: 1px" exportable="false">
+                            <p:commandLink action="#{cashRegisterController.viewDetail(item)}">
                                 <span class="glyphicon glyphicon-info-sign" data-toggle="tooltip" title="Ver Detalle"></span>
-                            </h:commandLink>                           
-                        </h:column>
-                    </h:dataTable>
+                            </p:commandLink>                            
+                        </p:column>
+                        
+                        <p:column headerText="" width="20" style="padding: 1px" exportable="false">
+                            <p:commandLink action="#{cashRegisterController.notifyByEmail(item)}" 
+                                           rendered="#{item.sic3docuesta.desEsta=='CERRADO'?true:false}"
+                                           update="form:message" onclick="fnShowInfoMessage('Procesando...')">
+                                <span class="glyphicon glyphicon-envelope" data-toggle="tooltip" title="Enviar Correo"></span>
+                            </p:commandLink>
+                        </p:column>
+
+                        <f:facet name="paginatorTopLeft">
+                            <p:commandButton type="button" icon="fa fa-sync" />
+                        </f:facet>
+
+                        <f:facet name="paginatorBottomRight">
+                            <p:commandButton type="button" icon="fa fa-cloud-upload" />
+                        </f:facet>
+                    </p:dataTable>                   
+                    
                     
                 </div>
             

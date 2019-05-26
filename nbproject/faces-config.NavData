@@ -1,6 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Scene Scope="Project" version="2">
     <Scope Scope="Faces Configuration Only"/>
-    <Scope Scope="Project"/>
+    <Scope Scope="Project">
+        <Node id="popups/popupPersonaRegistrar.xhtml" x="135" y="585" zoom="true"/>
+        <Node id="error.xhtml" x="150" y="750" zoom="true"/>
+        <Node id="index.xhtml" x="650" y="300" zoom="true"/>
+        <Node id="gastoRegistrar.xhtml" x="1165" y="217" zoom="true"/>
+        <Node id="kardexCargar.xhtml" x="1150" y="300" zoom="true"/>
+        <Node id="actualizarPrecios.xhtml" x="598" y="82" zoom="true"/>
+        <Node id="redirect.jsp" x="400" y="450" zoom="true"/>
+        <Node id="trash/popupPersonaRegistrar_ConTabs.xhtml" x="160" y="146" zoom="true"/>
+        <Node id="reportes.xhtml" x="486" y="202" zoom="true"/>
+        <Node id="popups/popupSendEmail.xhtml" x="900" y="450" zoom="true"/>
+        <Node id="cajaCuadreListar.xhtml" x="150" y="300" zoom="true"/>
+        <Node id="ordenRegistrar.xhtml" x="650" y="450" zoom="true"/>
+        <Node id="documentosListar.xhtml" x="400" y="300" zoom="true"/>
+        <Node id="login.xhtml" x="150" y="450" zoom="true"/>
+        <Node id="cajaCuadre.xhtml" x="900" y="300" zoom="true"/>
+        <Node id="gastosListar.xhtml" x="149" y="537" zoom="true"/>
+        <Node id="personaListar.xhtml" x="153" y="669" zoom="false"/>
+        <Node id="ordenDetalle.xhtml" x="86" y="76" zoom="true"/>
+        <Node id="trash/personaMantenimiento_conTabs.xhtml" x="904" y="69" zoom="true"/>
+        <Node id="popups/popupProductoRegistrar.xhtml" x="462" y="644" zoom="true"/>
+        <Node id="templates/templatePrincipal.xhtml" x="97" y="260" zoom="false"/>
+    </Scope>
     <Scope Scope="All Faces Configurations"/>
 </Scene>

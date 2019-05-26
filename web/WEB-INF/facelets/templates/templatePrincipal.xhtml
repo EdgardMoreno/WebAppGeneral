@@ -1,0 +1,456 @@
+<?xml version='1.0' encoding='UTF-8' ?> 
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"> 
+
+    <h:head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <meta charset="utf-8"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
+        <meta name="description" content=""/>
+        <meta name="author" content=""/>
+        <link rel="icon" href="#{request.contextPath}/faces/resources/img/favicon.ico"></link>        
+
+        <!--CSS STYLE -->        
+        <h:outputStylesheet name="/css/bootstrap.min.css"/>
+        <h:outputStylesheet name="/css/bootstrap.min.css.map"/>
+        <h:outputStylesheet name="/css/customizer.css"/>
+        <h:outputStylesheet name="/css/jquery-confirm-3.3.css"/>
+        <h:outputStylesheet name="/css/jquery.fancybox-2.1.7.css"/>
+        <h:outputStylesheet name="/css/sb-admin-2.css"/>
+        <h:outputStylesheet name="css/default.css" />
+
+        <!--<link rel="stylesheet" href="#{request.contextPath}/faces/resources/css/bootstrap-theme.min.css"/>-->
+
+        <!--JAVASCRIPT-->        
+        <script src="#{request.contextPath}/faces/resources/js/jquery-3.3.1.js"></script>
+        <script src="#{request.contextPath}/faces/resources/js/bootstrap.js"></script>
+        <script src="#{request.contextPath}/faces/resources/js/jquery-ui.js" />
+        
+        <script src="#{request.contextPath}/faces/resources/js/jquery.fancybox-2.1.7.js"></script>
+        <script src="#{request.contextPath}/faces/resources/js/jquery-confirm-3.3.js"></script>
+        <script src="#{request.contextPath}/faces/resources/js/customizerJS.js"></script>
+        
+        <!--Gestor de iconos -->
+        <script src="#{request.contextPath}/faces/resources/js/fontawesome/fontawesome-all.js"></script>
+
+        <title>Facelets Template</title>
+
+        <style>
+
+            .idDivDisplayUser{
+                
+                position:relative;
+                margin: 3px;
+                width: auto;
+                float:right;
+                top: 0px;
+                text-align: left;
+                font-weight: bolder;
+            }
+            
+            #nonAjaxLoad {
+                                          
+                position: fixed;
+                z-index: 999;
+                height: 2em;
+                width: 2em;             
+                overflow: show;
+                margin: auto;
+                top: 0;
+                left: 0;       
+                bottom: 0;
+                right: 0;
+                
+                background-color: rgba(192, 192, 192, 0.5);
+                background-repeat: no-repeat;
+                background-position: center;
+            }            
+                        
+        </style>        
+        
+        
+        <script>
+                
+                $(document).ready(function () {
+
+                    //Se utiliza para llamar a URL externa
+                    $(".iframe").fancybox({
+
+                        type: "iframe",
+                        modal: "true",
+                        enableEscapeButton: "false",
+                        autoDimensions: "false",
+                        width: 600,
+                        height: 480,
+                        autoSize: false,
+                        overlayColor: "#797379",
+                        titleShow: true,
+                        titlePosition: "outside",
+                        overlayOpacity: 0.6,
+                        transitionIn: "elastic",
+                        transitionOut: "elastic"
+
+                    });
+                });
+                
+
+            </script>
+        
+        
+        <div id="header">
+            <ui:insert name="header"></ui:insert>
+        </div>
+        
+    </h:head>
+    
+    <script type="text/javascript">
+        
+        /*Funcion de Jquery para el datePicker*/
+        $(function(){
+            $(".datepicker" ).datepicker({dateFormat: 'dd/mm/yy'});
+        });
+        
+    </script>
+
+    <body >
+        
+        
+        <div id="nonAjaxLoad">
+            <img src="#{request.contextPath}/faces/resources/img/loading_page.gif"/>
+        </div>
+        
+
+        <h:form id="form" enctype="multipart/form-data">
+            
+            
+            
+            <p:growl id="messagePrincipal" showDetail="true" />
+
+            <nav class="navbar navbar-inverse">
+                <div class="container-fluid">
+                    <div class="navbar-header">
+                        <a class="navbar-brand" href="#">DECO STYLOS</a>
+                    </div>
+                    <ul class="nav navbar-nav">
+                        <li class="active"><a href="#{request.contextPath}/faces/index.xhtml">Inicio</a></li>
+                        
+                        <li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="#">Productos<span class="caret"></span></a>
+                            <ul class="dropdown-menu">                              
+                                <li><h:commandLink id="idMenuRegisterProduct" value="Registrar Producto" onclick="return fnShowPopupCreateProduct_2('')"/>
+                                </li>                                
+                                <li><h:commandLink id="idMenuReporteProductos" value="Reporte de Productos" actionListener="#{masterPageController.validarDatos()}" action="#{masterPageController.irPagina()}">
+                                    <f:param name="paramTituloPagina" value="Reporte de Productos" />
+                                    <f:param name="paramNombrePagina" value="rptListadoProductos" />
+                                    </h:commandLink>
+                                </li>
+                                <!--<li><a href="#{request.contextPath}/faces/actualizarPrecios.xhtml">Actualizar Precios</a></li>-->
+                            </ul>
+                        </li>
+
+                        <li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="#">Clientes<span class="caret"></span></a>
+                            <ul class="dropdown-menu">
+                                <!--<li><a href="#{request.contextPath}/faces/popups/popupPersonaRegistrar.xhtml">Registrar Cliente</a></li>-->
+                                <li>                                
+                                    <h:commandLink id="idMenuCustomerReport" value="Reporte de Clientes" actionListener="#{masterPageController.validarDatos()}" action="#{masterPageController.irRptPersonas()}" >
+                                        <f:param name="paramTituloPagina" value="Reporte de Clientes" />
+                                        <f:param name="paramNombrePagina" value="personaListar" />
+                                        <f:param name="paramCodTRolpers" value="VI_SICTROLCLIENTE" />
+                                    </h:commandLink>
+                                </li>
+                            </ul>
+                        </li>
+                        
+                         <li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="#">Proveedores<span class="caret"></span></a>
+                            <ul class="dropdown-menu">
+                                <!--<li><a href="#{request.contextPath}/faces/popups/popupPersonaRegistrar.xhtml">Registrar Proveedor</a></li>-->
+                                <li>                                
+                                    <h:commandLink id="idMenuProviderReport" value="Reporte de Proveedores" actionListener="#{masterPageController.validarDatos()}" action="#{masterPageController.irRptPersonas()}" >
+                                        <f:param name="paramTituloPagina" value="Reporte de Proveedores" />
+                                        <f:param name="paramNombrePagina" value="personaListar" />
+                                        <f:param name="paramCodTRolpers" value="VI_SICTROLPROVEEDOR" />
+                                    </h:commandLink>
+                                </li>
+                            </ul>
+                        </li>
+
+                        <li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="#">Compras<span class="caret"></span></a>
+                            <ul class="dropdown-menu">
+                                <li>
+                                    <h:commandLink style="color:#0000FF" id="idMenuRegistrarOrdenCompra" value="Registrar Orden de Compra" actionListener="#{masterPageController.validarDatos()}" action="#{masterPageController.irRegistrarCompra()}" >
+                                        <f:param name="paramTituloPagina" value="Registrar Orden de Compra" />
+                                        <f:param name="paramNombrePagina" value="ordenRegistrar" />
+                                        <f:param name="paramCodSClaseeven" value="VI_SICSCLASEEVENORDENCOMPRA" />
+                                        <f:param name="paramCodTRolpers" value="VI_SICTROLPROVEEDOR" />
+                                    </h:commandLink>
+                                </li>
+                                <li>
+                                    <hr style="margin: 0px;"/>
+                                </li>                                                                
+                                <li>
+                                    <h:commandLink style="color:#0000FF" id="idMenuRegisterPurchase" value="Registrar Compra" actionListener="#{masterPageController.validarDatos()}" action="#{masterPageController.irRegistrarCompra()}" >
+                                        <f:param name="paramTituloPagina" value="Registrar Compra" />
+                                        <f:param name="paramNombrePagina" value="ordenRegistrar" />
+                                        <f:param name="paramCodSClaseeven" value="VI_SICSCLASEEVENCOMPRA" />
+                                        <f:param name="paramCodTRolpers" value="VI_SICTROLPROVEEDOR" />
+                                    </h:commandLink>
+                                </li>
+                                <li>
+                                    <h:commandLink style="color:#0000FF" id="idMenuRegistrarCompraOC" value="Registrar Compra desde O.C." actionListener="#{masterPageController.validarDatos()}" action="#{masterPageController.irRegistrarCompra()}" >
+                                        <f:param name="paramTituloPagina" value="Registrar Compra desde Orden de Compra" />
+                                        <f:param name="paramNombrePagina" value="ordenRegistrarDesdeOC" />
+                                        <f:param name="paramCodSClaseeven" value="VI_SICSCLASEEVENCOMPRA" />
+                                        <f:param name="paramCodTRolpers" value="VI_SICTROLPROVEEDOR" />
+                                    </h:commandLink>
+                                </li>
+                                <li>
+                                    <hr style="margin: 0px;"/>
+                                </li>
+                                <li>
+                                    <h:commandLink id="idMenuRptOrdenCompra" value="Reporte de Ordenes de Compra" actionListener="#{masterPageController.validarDatos()}" action="#{masterPageController.irRptComprasVentas()}" >
+                                        <f:param name="paramTituloPagina" value="Reporte de Ordenes de Compra" />
+                                        <f:param name="paramNombrePagina" value="documentosListar" />
+                                        <f:param name="paramCodSClaseeven" value="VI_SICSCLASEEVENORDENCOMPRA" />
+                                        <f:param name="paramCodTRolpers" value="VI_SICTROLPROVEEDOR" />
+                                    </h:commandLink>                                    
+                                </li>
+                                <li>
+                                    <h:commandLink id="idMenuPurchaseReport" value="Reporte de Compras" actionListener="#{masterPageController.validarDatos()}" action="#{masterPageController.irRptComprasVentas()}" >
+                                        <f:param name="paramTituloPagina" value="Reporte de Compras" />
+                                        <f:param name="paramNombrePagina" value="documentosListar" />
+                                        <f:param name="paramCodSClaseeven" value="VI_SICSCLASEEVENCOMPRA" />
+                                        <f:param name="paramCodTRolpers" value="VI_SICTROLPROVEEDOR" />
+                                    </h:commandLink>
+                                </li>
+                            </ul>
+                        </li>
+                        
+                        <li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="#">Ventas<span class="caret"></span></a>
+                            <ul class="dropdown-menu">
+                                <li>
+                                    <h:commandLink style="color:#0000FF" id="idMenuSaleRegist" value="Registrar Venta" actionListener="#{masterPageController.validarDatos()}" action="#{masterPageController.irRegistrarVenta()}" >
+                                        <f:param name="paramTituloPagina" value="Registrar Venta" />
+                                        <f:param name="paramNombrePagina" value="ordenRegistrar" />
+                                        <f:param name="paramCodSClaseeven" value="VI_SICSCLASEEVENVENTA" />
+                                        <f:param name="paramCodTRolpers" value="VI_SICTROLCLIENTE" />
+                                    </h:commandLink>
+                                </li>
+                                <li>
+                                    <h:commandLink id="idMenuSaleReport" value="Reporte de Ventas" actionListener="#{masterPageController.validarDatos()}" action="#{masterPageController.irRptComprasVentas()}" >
+                                        <f:param name="paramTituloPagina" value="Reporte de Ventas" />
+                                        <f:param name="paramNombrePagina" value="documentosListar" />
+                                        <f:param name="paramCodSClaseeven" value="VI_SICSCLASEEVENVENTA" />
+                                        <f:param name="paramCodTRolpers" value="VI_SICTROLCLIENTE" />
+                                    </h:commandLink>
+                                </li>
+                                 <li>
+                                    <hr style="margin: 0px;"/>
+                                </li>
+                                <li>
+                                    <h:commandLink style="color:#0000FF" value="Registrar Nota de Crédito" actionListener="#{masterPageController.validarDatos()}" action="#{masterPageController.irRegistrarNotaCreditoDebito()}" >
+                                        <f:param name="paramTituloPagina" value="Registrar Nota de Crédito" />
+                                        <f:param name="paramNombrePagina" value="ordenRegistrarDesdeOtroDocumento" />
+                                        <f:param name="paramCodSClaseeven" value="VI_SICSCLASEEVENNOTACREDITO" />
+                                        <f:param name="paramCodTRolpers" value="VI_SICTROLPROVEEDOR" />
+                                    </h:commandLink>
+                                </li>
+                            </ul>
+                        </li>
+                        
+                        
+                        <li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="#">Inventario<span class="caret"></span></a>
+                            <ul class="dropdown-menu">
+                                <li>
+                                    <h:commandLink id="idMenuInvenRegister" value="Cargar Kardex" actionListener="#{masterPageController.validarDatos()}" action="#{masterPageController.irRptComprasVentas()}" >
+                                        <f:param name="paramTituloPagina" value="Registrar Venta" />
+                                        <f:param name="paramNombrePagina" value="kardexCargar" />                                        
+                                    </h:commandLink>
+                                </li>
+                                
+                                <li>
+                                    <hr style="margin: 0px;"/>
+                                </li>
+                                
+                                <li>
+                                    <h:commandLink id="idMenuInvenReport" value="Reporte de Inventario" actionListener="#{masterPageController.validarDatos()}" action="#{masterPageController.irRptComprasVentas()}" >
+                                        <f:param name="paramTituloPagina" value="Reporte de Ventas" />
+                                        <f:param name="paramNombrePagina" value="kardexListar" />                                        
+                                    </h:commandLink>
+                                </li>
+                                
+                                <li>
+                                    <h:commandLink id="idMenuKardexResumen" value="Reporte Kardex Resumen" actionListener="#{masterPageController.validarDatos()}" action="#{masterPageController.irPagina()}" >
+                                        <f:param name="paramTituloPagina" value="Reporte Kardex Resumen" />
+                                        <f:param name="paramNombrePagina" value="rptKardexResumen" />                                        
+                                    </h:commandLink>
+                                </li>
+                                
+                            </ul>
+                        </li>
+                        
+                        <li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="#">Cierre Diario<span class="caret"></span></a>
+                            <ul class="dropdown-menu">
+                                <li><a href="#{request.contextPath}/faces/canalPublicidadRegistrar.xhtml">1. Registrar Canales Publicidad</a></li>
+                                <li>
+                                    <h:commandLink style="color:blue" id="idMenuCloseBox" value="2. Cuadrar Caja" actionListener="#{masterPageController.validarDatos()}" action="#{masterPageController.irPagina()}">
+                                        <f:param name="paramTituloPagina" value="Cuadre Caja" />
+                                        <f:param name="paramNombrePagina" value="cajaCuadre" />                                    
+                                    </h:commandLink>
+                                </li>
+                                <li>
+                                    <h:commandLink id="idMenuBoxReport" value="3. Reporte de Cierre Diarios" actionListener="#{masterPageController.validarDatos()}" action="#{masterPageController.irPagina()}">
+                                        <f:param name="paramTituloPagina" value="Reporte de Cierre Diario" />
+                                        <f:param name="paramNombrePagina" value="cajaCuadreListar" />                                    
+                                    </h:commandLink>
+                                </li>
+                                
+                            </ul>
+                        </li>
+                        
+                        <li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="#">Gastos<span class="caret"></span></a>
+                            <ul class="dropdown-menu">                                
+                                <li>
+                                    <h:commandLink style="color:#0000FF" id="idMenuRegisterSpend" value="Registrar Gasto" actionListener="#{masterPageController.validarDatos()}" action="#{masterPageController.irRegistrarGasto()}">
+                                        <f:param name="paramTituloPagina" value="Registrar Gasto" />
+                                        <f:param name="paramNombrePagina" value="gastoRegistrar" />
+                                        <f:param name="paramCodClaseeven" value="VI_SICGASTOS" />
+                                        <f:param name="paramCodTRolpers" value="VI_SICTROLPROVEEDOR" />
+                                    </h:commandLink>
+                                </li>
+                                <li>
+                                    <h:commandLink id="idMenuSpendReport" value="Reporte de Gastos" actionListener="#{masterPageController.validarDatos()}" action="#{masterPageController.irRptComprasVentas()}">
+                                        <f:param name="paramTituloPagina" value="Reporte de Gastos" />
+                                        <f:param name="paramNombrePagina" value="gastosListar" />
+                                        <f:param name="paramCodClaseeven" value="VI_SICGASTOS" />
+                                    </h:commandLink>
+                                </li>                                
+                            </ul>
+                        </li>
+                        
+                        <li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="#">Reportes<span class="caret"></span></a>
+                            <ul class="dropdown-menu">                                
+                                <li>
+                                    <h:commandLink id="idReportesGenerales" value="Reportes Generales" actionListener="#{masterPageController.validarDatos()}" action="#{masterPageController.irPagina()}">
+                                        <f:param name="paramTituloPagina" value="Reportes Generales" />
+                                        <f:param name="paramNombrePagina" value="rptGenerales" />                                        
+                                    </h:commandLink>
+                                </li>
+                                <li>
+                                    <h:commandLink id="idRptDetOperacionXProducto" value="Reporte Detalle Operaciones por producto" actionListener="#{masterPageController.validarDatos()}" action="#{masterPageController.irPagina()}">
+                                        <f:param name="paramTituloPagina" value="Reporte Detalle Operaciones por producto" />
+                                        <f:param name="paramNombrePagina" value="rptOperacionesPorProducto" />                                        
+                                    </h:commandLink>
+                                </li>
+                                <li>
+                                    <h:commandLink id="idReportesContables" value="Reportes Contables" actionListener="#{masterPageController.validarDatos()}" action="#{masterPageController.irPagina()}">
+                                        <f:param name="paramTituloPagina" value="Reportes Contables" />
+                                        <f:param name="paramNombrePagina" value="reportes" />                                        
+                                    </h:commandLink>
+                                </li>
+                                
+                            </ul>
+                        </li>
+                        
+                        <li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="#">Sunat<span class="caret"></span></a>
+                            <ul class="dropdown-menu">
+                                <li>
+                                    <h:commandLink  value="1. Enviar Factura y/o Boletas" actionListener="#{masterPageController.validarDatos()}" action="#{masterPageController.irPagina()}" >
+                                        <f:param name="paramTituloPagina" value="Listar Comprobantes Pendientes de Envío" />
+                                        <f:param name="paramNombrePagina" value="rptComprobantesPendientesEnvioSunat" />
+                                    </h:commandLink>
+                                </li>
+                                <li>
+                                    <h:commandLink  value="2. Enviar Comunicación Baja" actionListener="#{masterPageController.validarDatos()}" action="#{masterPageController.irPagina()}" >
+                                        <f:param name="paramTituloPagina" value="Listar Comprobantes Anulados Pendientes de Envío" />
+                                        <f:param name="paramNombrePagina" value="rptComunicBajaPendientesEnvioSunat" />
+                                    </h:commandLink>
+                                </li>
+                                <li>
+                                    <hr style="margin: 0px;"/>
+                                </li>
+                                <li>
+                                    <h:commandLink  style="color:red" value="4. Notificar reporte envío Facturación E." actionListener="#{masterPageController.notificarResumenEnvioDocuSunat()}" />
+                                </li>
+                                <li>
+                                    <hr style="margin: 0px;"/>
+                                </li>
+                                <li>
+                                    <h:commandLink  style="color:#0000FF" value="Reporte FACTURADOR SUNAT" actionListener="#{masterPageController.validarDatos()}" action="#{masterPageController.irPagina()}" >
+                                        <f:param name="paramTituloPagina" value="Reporte FACTURADOR SUNAT" />
+                                        <f:param name="paramNombrePagina" value="rptFacturadorSunat" />
+                                    </h:commandLink>
+                                </li>
+                                <li>
+                                    <hr style="margin: 0px;"/>
+                                </li>
+                                <li>                                    
+                                    <h:commandLink value="Configurar Parámetros Envio" onclick="return fnShowPopupConfParamFacturadorSunat()">
+                                    </h:commandLink>
+                                </li>
+                            </ul>
+                        </li>
+                        
+                        
+                    </ul>
+                    <ul class="nav navbar-nav navbar-right">                        
+                        
+                        <li>
+                            <h:commandLink action="#{masterPageController.logout()}" >
+                                <span class="glyphicon glyphicon-user"></span> Salir
+                            </h:commandLink>
+                        </li>
+                        <!--<li><a href="#"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>-->
+                    </ul>
+                </div>
+            </nav>
+                       
+            <div class="idDivDisplayUser">
+                <table>
+                    <tr>
+                        <td style="text-align: center">Bienvenido:</td>
+                        <td style="text-align: right">#{masterPageController.desLoginUser}</td>
+                    </tr>
+                    
+                    <tr style="display: none">
+                        <td style="color: blue; font-size: 18px">% Logrado de Meta(Papel):</td>
+                        <td style="color: blue; font-size: 18px;text-align: right">#{masterPageController.numPorcAlcanzado}%</td>
+                    </tr>
+                    <tr style="display: none">
+                        <td style="color: blue; font-size: 18px">% Logrado de Meta(Vinil):</td>
+                        <td style="color: blue; font-size: 18px;text-align: right">#{masterPageController.numPorcAlcanzado}%</td>
+                    </tr>
+                </table>                   
+            </div>
+            
+            <h:commandButton id="idBtnNotiResuPrinc" value="Notificar Resultado Proceso"  style="display: none" actionListener="#{reporteSunatController.notificarResumenEnvioDocuSunat()}"/>
+            
+
+            <div id="content">
+                <ui:insert name="content"></ui:insert>
+            </div>
+
+            <div id="footer">
+
+            </div>
+            
+            <a id="linkDialog" href="#" class="iframe"  style="display:none"/>
+            <a id="idLink" href="#"  style="display:none"/>
+
+        </h:form>
+        
+        <script>
+            $(document).ready(function(){
+                $('#nonAjaxLoad').hide();
+            });           
+            
+            $(window).bind('beforeunload', function() {
+                $('#nonAjaxLoad').show(); 
+            });            
+            
+        </script>
+       
+    </body>
+</html>

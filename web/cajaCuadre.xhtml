@@ -6,12 +6,12 @@
       xmlns:p="http://primefaces.org/ui"
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets"  >
 
-    <f:metadata>        
+    <!--<f:metadata>        
         <f:viewParam name="titulo" value="#{cashRegisterController.desTituloPagina}"/>
         <f:event type="preRenderView" listener="#{cashRegisterController.getParamsExternalPage}"/>
-    </f:metadata>
+    </f:metadata>-->
 
-    <ui:composition template="./templates/templatePrincipal.xhtml">
+    <ui:composition template="./WEB-INF/facelets/templates/templatePrincipal.xhtml">
 
         <ui:define name="header">
 
@@ -31,11 +31,31 @@
                 .panelTarjeta {
                     margin-top: 5px;
                     position:absolute;                    
-                    left: 470px;
+                    left: 770px;
                     /*border: 1px solid black;*/
                 }
-
-               
+                
+                .panelGastos {
+                    margin-top: 150px;
+                    position:absolute;                    
+                    left: 770px;
+                    /*border: 1px solid black;*/
+                }
+                
+                .panelTranDepo {
+                    margin-top: 230px;
+                    position:absolute;                    
+                    left: 770px;
+                    /*border: 1px solid black;*/
+                }       
+                
+                
+                .panelTotales{
+                    margin-top: 340px;
+                    position:absolute;                    
+                    left: 770px;
+                    
+                }       
 
                 table{
                     font-family: Verdana;
@@ -104,7 +124,7 @@
                 .valor{text-align: right; width: 65px; padding-right: 3px; margin: 0px; font-weight: bold;}
                 .cantidad{background-color: white; text-align: center; width: 75px; padding: 0px; margin: 0px;}
                 .gasto{ color: red;}
-                .sobraFalta{ font-size: 14px; 
+                .sobraFalta{ font-size: 13px; 
                             background-color: #167F92;
                             font-weight: bolder;
                             text-align: right;
@@ -157,7 +177,7 @@
                     <h3>${cashRegisterController.desTituloPagina}</h3>
                 </div>
 
-                <table >
+                <table>
                     <tr>
                         <td style="text-align: right; font-weight: bold; font-size: 11px; padding: 3px" >Fecha de Apertura:</td>
                         <td style="text-align: left; font-size: 11px; padding: 3px">${cashRegisterController.box.fecApertura}</td>
@@ -179,6 +199,11 @@
                 <!-- ****************************************** -->
                 <div class="panelEfectivo">
                     <table id="idTblEfectivo" border="1" >
+                        <tr>
+                            <td class="superTotal">APERTURA CAJA:</td>
+                            <th class="separadorColu"></th>
+                            <td colspan="2" class="superTotal_valor">#{cashRegisterController.box.numEfectApertCaja}</td>
+                        </tr>
                         <tr>
                             <th>EFECTIVO</th>
                             <th class="separadorColu"></th>
@@ -266,19 +291,14 @@
                             <td class="total">TOTAL GASTOS:</td>
                             <th class="separadorColu"></th>
                             <td colspan="2"><h:inputText id="idGastEfec" styleClass="ingresoMto gasto total" value="#{cashRegisterController.box.numEfectGastoTotal}" onkeypress="return fnAllowOnlyDecimalNumbers(event)" onblur="formatDecimal_2(this); fnHideSaveButton()"  autocomplete="off" readonly="#{!cashRegisterController.editFields}"/></td>
-                        </tr>
-                        <tr>
-                            <td class="total">APERTURA CAJA:</td>
-                            <th class="separadorColu"></th>
-                            <td colspan="2" class="ingresoMto total">#{cashRegisterController.box.numEfectApertCaja}</td>
-                        </tr>
-                        <tr>
+                        </tr>                        
+                        <tr style="display: none">
                             <td class="superTotal">TOTAL EFECTIVO:</td>
                             <th class="separadorColu"></th>
                             <td class="superTotal_valor" colspan="2">#{cashRegisterController.box.numEfectTotal}</td>
                         </tr>                    
 
-                        <tr>
+                        <tr style="display: none">
                             <td class="total">SISTEMA: TOTAL VENTAS EFECTIVO:</td>
                             <th class="separadorColu"></th>
                             <td class="total" colspan="2">${cashRegisterController.box.numEfectTotalVentaSiste}</td>
@@ -288,8 +308,8 @@
                             <th class="separadorColu"></th>
                             <td class="total gasto" colspan="2">${cashRegisterController.box.numEfectTotalGastoSiste}</td>
                         </tr>
-                        <tr>
-                            <td class="superTotal">SISTEMA: TOTAL EFECTIVO:</td>
+                        <tr >
+                            <td class="superTotal">SISTEMA: TOTAL VENTAS EFECTIVO:</td>
                             <th class="separadorColu"></th>
                             <td class="superTotal_valor" colspan="2">${cashRegisterController.box.numEfectTotalSistema}</td>
                         </tr>                    
@@ -305,18 +325,18 @@
                     
                     <h:panelGroup id="idPnBotones" rendered="#{cashRegisterController.editFields}">
                         <div class="offset-sm-2 col-sm-10">
-                            <h:commandLink id="idBtnCalcular" styleClass="btn btn-primary" value="Calcular">
+                            <h:commandButton id="idBtnCalcular" styleClass="btn btn-primary" value="Calcular">
                                 <f:ajax execute="@form" render="@form" listener="#{cashRegisterController.calculate()}" onevent="fnAjaxListenCalcularCuadreCaja" />
-                            </h:commandLink>
+                            </h:commandButton>
                             <input type="button" disabled="true" id="btnConfirm" value="Cerrar Caja" class="btn btn-danger" onclick="return fnValidateForm()"/>
                         </div>
 
-                        <h:commandLink styleClass="btn btn-primary"
+                        <h:commandButton styleClass="btn btn-primary"
                                        id="idBtnGrabar"
-                                       value="Grabar"                                        
+                                       value="Grabar"
                                        style="display: none" >
                             <f:ajax execute="@form" render="@form" listener="#{cashRegisterController.save()}" />
-                        </h:commandLink>
+                        </h:commandButton>
                     </h:panelGroup>
                     
                 </div>
@@ -326,7 +346,7 @@
                 <!-- TARJETA -->
                 <!-- ****************************************** -->
                 <div class="panelTarjeta">
-                    <table id="idTblTarjeta" width="375" border="1" >
+                    <table width="375" border="1" >
                         <tr>
                             <th style="width: 23em" >TARJETA</th>
                             <th class="separadorColu"></th>                        
@@ -358,21 +378,78 @@
                             <td id="idSobraFaltaTarjeta" class="sobraFalta">${cashRegisterController.box.numTarjeSobraFalta}</td>
                         </tr>
                     </table>
+                    <br/>                                       
+                </div>               
+                
+                
+                <!-- ****************************************** -->
+                <!-- GASTOS -->
+                <!-- ****************************************** -->
+                <div class="panelGastos">
+                    <table width="375" border="1" >
+                        <tr>
+                            <th style="width: 23em" >GASTOS EFECTIVO</th>
+                            <th class="separadorColu"></th>                        
+                            <th >VALOR</th>
+                        </tr>
+                        <tr>
+                            <td class="total" >SISTEMA: TOTAL GASTOS:</td>
+                            <th class="separadorColu"></th> 
+                            <td class="ingresoMto">${cashRegisterController.box.numEfectTotalGastoSiste}</td>
+                        </tr>
+                        <tr>
+                            <td class="sobraFalta" >TOTAL GASTOS</td>
+                            <th class="separadorColu"></th>
+                            <td class="sobraFalta">${cashRegisterController.box.numEfectTotalGastoSiste}</td>
+                        </tr>
+                    </table>
                     <br/>
-                    <br/>
-                    
-                        <table width="375" >
-                            <tr>
-                                <td style="width: 21.5em" class="totalVentas" >TOTAL VENTAS(EFEC + TARJ):</td>
-                                <td class="separadorColu"></td>                        
-                                <td style="width: 5em" class="totalVentas">${cashRegisterController.desTotalVentas}</td>
-                            </tr>
-
-                        </table>                    
+                    <br/>                   
+                                  
                 </div>
-
-
-              
+                
+                <!-- ****************************************** -->
+                <!-- TRANSFERENCIA / DEPOSITO -->
+                <!-- ****************************************** -->
+                <div class="panelTranDepo">
+                    <table id="idTblTranDepo" width="375" border="1" >
+                        <tr>
+                            <th style="width: 23em" >TRANSFERENCIA / DEPOSITO</th>
+                            <th class="separadorColu"></th>                        
+                            <th >VALOR</th>
+                        </tr>                        
+                        <tr>
+                            <td class="total" >TRANS / DEPO:</td>
+                            <th class="separadorColu"></th>
+                            <td><h:inputText id="MtoTranDepo" styleClass="ingresoMto total" value="#{cashRegisterController.box.numTranDepoTotal}" onkeypress="return fnAllowOnlyDecimalNumbers(event)"  onblur="formatDecimal_2(this); fnHideSaveButton()" autocomplete="off" readonly="#{!cashRegisterController.editFields}"/></td>
+                        </tr>
+                        <tr>
+                            <td class="sobraFalta" >SISTEMA: TOTAL TRANS / DEPO:</td>
+                            <th class="separadorColu"></th> 
+                            <td class="sobraFalta">${cashRegisterController.box.numTranDepoTotalSiste}</td>
+                        </tr>
+                    </table>
+                    <br/>                    
+                </div>
+                
+                <div class="panelTotales">
+                    
+                    <table width="375" >
+                        <tr>
+                            <td style="width: 21.5em" class="totalVentas" >TOTAL VENTAS(EFEC + TARJ + TRAN/DEPO):</td>
+                            <td class="separadorColu"></td>                        
+                            <td style="width: 5em" class="totalVentas">${cashRegisterController.desTotalVentas}</td>
+                        </tr>
+                        <tr>
+                            <td style="width: 21.5em" class="totalVentas" >TOTAL EFECTIVO EN CAJA:</td>
+                            <td class="separadorColu"></td>                        
+                            <td style="width: 5em" class="totalVentas">${cashRegisterController.desTotalEfectivo}</td>
+                        </tr>
+                    </table>      
+                    
+                </div>
+                
+                
             </div>
 
         </ui:define>

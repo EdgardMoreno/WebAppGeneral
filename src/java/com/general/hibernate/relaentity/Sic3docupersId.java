@@ -16,6 +16,10 @@ public class Sic3docupersId  implements java.io.Serializable {
      private BigDecimal idTrolpers;
      private BigDecimal idPers;
      private Date fecDesde;
+     
+     /*Agregados*/
+     private String codTreladocu;
+     private String codTrolpers;
 
     public Sic3docupersId() {
     }
@@ -64,7 +68,22 @@ public class Sic3docupersId  implements java.io.Serializable {
         this.fecDesde = fecDesde;
     }
 
+    public String getCodTreladocu() {
+        return codTreladocu;
+    }
 
+    public void setCodTreladocu(String codTreladocu) {
+        this.codTreladocu = codTreladocu;
+    }
+
+    public String getCodTrolpers() {
+        return codTrolpers;
+    }
+
+    public void setCodTrolpers(String codTrolpers) {
+        this.codTrolpers = codTrolpers;
+    }   
+    
    public boolean equals(Object other) {
          if ( (this == other ) ) return true;
 		 if ( (other == null ) ) return false;

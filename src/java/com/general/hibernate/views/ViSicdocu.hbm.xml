@@ -76,6 +76,11 @@
     <property name="numDocu" type="big_decimal">
       <column name="NUM_DOCU" precision="22" scale="0"/>
     </property>
+    
+    <property name="numDocuunido" type="string">
+      <column name="COD_SERIE||'-'||NUM_DOCU" precision="30" scale="0"/>
+    </property>
+    
     <property name="desNotas" type="string">
       <column length="4000" name="DES_NOTAS"/>
     </property>
@@ -95,9 +100,22 @@
     <property name="numMtodscto" type="string">
       <column name="NUM_MTODSCTO" length="20"/>
     </property>
-    <property name="numMtototal" type="string">
-      <column name="NUM_MTOTOTAL" length="20"/>
+    <property name="numMtototal" type="double">
+      <column name="NUM_MTOTOTAL" precision="22" scale="0"/>
     </property>
+    <property name="numTotalpagado" type="double">
+      <column name="NUM_TOTALPAGADO" precision="22" scale="0"/>
+    </property>
+    <property name="numMtopagadotarjeta" type="double">
+      <column name="NUM_MTOPAGADOTARJETA" precision="22" scale="0"/>
+    </property>
+    <property name="numMtopagadocomitarjeta" type="double">
+      <column name="NUM_MTOPAGADOCOMITARJETA" precision="22" scale="0"/>
+    </property>
+    <property name="numMtopagadoefectivo" type="double">
+      <column name="NUM_MTOPAGADOEFECTIVO" precision="22" scale="0"/>
+    </property>
+    
     
     
     <property name="idTipodocu" type="big_decimal">
@@ -135,6 +153,29 @@
     </property>
     <property name="desTrolpersCreador" type="string">
       <column length="500" name="DES_TROLPERS_CREADOR"/>
+    </property>
+    <property name="idDocurel" type="big_decimal">
+      <column name="ID_DOCUREL" precision="22" scale="0" />
+    </property>
+    <property name="desDocurel" type="string">
+      <column length="100" name="DES_DOCUREL"/>
+    </property>
+    <property name="desSucursal" type="string">
+      <column length="100" name="DES_SUCURSAL"/>
+    </property>
+    <property name="indSitusunat" type="string">
+      <column length="5" name="IND_SITUSUNAT"/>
+    </property>
+    <property name="desSitusunat" type="string">
+      <column length="100" name="DES_SITUSUNAT"/>
+    </property>
+    
+    <property name="fecEnvisunat" type="date">
+      <column length="10" name="FEC_ENVISUNAT"/>
+    </property>
+    
+    <property name="flgDeclaradosunat" type="integer">
+      <column name="FLG_DECLARADOSUNAT" precision="5" scale="0"/>
     </property>
   </class>
 </hibernate-mapping>

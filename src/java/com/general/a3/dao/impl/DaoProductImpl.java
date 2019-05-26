@@ -25,12 +25,14 @@ import com.general.util.beans.UtilClass;
 import com.general.util.exceptions.ValidationException;
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.sql.CallableStatement;
 import java.util.ArrayList;
 import org.hibernate.Criteria;
 import org.hibernate.HibernateException;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.hibernate.jdbc.ReturningWork;
+import org.hibernate.jdbc.Work;
 
 /**
  *
@@ -93,6 +95,7 @@ public class DaoProductImpl implements Serializable{
 
                         sp.addParameter(new InParameter("X_ID_TIPOIDEN",    Types.INTEGER, intIdTipoIden));
                         sp.addParameter(new InParameter("X_COD_IDEN",       Types.VARCHAR, sic1prod.getCodProd().trim().toUpperCase()));
+                        sp.addParameter(new InParameter("X_COD_PRODINT",    Types.VARCHAR, sic1prod.getCodProdint().trim().toUpperCase()));
                         sp.addParameter(new InParameter("X_DES_PROD",       Types.VARCHAR, sic1prod.getDesProd().trim().toUpperCase()));
                         //Persona Juridica
                         sp.addParameter(new InParameter("X_ID_STIPOPROD",   Types.INTEGER, sic1prod.getIdStipoprod()));
@@ -152,11 +155,41 @@ public class DaoProductImpl implements Serializable{
         
         return result;        
     }
-
     
-    public String delete(Session session, String id) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
+    /**
+     * MEDODO QUE ACTUALIZA EL STOCK DEL PRODUCTO
+     * @param cnConexion
+     * @param idDocu
+     * @throws Exception 
+     */
+    public void updateStock(Connection cnConexion, Integer idDocu) throws Exception{
+        
+        try{
+            
+            /*Si es venta, se suma; si es compra, se resta; si no se suma 0*/
+
+            String sql = 
+                        "UPDATE SIC1PROD T0 " +
+                        "       SET T0.NUM_CANTSTOCK = NUM_CANTSTOCK + (SELECT SUM(TMP1.NUM_CANTIDAD) * DECODE(TMPDOC.ID_SCLASEEVEN,1,-1,2,1,0) " +
+                        "                                               FROM SIC3DOCUPROD TMP1 " +
+                        "                                               JOIN SIC1DOCU TMPDOC ON TMPDOC.ID_DOCU = TMP1.ID_DOCU " +
+                        "                                               WHERE TMP1.ID_DOCU = " + idDocu +" AND TMP1.ID_PROD = T0.ID_PROD " +
+                        "                                               GROUP BY TMPDOC.ID_SCLASEEVEN  ) " +
+                        "WHERE T0.ID_PROD IN (SELECT ID_PROD " +
+                                            " FROM SIC3DOCUPROD TMP1 "
+                                            + " JOIN SIC1DOCU TMP2 ON TMP1.ID_DOCU = TMP2.ID_DOCU "
+                                            + " WHERE TMP2.ID_STIPODOCU <> 4 AND TMP1.ID_DOCU = " + idDocu+ ")";
+
+            System.out.println("sql:" + sql);
+            CallableStatement statement = cnConexion.prepareCall(sql);
+            statement.executeUpdate();
+                 
+        } catch (SQLException ex) {
+            throw new Exception(ex.getMessage());
+        }
+        
+    }    
+    
     
     public String relateProdDocu(Session session, List<Sic3proddocu> lstSic3proddocus) throws Exception {
               
@@ -259,9 +292,13 @@ public class DaoProductImpl implements Serializable{
         int flgFilter = 0;
         
         Criteria criteria = session.createCriteria(Sic1prod.class);
-       
-        if(codProd != null && codProd.trim().length() > 0 ){
-            criteria.add(Restrictions.like("codProd", codProd + "%").ignoreCase());
+
+        /*Si el codigo ingresado comienza con el caracter "/" se busca el codigo interno del producto*/
+        if(codProd != null && codProd.trim().length() > 0 && codProd.trim().substring(0, 1).equals("/")){            
+            criteria.add(Restrictions.like("codProdint", "%" + codProd.substring(1) + "%").ignoreCase());
+            flgFilter = 1;
+        }else if(codProd != null && codProd.trim().length() > 0){
+            criteria.add(Restrictions.like("codProd", "%" + codProd + "%").ignoreCase());            
             flgFilter = 1;
         }
         
@@ -294,11 +331,13 @@ public class DaoProductImpl implements Serializable{
         if(obj.getIdProd()!= null && obj.getIdProd().intValue() > 0)
             criteria.add(Restrictions.eq("idProd",obj.getIdProd()));
         if(obj.getCodProd()!= null && obj.getCodProd().trim().length() > 0 )
-            criteria.add(Restrictions.like("codProd",obj.getCodProd() + '%' ).ignoreCase());
+            criteria.add(Restrictions.like("codProd",obj.getCodProd().trim() + '%' ).ignoreCase());
+        if(obj.getCodProdint()!= null && obj.getCodProdint().trim().length() > 0 )
+            criteria.add(Restrictions.like("codProdint",obj.getCodProdint().trim() + '%' ).ignoreCase());
         if(obj.getIdStipoprod()!= null && obj.getIdStipoprod().intValue() > 0 )
             criteria.add(Restrictions.eq("idStipoprod",obj.getIdStipoprod()));        
         if(obj.getDesProd()!= null && !obj.getDesProd().trim().isEmpty() )
-            criteria.add(Restrictions.like("desProd",'%' + obj.getDesProd() + '%').ignoreCase());
+            criteria.add(Restrictions.like("desProd",'%' + obj.getDesProd().trim() + '%').ignoreCase());
         
         List<ViSicprod> lst = criteria.list();
 

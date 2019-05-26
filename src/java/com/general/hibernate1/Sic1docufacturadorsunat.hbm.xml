@@ -1,0 +1,77 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 31/03/2019 04:18:33 PM by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+    <class name="com.general.hibernate1.Sic1docufacturadorsunat" table="SIC1DOCUFACTURADORSUNAT" schema="SICDBA" optimistic-lock="version">
+        <comment>Contiene la informaci&#243;n que se genera desde el SFS Facturador de la sunat. Es un replica de la tabla DOCUMENTO del SFS Facturador.</comment>
+        <composite-id name="id" class="com.general.hibernate1.Sic1docufacturadorsunatId">
+            <key-property name="codProc" type="string">
+                <column name="COD_PROC" length="50" />
+            </key-property>
+            <key-property name="idDocu" type="big_decimal">
+                <column name="ID_DOCU" precision="22" scale="0" />
+            </key-property>
+        </composite-id>
+        <property name="numRuc" type="string">
+            <column name="NUM_RUC" length="11">
+                <comment>Contiene el Ruc del contribuyente</comment>
+            </column>
+        </property>
+        <property name="tipDocu" type="string">
+            <column name="TIP_DOCU" length="2">
+                <comment>Indica el Tipo de documento</comment>
+            </column>
+        </property>
+        <property name="numDocu" type="string">
+            <column name="NUM_DOCU" length="60">
+                <comment>Contiene el numero del comprobante</comment>
+            </column>
+        </property>
+        <property name="fecCarg" type="date">
+            <column name="FEC_CARG" length="7">
+                <comment>Indica la fecha de carga</comment>
+            </column>
+        </property>
+        <property name="fecGene" type="date">
+            <column name="FEC_GENE" length="7">
+                <comment>Indica la fecha de generacion</comment>
+            </column>
+        </property>
+        <property name="fecEnvi" type="date">
+            <column name="FEC_ENVI" length="7">
+                <comment>Indica la fecha de env&#237;o</comment>
+            </column>
+        </property>
+        <property name="desObse" type="string">
+            <column name="DES_OBSE" length="1000">
+                <comment>Indica las observaciones</comment>
+            </column>
+        </property>
+        <property name="nomArch" type="string">
+            <column name="NOM_ARCH" length="250">
+                <comment>Indica el numero del archivo</comment>
+            </column>
+        </property>
+        <property name="indSitu" type="string">
+            <column name="IND_SITU" length="2">
+                <comment>Contiene el Ruc del contribuyente</comment>
+            </column>
+        </property>
+        <property name="tipArch" type="string">
+            <column name="TIP_ARCH" length="6">
+                <comment>Contiene el Ruc del contribuyente</comment>
+            </column>
+        </property>
+        <property name="firmDigital" type="string">
+            <column name="FIRM_DIGITAL" length="250">
+                <comment>Contiene el Ruc del contribuyente</comment>
+            </column>
+        </property>
+        <property name="flgActivo" type="big_decimal">
+            <column name="FLG_ACTIVO" precision="22" scale="0">
+                <comment>1 Indica que aun archivos por procesar, 0 indica que todos los archivos fueron procesados</comment>
+            </column>
+        </property>
+    </class>
+</hibernate-mapping>

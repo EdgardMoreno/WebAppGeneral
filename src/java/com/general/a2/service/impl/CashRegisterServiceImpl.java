@@ -16,10 +16,9 @@ import com.general.util.dao.DaoFuncionesUtil;
 import com.general.util.exceptions.CustomizerException;
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.sql.SQLException;
+import java.util.Date;
 import java.util.List;
-import javax.faces.context.FacesContext;
-import javax.faces.context.Flash;
-import javax.faces.event.ComponentSystemEvent;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.internal.SessionImpl;
@@ -61,7 +60,7 @@ public class CashRegisterServiceImpl implements Serializable{
     }
     
     
-    public void close(Sic4cuaddiario obj) throws CustomizerException {
+    public void cerrarCaja(Sic4cuaddiario obj) throws CustomizerException {
         
         Transaction tx = null;        
         try {
@@ -107,8 +106,15 @@ public class CashRegisterServiceImpl implements Serializable{
         }
         return obj;
     }
-     
-     public Sic4cuaddiario getById(BigDecimal idPers, BigDecimal numPeri) throws CustomizerException {
+    
+    /**
+     * SE CARGA LOS DATOS NECESARIOS PARA REALIZAR EL CIERRE DE CAJA 
+     * @param idPers
+     * @param numPeri
+     * @return
+     * @throws CustomizerException 
+     */
+    public Sic4cuaddiario obtenerDatosApertura(BigDecimal idPers, BigDecimal numPeri) throws CustomizerException {
         
         Sic4cuaddiario obj = null;
         try {
@@ -119,16 +125,46 @@ public class CashRegisterServiceImpl implements Serializable{
             
             DaoCashRegisterImpl dao = new DaoCashRegisterImpl();
             session = HibernateUtil.getSessionFactory().openSession();
-            obj = dao.getById(session, id);
+            obj = dao.getById(session, id);            
+           
+            
             
             /*Se obtiene los totales de la VENTA en EFECTIVO/TARJETA que se realizó desde el sistema*/
             obj = dao.getSummaryOrders(session, obj);
             
             if(obj != null && obj.getNumEfectApertCaja()!= null)
-                obj.getNumEfectApertCaja().setScale(2,BigDecimal.ROUND_HALF_UP);
+                obj.getNumEfectApertCaja().setScale(2,BigDecimal.ROUND_HALF_UP);           
             
-            System.out.println("Apertura Caja: " + obj.getNumEfectApertCaja());
             
+        } catch (Exception ex) {
+            throw new CustomizerException(ex.getMessage());
+        }finally{
+            if(session != null)
+                session.close();
+        }
+        return obj;
+    }
+    
+    /**
+     * SE OBTIENE LOS DATOS DEL PERIODO QUE YA HA SIDO CERRADO.
+     * @param idPers
+     * @param numPeri
+     * @return
+     * @throws CustomizerException 
+     */
+    public Sic4cuaddiario obtenerDatosPeriodoCerrado(BigDecimal idPers, BigDecimal numPeri) throws CustomizerException {
+        
+        Sic4cuaddiario obj = null;
+        try {
+            
+            Sic4cuaddiarioId id = new Sic4cuaddiarioId();
+            id.setIdPers(idPers);
+            id.setNumPeri(numPeri);
+            
+            DaoCashRegisterImpl dao = new DaoCashRegisterImpl();
+            session = HibernateUtil.getSessionFactory().openSession();
+            obj = dao.getById(session, id);
+                        
         } catch (Exception ex) {
             throw new CustomizerException(ex.getMessage());
         }finally{
@@ -154,6 +190,13 @@ public class CashRegisterServiceImpl implements Serializable{
        return result;
     }
      
+    
+    public List<Sic4cuaddiario> listarCierresDiarios(String fecDesde, String fecHasta) throws SQLException, Exception{
+        
+        DaoCashRegisterImpl dao = new DaoCashRegisterImpl();
+        return dao.listarCierresDiarios(fecDesde, fecHasta);
+        
+    }
     
     
 }

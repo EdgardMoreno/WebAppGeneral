@@ -7,12 +7,11 @@ import com.general.hibernate.entity.HibernateUtil;
 import com.general.hibernate.entity.Sic1prod;
 import com.general.hibernate.relaentity.Sic3proddocu;
 import com.general.hibernate.views.ViSicprod;
-import com.general.util.dao.DaoFuncionesUtil;
 import com.general.util.exceptions.CustomizerException;
 import com.general.util.exceptions.ValidationException;
 import java.io.Serializable;
 import java.util.List;
-import java.sql.SQLException;
+import org.hibernate.HibernateException;
 import org.hibernate.Session;
 
 
@@ -128,7 +127,7 @@ public class ProductServiceImpl implements Serializable{
         try{
             session = HibernateUtil.getSessionFactory().openSession();
             result = daoProductImpl.listViSicProd(session, obj);
-        }catch(Exception ex){
+        }catch(HibernateException ex){
             throw new CustomizerException(ex.getMessage());
         }finally{
             session.close();

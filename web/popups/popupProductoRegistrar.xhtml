@@ -7,9 +7,11 @@
     xmlns:p="http://primefaces.org/ui"
     xmlns:ui="http://xmlns.jcp.org/jsf/facelets" >
 
-    <f:metadata>
+    <f:metadata>        
+        <f:viewParam name="paramIdProd" value="#{productController.idProd}"/>
+        <f:viewParam name="paramCodProd" value="#{productController.sic1prod.codProd}"/>        
         <f:viewParam name="paramExternalPage" value="#{productController.paramPageFlgActivo}"/>
-        <f:viewParam name="paramCodProd" value="#{productController.sic1prod.codProd}"/>
+        <f:event type="preRenderView" listener="#{productController.getParamsExternalPage}"/>
     </f:metadata>
 
     <h:head>
@@ -60,39 +62,53 @@
     </h:head>
     <h:body>        
 
-        <div class="container">
-
-            <div id="divResultadoValidacion"/>
+        <div class="container">           
             
             <div class="page-header" >
                 <h3>Registrar Producto</h3>
             </div>
+            
+            <div id="divResultadoValidacion"/>
 
             <h:form id="form">
 
                 <p:growl id="message" showDetail="true" />
 
-                <h:panelGrid id="pgRegProduct" columns="2"  style="width:80%" columnClasses="label_panelGrid_2c, text_panelGrid_2c">
+                <h:panelGrid id="pgRegProduct" columns="2"  columnClasses="label_panelGrid_2c, text_panelGrid_2c">
 
-                    <h:outputLabel value="Código Producto:"/>
+                    <h:outputLabel value="Código Producto*:"/>
                     <h:inputText id="codigoProducto"
                                  autocomplete="off"
                                  styleClass="form-control left"
                                  disabled="#{productController.flgEditProd or productController.paramPageFlgActivo==1?true:false}"
-                                 style="width:30%"
+                                 style="width:80%"
                                  value="#{productController.sic1prod.codProd}"/>
+                    
+                    <h:outputLabel value="Código Producto Interno:*"/>
+                            <h:inputText id="codigoProductoInterno"
+                                         autocomplete="off"
+                                         styleClass="form-control left"                                         
+                                         style="width:80%"
+                                         value="#{productController.sic1prod.codProdint}"/>                    
 
-                    <h:outputLabel value="Nombre Producto:"/>
+                    <h:outputLabel value="Descripción Producto:"/>
                     <h:inputText id="nombreProducto"
                                  autocomplete="off"
                                  styleClass="form-control left"
-                                 style="width:60%"
+                                 style="width:80%"
                                  value="#{productController.sic1prod.desProd}"/>
+                    
+                    <h:outputLabel value="Nombre Comercial:"/>
+                    <h:inputText id="nombreComercial"
+                                 autocomplete="off"
+                                 styleClass="form-control left"
+                                 style="width:80%"
+                                 value="#{productController.sic1prod.desProdcome}"/>
 
                     <h:outputLabel value="Tipo Producto:" />
-                    <h:selectOneMenu id="somTipoProducto" style="width:60%" value="#{productController.sic1prod.idStipoprod}" styleClass="form-control">
-                        <f:selectItem itemLabel="-- Seleccione --" itemValue="-1" noSelectionOption="true"/>
-                        <f:selectItems value="#{productController.items}" />
+                    <h:selectOneMenu id="somTipoProducto" style="width:80%" value="#{productController.sic1prod.idStipoprod}" styleClass="form-control">
+                        <f:selectItem itemValue="-1" itemLabel="-- Seleccione --"  />
+                        <f:selectItems value="#{productController.items}" var="c" itemValue="#{c.idGeneral}" itemLabel="#{c.desGeneral}"/>
                     </h:selectOneMenu>
 
                     <h:outputLabel value="Precio Venta:"/>
@@ -100,7 +116,7 @@
                         <div class="input-group mb-2 mb-sm-0">
                             <div class="input-group-addon">S/.</div>
                             <h:inputText id="precioVenta" styleClass="form-control"
-                                         style="width:25%"
+                                         style="width:50%;text-align: right"
                                          autocomplete="off"
                                          value="#{productController.sic1prod.numPrecio}"
                                          onkeypress="return fnAllowOnlyDecimalNumbers(event)"
@@ -120,7 +136,7 @@
                 <div class="offset-sm-2 col-sm-10">                    
                     <input type="button" id="btnConfirm" value="Grabar" class="btn btn-primary" 
                            onclick="return fnValidateProductForm()"/>
-                    <input type="button" id="btnConfirm" value="Cancelar" class="btn btn-primary" onclick="parent.$.fancybox.close();"/>
+                    <input type="button" id="btnConfirm" value="Cerrar" class="btn btn-danger" onclick="parent.$.fancybox.close();"/>
                 </div>
                 
                 <h:commandButton id="btnGrabar" style="display: none">

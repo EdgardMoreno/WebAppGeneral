@@ -1,0 +1,186 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"      
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"  >
+    
+    <ui:composition template="./WEB-INF/facelets/templates/templatePrincipal.xhtml">
+        
+        <ui:define name="header">
+            
+            <script>                
+                
+                function fnNotificarProcesoFacturacion(){                    
+                    
+                    var message = "¿Está seguro de NOTIFICAR?";
+                    fnShowDialogConfirm('form\\:idBtnNotiResu', message);
+                    return false;
+                }
+                
+                function fnEjecutarFinProceso(){                    
+                    
+                    var message = "¿Está seguro de NOTIFICAR?";
+                    fnShowDialogConfirm('form\\:idBtnNotiFinProc', message);
+                    return false;
+                }
+                
+                /*Ejecutar el boton "Actualizar Resultado"*/
+                function fnEjecutarActuaResultado(){                                        
+                    $("#form\\:idBtnActuResu").click();                    
+                }
+                
+                
+                /*Función que se ejecuta durante el ciclo de vida de la llamada AJAX.
+                *Cierra el IFRAME
+                function fnAjaxListenFinProcesoFacturacion(data) {
+                    
+                    switch (data.status) {
+                        case "success":
+                            fnShowInfoMessage("Se realizó FIN PROCESO FACTURACION con éxito.");
+                            break;
+                    }
+               }*/
+               
+                
+            </script>
+                   
+        </ui:define>
+        
+        <ui:define name="content">
+                
+                <div class="container">
+                    
+                    <p:growl id="message" showDetail="true" />
+                    
+                    <div class="page-header">
+                        <h3>#{reporteSunatController.desTituloPagina}</h3>
+                         <big>Se lista todos los comprobantes de venta que aún no han sido enviados a la SUNAT.</big><br/>
+                         *El plazo para notificar es hasta 7 días desde la generación del comprobante.
+                    </div>
+                    
+                    <br/>
+                    <div class="row">                            
+                                                
+                        <div class="form-group col-md-2">
+                            <h:outputLabel value="FECHA DESDE:"/>
+                            <h:inputText autocomplete="off" value="#{reporteSunatController.strFecDesde}" disabled="true" styleClass="form-control datepicker"/>
+                        </div>
+
+                        <div class="form-group col-md-2">
+                            <h:outputLabel value="FECHA HASTA:"/>
+                            <h:inputText autocomplete="off" value="#{reporteSunatController.strFecHasta}" disabled="true" styleClass="form-control datepicker"/>
+                        </div>                        
+
+                        <div class="form-group col-md-2">
+                            <label>&nbsp;&nbsp;</label>
+                            <div>
+                                <h:commandButton styleClass="btn btn-primary" value="Buscar" >
+                                    <f:ajax render="@form" listener="#{reporteSunatController.listarComprobantesPendienteEnvio()}"/>
+                                </h:commandButton>
+                            </div>                            
+                        </div>
+                        
+                        <div class="form-group col-md-2">
+                            <label>&nbsp;&nbsp;</label>
+                            <div>                                
+                                <h:commandButton id="idPaso01" styleClass="btn btn-warning" value="1. Generar Archivos y Enviar a Facturador SUNAT" onclick="setInterval('fnEjecutarActuaResultado()',30000);" >
+                                    <f:ajax render="@form" listener="#{reporteSunatController.generarArchivosFacturacionElect(null)}" />
+                                </h:commandButton>
+                                <h:commandButton style="display: none" id="idBtnActuResu" styleClass="btn btn-success" value="2. Actualizar Resultado" >
+                                    <f:ajax render="@form" listener="#{reporteSunatController.obtenerResultadoDesdeFacturador()}" />
+                                </h:commandButton>                                    
+                                <h:commandButton id="idPaso03" styleClass="btn btn-success" value="2. Finalizar Proceso" title="Genera Backup de archivos enviados" onclick="return fnEjecutarFinProceso()" />                                
+                            </div>
+                            
+                        </div>                                                
+                        
+                    </div>
+                    
+                    <div class="row">
+
+                        <!-- ********************************** -->
+                        <!-- LISTA --> 
+                        <!-- *********************************** -->                        
+                            
+                        <p:dataTable                            
+                            id="dtOperaciones" var="item" 
+                            value="#{reporteSunatController.lstCompPago}" rows="30" style="margin-bottom:20px"
+                            paginator="true"
+                            paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown} {Exporters}"
+                            rowsPerPageTemplate="30,50">
+
+                            <f:facet name="{Exporters}">
+                                <h:commandLink>
+                                    <p:graphicImage name="/img/excel.png" width="24"/>
+                                    <p:dataExporter type="xls" target="dtOperaciones" fileName="RptOperacionesXProducto" />
+                                </h:commandLink>                               
+
+                            </f:facet>
+
+                            <p:column headerText="No." width="20" style="padding: 1px;text-align: center">
+                                <h:outputText value="#{reporteSunatController.lstCompPago.indexOf(item) + 1}" />
+                            </p:column>
+
+                            <p:column headerText="Tipo Documento" width="110">
+                                <h:outputText value="#{item.sic1docu.sic1stipodocu.desStipodocu}" />                                        
+                            </p:column>
+
+                            <p:column headerText="Fecha Operación" width="100">
+                                <h:outputText value="#{item.sic1docu.fecDesde}" />
+                            </p:column>
+                            
+                            <p:column headerText="Nro. Comprobante" width="100" style="text-align: center; color: blue">
+                                <h:commandLink value="#{item.sic1docu.codSerie} - #{item.sic1docu.numDocu}" action="#{reportController.verDetalleComprobante2(item.sic1docu)}"/>
+                            </p:column>
+                            
+                            <p:column headerText="Fecha Envio" width="100">
+                                <h:outputText value="#{item.sic1docufactsunat.fecEnvi}" />
+                            </p:column>                           
+                                                        
+                            <p:column headerText="Estado Sunat" width="170">
+                                <h:outputText value="#{item.sic1docufactsunat.desSitu}" />
+                            </p:column>
+                            
+                            <p:column headerText="Observación Sunat" >
+                                <h:outputText value="#{item.sic1docufactsunat.desObse}" />
+                            </p:column>
+                            
+                            <p:column headerText="" width="190" exportable="false">
+                                <h:commandButton value="Generar y Env. Facturador." rendered="#{item.sic1docufactsunat.indSitu == '03'?false:true}" styleClass="btn btn-primary"  >
+                                    <f:ajax execute="dtOperaciones" render="@form" listener="#{reporteSunatController.generarArchivosFacturacionElect(item)}"/>
+                                </h:commandButton>
+                            </p:column>
+
+                            <f:facet name="paginatorTopLeft">
+                                <p:commandButton type="button" icon="fa fa-sync" />
+                            </f:facet>
+
+                            <f:facet name="paginatorBottomRight">
+                                <p:commandButton type="button" icon="fa fa-cloud-upload" />
+                            </f:facet>
+                        </p:dataTable>
+                        
+                    </div>
+                                        
+                    <div style="margin: 30px 0px" class="offset-sm-2 col-sm-10">
+                        <h:commandButton rendered="false" styleClass="btn btn-primary" value="Notificar Resumen de Proceso" onclick="return fnNotificarProcesoFacturacion()" />
+                    </div>
+                                        
+                    <h:commandButton id="idBtnNotiFinProc" value="Ejecutar Fin Proceso" style="display: none">
+                        <f:ajax execute="form" render="@form" listener="#{reporteSunatController.ejecutarFinProceso()}" onevent="fnAjaxListenFinProcesoEnviado"/>
+                    </h:commandButton>
+                    
+                    <h:commandButton id="idBtnNotiResu" value="Notificar Resumen Proceso"  style="display: none" >
+                        <f:ajax render="@form
+                                " listener="#{reporteSunatController.notificarResumenEnvioDocuSunat()}"/>
+                    </h:commandButton>
+                    
+                    
+                    
+                    
+                </div>
+        </ui:define>
+    </ui:composition>
+</html>
