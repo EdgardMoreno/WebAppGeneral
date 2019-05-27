@@ -14,18 +14,13 @@ import com.general.a3.dao.impl.DaoProductImpl;
 
 import com.general.hibernate.entity.HibernateUtil;
 
-import com.general.hibernate.entity.Sic1general;
 import com.general.hibernate.entity.Sic1idenpers;
-import com.general.hibernate.entity.Sic1idenpersId;
 import com.general.hibernate.entity.Sic1pers;
-import com.general.a2.service.impl.MaestroCatalogoServiceImpl;
 import com.general.a2.service.impl.ReportServiceImpl;
 import com.general.a3.dao.impl.DaoCashRegisterImpl;
 import com.general.a3.dao.impl.DaoDocuKardexImpl;
 import com.general.a3.dao.impl.DaoDocumentImpl;
 import com.general.a3.dao.impl.DaoLoginImpl;
-import com.general.a3.dao.impl.DaoMaestroCatalogoImpl;
-
 import com.general.hibernate.entity.Sic1idendocu;
 import com.general.hibernate.entity.Sic1persindi;
 import com.general.hibernate.entity.Sic1persorga;
@@ -41,17 +36,12 @@ import com.general.util.dao.ConexionBD;
 import com.general.util.dao.DaoFuncionesUtil;
 import java.io.File;
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
 import java.sql.Connection;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import org.apache.log4j.Logger;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -62,11 +52,13 @@ import org.hibernate.SessionFactory;
  */
 public class Main {
 
-    private final static Logger log = LoggerFactory.getLogger(Main.class);
+    
+    private static final Logger log = Logger.getLogger(Main.class);
 
     public static void main(String[] args) throws Exception {
         
-        
+        log.debug("Holaaaa");
+        log.error("Error");
         System.out.println(String.format("%03d", 10));
         
         String codProd = "/ysvg/";

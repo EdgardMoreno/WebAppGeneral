@@ -6,7 +6,6 @@
 package com.general.util.dao;
 
 import com.general.a2.service.impl.FacturadorSunatServiceImpl;
-import com.general.a3.dao.impl.DaoFacturadorSunatImpl;
 import java.io.Serializable;
 import java.sql.Connection;
 import java.sql.DriverManager;
