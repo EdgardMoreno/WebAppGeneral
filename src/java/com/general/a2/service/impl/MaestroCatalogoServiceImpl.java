@@ -267,7 +267,7 @@ public class MaestroCatalogoServiceImpl implements Serializable{
      * @return "List(Sic1stipodocu)" de Subtipo de documentos
      * @throws CustomizerException
      */
-    public List<Sic1stipodocu> obtComprobantesPagogGasto() throws Exception {
+    public List<Sic1stipodocu> obtComprobantesPagoGasto() throws Exception {
         
         List<Sic1stipodocu> lstResult = new ArrayList();
         

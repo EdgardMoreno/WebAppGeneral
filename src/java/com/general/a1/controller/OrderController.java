@@ -44,7 +44,6 @@ import javax.faces.bean.SessionScoped;
 
 @Named
 @ManagedBean
-//@ViewScoped
 @SessionScoped
 public class OrderController implements Serializable{
  
@@ -442,7 +441,7 @@ public class OrderController implements Serializable{
                 this.itemSTipoDocu = objMaeCataService.obtComprobantesPagoOrdenCompra();
             }
             else if(this.codClaseeven != null && this.codClaseeven.equals("VI_SICGASTOS")){
-                this.itemSTipoDocu = objMaeCataService.obtComprobantesPagogGasto();
+                this.itemSTipoDocu = objMaeCataService.obtComprobantesPagoGasto();
                 lstFormaPago = objMaeCataService.obtFormasPagoCompra();
             }
             else
@@ -522,7 +521,7 @@ public class OrderController implements Serializable{
         System.out.println("Agregar Item");
         
         /*Se agrega un producto que se ha editado*/
-        if(this.indexTabla>=0){
+        if(this.indexTabla >= 0){
             
             int item = this.indexTabla + 1;
             Sic3docuprod obj  = this.lstSic3docuprod.get(indexTabla);
@@ -1299,8 +1298,7 @@ public class OrderController implements Serializable{
                 this.sic1docu.setNumMtoPagadoTarjeta(this.numMtoPagadoTarjeta);
                 this.sic1docu.setNumMtoPagadoComiTarjeta(this.numMtoPagadoComiTarjeta);
                 
-                /* SETEANDO DOCUMENTO REFERENCIADO*/
-                
+                /* SETEANDO DOCUMENTO REFERENCIADO*/                
                 
                 
                 if(this.lstViSicdocus.size() > 0){

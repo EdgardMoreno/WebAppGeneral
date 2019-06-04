@@ -379,7 +379,7 @@
                         <tr>
                             <td colspan="5" style="padding: 8px 0px 8px 0px" ><div class="subtitulo"><h:outputLabel value="INGRESAR PRODUCTOS"/></div></td>
                         </tr>
-                        <tr>
+                        <tr style="display: #{orderController.flgEditProducts?'':'none'}">
                             <td class="compra_panelGrid_1">
                                 <h:outputLabel value="Código Producto:"/>
                             </td>
@@ -407,7 +407,7 @@
                                                  value="#{orderController.sic1prod.desProd}" />
                             </td>
                         </tr>
-                        <tr>
+                        <tr style="display: #{orderController.flgEditProducts?'':'none'}">
                             <td class="compra_panelGrid_1">
                                 <h:outputLabel value="Precio:"/>
                             </td>
@@ -423,7 +423,7 @@
                                 </div>
                             </td>                           
                         </tr>
-                        <tr>
+                        <tr style="display: #{orderController.flgEditProducts?'':'none'}">
                             <td class="compra_panelGrid_1"><h:outputLabel value="Cantidad:"/></td>
                             <td class="compra_panelGrid_2">
                                 <div class="input-group mb-2 mb-sm-0">
@@ -436,7 +436,7 @@
                                 </div>
                             </td>                      
                         </tr>
-                        <tr>                            
+                        <tr style="display: #{orderController.flgEditProducts?'':'none'}">                            
                             <td class="compra_panelGrid_1">                                
                                 <h:outputLabel value="Descuento:"/>                                
                             </td>
@@ -515,7 +515,7 @@
                             <h:column id="idTableAmount" headerClass="table_style_amount">
                                 <f:facet  name="header">CANTIDAD</f:facet>#{item.numCantidad}
                                 
-                                 <f:facet name="footer">
+                                <f:facet name="footer">
                                     <div class="table_style_total_amount">
                                         #{orderController.numSumItemsAmount}
                                     </div>
@@ -804,7 +804,7 @@
                 <table class="ocultarObjeto">
                     <tr>
                         <td><label>CodTRolpers:</label></td>
-                        <td><input type="text" id="idCodTRolpers" disabled="true" value="${orderController.codTRolpersExterno}"/></td>
+                        <td><h:inputText id="idCodTRolpers" style="display: none" value="#{orderController.codTRolpersExterno}"/></td>
                         <td><h:inputText id="idDocuImpresion" style="display: none" value="#{orderController.idDocuImpresion}" /></td>
                     </tr>                    
                 </table>

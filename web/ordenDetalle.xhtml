@@ -77,6 +77,26 @@
                 <div class="page-header" >
                     <h3>${orderController.desTituloPagina}</h3>
                 </div>
+                
+                <!-- ****************************************************************************** -->
+                <!-- BOTONES DE ACCION  -->
+                <!-- ****************************************************************************** -->                
+                <div class="offset-sm-2 col-sm-10">
+                    <h:commandButton 
+                                   value="Imprimir Voucher"                                   
+                                   styleClass="btn btn-primary"
+                                   onclick="return fnImprimirVoucher()" >
+                    </h:commandButton>                    
+                    <h:commandButton 
+                                   value="Descargar PDF"                                   
+                                   styleClass="btn btn-primary"
+                                   actionListener="#{orderController.descargarComprobantePDF()}" >
+                    </h:commandButton>                    
+                    <h:commandButton value="Anular AUN NO FUNCIONA"                                     
+                                     styleClass="btn btn-danger"
+                                     onclick="return fnShowPopupAnularDocumento(#{orderController.sic1docu.idDocu})" rendered="false">
+                    </h:commandButton>
+                </div>
 
                 <!-- ****************************************************************************** -->
                 <!-- PANEL PARA INGRESO DE DATOS DE LA ORDEN -->
@@ -431,26 +451,8 @@
                                    styleClass="btn btn-danger"
                                    onclick="return fnFinishOrder()" >
                     </h:commandButton>
-                </div>
+                </div>               
                 
-                <div style="margin: 30px 0px" class="offset-sm-2 col-sm-10">
-                    <h:commandButton 
-                                   value="Imprimir Voucher"                                   
-                                   styleClass="btn btn-primary"
-                                   onclick="return fnImprimirVoucher()" >
-                    </h:commandButton>
-                    &nbsp;
-                    <h:commandButton 
-                                   value="Descargar PDF"                                   
-                                   styleClass="btn btn-primary"
-                                   actionListener="#{orderController.descargarComprobantePDF()}" >
-                    </h:commandButton>
-                    &nbsp;
-                    <h:commandButton value="Anular AUN NO FUNCIONA"                                     
-                                     styleClass="btn btn-danger"
-                                     onclick="return fnShowPopupAnularDocumento(#{orderController.sic1docu.idDocu})" rendered="false">
-                    </h:commandButton>
-                </div>
 
                 <!-- ****************************************************************************** -->
                 <!-- ELEMENTOS OCULTOS -->

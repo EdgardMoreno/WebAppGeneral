@@ -212,12 +212,6 @@
         </file>
     </editor-bookmarks>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
-        <group>
-            <file>file:/E:/PROYECTO_DESARROLLO_SOFTWARE/APLICACIONES/WEBAPPGENERAL/CODIGO_FUENTE/WebAppGeneral/web/rptOperacionesPorProducto.xhtml</file>
-            <file>file:/E:/PROYECTO_DESARROLLO_SOFTWARE/APLICACIONES/WEBAPPGENERAL/CODIGO_FUENTE/WebAppGeneral/web/WEB-INF/facelets/templates/templatePrincipal.xhtml</file>
-            <file>file:/E:/PROYECTO_DESARROLLO_SOFTWARE/APLICACIONES/WEBAPPGENERAL/CODIGO_FUENTE/WebAppGeneral/web/personaListar.xhtml</file>
-            <file>file:/E:/PROYECTO_DESARROLLO_SOFTWARE/APLICACIONES/WEBAPPGENERAL/CODIGO_FUENTE/WebAppGeneral/web/ordenDetalle.xhtml</file>
-            <file>file:/E:/PROYECTO_DESARROLLO_SOFTWARE/APLICACIONES/WEBAPPGENERAL/CODIGO_FUENTE/WebAppGeneral/web/WEB-INF/facelets/templates/templateBuscarPersona.xhtml</file>
-        </group>
+        <group/>
     </open-files>
 </project-private>

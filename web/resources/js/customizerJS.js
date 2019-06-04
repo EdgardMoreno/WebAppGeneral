@@ -579,9 +579,10 @@ function fnAjaxListenPersonSearch(data) {
         case "complete":
             break;
         case "success":
-            var value = document.getElementById("form:razonSocial").value;
-            if (value.length == 0) {
-                var codTRolpers = document.getElementById("idCodTRolpers").value;
+            var valor = document.getElementById("form:razonSocial").value;
+            console.log("Value: " + valor);
+            if (valor.length == 0) {
+                var codTRolpers = document.getElementById("form:idCodTRolpers").value;
                 var numDocuIden = document.getElementById("form:numDocuIden").value;
                 console.log("codTRolpers: " + codTRolpers);
                 console.log("numDocuIden: " + numDocuIden);

@@ -224,7 +224,8 @@ public class ReporteSunatController implements Serializable{
                     Sic1docufacturadorsunat objFacturadorLocal = objItem.getSic1docufactsunat();
                     
                     /*Solo se procesa los comprobantes pendientes de envío*/
-                    if( objFacturadorLocal.getIndSitu() == null || !objFacturadorLocal.getIndSitu().equals(Constantes.CONS_ESTA_SUNAT_IND_SITU_ENVIADO_ACEPTADO)){ //03 -> Enviado y Aceptado SUNAT
+                    if( objFacturadorLocal.getIndSitu() == null || 
+                            !objFacturadorLocal.getIndSitu().equals(Constantes.CONS_ESTA_SUNAT_IND_SITU_ENVIADO_ACEPTADO)){ //03 -> Enviado y Aceptado SUNAT
 
                         /*1) Limpia la BD y los Directorios del Facturador: DATA,ENVIO,FIRMA,RPTA*/
                         System.out.println("1) Limpia la BD y los Directorios del Facturador: DATA,ENVIO,FIRMA,RPTA");

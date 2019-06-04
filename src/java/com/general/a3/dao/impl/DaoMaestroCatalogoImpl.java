@@ -234,8 +234,9 @@ public class DaoMaestroCatalogoImpl implements Serializable{
                     obj.setIdTipodocu(rsConsulta.getBigDecimal("ID_TIPODOCU"));
                     obj.setFlgVigencia(rsConsulta.getBigDecimal("FLG_VIGENCIA"));
                     obj.setIdTrolesta(rsConsulta.getBigDecimal("ID_TROLESTA"));
-                    //obj.setFlgAutogen(rsConsulta.getInt("FLG_AUTOGEN"));
-                                        
+                    obj.setCodSunat(rsConsulta.getString("COD_SUNAT"));
+                    obj.setCodPrefcpe(rsConsulta.getString("COD_PREFCPE"));
+
                     lista.add(obj);
                 }
         
@@ -244,7 +245,7 @@ public class DaoMaestroCatalogoImpl implements Serializable{
         } catch (Exception e){
             throw new Exception("obtComprobantesPagoXCodigos()-ERROR:" + e.getMessage());
         }finally{
-             if(statement != null){
+            if(statement != null){
                 statement.close();
             }
             

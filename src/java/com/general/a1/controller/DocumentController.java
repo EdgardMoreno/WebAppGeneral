@@ -29,6 +29,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.math.MathContext;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
@@ -37,7 +38,6 @@ import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
-import javax.faces.event.ComponentSystemEvent;
 import javax.inject.Named;
 import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletResponse;
@@ -60,8 +60,8 @@ public class DocumentController implements Serializable{
     private static final int FILA_INI_EXCEL = 6;
     private final static Logger log = LoggerFactory.getLogger(DocumentController.class);    
     private DocuOrderServiceImpl documentServiceImpl;
-    private List<Sic1stipodocu> itemSTipoDocu  = new ArrayList();
-    private List<ViSicestageneral> itemsEstaRol  = new ArrayList();
+    private List<Sic1stipodocu> itemSTipoDocu = new ArrayList();
+    private List<ViSicestageneral> itemsEstaRol = new ArrayList();
     private ViSicdocu viSicdocu; 
     private List<ViSicdocu> lstViSicdocus;
     private List<ViSicdocu> lstViSicdocusTmp;
@@ -75,15 +75,17 @@ public class DocumentController implements Serializable{
     private String desMotivoAnulacion;
     private String codTRolpersExterno;
     
+    private BigDecimal numTotalOrden;
+    private Integer numTotalItemsOrden;
+    
     private Sic1docu sic1docu;
     private Sic1pers sic1pers;
     private Sic1idenpersId sic1idenpersId;
     
     private BigDecimal idDocuSelected;
-    private int paramPageIdDocu = 0;
+    private int paramPageIdDocu = 0;    
     
     private String numDocu;
-   
     
     public DocumentController(){
         
@@ -262,9 +264,7 @@ public class DocumentController implements Serializable{
 
     public void setParamPageIdDocu(int paramPageIdDocu) {
         this.paramPageIdDocu = paramPageIdDocu;
-    }
-
-    
+    }    
 
     public List<Sic3docuprod> getLstProducts() {
         return lstProducts;
@@ -280,8 +280,23 @@ public class DocumentController implements Serializable{
 
     public void setCodTRolpersExterno(String codTRolpersExterno) {
         this.codTRolpersExterno = codTRolpersExterno;
-    }    
-    
+    }
+
+    public BigDecimal getNumTotalOrden() {
+        return numTotalOrden;
+    }
+
+    public void setNumTotalOrden(BigDecimal numTotalOrden) {
+        this.numTotalOrden = numTotalOrden;
+    }
+
+    public Integer getNumTotalItemsOrden() {
+        return numTotalItemsOrden;
+    }
+
+    public void setNumTotalItemsOrden(Integer numTotalItemsOrden) {
+        this.numTotalItemsOrden = numTotalItemsOrden;
+    }
     
     /*****************************************************************************************/
     /*** METODOS ****/
@@ -635,7 +650,7 @@ public class DocumentController implements Serializable{
             }
             
             if(this.codSClaseeven.equals(Constantes.CONS_COD_SCLASEEVEN_NOTACREDITO)){
-                desTituloPaginaLocal = "ANULAR VENTA CON NOTA DE CREDITO";
+                desTituloPaginaLocal = "REGISTRAR NOTA DE CREDITO";
                 codSClaseevenlocal = this.codSClaseeven;
             }else if(this.codSClaseeven.equals(Constantes.CONS_COD_SCLASEEVEN_ORDENCOMPRA)){
                 desTituloPaginaLocal = "REGISTRAR COMPRA DESDE UNA NOTA DE PEDIDO";
@@ -839,7 +854,7 @@ public class DocumentController implements Serializable{
         }
     }
     
-    public void seleccionarOrdenCompra(ViSicdocu objDocu) throws Exception{
+    public void seleccionarOrden(ViSicdocu objDocu) throws Exception{
         
         try{
             this.lstViSicdocusTmp = new ArrayList<>();
@@ -847,6 +862,14 @@ public class DocumentController implements Serializable{
             
             //Listar los productos relacionados
             this.lstProducts = documentServiceImpl.obtProductosXidDocu(objDocu.getIdDocu());            
+            
+            this.numTotalItemsOrden = 0;
+            this.numTotalOrden = new BigDecimal("0.00");
+            
+            for (Sic3docuprod obj : lstProducts ){
+                this.numTotalItemsOrden += obj.getNumCantidad().intValue();
+                this.numTotalOrden      = this.numTotalOrden.add( new BigDecimal((obj.getNumValor().doubleValue() - obj.getNumMtodscto().doubleValue()) * obj.getNumCantidad().intValue())).setScale(2,BigDecimal.ROUND_HALF_UP);
+            }
                         
             this.lstViSicdocus.clear();
             

@@ -231,9 +231,12 @@ public class FacturadorSunatServiceImpl {
         try{
             
             /*GRABAR EN TABLA DE LA SUNAT SOLO LAS OPERACIONES DE TIPO VENTA Y LAS QUE TENGAN CODIGO DE SUNAT*/
-            if(objDocu.getSic1sclaseeven().getCodSclaseeven().equals(Constantes.CONS_COD_SCLASEEVEN_VENTA) && 
-                    objDocu.getSic1stipodocu().getCodSunat() != null && 
-                        !objDocu.getSic1stipodocu().getCodSunat().isEmpty()){
+            if((objDocu.getSic1sclaseeven().getCodSclaseeven().equals(Constantes.CONS_COD_SCLASEEVEN_VENTA) || 
+                    objDocu.getSic1sclaseeven().getCodSclaseeven().equals(Constantes.CONS_COD_SCLASEEVEN_NOTACREDITO)) &&
+                        (objDocu.getSic1stipodocu().getCodStipodocu().equals(Constantes.CONS_COD_STIPODOCU_FACTURA) ||
+                            objDocu.getSic1stipodocu().getCodStipodocu().equals(Constantes.CONS_COD_STIPODOCU_BOLETA)) &&
+                                objDocu.getSic1stipodocu().getCodSunat() != null && 
+                                    !objDocu.getSic1stipodocu().getCodSunat().isEmpty()){
             
                 String codProc = codTipoOpeSunat;                
                 
@@ -243,8 +246,13 @@ public class FacturadorSunatServiceImpl {
 
                 Sic1docufacturadorsunat objFact = new Sic1docufacturadorsunat();
                 objFact.setNumRuc(Constantes.CONS_NUM_RUC);
-                objFact.setNumDocu(objDocu.getCodSerie() + "-" + objDocu.getNumDocu());
-                //objFact.setFlgActivo(new BigDecimal(1));
+                objFact.setTipDocu(objDocu.getSic1stipodocu().getCodSunat());
+                
+                String numDocuUnido = null;
+                if(objDocu.getNumDocu() != null &&  objDocu.getNumDocu().intValue() > 0)
+                    numDocuUnido = objDocu.getCodSerie() + "-" + objDocu.getNumDocu();
+                
+                objFact.setNumDocu(numDocuUnido);
                 objFact.setId(objIdFact);
 
                 DaoFacturadorSunatImpl objFacturadorDao = new DaoFacturadorSunatImpl();

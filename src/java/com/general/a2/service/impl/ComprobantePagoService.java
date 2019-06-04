@@ -92,11 +92,19 @@ public class ComprobantePagoService {
             
                 /********************************************************************************/
                 /**** CABECERA ******/
-                /********************************************************************************/                
+                /********************************************************************************/
+                
+                String nomComprobante = Constantes.CONS_NUM_RUC + "-" + 
+                                        objComprobante.getSic1docu().getSic1stipodocu().getCodSunat() + "-" + 
+                                        objComprobante.getSic1docu().getCodSerie() + "-" + 
+                                        objComprobante.getSic1docu().getNumDocu();
+                
+                if(objComprobante.getSic1docu().getSic1sclaseeven().getCodSclaseeven().equals("VI_SICSCLASEEVENNOTACREDITO"))
+                    nomComprobante = nomComprobante + ".NOT";
+                else
+                    nomComprobante = nomComprobante + ".CAB";
 
-                String nomComprobante = Constantes.CONS_NUM_RUC + "-" + objComprobante.getSic1docu().getSic1stipodocu().getCodSunat() + "-" + objComprobante.getSic1docu().getCodSerie() + "-" + objComprobante.getSic1docu().getNumDocu();
-
-                File archivo = new File(strRuta + nomComprobante + ".CAB");
+                File archivo = new File(strRuta + nomComprobante);
 
                 //Crear objeto FileWriter que sera el que nos ayude a escribir sobre archivo
                 FileWriter escribir = new FileWriter(archivo, false);
@@ -118,10 +126,8 @@ public class ComprobantePagoService {
                 escribir.write(objComprobante.getSumImpVenta()+ "|");
                 escribir.write(objComprobante.getUblVersionId()+ "|");
                 escribir.write(objComprobante.getCustomizationId()+ "|");
-
-                escribir.close();
-
-                System.out.println("FIN CABECERA");
+                
+                escribir.close();                
 
                 /********************************************************************************/
                 /**** DETALLE ******/

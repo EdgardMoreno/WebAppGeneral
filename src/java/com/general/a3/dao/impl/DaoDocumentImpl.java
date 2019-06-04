@@ -591,8 +591,8 @@ public class DaoDocumentImpl implements Serializable{
                 objDocuprod.setFecHasta(rsConsulta.getDate("FEC_HASTA"));
                 objDocuprod.setIdTreladocu(rsConsulta.getBigDecimal("ID_TRELADOCU"));
                 objDocuprod.setNumCantidad(rsConsulta.getBigDecimal("NUM_CANTIDAD"));
-                objDocuprod.setNumMtodscto(rsConsulta.getBigDecimal("NUM_MTODSCTO"));
-                objDocuprod.setNumValor(rsConsulta.getBigDecimal("NUM_VALOR"));                
+                objDocuprod.setNumMtodscto(rsConsulta.getBigDecimal("NUM_MTODSCTO").setScale(2,BigDecimal.ROUND_HALF_UP));
+                objDocuprod.setNumValor(rsConsulta.getBigDecimal("NUM_VALOR").setScale(2,BigDecimal.ROUND_HALF_UP));                
                 objDocuprod.setSic1prod(objProd);
                 objDocuprod.setId(id);
                 

@@ -128,7 +128,7 @@ public class DaoFacturadorSunatImpl {
         
         }catch(SQLException ex){
             throw new Exception(ex.getMessage());
-        }catch(Exception ex){            
+        }catch(Exception ex){
             throw new Exception(ex.getMessage());
         }
     }

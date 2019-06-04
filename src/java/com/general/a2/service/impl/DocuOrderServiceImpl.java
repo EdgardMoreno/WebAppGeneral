@@ -179,30 +179,15 @@ public class DocuOrderServiceImpl implements Serializable, DocumentService{
 
             /*CALCULAR COMISION POS*/
                 if (sic1docu.getIdTipotarjeta() != null && sic1docu.getIdTipotarjeta().intValue() > 0 ){
-                    //numMtoTotal = sic1docu.getNumSubtotal().doubleValue() + sic1docu.getNumIgv().doubleValue();
+                    
                     numMtoTotal = sic1docu.getNumMtotarjeta().doubleValue() + sic1docu.getNumMtocomitarjeta().doubleValue();
                     numMtoComision = DaoFuncionesUtil.FNC_SICOBTCOMISION(session
                                                                         ,numMtoTotal
                                                                         ,sic1docu.getIdModapago().intValue()
-                                                                        ,sic1docu.getIdTipotarjeta().intValue());                    
+                                                                        ,sic1docu.getIdTipotarjeta().intValue());
                     
-                    //sic1idendocu.getSic1docu().setNumMtocomi(new BigDecimal(numMtoComision.doubleValue() + sic1docu.getNumMtoPagadoComiTarjeta()));
                     sic1idendocu.getSic1docu().setNumMtocomi(numMtoComision);
                 }
-                
-//                sic1idendocu.getSic1docu().setNumMtotarjeta(sic1docu.getNumMtotarjeta().add(new BigDecimal(sic1docu.getNumMtoPagadoTarjeta())).setScale(2, BigDecimal.ROUND_HALF_UP));
-//                sic1idendocu.getSic1docu().setNumMtoefectivo(new BigDecimal(sic1docu.getNumMtoefectivo().doubleValue() + sic1docu.getNumMtoPagadoEfectivo()).setScale(2, BigDecimal.ROUND_HALF_UP));
-                
-                /*Temporalmente se deja con CODIGO DURO
-                  Aplica cuando se está finalizando la venta a partir de una NOTA DE VENTA
-                  Si en la NOTA DE VENTA ha realizado algun pago con tarjeta y en la operacion de terminar venta el restante solo lo paga con efectivo
-                  entonces se hace que se guarde con Tarjeta, esto para que al momento de ver el detalle de la operacion se visualice tanto el monto con tarjte
-                  como efectivo
-                  */
-//                if(sic1docu.getNumMtoPagadoTarjeta()>0 && sic1idendocu.getSic1docu().getIdModapago().intValue() == 46103/*Efectivo*/){
-//                    sic1idendocu.getSic1docu().setIdModapago(new BigDecimal(46105)/*Tarjeta Credito*/);
-//                    sic1idendocu.getSic1docu().setIdTipotarjeta(new BigDecimal(46106));/*Visa*/
-//                }
         
             /*GUARDAR PEDIDO*/
                 BigDecimal intIdTRolPers = DaoFuncionesUtil.FNC_SICOBTIDGEN(((SessionImpl) session).connection()
@@ -222,8 +207,7 @@ public class DocuOrderServiceImpl implements Serializable, DocumentService{
                 idEsta.setIdTrolestadocu(intIdTRolEsta);
                 idEsta.setIdEstadocu(intIdEsta);
                 Sic3docuesta sic3docuesta = new Sic3docuesta();
-                sic3docuesta.setId(idEsta);
-                
+                sic3docuesta.setId(idEsta);                
                 
                 sic1idendocu.getSic1docu().setIdTrolpers(intIdTRolPers);
                 sic1idendocu.getSic1docu().setSic3docuesta(sic3docuesta);
@@ -238,18 +222,11 @@ public class DocuOrderServiceImpl implements Serializable, DocumentService{
                 if(sic1docu.getSic1sclaseeven().getCodSclaseeven() != null && sic1docu.getSic1sclaseeven().getCodSclaseeven().equals(Constantes.CONS_COD_SCLASEEVEN_ORDENCOMPRA))
                     daoDocumentImpl.eliminarProductosXidDocu(session, new BigDecimal(strIdDocuResult));                
 
-            /*GUARDAR DETALLE DE PRODUCTOS*/
-            
-//                List<Sic3docuprod> lstProductos = sic1docu.getLstSic3docuprod();
-//                int index = 0;                
-//                
-//                while(index < lstProductos.size()){
-//                    lstProductos.get(index).getId().setIdDocu(new BigDecimal(strIdDocuResult));
-//                    index++;
-//                }
+            /*GUARDAR DETALLE DE PRODUCTOS*/         
+
                 daoDocumentImpl.relateDocuProd(session, new BigDecimal(strIdDocuResult), sic1docu.getLstSic3docuprod());
                 
-            /*GUARDAR DOCUMENTO RELACIONADO*/
+            /*GUARDAR DOCUMENTO RELACIONADO. EJEMPLO: NOTA DE VENTA*/
                 if(sic1docu.getSic3docudocu() != null){
                     
                     BigDecimal intIdTRelaDocu = DaoFuncionesUtil.FNC_SICOBTIDGEN(((SessionImpl) session).connection()
@@ -285,11 +262,9 @@ public class DocuOrderServiceImpl implements Serializable, DocumentService{
 
 
             /*Registrar documento en tabla de pendientes de envío a Sunat*/
-            if(sic1docu.getSic1stipodocu().getCodStipodocu().equals(Constantes.CONS_COD_STIPODOCU_FACTURA) ||
-                    sic1docu.getSic1stipodocu().getCodStipodocu().equals(Constantes.CONS_COD_STIPODOCU_BOLETA)){
-                FacturadorSunatServiceImpl objFacturador = new FacturadorSunatServiceImpl();
-                objFacturador.registrarDocuPendienteEnvioSunat(((SessionImpl)session).connection(), sic1docu, Constantes.CONS_COD_TIPO_OPE_SUNAT_COMUNIC_BAJA);
-            }
+            sic1docu.setIdDocu(new BigDecimal(strIdDocuResult));
+            FacturadorSunatServiceImpl objFacturador = new FacturadorSunatServiceImpl();
+            objFacturador.registrarDocuPendienteEnvioSunat(((SessionImpl)session).connection(), sic1docu, Constantes.CONS_COD_TIPO_OPE_SUNAT_GENE_COMPROB_ELECT);
             
             tx.commit();
             
