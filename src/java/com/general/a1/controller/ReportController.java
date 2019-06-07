@@ -1092,27 +1092,39 @@ public class ReportController  implements Serializable{
      * @return
      * @throws CustomizerException 
      */
-    public String verDetalleComprobante(Sic3docuprod objDocuProd) throws Exception{
-        
-        String desTitulo = "VER DETALLE " + objDocuProd.getSic1docu().getSic1sclaseeven().getDesSclaseeven() + ": " + 
-                                        objDocuProd.getSic1docu().getSic1stipodocu().getDesStipodocu() + " " + 
-                                        objDocuProd.getSic1docu().getCodSerie() + "-" + 
-                                        objDocuProd.getSic1docu().getNumDocu();
-        
-        FacesContext context = FacesContext.getCurrentInstance();        
-        context.getExternalContext().getSessionMap().put("orderController", null);        
-        OrderController objController = context.getApplication().evaluateExpressionGet(context, "#{orderController}", OrderController.class);
-        objController.loadOrderDetails( objDocuProd.getSic1docu().getIdDocu()
-                                       ,desTitulo
-                                       ,objDocuProd.getSic1docu().getSic1sclaseeven().getCodSclaseeven()
-                                       ,objDocuProd.getSic1docu().getSic3docudocu().getSic1docurel().getIdDocu()
-                                       ,new ArrayList<>()
-                                       ,false
-                                       ,false);
-        
-        return "ordenDetalle?faces-redirect=true";
-        
-    }
+//    public String verDetalleComprobante(Sic3docuprod objDocuProd) throws Exception{
+//        
+//        String desTitulo = "VER DETALLE " + objDocuProd.getSic1docu().getSic1sclaseeven().getDesSclaseeven() + ": " + 
+//                                        objDocuProd.getSic1docu().getSic1stipodocu().getDesStipodocu() + " " + 
+//                                        objDocuProd.getSic1docu().getCodSerie() + "-" + 
+//                                        objDocuProd.getSic1docu().getNumDocu();
+//        
+//        FacesContext context = FacesContext.getCurrentInstance();        
+//        context.getExternalContext().getSessionMap().put("orderController", null);        
+//        OrderController objController = context.getApplication().evaluateExpressionGet(context, "#{orderController}", OrderController.class);
+//        
+//        boolean flgNuevo            = false;
+//        boolean flgEditarProductos  = false;
+//        boolean flgEditarPersona    = false;
+//        boolean flgEditarFecha      = false;
+//        boolean flgEditarFormaPago  = false;
+//        boolean flgMostrarFormaPago = true;
+//        
+//        objController.loadOrderDetails(  objDocuProd.getSic1docu().getIdDocu()
+//                                        ,desTitulo
+//                                        ,objDocuProd.getSic1docu().getSic1sclaseeven().getCodSclaseeven()
+//                                        ,objDocuProd.getSic1docu().getSic3docudocu().getSic1docurel().getIdDocu()
+//                                        ,new ArrayList<>()
+//                                        ,flgNuevo
+//                                        ,flgEditarProductos
+//                                        ,flgEditarPersona
+//                                        ,flgEditarFecha
+//                                        ,flgEditarFormaPago
+//                                        ,flgMostrarFormaPago );
+//        
+//        return "ordenDetalle?faces-redirect=true";
+//        
+//    }
     
     /**
      * PERMITE VISUALIZAR EL DETALLE DEL DOCUMENTO
@@ -1127,18 +1139,32 @@ public class ReportController  implements Serializable{
                                             objDocu.getCodSerie() + "-" + 
                                             objDocu.getNumDocu();
         
-        FacesContext context = FacesContext.getCurrentInstance();
-        /*Se limpia el objeto "orderController" que se tenga en el FACESCONTEXT*/
-        context.getExternalContext().getSessionMap().put("orderController", null);
-        /*Se instancia y crear el objecto "orderController" */
+        FacesContext context = FacesContext.getCurrentInstance();        
+        context.getExternalContext().getSessionMap().put("orderController", null);        
         OrderController objController = context.getApplication().evaluateExpressionGet(context, "#{orderController}", OrderController.class);
-        objController.loadOrderDetails(objDocu.getIdDocu()
-                                       ,desTitulo
-                                       ,objDocu.getSic1sclaseeven().getCodSclaseeven()
-                                       ,new BigDecimal(0)
-                                       ,new ArrayList<>()
-                                       ,false
-                                       ,false);
+        
+        boolean flgNuevo            = false;
+        boolean flgEditarProductos  = false;
+        boolean flgEditarPersona    = false;
+        boolean flgEditarFecha      = false;
+        boolean flgEditarFormaPago  = false;
+        boolean flgMostrarFormaPago = true;
+        boolean flgEditarTipoDocumento = false;
+        boolean flgEditarNroDocumento = false;
+        
+        objController.loadOrderDetails(  objDocu.getIdDocu()
+                                        ,desTitulo
+                                        ,objDocu.getSic1sclaseeven().getCodSclaseeven()
+                                        ,objDocu.getSic3docudocu().getSic1docurel().getIdDocu()//new BigDecimal(0)
+                                        ,new ArrayList<>()
+                                        ,flgNuevo
+                                        ,flgEditarProductos
+                                        ,flgEditarPersona
+                                        ,flgEditarFecha
+                                        ,flgEditarFormaPago
+                                        ,flgMostrarFormaPago
+                                        ,flgEditarTipoDocumento
+                                        ,flgEditarNroDocumento );
         
         return "ordenDetalle?faces-redirect=true";
         

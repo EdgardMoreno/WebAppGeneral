@@ -34,7 +34,7 @@ public class Sic3docuprod  implements java.io.Serializable {
 
     public Sic3docuprod() {
         this.flgNuevo = false;
-        //this.flgSeleccionado = true;
+        this.flgSeleccionado = false;
     }
 
 	

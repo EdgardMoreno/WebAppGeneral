@@ -633,9 +633,13 @@ public class DaoDocumentImpl implements Serializable{
         
         try{            
             
-            String sql = " SELECT T0.* " +
-                         " FROM SIC3DOCUDOCU T0 " +                         
-                         " WHERE T0.FEC_HASTA = PKG_SICCONSGENERAL.FNC_SICOBTFECINF AND T0.ID_DOCU = " + idDocu;
+            String sql = "SELECT T0.* " +
+                            " FROM SIC3DOCUDOCU T0 " +
+                            " WHERE T0.FEC_HASTA = PKG_SICCONSGENERAL.FNC_SICOBTFECINF AND T0.ID_DOCU = " + idDocu;
+                            /*" UNION " +
+                            " SELECT T0.* " +
+                            " FROM SIC3DOCUDOCU T0 " +
+                            " WHERE T0.FEC_HASTA = PKG_SICCONSGENERAL.FNC_SICOBTFECINF AND T0.ID_DOCUREL = " + idDocu;*/
             
             statement = cnConexion.prepareCall(sql,
                                                ResultSet.TYPE_SCROLL_SENSITIVE,
@@ -655,6 +659,8 @@ public class DaoDocumentImpl implements Serializable{
                 obj.setDesNotas(rsConsulta.getString("DES_NOTAS"));
                 obj.setFecHasta(rsConsulta.getDate("FEC_HASTA"));
                 obj.setId(id);
+                
+                list.add(obj);
             }
 
         }catch(SQLException ex){

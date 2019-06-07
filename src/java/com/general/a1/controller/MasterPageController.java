@@ -13,6 +13,7 @@ import com.general.util.beans.UtilClass;
 import com.general.util.exceptions.CustomizerException;
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Date;
 import javax.el.ELException;
 import javax.faces.bean.ManagedBean;
@@ -199,7 +200,7 @@ public class MasterPageController implements Serializable{
     }
     
     
-    public String irRegistrarVenta() throws CustomizerException{
+    public String irRegistrarVenta() throws CustomizerException, Exception{
 
         if(this.desMensajeError != null){
             UtilClass.addErrorMessage(this.desMensajeError);
@@ -207,8 +208,36 @@ public class MasterPageController implements Serializable{
         }
         
         FacesContext context = FacesContext.getCurrentInstance();
+//        OrderController objController = context.getApplication().evaluateExpressionGet(context, "#{orderController}", OrderController.class);
+//        objController.inicializarDatosRegistro(this.codSClaseeven, this.codTRolpers, this.desTituloPagina, true);        
+        
+        
+        context.getExternalContext().getSessionMap().put("orderController", null);            
         OrderController objController = context.getApplication().evaluateExpressionGet(context, "#{orderController}", OrderController.class);
-        objController.inicializarDatosRegistro(this.codSClaseeven, this.codTRolpers, this.desTituloPagina, true);        
+
+        boolean flgNuevo            = true;
+        boolean flgEditarProductos  = true;
+        boolean flgEditarPersona    = true;
+        boolean flgEditarFecha      = true;
+        boolean flgEditarFormaPago  = true;
+        boolean flgMostrarFormaPago = true;
+        boolean flgEditarTipoDocumento = true;
+        boolean flgEditarNroDocumento = true;
+
+
+        objController.loadOrderDetails(  new BigDecimal(0)
+                                        ,this.desTituloPagina
+                                        ,this.codSClaseeven
+                                        ,new BigDecimal(0)
+                                        ,new ArrayList<>()
+                                        ,flgNuevo
+                                        ,flgEditarProductos
+                                        ,flgEditarPersona
+                                        ,flgEditarFecha
+                                        ,flgEditarFormaPago
+                                        ,flgMostrarFormaPago
+                                        ,flgEditarTipoDocumento
+                                        ,flgEditarNroDocumento);
         
         return  desNombrePagina + "?faces-redirect=true";
     }

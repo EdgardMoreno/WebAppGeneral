@@ -9,6 +9,7 @@ import com.general.a2.service.impl.DocuOrderServiceImpl;
 import com.general.a2.service.impl.MaestroCatalogoServiceImpl;
 import com.general.a2.service.impl.PersonServiceImpl;
 import com.general.hibernate.entity.Sic1docu;
+import com.general.hibernate.entity.Sic1general;
 import com.general.hibernate.entity.Sic1idendocu;
 import com.general.hibernate.entity.Sic1idenpers;
 import com.general.hibernate.entity.Sic1idenpersId;
@@ -29,7 +30,6 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.math.MathContext;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
@@ -38,6 +38,7 @@ import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
+import javax.faces.event.ValueChangeEvent;
 import javax.inject.Named;
 import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletResponse;
@@ -73,7 +74,7 @@ public class DocumentController implements Serializable{
     private String codTRolpers;
     private String codSClaseeven;
     private String desMotivoAnulacion;
-    private String codTRolpersExterno;
+    private String codTRolpersExterno;    
     
     private BigDecimal numTotalOrden;
     private Integer numTotalItemsOrden;
@@ -83,9 +84,13 @@ public class DocumentController implements Serializable{
     private Sic1idenpersId sic1idenpersId;
     
     private BigDecimal idDocuSelected;
-    private int paramPageIdDocu = 0;    
+    private int paramPageIdDocu = 0;
     
+    /*NOTA CREDITO/DEBITO*/
+    private List<Sic1general> itemsTipoNota = new ArrayList();
     private String numDocu;
+    private BigDecimal idTipoNota;
+    private Boolean flgDeshabilitarSelecProdu;
     
     public DocumentController(){
         
@@ -95,18 +100,20 @@ public class DocumentController implements Serializable{
                 System.out.println("Aqui");
             }
             
-            this.documentServiceImpl = new DocuOrderServiceImpl();
-            this.viSicdocu           = new ViSicdocu();
-            this.lstViSicdocus       = new ArrayList();
-            this.lstViSicdocusTmp    = new ArrayList<>();
-            this.lstProducts         = new ArrayList<>(); 
+            this.documentServiceImpl        = new DocuOrderServiceImpl();
+            this.viSicdocu                  = new ViSicdocu();
+            this.lstViSicdocus              = new ArrayList();
+            this.lstViSicdocusTmp           = new ArrayList<>();
+            this.lstProducts                = new ArrayList<>(); 
+            this.itemsTipoNota              = new ArrayList();
+            this.flgDeshabilitarSelecProdu  = true;
 
-            this.desFecDesde         = UtilClass.getCurrentDay();
-            /*desFecHasta         = UtilClass.getCurrentDay();*/
+            this.desFecDesde            = UtilClass.getCurrentDay();            
 
             /*Cargar Catalogo: COMPROBANTES DE PAGO*/
             MaestroCatalogoServiceImpl objMaeCata = new MaestroCatalogoServiceImpl();
             this.itemSTipoDocu = objMaeCata.obtComprobantesPago();
+            this.itemsTipoNota = objMaeCata.obtMotivosNotaCredito();
 
             /*Cargar Catalogo: STIPODOCU*/
             this.itemsEstaRol = objMaeCata.getCataEstaRolDocuInf();
@@ -297,17 +304,67 @@ public class DocumentController implements Serializable{
     public void setNumTotalItemsOrden(Integer numTotalItemsOrden) {
         this.numTotalItemsOrden = numTotalItemsOrden;
     }
+
+    public List<Sic1general> getItemsTipoNota() {
+        return itemsTipoNota;
+    }
+
+    public void setItemsTipoNota(List<Sic1general> itemsTipoNota) {
+        this.itemsTipoNota = itemsTipoNota;
+    }
+
+    public BigDecimal getIdTipoNota() {
+        return idTipoNota;
+    }
+
+    public void setIdTipoNota(BigDecimal idTipoNota) {
+        this.idTipoNota = idTipoNota;
+    }
+
+    public Boolean getFlgDeshabilitarSelecProdu() {
+        return flgDeshabilitarSelecProdu;
+    }
+
+    public void setFlgDeshabilitarSelecProdu(Boolean flgDeshabilitarSelecProdu) {
+        this.flgDeshabilitarSelecProdu = flgDeshabilitarSelecProdu;
+    }
+
+   
     
     /*****************************************************************************************/
     /*** METODOS ****/
     /*****************************************************************************************/
     
-    public void buscarOrdenes() throws CustomizerException{
+    /*Dependiendo del tipo de nota seleccionada, se bloquea o habilita los items de los productos*/
+    public void cambiarSeleccionTipoNota(){
+	
+        //Integer idValor = Integer.valueOf(e.getNewValue().toString());
+        this.flgDeshabilitarSelecProdu = true;
+        //System.out.println("idValor:" + idValor);
+        
+        for(Sic1general obj : this.itemsTipoNota){
+            if (obj.getIdGeneral().intValue() == idTipoNota.intValue()){
+                if(obj.getCodValorgeneral().equals(Constantes.TIPONOTACREDDEVOLXITEM)){
+                    this.flgDeshabilitarSelecProdu = false;
+                    break;
+                }
+            }
+        }
+        /*Si está bloqueado, significa que se ha elegido algo como "DEVOLUCION TOTAL", por lo tanto se obliga a que todos 
+        los productos se consideran como parte de la nota de credito*/
+        if(this.flgDeshabilitarSelecProdu){
+            for(int i=0; i<lstProducts.size(); i++){
+                lstProducts.get(i).setFlgSeleccionado(true);
+            }
+        }        
+    } 
+    
+    public void buscarOrdenes() throws CustomizerException, ValidationException{
      
         try {
             
             /*Validar*/
-             if(!this.codSClaseeven.equals(Constantes.CONS_COD_SCLASEEVEN_ORDENCOMPRA) && (this.numDocu == null || this.numDocu.isEmpty()))
+             if(!this.codSClaseeven.equals(Constantes.COD_SCLASEEVEN_ORDENCOMPRA) && (this.numDocu == null || this.numDocu.isEmpty()))
                  throw new ValidationException("Debe ingresar un número de documento.");            
             
             this.viSicdocu = new ViSicdocu();
@@ -315,12 +372,12 @@ public class DocumentController implements Serializable{
             if(this.numDocu != null && this.numDocu.trim().length() > 0)
                 this.viSicdocu.setNumDocuunido(this.numDocu);
             
-            if(this.codSClaseeven.equals(Constantes.CONS_COD_SCLASEEVEN_NOTACREDITO)){
-                this.viSicdocu.setCodSclaseeven(Constantes.CONS_COD_SCLASEEVEN_VENTA);
+            if(this.codSClaseeven.equals(Constantes.COD_SCLASEEVEN_NOTACREDITO)){
+                this.viSicdocu.setCodSclaseeven(Constantes.COD_SCLASEEVEN_VENTA);
                 this.viSicdocu.setCodStipodocu(Constantes.CONS_COD_STIPODOCU_FACTURA);
                 this.viSicdocu.setCodEsta(Constantes.CONS_COD_ESTAFINALIZADO);
             }
-            else if(this.codSClaseeven.equals(Constantes.CONS_COD_SCLASEEVEN_ORDENCOMPRA)){
+            else if(this.codSClaseeven.equals(Constantes.COD_SCLASEEVEN_ORDENCOMPRA)){
                 this.viSicdocu.setCodSclaseeven(this.codSClaseeven);
                 this.viSicdocu.setCodEsta(Constantes.CONS_COD_ESTANOTIFICADO);
             }                        
@@ -381,7 +438,7 @@ public class DocumentController implements Serializable{
     }
     
     /**
-     * PERMITE VER EL DETALLE DE UNA ORDEN
+     * PERMITE VER EL DETALLE DE UNA ORDEN (EN MODO LECTURA)
      * @param viSicdocu
      * @return
      * @throws CustomizerException 
@@ -390,18 +447,33 @@ public class DocumentController implements Serializable{
         
         String desTitulo = "DETALLE DE " + viSicdocu.getDesSclaseeven() + ": " + viSicdocu.getDesStipodocu() + " " + viSicdocu.getCodSerie() + "-" + viSicdocu.getNumDocu();
         
-        FacesContext context = FacesContext.getCurrentInstance();
-        /*Se limpia el objeto "orderController" que se tenga en el FACESCONTEXT*/
-        context.getExternalContext().getSessionMap().put("orderController", null);
-        /*Se instancia y crear el objecto "orderController" */
-        OrderController objController = context.getApplication().evaluateExpressionGet(context, "#{orderController}", OrderController.class);
-        objController.loadOrderDetails(viSicdocu.getIdDocu()
-                                       ,desTitulo
-                                       ,viSicdocu.getCodSclaseeven()
-                                       ,viSicdocu.getIdDocurel()
-                                       ,new ArrayList<>()
-                                       ,false
-                                       ,false);
+        FacesContext context = FacesContext.getCurrentInstance();        
+        context.getExternalContext().getSessionMap().put("orderController", null);        
+        OrderController objController = context.getApplication().evaluateExpressionGet(context, "#{orderController}", OrderController.class);        
+        
+        List<Sic3docuprod> lstProductosSeleccionados = new ArrayList<>(); 
+        boolean flgNuevo                = false;
+        boolean flgEditarProductos      = false;
+        boolean flgEditarPersona        = false;
+        boolean flgEditarFecha          = false;
+        boolean flgEditarFormaPago      = false;
+        boolean flgMostrarFormaPago     = true;
+        boolean flgEditarTipoDocumento  = false;
+        boolean flgEditarNroDocumento   = false;
+        
+        objController.loadOrderDetails( viSicdocu.getIdDocu()
+                                        ,desTitulo
+                                        ,viSicdocu.getCodSclaseeven()
+                                        ,viSicdocu.getIdDocurel()
+                                        ,lstProductosSeleccionados
+                                        ,flgNuevo
+                                        ,flgEditarProductos
+                                        ,flgEditarPersona
+                                        ,flgEditarFecha
+                                        ,flgEditarFormaPago
+                                        ,flgMostrarFormaPago
+                                        ,flgEditarTipoDocumento
+                                        ,flgEditarNroDocumento );
         
         return "ordenDetalle?faces-redirect=true";
     }
@@ -419,13 +491,29 @@ public class DocumentController implements Serializable{
         FacesContext context = FacesContext.getCurrentInstance();        
         context.getExternalContext().getSessionMap().put("orderController", null);        
         OrderController objController = context.getApplication().evaluateExpressionGet(context, "#{orderController}", OrderController.class);
-        objController.loadOrderDetails(viSicdocu.getIdDocu()
+        
+        boolean flgNuevo                = false;
+        boolean flgEditarProductos      = true;
+        boolean flgEditarPersona        = true;
+        boolean flgEditarFecha          = true;
+        boolean flgEditarFormaPago      = false;
+        boolean flgMostrarFormaPago     = true;
+        boolean flgEditarTipoDocumento  = false;
+        boolean flgEditarNroDocumento   = false;
+        
+        objController.loadOrderDetails( viSicdocu.getIdDocu()
                                        ,desTitulo
                                        ,viSicdocu.getCodSclaseeven()
                                        ,new BigDecimal(0)
                                        ,new ArrayList<>()
-                                       ,false /*flgNuevo*/
-                                       ,true);/*flgEditarProductos*/
+                                       ,flgNuevo
+                                       ,flgEditarProductos
+                                       ,flgEditarPersona
+                                       ,flgEditarFecha
+                                       ,flgEditarFormaPago
+                                       ,flgMostrarFormaPago
+                                       ,flgEditarTipoDocumento
+                                       ,flgEditarNroDocumento );
         
         return "ordenRegistrar?faces-redirect=true";
     }
@@ -446,8 +534,8 @@ public class DocumentController implements Serializable{
             String codSclaseeventmp = sic1idendocu.getSic1docu().getSic1sclaseeven().getCodSclaseeven();
             
             //CAMBIANDO DE ESTADO A NOTIFICADO PARA UNA ORDEN DE COMPRA
-            if(codSclaseeventmp.equals(Constantes.CONS_COD_SCLASEEVEN_ORDENCOMPRA)
-                && sic1idendocu.getSic1docu().getCodEstadocu().equals(Constantes.CONS_COD_ESTACREADO)){                
+            if(codSclaseeventmp.equals(Constantes.COD_SCLASEEVEN_ORDENCOMPRA) && 
+                    sic1idendocu.getSic1docu().getCodEstadocu().equals(Constantes.CONS_COD_ESTACREADO)){
                 
                 try {
                     
@@ -602,17 +690,34 @@ public class DocumentController implements Serializable{
 
             String desTitulo = "FINALIZAR VENTA";
             
-            FacesContext context = FacesContext.getCurrentInstance();
-            /*Se limpia el objeto "orderController" que se tenga en el FACESCONTEXT*/
+            FacesContext context = FacesContext.getCurrentInstance();            
             context.getExternalContext().getSessionMap().put("orderController", null);            
-            OrderController objController = context.getApplication().evaluateExpressionGet(context, "#{orderController}", OrderController.class);        
-            objController.loadOrderDetails(viSicdocu.getIdDocu()
-                                           ,desTitulo
-                                           ,viSicdocu.getCodSclaseeven()
-                                           ,viSicdocu.getIdDocu()
-                                           ,new ArrayList<>()
-                                           ,true
-                                           ,true);
+            OrderController objController = context.getApplication().evaluateExpressionGet(context, "#{orderController}", OrderController.class);
+            
+            boolean flgNuevo            = true;
+            boolean flgEditarProductos  = true;
+            boolean flgEditarPersona    = false;
+            boolean flgEditarFecha      = true;
+            boolean flgEditarFormaPago  = true;
+            boolean flgMostrarFormaPago = true;
+            boolean flgEditarTipoDocumento  = true;
+            boolean flgEditarNroDocumento   = true;
+            
+            objController.loadOrderDetails(  viSicdocu.getIdDocu()
+                                            ,desTitulo
+                                            ,viSicdocu.getCodSclaseeven()
+                                            ,viSicdocu.getIdDocu()
+                                            ,new ArrayList<>()
+                                            ,flgNuevo
+                                            ,flgEditarProductos
+                                            ,flgEditarPersona
+                                            ,flgEditarFecha
+                                            ,flgEditarFormaPago
+                                            ,flgMostrarFormaPago
+                                            ,flgEditarTipoDocumento
+                                            ,flgEditarNroDocumento );
+            
+            
         }catch(ValidationException e){
             UtilClass.addErrorMessage(e.getMessage());
             return "";
@@ -629,32 +734,73 @@ public class DocumentController implements Serializable{
      */
     public String crearCompraDesdeOC() throws CustomizerException, Exception{       
         
-        String desTituloPaginaLocal = null;
-        String codSClaseevenlocal = null;
+        String desTituloPaginaLocal         = null;
+        String codSClaseevenlocal           = null;
+        int contadorProductosSeleccionados  = 0;
+        boolean flgMostrarFormaPago         = false;
+        boolean flgEditarFormaPago          = false;
+        boolean flgEditarTipoDocumento      = true;
+        boolean flgEditarNroDocumento       = true;
+        String desTipoNota                  = null;
+        
         try {
+            
+            if(this.codSClaseeven.equals(Constantes.COD_SCLASEEVEN_NOTACREDITO) || 
+                    this.codSClaseeven.equals(Constantes.COD_SCLASEEVEN_NOTADEBITO)){
+                
+                if(this.idTipoNota.intValue() <= 0)
+                    throw new ValidationException("Se debe seleccionar el tipo de nota.");
+                
+                flgEditarTipoDocumento      = false;
+                flgEditarNroDocumento       = true;
+                
+                /*Si la nota de credito es por devolucion, setear para que se muestre la forma de pago*/
+                for(Sic1general obj : this.itemsTipoNota){
+                    if (obj.getIdGeneral().intValue() == idTipoNota.intValue()){
+                        desTipoNota = obj.getDesGeneral();
+                        if(obj.getCodValorgeneral().equals(Constantes.TIPONOTACREDDEVOLTOTAL) || 
+                                obj.getCodValorgeneral().equals(Constantes.TIPONOTACREDDEVOLXITEM)){
+                            flgMostrarFormaPago = true;
+                            flgEditarFormaPago  = true;
+                            break;
+                        }
+                    }
+                }
+            }
+                        
+            /*Se verifica si hay productos seleccionados*/
+            for(Sic3docuprod obj : this.lstProducts){
+                if(obj.getFlgSeleccionado())
+                    contadorProductosSeleccionados++;
+            }          
+            if(contadorProductosSeleccionados == 0)
+                throw new ValidationException("Se debe seleccionar al menos un producto.");
+            /**/
             
             BigDecimal idDocuLocal = this.lstViSicdocusTmp.get(0).getIdDocu();
             
             /*Se verifica si la ORDEN DE COMPRA está pendiente de descargo*/            
             String codEstaDocu = documentServiceImpl.getLastCodEstaDocu(idDocuLocal);
                     
-            if(this.codSClaseeven.equals(Constantes.CONS_COD_SCLASEEVEN_NOTACREDITO) && 
+            if(this.codSClaseeven.equals(Constantes.COD_SCLASEEVEN_NOTACREDITO) &&
                     !codEstaDocu.equals(Constantes.CONS_COD_ESTAFINALIZADO)){
                 
-                throw new ValidationException("El documento no está finalizado.");                
+                throw new ValidationException("El documento no está finalizado.");
             }
-            else if(this.codSClaseeven.equals(Constantes.CONS_COD_SCLASEEVEN_ORDENCOMPRA) && 
-                    codEstaDocu.equals(Constantes.CONS_COD_ESTAFINALIZADO)){
+            else if(this.codSClaseeven.equals(Constantes.COD_SCLASEEVEN_ORDENCOMPRA) &&
                 
+                    codEstaDocu.equals(Constantes.CONS_COD_ESTAFINALIZADO)){
                 throw new ValidationException("El documento ya está finalizado.");
-            }
-            
-            if(this.codSClaseeven.equals(Constantes.CONS_COD_SCLASEEVEN_NOTACREDITO)){
-                desTituloPaginaLocal = "REGISTRAR NOTA DE CREDITO";
+            }            
+            else if(this.codSClaseeven.equals(Constantes.COD_SCLASEEVEN_NOTACREDITO)){
+                
+                desTituloPaginaLocal = "REGISTRAR NOTA DE CREDITO: " + desTipoNota;
                 codSClaseevenlocal = this.codSClaseeven;
-            }else if(this.codSClaseeven.equals(Constantes.CONS_COD_SCLASEEVEN_ORDENCOMPRA)){
-                desTituloPaginaLocal = "REGISTRAR COMPRA DESDE UNA NOTA DE PEDIDO";
-                codSClaseevenlocal = Constantes.CONS_COD_SCLASEEVEN_COMPRA;
+                
+            }else if(this.codSClaseeven.equals(Constantes.COD_SCLASEEVEN_ORDENCOMPRA)){
+                
+                desTituloPaginaLocal = "REGISTRAR COMPRA DESDE UNA NOTA DE PEDIDO";            
+                codSClaseevenlocal = Constantes.COD_SCLASEEVEN_COMPRA;
             }
             
             FacesContext context = FacesContext.getCurrentInstance();
@@ -670,18 +816,30 @@ public class DocumentController implements Serializable{
             if(lstProductosSeleccionados.isEmpty()){
                 UtilClass.addWarnMessage("Debe seleccionar productos.");
                 return "";
-            }
-                
+            }                
             
             context.getExternalContext().getSessionMap().put("orderController", null);            
             OrderController objController = context.getApplication().evaluateExpressionGet(context, "#{orderController}", OrderController.class);
-            objController.loadOrderDetails( new BigDecimal(0)
-                                           ,desTituloPaginaLocal
-                                           ,codSClaseevenlocal
-                                           ,idDocuLocal
-                                           ,lstProductosSeleccionados
-                                           ,true
-                                           ,false);
+            
+            boolean flgNuevo            = true;
+            boolean flgEditarProductos  = false;
+            boolean flgEditarPersona    = false;
+            boolean flgEditarFecha      = true;
+            
+            
+            objController.loadOrderDetails(  new BigDecimal(0)
+                                            ,desTituloPaginaLocal
+                                            ,codSClaseevenlocal
+                                            ,idDocuLocal
+                                            ,lstProductosSeleccionados
+                                            ,flgNuevo
+                                            ,flgEditarProductos
+                                            ,flgEditarPersona
+                                            ,flgEditarFecha
+                                            ,flgEditarFormaPago
+                                            ,flgMostrarFormaPago
+                                            ,flgEditarTipoDocumento
+                                            ,flgEditarNroDocumento );
         }catch(ValidationException e){
             UtilClass.addErrorMessage(e.getMessage());
             return "";

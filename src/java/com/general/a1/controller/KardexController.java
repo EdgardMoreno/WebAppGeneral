@@ -417,7 +417,7 @@ public class KardexController implements Serializable{
             sic1docu.setIdPers(SessionUtils.getUserId()); //Login
             
             Sic1sclaseeven objSclaseeven = new Sic1sclaseeven();
-            objSclaseeven.setCodSclaseeven(Constantes.CONS_COD_SCLASEEVEN_CTRL_INVENTARIO);            
+            objSclaseeven.setCodSclaseeven(Constantes.COD_SCLASEEVEN_CTRL_INVENTARIO);            
             sic1docu.setSic1sclaseeven(objSclaseeven);
             //sic1docu.setCodSclaseeven(Constantes.CONS_COD_SCLASEEVEN_CTRL_INVENTARIO);
             

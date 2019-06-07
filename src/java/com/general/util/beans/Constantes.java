@@ -9,9 +9,8 @@ package com.general.util.beans;
  *
  * @author emoreno
  */
-public class Constantes {
-    
-    
+public class Constantes {    
+
     
 //    public static Integer CONS_GENERO_MASCULINO = 1;
 //    public static Integer CONS_GENERO_FEMENINO = 2;
@@ -129,17 +128,17 @@ public class Constantes {
     /*CODIGO DE CLASE DE EVENTO*/
     public static String CONS_COD_CLASEEVEN                = "VI_SICCLASEEVEN";
         /*CODIGOS*/
-        public static String CONS_COD_CLASEEVEN_GASTOS              = "VI_SICGASTOS";
+        public static String COD_CLASEEVEN_GASTOS              = "VI_SICGASTOS";
     
     /*CODIGO DE SUB CLASE DE EVENTO*/
     public static String CONS_COD_SCLASEEVEN            = "VI_SICSCLASEEVEN";
         /*CODIGOS*/
-        public static String CONS_COD_SCLASEEVEN_VENTA              = "VI_SICSCLASEEVENVENTA";
-        public static String CONS_COD_SCLASEEVEN_COMPRA             = "VI_SICSCLASEEVENCOMPRA";
-        public static String CONS_COD_SCLASEEVEN_ORDENCOMPRA        = "VI_SICSCLASEEVENORDENCOMPRA";
-        public static String CONS_COD_SCLASEEVEN_NOTACREDITO        = "VI_SICSCLASEEVENNOTACREDITO";
-        public static String CONS_COD_SCLASEEVEN_NOTADEBITO        = "VI_SICSCLASEEVENNOTADEBITO";
-        public static String CONS_COD_SCLASEEVEN_CTRL_INVENTARIO    = "VI_SICSCLASEEVENCTRLINVENT";
+        public static String COD_SCLASEEVEN_VENTA              = "VI_SICSCLASEEVENVENTA";
+        public static String COD_SCLASEEVEN_COMPRA             = "VI_SICSCLASEEVENCOMPRA";
+        public static String COD_SCLASEEVEN_ORDENCOMPRA        = "VI_SICSCLASEEVENORDENCOMPRA";
+        public static String COD_SCLASEEVEN_NOTACREDITO        = "VI_SICSCLASEEVENNOTACREDITO";
+        public static String COD_SCLASEEVEN_NOTADEBITO         = "VI_SICSCLASEEVENNOTADEBITO";
+        public static String COD_SCLASEEVEN_CTRL_INVENTARIO    = "VI_SICSCLASEEVENCTRLINVENT";
             
     /*CODIGO DE TIPO DE DOCUMENTO*/
     public static String CONS_COD_TIPODOCU            = "VI_SICTIPODOCU";        
@@ -157,11 +156,10 @@ public class Constantes {
         public static String CONS_COD_STIPODOCU_BOLETOVIAJE         = "VI_SICBOLETOVIAJE";
         public static String CONS_COD_STIPODOCU_NOTAVENTA           = "VI_SICNOTAVENTA";
         public static String CONS_COD_STIPODOCU_OTROSPAGOS          = "VI_SICOTROPAGO";
-        public static String CONS_COD_STIPODOCU_NOTAPEDIDO          = "VI_SICNOTAPEDIDO";
-        
+        public static String CONS_COD_STIPODOCU_NOTAPEDIDO          = "VI_SICNOTAPEDIDO";        
         
     /*CODIGO DE MODO DE PAGO*/
-    public static String COD_MODOPAGO            = "VI_SICMODAPAGO";        
+    public static String COD_MODOPAGO                   = "VI_SICMODAPAGO";
         /*CODIGOS*/
         public static String COD_MODOPAGO_TRANSFER         = "VI_SICTRANSFE";
         public static String COD_MODOPAGO_DEPOSITO         = "VI_SICDEPOSITO";
@@ -169,6 +167,13 @@ public class Constantes {
         public static String COD_MODOPAGO_TARJDEBITO       = "VI_SICTARJDEBITO";
         public static String COD_MODOPAGO_TARJCREDITO      = "VI_SICTARJCREDITO";
     
+    /*CODIGO MOTIVOS DE NOTA DE CREDITO*/
+    public static String VI_SICTIPONOTACREDITO          = "VI_SICTIPONOTACREDITO";
+        public static String TIPONOTACREDANULOPERACION      = "TIPONOTACREDANULOPERACION";
+        public static String TIPONOTACREDANULERRORRUC       = "TIPONOTACREDANULERRORRUC";
+        public static String TIPONOTACREDDEVOLTOTAL         = "TIPONOTACREDDEVOLTOTAL";
+        public static String TIPONOTACREDDEVOLXITEM         = "TIPONOTACREDDEVOLXITEM";
+        public static String TIPONOTACREDAJUSTEIVAP         = "TIPONOTACREDAJUSTEIVAP";        
         
     /*AMBIENTES SISTEMA*/
     public static String CONS_DES_AMBIENTESISTEMA = "PRODUCCIÓN:";

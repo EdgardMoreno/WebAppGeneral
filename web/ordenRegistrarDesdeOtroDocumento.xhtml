@@ -162,12 +162,24 @@
                             <p:column headerText="Sucursal" width="180" style="text-align: center">
                                 <h:outputText value="#{item.desSucursal}" />
                             </p:column>                        
-                        </p:dataTable>
-
-
-                        <h3>
+                        </p:dataTable>                        
+                        
+                        <div class="row" style="margin-left: 5px">
+                            <div class="form-group col-md-3">
+                                <h:outputLabel value="Tipo de Nota:"/>
+                                <h:selectOneMenu  id="idTipoNota"
+                                                  value="#{documentController.idTipoNota}"                                                  
+                                                  styleClass="form-control">
+                                    <f:selectItem itemValue="-1" itemLabel="-- Seleccione --" />
+                                    <f:selectItems value="#{documentController.itemsTipoNota}" var="c" itemValue="#{c.idGeneral}" itemLabel="#{c.desGeneral}"/>
+                                    <f:ajax execute="@this" render="@form" event="change" listener="#{documentController.cambiarSeleccionTipoNota}" />
+                                </h:selectOneMenu>
+                            </div>
+                        </div>                        
+                        
+                        <h4>
                             Productos relacionados:<br/>
-                        </h3>
+                        </h4>
                         
                         <p:dataTable                                                        
                             id="dtProductos" var="item" 
@@ -178,7 +190,7 @@
                             </p:column>                            
 
                             <p:column width="25" style="text-align: center">
-                                <h:selectBooleanCheckbox value="#{item.flgSeleccionado}" style="text-align: center"/>
+                                <h:selectBooleanCheckbox value="#{item.flgSeleccionado}" disabled="#{documentController.flgDeshabilitarSelecProdu}"/>
                             </p:column>
                             
                             <p:column headerText="Código" width="110" style="color: blue;font-size: 14px">
@@ -221,13 +233,12 @@
 
                         </p:dataTable>
                         
+                        
+                        
                         <h:commandButton value="Siguiente &raquo;" styleClass="btn btn-success" action="#{documentController.crearCompraDesdeOC()}" >
                         </h:commandButton>
                         
                     </h:panelGroup>
-                    
-                    
-                   
                     
                 </div>
 

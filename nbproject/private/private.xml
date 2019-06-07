@@ -1,74 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project-private xmlns="http://www.netbeans.org/ns/project-private/1">
-    <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="59">
-        <file>
-            <url>src/java/com/general/a1/controller/KardexController.java</url>
-            <bookmark id="40">
-                <name/>
-                <line>282</line>
-                <key/>
-            </bookmark>
-        </file>
-        <file>
-            <url>web/personaMantenimiento.xhtml</url>
-            <bookmark id="13">
-                <name/>
-                <line>15</line>
-                <key/>
-            </bookmark>
-            <bookmark id="12">
-                <name/>
-                <line>161</line>
-                <key/>
-            </bookmark>
-        </file>
-        <file>
-            <url>src/java/com/general/a1/controller/CompraController.java</url>
-            <bookmark id="10">
-                <name/>
-                <line>373</line>
-                <key/>
-            </bookmark>
-        </file>
-        <file>
-            <url>src/java/com/general/a1/controller/DocumentController.java</url>
-            <bookmark id="27">
-                <name/>
-                <line>259</line>
-                <key/>
-            </bookmark>
-            <bookmark id="28">
-                <name/>
-                <line>307</line>
-                <key/>
-            </bookmark>
-            <bookmark id="39">
-                <name/>
-                <line>327</line>
-                <key/>
-            </bookmark>
-            <bookmark id="59">
-                <name/>
-                <line>432</line>
-                <key/>
-            </bookmark>
-        </file>
-        <file>
-            <url>web/ordenRegistrar.xhtml</url>
-            <bookmark id="50">
-                <name/>
-                <line>824</line>
-                <key/>
-            </bookmark>
-        </file>
-        <file>
-            <url>web/productoRegistrar.xhtml</url>
-            <bookmark id="1">
-                <name/>
-                <line>142</line>
-                <key/>
-            </bookmark>
-        </file>
+    <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="61">
         <file>
             <url>src/java/com/general/a2/service/impl/DocuOrderServiceImpl.java</url>
             <bookmark id="43">
@@ -109,17 +41,46 @@
             </bookmark>
             <bookmark id="57">
                 <name/>
-                <line>438</line>
+                <line>468</line>
                 <key/>
             </bookmark>
             <bookmark id="49">
                 <name/>
-                <line>1297</line>
+                <line>1327</line>
                 <key/>
             </bookmark>
             <bookmark id="58">
                 <name/>
-                <line>1459</line>
+                <line>1488</line>
+                <key/>
+            </bookmark>
+        </file>
+        <file>
+            <url>src/java/com/general/a1/controller/KardexController.java</url>
+            <bookmark id="40">
+                <name/>
+                <line>282</line>
+                <key/>
+            </bookmark>
+        </file>
+        <file>
+            <url>web/personaMantenimiento.xhtml</url>
+            <bookmark id="13">
+                <name/>
+                <line>15</line>
+                <key/>
+            </bookmark>
+            <bookmark id="12">
+                <name/>
+                <line>161</line>
+                <key/>
+            </bookmark>
+        </file>
+        <file>
+            <url>src/java/com/general/a1/controller/CompraController.java</url>
+            <bookmark id="10">
+                <name/>
+                <line>373</line>
                 <key/>
             </bookmark>
         </file>
@@ -142,6 +103,14 @@
             </bookmark>
         </file>
         <file>
+            <url>src/java/com/general/a3/dao/impl/DaoMaestroCatalogoImpl.java</url>
+            <bookmark id="60">
+                <name/>
+                <line>114</line>
+                <key/>
+            </bookmark>
+        </file>
+        <file>
             <url>src/java/com/general/a1/controller/ReportController.java</url>
             <bookmark id="48">
                 <name/>
@@ -154,6 +123,34 @@
             <bookmark id="11">
                 <name/>
                 <line>332</line>
+                <key/>
+            </bookmark>
+        </file>
+        <file>
+            <url>src/java/com/general/a1/controller/DocumentController.java</url>
+            <bookmark id="27">
+                <name/>
+                <line>268</line>
+                <key/>
+            </bookmark>
+            <bookmark id="28">
+                <name/>
+                <line>379</line>
+                <key/>
+            </bookmark>
+            <bookmark id="39">
+                <name/>
+                <line>399</line>
+                <key/>
+            </bookmark>
+            <bookmark id="59">
+                <name/>
+                <line>526</line>
+                <key/>
+            </bookmark>
+            <bookmark id="61">
+                <name/>
+                <line>721</line>
                 <key/>
             </bookmark>
         </file>
@@ -210,8 +207,38 @@
                 <key/>
             </bookmark>
         </file>
+        <file>
+            <url>web/ordenRegistrar.xhtml</url>
+            <bookmark id="50">
+                <name/>
+                <line>830</line>
+                <key/>
+            </bookmark>
+        </file>
+        <file>
+            <url>web/productoRegistrar.xhtml</url>
+            <bookmark id="1">
+                <name/>
+                <line>142</line>
+                <key/>
+            </bookmark>
+        </file>
     </editor-bookmarks>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
-        <group/>
+        <group>
+            <file>file:/C:/ARCHIVOS/PRE_PRODUCCION/PROYECTOS_DESARROLLO_SOFTWARE/APLICACIONES/WEBAPPGENERAL/WebAppGeneral/src/java/com/general/a1/controller/MasterPageController.java</file>
+            <file>file:/C:/ARCHIVOS/PRE_PRODUCCION/PROYECTOS_DESARROLLO_SOFTWARE/APLICACIONES/WEBAPPGENERAL/WebAppGeneral/src/java/com/general/util/beans/Constantes.java</file>
+            <file>file:/C:/ARCHIVOS/PRE_PRODUCCION/PROYECTOS_DESARROLLO_SOFTWARE/APLICACIONES/WEBAPPGENERAL/WebAppGeneral/web/ordenRegistrarDesdeOtroDocumento.xhtml</file>
+            <file>file:/C:/ARCHIVOS/PRE_PRODUCCION/PROYECTOS_DESARROLLO_SOFTWARE/APLICACIONES/WEBAPPGENERAL/WebAppGeneral/src/java/com/general/a1/controller/DocumentController.java</file>
+            <file>file:/C:/ARCHIVOS/PRE_PRODUCCION/PROYECTOS_DESARROLLO_SOFTWARE/APLICACIONES/WEBAPPGENERAL/WebAppGeneral/src/java/com/general/a1/controller/OrderController.java</file>
+            <file>file:/C:/ARCHIVOS/PRE_PRODUCCION/PROYECTOS_DESARROLLO_SOFTWARE/APLICACIONES/WEBAPPGENERAL/WebAppGeneral/src/java/com/general/hibernate/relaentity/Sic3docuprod.java</file>
+            <file>file:/C:/ARCHIVOS/PRE_PRODUCCION/PROYECTOS_DESARROLLO_SOFTWARE/APLICACIONES/WEBAPPGENERAL/WebAppGeneral/web/documentosListar.xhtml</file>
+            <file>file:/C:/ARCHIVOS/PRE_PRODUCCION/PROYECTOS_DESARROLLO_SOFTWARE/APLICACIONES/WEBAPPGENERAL/WebAppGeneral/web/ordenRegistrar.xhtml</file>
+            <file>file:/C:/ARCHIVOS/PRE_PRODUCCION/PROYECTOS_DESARROLLO_SOFTWARE/APLICACIONES/WEBAPPGENERAL/WebAppGeneral/src/java/com/general/a2/service/impl/DocuOrderServiceImpl.java</file>
+            <file>file:/C:/ARCHIVOS/PRE_PRODUCCION/PROYECTOS_DESARROLLO_SOFTWARE/APLICACIONES/WEBAPPGENERAL/WebAppGeneral/src/java/com/general/a2/service/impl/MaestroCatalogoServiceImpl.java</file>
+            <file>file:/C:/ARCHIVOS/PRE_PRODUCCION/PROYECTOS_DESARROLLO_SOFTWARE/APLICACIONES/WEBAPPGENERAL/WebAppGeneral/src/java/com/general/a3/dao/impl/DaoDocumentImpl.java</file>
+            <file>file:/C:/ARCHIVOS/PRE_PRODUCCION/PROYECTOS_DESARROLLO_SOFTWARE/APLICACIONES/WEBAPPGENERAL/WebAppGeneral/src/java/com/general/a1/controller/ReportController.java</file>
+            <file>file:/C:/ARCHIVOS/PRE_PRODUCCION/PROYECTOS_DESARROLLO_SOFTWARE/APLICACIONES/WEBAPPGENERAL/WebAppGeneral/src/java/com/general/a3/dao/impl/DaoMaestroCatalogoImpl.java</file>
+        </group>
     </open-files>
 </project-private>

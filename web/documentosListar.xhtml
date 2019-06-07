@@ -83,26 +83,24 @@
                         <f:selectItem itemLabel="-- Todos --" itemValue="-1" />                            
                         <f:selectItems value="#{documentController.itemSTipoDocu}" var="c" itemValue="#{c.idStipodocu}" itemLabel="#{c.desStipodocu}" />
                     </h:selectOneMenu>
-                    <h:outputLabel value="Cod. Serie:"/>
-                    <h:inputText styleClass="form-control"  autocomplete="off" value="#{documentController.viSicdocu.codSerie}"  />
+                    <h:outputLabel value="Nro. Documento:"/>
+                    <h:inputText styleClass="form-control"  autocomplete="off" value="#{documentController.viSicdocu.numDocuunido}"  />
                     <h:outputLabel value="Creador:"/>
                     <h:inputText styleClass="form-control" value="#{documentController.viSicdocu.desPersCreador}"  style="width:150%"/>
-
 
                     <h:outputLabel value="Estado:"/>
                     <h:selectOneMenu value="#{documentController.viSicdocu.idEstadocu}" style="width:100%" styleClass="form-control">
                         <f:selectItem itemLabel="-- Todos --" itemValue="-1" />
                         <f:selectItems value="#{documentController.itemsEstaRol}" var="c" itemValue="#{c.idEsta}" itemLabel="#{c.desEsta}" />
-                    </h:selectOneMenu>
-                    <h:outputLabel value="Correlativo:"/>
-                    <h:inputText autocomplete="off"                                                                                          
-                                 value="#{documentController.viSicdocu.numDocu}" styleClass="form-control"/>                        
+                    </h:selectOneMenu>                    
                     <h:outputLabel value="¿Enviado a Sunat?"/>
                     <h:selectOneMenu value="#{documentController.viSicdocu.flgDeclaradosunat}" style="width:100%" styleClass="form-control">
                         <f:selectItem itemLabel="-- Todos --" itemValue="-1" />
                         <f:selectItem itemLabel="Si" itemValue="1" />
                         <f:selectItem itemLabel="No" itemValue="0" />
                     </h:selectOneMenu>
+                    <h:outputLabel value=""/>
+                    <h:outputLabel value=""/>                
 
                     <h:outputLabel value="Docu. Identidad Cliente/Proveedor:"/>
                     <h:panelGroup>

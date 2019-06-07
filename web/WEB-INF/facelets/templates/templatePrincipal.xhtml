@@ -178,18 +178,7 @@
                         </li>
 
                         <li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="#">Compras<span class="caret"></span></a>
-                            <ul class="dropdown-menu">
-                                <li>
-                                    <h:commandLink style="color:#0000FF" id="idMenuRegistrarOrdenCompra" value="Registrar Orden de Compra" actionListener="#{masterPageController.validarDatos()}" action="#{masterPageController.irRegistrarCompra()}" >
-                                        <f:param name="paramTituloPagina" value="Registrar Orden de Compra" />
-                                        <f:param name="paramNombrePagina" value="ordenRegistrar" />
-                                        <f:param name="paramCodSClaseeven" value="VI_SICSCLASEEVENORDENCOMPRA" />
-                                        <f:param name="paramCodTRolpers" value="VI_SICTROLPROVEEDOR" />
-                                    </h:commandLink>
-                                </li>
-                                <li>
-                                    <hr style="margin: 0px;"/>
-                                </li>                                                                
+                            <ul class="dropdown-menu">                                                                                               
                                 <li>
                                     <h:commandLink style="color:#0000FF" id="idMenuRegisterPurchase" value="Registrar Compra" actionListener="#{masterPageController.validarDatos()}" action="#{masterPageController.irRegistrarCompra()}" >
                                         <f:param name="paramTituloPagina" value="Registrar Compra" />
@@ -209,6 +198,18 @@
                                 <li>
                                     <hr style="margin: 0px;"/>
                                 </li>
+                                
+                                <li>
+                                    <h:commandLink style="color:#0000FF" id="idMenuRegistrarOrdenCompra" value="Registrar Orden de Compra" actionListener="#{masterPageController.validarDatos()}" action="#{masterPageController.irRegistrarCompra()}" >
+                                        <f:param name="paramTituloPagina" value="Registrar Orden de Compra" />
+                                        <f:param name="paramNombrePagina" value="ordenRegistrar" />
+                                        <f:param name="paramCodSClaseeven" value="VI_SICSCLASEEVENORDENCOMPRA" />
+                                        <f:param name="paramCodTRolpers" value="VI_SICTROLPROVEEDOR" />
+                                    </h:commandLink>
+                                </li>
+                                <li>
+                                    <hr style="margin: 0px;"/>
+                                </li>                                 
                                 <li>
                                     <h:commandLink id="idMenuRptOrdenCompra" value="Reporte de Ordenes de Compra" actionListener="#{masterPageController.validarDatos()}" action="#{masterPageController.irRptComprasVentas()}" >
                                         <f:param name="paramTituloPagina" value="Reporte de Ordenes de Compra" />
@@ -231,23 +232,13 @@
                         <li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="#">Ventas<span class="caret"></span></a>
                             <ul class="dropdown-menu">
                                 <li>
-                                    <h:commandLink style="color:#0000FF" id="idMenuSaleRegist" value="Registrar Venta" actionListener="#{masterPageController.validarDatos()}" action="#{masterPageController.irRegistrarVenta()}" >
+                                    <h:commandLink style="color:#0000FF" id="idMenuSaleRegist" value="Registrar Venta" 
+                                                   actionListener="#{masterPageController.validarDatos()}" action="#{masterPageController.irRegistrarVenta()}" >
                                         <f:param name="paramTituloPagina" value="Registrar Venta" />
                                         <f:param name="paramNombrePagina" value="ordenRegistrar" />
                                         <f:param name="paramCodSClaseeven" value="VI_SICSCLASEEVENVENTA" />
                                         <f:param name="paramCodTRolpers" value="VI_SICTROLCLIENTE" />
                                     </h:commandLink>
-                                </li>
-                                <li>
-                                    <h:commandLink id="idMenuSaleReport" value="Reporte de Ventas" actionListener="#{masterPageController.validarDatos()}" action="#{masterPageController.irRptComprasVentas()}" >
-                                        <f:param name="paramTituloPagina" value="Reporte de Ventas" />
-                                        <f:param name="paramNombrePagina" value="documentosListar" />
-                                        <f:param name="paramCodSClaseeven" value="VI_SICSCLASEEVENVENTA" />
-                                        <f:param name="paramCodTRolpers" value="VI_SICTROLCLIENTE" />
-                                    </h:commandLink>
-                                </li>
-                                 <li>
-                                    <hr style="margin: 0px;"/>
                                 </li>
                                 <li>
                                     <h:commandLink style="color:#0000FF" value="Registrar Nota de Crédito" actionListener="#{masterPageController.validarDatos()}" action="#{masterPageController.irRegistrarNotaCreditoDebito()}" >
@@ -257,6 +248,27 @@
                                         <f:param name="paramCodTRolpers" value="VI_SICTROLPROVEEDOR" />
                                     </h:commandLink>
                                 </li>
+                                <li>
+                                    <hr style="margin: 0px;"/>
+                                </li>
+                                <li>
+                                    <h:commandLink id="idMenuSaleReport" value="Reporte de Ventas" actionListener="#{masterPageController.validarDatos()}" action="#{masterPageController.irRptComprasVentas()}" >
+                                        <f:param name="paramTituloPagina" value="Reporte de Ventas" />
+                                        <f:param name="paramNombrePagina" value="documentosListar" />
+                                        <f:param name="paramCodSClaseeven" value="VI_SICSCLASEEVENVENTA" />
+                                        <f:param name="paramCodTRolpers" value="VI_SICTROLCLIENTE" />
+                                    </h:commandLink>
+                                </li>
+                                <li>
+                                    <h:commandLink  value="Reporte de Notas de Crédito" actionListener="#{masterPageController.validarDatos()}" action="#{masterPageController.irRptComprasVentas()}" >
+                                        <f:param name="paramTituloPagina" value="Reporte de Notas de Crédito" />
+                                        <f:param name="paramNombrePagina" value="documentosListar" />
+                                        <f:param name="paramCodSClaseeven" value="VI_SICSCLASEEVENNOTACREDITO" />
+                                        <f:param name="paramCodTRolpers" value="VI_SICTROLCLIENTE" />
+                                    </h:commandLink>
+                                </li>
+                                
+                                
                             </ul>
                         </li>
                         

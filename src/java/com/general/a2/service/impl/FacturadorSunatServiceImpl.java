@@ -231,8 +231,8 @@ public class FacturadorSunatServiceImpl {
         try{
             
             /*GRABAR EN TABLA DE LA SUNAT SOLO LAS OPERACIONES DE TIPO VENTA Y LAS QUE TENGAN CODIGO DE SUNAT*/
-            if((objDocu.getSic1sclaseeven().getCodSclaseeven().equals(Constantes.CONS_COD_SCLASEEVEN_VENTA) || 
-                    objDocu.getSic1sclaseeven().getCodSclaseeven().equals(Constantes.CONS_COD_SCLASEEVEN_NOTACREDITO)) &&
+            if((objDocu.getSic1sclaseeven().getCodSclaseeven().equals(Constantes.COD_SCLASEEVEN_VENTA) || 
+                    objDocu.getSic1sclaseeven().getCodSclaseeven().equals(Constantes.COD_SCLASEEVEN_NOTACREDITO)) &&
                         (objDocu.getSic1stipodocu().getCodStipodocu().equals(Constantes.CONS_COD_STIPODOCU_FACTURA) ||
                             objDocu.getSic1stipodocu().getCodStipodocu().equals(Constantes.CONS_COD_STIPODOCU_BOLETA)) &&
                                 objDocu.getSic1stipodocu().getCodSunat() != null && 
@@ -280,7 +280,7 @@ public class FacturadorSunatServiceImpl {
             cnConexion = ConexionBD.obtConexion();
             
             /*GRABAR EN TABLA DE LA SUNAT SOLO LAS OPERACIONES DE TIPO VENTA Y LAS QUE TENGAN CODIGO DE SUNAT*/
-            if(objDocu.getSic1sclaseeven().getCodSclaseeven().equals(Constantes.CONS_COD_SCLASEEVEN_VENTA) && 
+            if(objDocu.getSic1sclaseeven().getCodSclaseeven().equals(Constantes.COD_SCLASEEVEN_VENTA) && 
                     objDocu.getSic1stipodocu().getCodSunat() != null && 
                         !objDocu.getSic1stipodocu().getCodSunat().isEmpty()){
             

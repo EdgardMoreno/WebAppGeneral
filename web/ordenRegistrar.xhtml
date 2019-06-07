@@ -269,7 +269,7 @@
                     
                     <div class="form-group subtitulo" >
                         <h:outputLabel value="DOCUMENTOS RELACIONADOS" rendered="#{not empty orderController.lstViSicdocus}"/>
-                    </div>
+                    </div>                    
                     
                     <!-- ********************************** -->
                     <!-- LISTA DE DOCUMENTOS REFERENCIADOS -->
@@ -327,6 +327,7 @@
                             <td class="compra_panelGrid_2">
                                 <h:inputText id="fecRegistro" size="10" 
                                              value="#{orderController.desFecRegistro}"
+                                             readonly="#{orderController.flgEditarFecha}"
                                              autocomplete="off"
                                              styleClass="form-control datepicker"
                                              style="font-size:14px;font-weight:bold; z-index: 50 "/></td>
@@ -350,7 +351,7 @@
                             </td>
                             <td class="compra_panelGrid_3" >
                                 <h:commandLink  id="btnSearchPerson"                                                
-                                                disabled="#{!orderController.flgEditPerson}"
+                                                rendered="#{orderController.flgEditPerson}"
                                                 styleClass="btn btn-default"                                          
                                                 onclick="return fnValidateDocuIden(document.getElementById('form:numDocuIden').value)"> 
                                     <span class="glyphicon glyphicon-new-window"></span>Buscar
@@ -510,6 +511,13 @@
                                     <h:outputLabel value="S/." />
                                     <f:facet name="header">DSCTO</f:facet>#{item.numMtodscto}
                                 </div>
+                                
+                                <f:facet name="footer">
+                                    <div class="table_style_total_amount">
+                                        #{orderController.numSumItemsDescuento}
+                                    </div>
+                                </f:facet> 
+                                
                             </h:column>
                             
                             <h:column id="idTableAmount" headerClass="table_style_amount">
@@ -595,7 +603,7 @@
                         </tr>
                     </table>
 
-                    <h:panelGroup rendered="#{not empty orderController.itemsPayMode}" >
+                    <h:panelGroup rendered="#{not empty orderController.itemsPayMode or orderController.flgMostrarFormaPago}" >
                         <table width="100%" >
                             <tr>
                                 <td class="compra_totales_label">
@@ -604,6 +612,7 @@
                                 <td class="compra_totales_text">
                                     <h:selectOneMenu id="idPayMode" 
                                                      value="#{orderController.sic1docu.idModapago}" 
+                                                     disabled="#{!orderController.flgEditarFormaPago}"
                                                      styleClass="form-control">
                                         <f:selectItem itemValue="-1" itemLabel="-- Seleccione --" />
                                         <f:selectItems value="#{orderController.itemsPayMode}" var="c" itemValue="#{c.idGeneral}" itemLabel="#{c.desGeneral}"/>
@@ -620,7 +629,11 @@
                                 </td>
                                 <td class="compra_totales_text">
                                     <h:panelGroup id="idTextNumVoucher" >
-                                        <h:inputText value="#{orderController.sic1docu.numVoucher}" autocomplete="off" styleClass="form-control" rendered="#{orderController.flgMostrarNumVoucher}"/>
+                                        <h:inputText value="#{orderController.sic1docu.numVoucher}" 
+                                                     autocomplete="off" 
+                                                     styleClass="form-control" 
+                                                     rendered="#{orderController.flgMostrarNumVoucher}" 
+                                                     readonly="#{!orderController.flgEditarFormaPago}"/>
                                     </h:panelGroup>
                                 </td>
                             </tr>
@@ -634,6 +647,7 @@
                                 <td class="compra_totales_text">
                                     <h:panelGroup id="idTextTipotarjeta" >
                                         <h:selectOneMenu  value="#{orderController.sic1docu.idTipotarjeta}"
+                                                          readonly="#{!orderController.flgEditarFormaPago}"
                                                           styleClass="form-control"
                                                           rendered="#{not empty orderController.itemsTypeCard}">                                        
                                             <f:selectItems value="#{orderController.itemsTypeCard}" />
@@ -654,7 +668,8 @@
                                             <div class="input-group mb-1 mb-sm-0">
                                                 <div class="input-group-addon">S/.</div>
                                                 <h:inputText
-                                                    id="numMtotarjeta" autocomplete="off"                                                    
+                                                    id="numMtotarjeta" autocomplete="off"
+                                                    readonly="#{!orderController.flgEditarFormaPago}"
                                                     styleClass="form-control"
                                                     value="#{orderController.sic1docu.numMtotarjeta}"                                                
                                                     onkeypress="return fnAllowOnlyDecimalNumbers(event)">
@@ -689,7 +704,9 @@
                                     <div class="input-group mb-1 mb-sm-0">
                                         <div class="input-group-addon">S/.</div>
                                         <h:inputText
-                                            id="numMtoefectivo" autocomplete="off"
+                                            id="numMtoefectivo" 
+                                            autocomplete="off"
+                                            readonly="#{!orderController.flgEditarFormaPago}"
                                             styleClass="form-control"
                                             value="#{orderController.sic1docu.numMtoefectivo}"
                                             onkeypress="return fnAllowOnlyDecimalNumbers(event)">
@@ -697,8 +714,7 @@
                                         </h:inputText>
                                     </div>
                                 </td>
-                            </tr>
-                            
+                            </tr>                            
                         </table>
                     </h:panelGroup>                    
 
@@ -837,6 +853,7 @@
                                                             <td class="compra_panelGrid_1"><h:outputLabel value="Tipo Comprobante:"/></td>
                                                             <td>
                                                                 <h:selectOneMenu id="somTipoDocu" styleClass="form-control"
+                                                                                 disabled="#{!orderController.flgEditarTipoDocumento}"
                                                                                  value="#{orderController.sic1docu.idStipodocu}" >
                                                                     <f:selectItem itemValue="-1" itemLabel="-- Seleccionar --" />
                                                                     <f:selectItems value="#{orderController.itemSTipoDocu}" var="c" itemValue="#{c.idStipodocu}" itemLabel="#{c.desStipodocu}" />
@@ -847,6 +864,7 @@
                                                             <td class="compra_panelGrid_1"><h:outputLabel value="Serie:"/></td>
                                                             <td class="compra_panelGrid_2">
                                                                 <h:inputText id="codSerie" autocomplete="off"
+                                                                             readonly="#{!orderController.flgEditarNroDocumento}"
                                                                              disabled="#{not empty orderController.sic1docu.idDocu}"
                                                                              class="form-control"
                                                                              value="${orderController.sic1docu.codSerie}" />
@@ -856,6 +874,7 @@
                                                             <td class="compra_panelGrid_1"><h:outputLabel value="Número:"/></td>
                                                             <td class="compra_panelGrid_2">
                                                                 <h:inputText id="numDocumento" autocomplete="off"
+                                                                             readonly="#{!orderController.flgEditarNroDocumento}"
                                                                              disabled="#{not empty orderController.sic1docu.idDocu}"
                                                                              styleClass="form-control" 
                                                                              onkeypress="return fnAllowOnlyNumbers(event)"

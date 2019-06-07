@@ -36,6 +36,31 @@ public class MaestroCatalogoServiceImpl implements Serializable{
         daoSic1generalImp = new DaoMaestroCatalogoImpl();
     }
     
+    
+    /**
+     * SE OBTIENE UNA "LISTA DE ELEMENTOS" QUE INDICA EL MOTIVO POR EL CUAL SE HACE UNA NOTA DE CREDITO
+     * @return Se obtiene un objeto LIST<SIC1GENERAL>
+     * @throws CustomizerException 
+     */
+    public List<Sic1general> obtMotivosNotaCredito() throws CustomizerException {
+        
+        List<Sic1general> lstResult;
+        try{
+
+            List<String> list = new ArrayList<>();            
+            list.add(Constantes.TIPONOTACREDANULOPERACION);
+            list.add(Constantes.TIPONOTACREDANULERRORRUC);
+            list.add(Constantes.TIPONOTACREDDEVOLTOTAL);
+            list.add(Constantes.TIPONOTACREDDEVOLXITEM);            
+            
+            lstResult = daoSic1generalImp.listByCod_ValorGeneral(list);
+            
+        }catch(Exception ex){
+            throw new CustomizerException(ex.getMessage());
+        }
+        return lstResult;        
+    }
+    
     /**
      * SE OBTIENE EL CATALOGO DE CANALES DE PUBLICIDAD
      * @return
@@ -136,6 +161,26 @@ public class MaestroCatalogoServiceImpl implements Serializable{
             List<String> list = new ArrayList<>();
             list.add(Constantes.COD_MODOPAGO_TRANSFER);
             list.add(Constantes.COD_MODOPAGO_DEPOSITO);
+            list.add(Constantes.COD_MODOPAGO_EFECTIVO);
+            lstResult = daoSic1generalImp.listByCod_ValorGeneral(list);
+        } catch(Exception ex){
+            throw new CustomizerException(ex.getMessage());
+        }     
+        return lstResult;        
+    }
+    
+    /**
+     * SE OBTIENE UNA "LISTA DE ELEMENTOS" QUE INDICA LA FORMA DE PAGO (Transferencia, Deposito, etc.)
+     * @return Se obtiene un objeto LIST<SIC1GENERAL>
+     * @throws CustomizerException 
+     */
+    public List<Sic1general> obtFormasPagoNotaCredito() throws CustomizerException {
+        
+        List<Sic1general> lstResult;
+        try{                
+            
+            List<String> list = new ArrayList<>();
+            list.add(Constantes.COD_MODOPAGO_TRANSFER);            
             list.add(Constantes.COD_MODOPAGO_EFECTIVO);
             lstResult = daoSic1generalImp.listByCod_ValorGeneral(list);
         } catch(Exception ex){
@@ -340,6 +385,29 @@ public class MaestroCatalogoServiceImpl implements Serializable{
     }  
     
     /** 
+     * METODO QUE DEVUELVE EL CATALOGO DE COMPROBANTES DE PAGOS PARA REGISTRAR UNA NOTA DE CREDITO
+     * @return "List(Sic1stipodocu)" de Subtipo de documentos
+     * @throws CustomizerException
+     */
+    public List<Sic1stipodocu> obtComprobantesPagoNotaCredito() throws Exception {
+        
+        List<Sic1stipodocu> lstResult = new ArrayList();
+        
+        try{
+            String[] arrCodigos = new String[3];
+            arrCodigos[0] = "'" + Constantes.CONS_COD_STIPODOCU_FACTURA + "'";
+            arrCodigos[1] = "'" + Constantes.CONS_COD_STIPODOCU_BOLETA + "'";            
+            
+            DaoMaestroCatalogoImpl objDao = new DaoMaestroCatalogoImpl();
+            lstResult = objDao.obtComprobantesPagoXCodigos(arrCodigos);
+                        
+        } catch(Exception ex){
+            throw new CustomizerException(ex.getMessage());
+        } 
+        return lstResult;
+    }  
+    
+    /** 
      * METODO QUE DEVUELVE EL CATALOGO DE COMPROBANTES DE PAGOS PARA UNA ORDEN DE COMPRA (NOTA DE PEDIDO)
      * @return "List(Sic1stipodocu)" de Subtipo de documentos
      * @throws CustomizerException
@@ -398,7 +466,7 @@ public class MaestroCatalogoServiceImpl implements Serializable{
             
             BigDecimal idClaseeven = DaoFuncionesUtil.FNC_SICOBTIDGEN(((SessionImpl) session).connection()
                                                                                 , Constantes.CONS_COD_CLASEEVEN
-                                                                                , Constantes.CONS_COD_CLASEEVEN_GASTOS);
+                                                                                , Constantes.COD_CLASEEVEN_GASTOS);
             
             lstResultado = daoSic1generalImp.getCataSClaseEven(session, idClaseeven);            
             
@@ -424,7 +492,7 @@ public class MaestroCatalogoServiceImpl implements Serializable{
             
             BigDecimal idClaseeven = DaoFuncionesUtil.FNC_SICOBTIDGEN(((SessionImpl) session).connection()
                                                                                 , Constantes.CONS_COD_CLASEEVEN
-                                                                                , Constantes.CONS_COD_CLASEEVEN_GASTOS);
+                                                                                , Constantes.COD_CLASEEVEN_GASTOS );
             
             List<Sic1sclaseeven> list = daoSic1generalImp.getCataSClaseEven(session, idClaseeven);                        
         

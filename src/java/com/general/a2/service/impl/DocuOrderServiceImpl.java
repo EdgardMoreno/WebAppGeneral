@@ -219,7 +219,7 @@ public class DocuOrderServiceImpl implements Serializable, DocumentService{
                 
             /*EN CASO DE ORDEN DE COMPRA SE ELIMINA LOS PRODUCTOS PARA VOLVER A CREARLOS, ESTO PARA QUE FUNCIONE LA EDICION DE UN ORDEN DE COMPRA DONDE SE REDUCE LA CANTIDAD DE ITEMS
               QUE HABIA EN UN INICIO*/
-                if(sic1docu.getSic1sclaseeven().getCodSclaseeven() != null && sic1docu.getSic1sclaseeven().getCodSclaseeven().equals(Constantes.CONS_COD_SCLASEEVEN_ORDENCOMPRA))
+                if(sic1docu.getSic1sclaseeven().getCodSclaseeven() != null && sic1docu.getSic1sclaseeven().getCodSclaseeven().equals(Constantes.COD_SCLASEEVEN_ORDENCOMPRA))
                     daoDocumentImpl.eliminarProductosXidDocu(session, new BigDecimal(strIdDocuResult));                
 
             /*GUARDAR DETALLE DE PRODUCTOS*/         
