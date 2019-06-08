@@ -319,7 +319,7 @@ public class DocuOrderServiceImpl implements Serializable, DocumentService{
             cnConexion = ConexionBD.obtConexion();
             
             /*Se verifica si el documento en consulta es documento secundario de algun documento principal*/
-            List<Sic3docudocu> list = daoDocumentImpl.obtDocusRelXidDocuRel(cnConexion, idDocu);
+            List<Sic3docudocu> list = daoDocumentImpl.obtDocusRelXidDocuRel(idDocu);
             for (Sic3docudocu obj :list ){
                 String codEstaDocu = daoDocumentImpl.getLastCodEstaDocu(cnConexion, obj.getId().getIdDocu());
                 if(!codEstaDocu.equals(Constantes.CONS_COD_ESTAANULADO)){
@@ -334,7 +334,7 @@ public class DocuOrderServiceImpl implements Serializable, DocumentService{
             this.relateDocuEsta(cnConexion, idDocu, codTrolestadocu, codEstadocu, desMotivo );
             
             /*Se libera los documentos secundarios relacionados al documento en consulta*/
-            list = daoDocumentImpl.obtDocusRelXidDocu(cnConexion, idDocu);
+            list = daoDocumentImpl.obtDocusRelXidDocu(idDocu);
             for (Sic3docudocu obj :list ){                
                 this.relateDocuEsta(cnConexion, obj.getId().getIdDocurel(), codTrolestadocu, Constantes.CONS_COD_ESTAPORRECOGER, desMotivo );
             }            
@@ -513,8 +513,8 @@ public class DocuOrderServiceImpl implements Serializable, DocumentService{
         }
         
         return lstResult;
-        
-    }    
+
+    }
 
     
     /**
@@ -525,41 +525,44 @@ public class DocuOrderServiceImpl implements Serializable, DocumentService{
      */    
     public Sic1idendocu getOrderByIdDocu(BigDecimal idDocu) throws Exception {
         
-        Sic1idendocu sic1idendocu;
-        List<Sic3docuprod> lstProducts = new ArrayList<>();
-        List<Sic3docuprod> lstProductsRel;
+        Sic1idendocu sic1idendocu;        
         Connection cnConexion = null;
         
-        try{            
+        try{
             
             cnConexion = ConexionBD.obtConexion();    
             
-            /*Se obtiene los datos de documento*/
-            //sic1idendocu = daoDocumentImpl.getById(session, idDocu);
-            sic1idendocu = daoDocumentImpl.obtDocuXidDocu(idDocu);                       
+            /*Se obtiene los datos de documento*/            
+            sic1idendocu = daoDocumentImpl.obtDocuXidDocu(idDocu);
             
-            /*Se obtiene la lista de los DOCUMENTOS RELACIONADOS*/
-            List<Sic3docudocu> lstDocusRel = daoDocumentImpl.obtDocusRelXidDocu(cnConexion, idDocu);
+            /*Se obtiene la lista de los DOCUMENTOS PADRE*/
+            List<Sic3docudocu> lstDocusPadre = daoDocumentImpl.obtDocusRelXidDocu(idDocu);
+            /*Se obtiene la lista de los DOCUMENTOS HIJO*/
+            List<Sic3docudocu> lstDocusHijo = daoDocumentImpl.obtDocusRelXidDocuRel(idDocu);
+            /*Se obtiene la lista de los PRODUCTOS*/
+            List<Sic3docuprod> lstProducts = daoDocumentImpl.obtProductosXidDocu(idDocu);
             
-            /*SE OBTIENE LOS PRODUCTOS DEL DOCUMENTO RELACIONADO*/
-            for(Sic3docudocu objDocuRel : lstDocusRel){
-                lstProductsRel = daoDocumentImpl.obtProductosXidDocu(objDocuRel.getId().getIdDocurel());
-                lstProducts.addAll(lstProductsRel);
-            }
+//            /*SE OBTIENE LOS PRODUCTOS DEL DOCUMENTO RELACIONADO*/
+//            for(Sic3docudocu objDocuRel : lstDocusPadre){
+//                lstProductsRel = daoDocumentImpl.obtProductosXidDocu(objDocuRel.getId().getIdDocurel());
+//                lstProducts.addAll(lstProductsRel);
+//            }
+//            
+//            /*SE OBTIENE LA LISTA DE PRODUCTOS DEL DOCUMENTO PRINCIPAL*/
+//            lstProducts = daoDocumentImpl.obtProductosXidDocu(idDocu);
+//            
+//            /*Seteando valor false para indicar que esos productos ya son parte de la orden*/
+//            for(int i=0; i<lstProducts.size(); i++){
+//                lstProducts.get(i).setFlgNuevo(false);
+//            }
             
-            /*SE OBTIENE LA LISTA DE PRODUCTOS DEL DOCUMENTO PRINCIPAL*/
-            lstProducts = daoDocumentImpl.obtProductosXidDocu(idDocu);
-            
-            /*Seteando valor false para indicar que esos productos ya son parte de la orden*/
-            for(int i=0; i<lstProducts.size(); i++){
-                lstProducts.get(i).setFlgNuevo(false);
-            }
-            
+            sic1idendocu.getSic1docu().setLstDocusPadre(lstDocusPadre);
+            sic1idendocu.getSic1docu().setLstDocusHijo(lstDocusHijo);
             sic1idendocu.getSic1docu().setLstSic3docuprod(lstProducts);
             
             /*Se obtiene la lista de PERSONAS RELACIONAS AL DOCUMENTO*/
 //            List<Sic3docupers> lstPersonas = daoDocumentImpl.obtPersRelXidDocu(idDocu);
-//            sic1idendocu.getSic1docu().setLstPersRela(lstPersonas);            
+//            sic1idendocu.getSic1docu().setLstPersRela(lstPersonas);
             
             /*Se obtiene el codigo del ultimo estado del documento*/
             String codEstaDocu = daoDocumentImpl.getLastCodEstaDocu(cnConexion, idDocu);

@@ -235,6 +235,7 @@ and open the template in the editor.
 
 .subtitulo{
     background-color: rgb(219, 186, 186);
+    padding-left: 4px;    
     width: 100%;
 }
 

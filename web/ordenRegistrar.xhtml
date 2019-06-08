@@ -268,7 +268,7 @@
                 <div class="panelIngresoDatosOrden">
                     
                     <div class="form-group subtitulo" >
-                        <h:outputLabel value="DOCUMENTOS RELACIONADOS" rendered="#{not empty orderController.lstViSicdocus}"/>
+                        <h:outputLabel value="DOCUMENTOS RELACIONADOS" rendered="#{not empty orderController.lstDocusPadre}"/>
                     </div>                    
                     
                     <!-- ********************************** -->
@@ -277,12 +277,12 @@
                     
                     <p:dataTable                                                        
                         id="idTblDocuments" var="item" 
-                        rendered="#{not empty orderController.lstViSicdocus}"
-                        value="#{orderController.lstViSicdocus}" 
-                        style="margin-bottom:20px;padding: 0px">                                                        
+                        rendered="#{not empty orderController.lstDocusPadre}"
+                        value="#{orderController.lstDocusPadre}" 
+                        style="margin-bottom:20px;padding: 0px; font-size: 11px ">                                                        
 
                         <p:column headerText="No." width="25" style="padding: 1px;text-align: center">
-                            <h:outputText value="#{orderController.lstViSicdocus.indexOf(item) + 1}" />
+                            <h:outputText value="#{orderController.lstDocusPadre.indexOf(item) + 1}" />
                         </p:column>                            
 
                         <p:column headerText="Evento" width="120" style="color: blue;font-size: 12px;text-align: center">
@@ -380,19 +380,19 @@
                         <tr>
                             <td colspan="5" style="padding: 8px 0px 8px 0px" ><div class="subtitulo"><h:outputLabel value="INGRESAR PRODUCTOS"/></div></td>
                         </tr>
-                        <tr style="display: #{orderController.flgEditProducts?'':'none'}">
+                        <tr style="display: #{orderController.flgAgregarProductos?'':'none'}">
                             <td class="compra_panelGrid_1">
                                 <h:outputLabel value="Código Producto:"/>
                             </td>
                             <td class="compra_panelGrid_2">
-                                <h:inputText id="codigoProducto"  autocomplete="off" styleClass="form-control" value="#{orderController.sic1prod.codProd}" disabled="#{!orderController.flgEditProducts}">
+                                <h:inputText id="codigoProducto"  autocomplete="off" styleClass="form-control" value="#{orderController.sic1prod.codProd}">
                                     <f:ajax execute="codigoProducto" render="descProducto pnAutocomplete" event="keyup" listener="#{orderController.searchProduct()}"  onevent="fnShowAutocompleteResult" />
                                 </h:inputText>
                             </td>
                             <td class="compra_panelGrid_3" >
                                 <h:commandLink  id="idCreateProduct" rendered="#{!orderController.flgIsSale}"
                                                 onclick="return fnShowPopupCreateProduct()"
-                                                disabled="#{!orderController.flgEditProducts}"
+                                                disabled="#{!orderController.flgAgregarProductos}"
                                                 styleClass="btn btn-default"> 
                                     <span class="glyphicon glyphicon-new-window"></span>Nuevo
                                 </h:commandLink>
@@ -408,15 +408,14 @@
                                                  value="#{orderController.sic1prod.desProd}" />
                             </td>
                         </tr>
-                        <tr style="display: #{orderController.flgEditProducts?'':'none'}">
+                        <tr style="display: #{orderController.flgAgregarProductos?'':'none'}">
                             <td class="compra_panelGrid_1">
                                 <h:outputLabel value="Precio:"/>
                             </td>
                             <td class="compra_panelGrid_2">
                                 <div class="input-group mb-2 mb-sm-0">
                                     <div class="input-group-addon">S/.</div>
-                                    <h:inputText id="costoUnitario" styleClass="form-control"
-                                                 disabled="#{!orderController.flgEditProducts}"
+                                    <h:inputText id="costoUnitario" styleClass="form-control"                                                 
                                                  autocomplete="off"
                                                  value="#{orderController.sic3docuprod.numValor }"
                                                  onkeypress="return fnAllowOnlyDecimalNumbers(event)"
@@ -424,20 +423,19 @@
                                 </div>
                             </td>                           
                         </tr>
-                        <tr style="display: #{orderController.flgEditProducts?'':'none'}">
+                        <tr style="display: #{orderController.flgAgregarProductos?'':'none'}">
                             <td class="compra_panelGrid_1"><h:outputLabel value="Cantidad:"/></td>
                             <td class="compra_panelGrid_2">
                                 <div class="input-group mb-2 mb-sm-0">
                                     <div class="input-group-addon">#&nbsp;&nbsp;</div>
-                                    <h:inputText id="cantidad" styleClass="form-control"  
-                                                 disabled="#{!orderController.flgEditProducts}"
+                                    <h:inputText id="cantidad" styleClass="form-control"                                                   
                                                  autocomplete="off"
                                                  onkeypress="return fnAllowOnlyNumbers(event)"
                                                  value="#{orderController.sic3docuprod.numCantidad }" />
                                 </div>
                             </td>                      
                         </tr>
-                        <tr style="display: #{orderController.flgEditProducts?'':'none'}">                            
+                        <tr style="display: #{orderController.flgAgregarProductos?'':'none'}">                            
                             <td class="compra_panelGrid_1">                                
                                 <h:outputLabel value="Descuento:"/>                                
                             </td>
@@ -445,8 +443,7 @@
                                 <div class="input-group mb-2 mb-sm-0">
                                     <div class="input-group-addon">S/.</div>
                                     <h:inputText id="idDescuento" styleClass="form-control"
-                                                 style="color: red"
-                                                 disabled="#{!orderController.flgEditProducts}"
+                                                 style="color: red"                                                 
                                                  autocomplete="off"
                                                  value="#{orderController.sic3docuprod.numMtodscto}"
                                                  onkeypress="return fnAllowOnlyDecimalNumbers(event)"
@@ -454,8 +451,7 @@
                                 </div>                                
                             </td>   
                             <td class="compra_panelGrid_3">
-                                <p:commandLink actionListener="#{orderController.addItem()}" 
-                                               disabled="#{!orderController.flgEditProducts}"
+                                <p:commandLink actionListener="#{orderController.addItem()}"
                                                onstart="return fnValiteAddProduct()"
                                                styleClass="btn btn-default"
                                                update="form:pnDetOrder,codigoProducto,descProducto,costoUnitario,idDescuento,cantidad,form:pnTotals,idMtoTarjeta,numMtoefectivo" >
@@ -488,21 +484,21 @@
                                                      ,table_style_action">
 
                             <h:column headerClass="table_style_id">
-                                <f:facet name="header">No.</f:facet>#{item.numIndex}
+                                <f:facet name="header">Item</f:facet>#{item.id.numItem}
                             </h:column> 
                             
                             <h:column headerClass="table_style_code">
-                                <f:facet name="header">CODIGO</f:facet>#{item.sic1prod.codProd}
+                                <f:facet name="header">Código</f:facet>#{item.sic1prod.codProd}
                             </h:column>
                             
                             <h:column headerClass="table_style_description_medium">
-                                <f:facet name="header">DESCRIPCION</f:facet>#{item.sic1prod.desProd}
+                                <f:facet name="header">Descripción</f:facet>#{item.sic1prod.desProd}
                             </h:column>
                             
                             <h:column  headerClass="table_style_price">
                                 <div >
                                     <h:outputLabel value="S/." />
-                                    <f:facet name="header">PRECIO</f:facet>#{item.numValor}
+                                    <f:facet name="header">Precio</f:facet>#{item.numValor}
                                 </div>
                             </h:column>
                             
@@ -512,8 +508,9 @@
                                     <f:facet name="header">DSCTO</f:facet>#{item.numMtodscto}
                                 </div>
                                 
-                                <f:facet name="footer">
-                                    <div class="table_style_total_amount">
+                               <f:facet name="footer">                                    
+                                    <div class="table_style_total_price" style="color: red">
+                                        <h:outputLabel value="S/." />
                                         #{orderController.numSumItemsDescuento}
                                     </div>
                                 </f:facet> 
@@ -521,7 +518,7 @@
                             </h:column>
                             
                             <h:column id="idTableAmount" headerClass="table_style_amount">
-                                <f:facet  name="header">CANTIDAD</f:facet>#{item.numCantidad}
+                                <f:facet  name="header">Cantidad</f:facet>#{item.numCantidad}
                                 
                                 <f:facet name="footer">
                                     <div class="table_style_total_amount">
@@ -534,7 +531,7 @@
                             <h:column headerClass="table_style_price_7x">
                                 <div >
                                     <h:outputLabel value="S/." />
-                                    <f:facet name="header">TOTAL</f:facet>#{item.numValor * item.numCantidad}
+                                    <f:facet name="header">Total</f:facet>#{item.numValor * item.numCantidad}
                                 </div>
                                 
                                 <f:facet name="footer">
@@ -546,16 +543,16 @@
                             </h:column>
                             
                             <h:column headerClass="table_style_action">
-                                <f:facet name="header">ACCION</f:facet>
-                                <h:panelGroup rendered="#{empty item.id.idDocu}">
+                                <f:facet name="header">Acción</f:facet>
+                                <h:panelGroup rendered="#{item.flgEditar}">
                                     <h:commandLink>                                              
                                         <span class="glyphicon glyphicon-trash"></span>
-                                        <f:ajax execute="@this" render="@form" listener="#{orderController.deleteAction(item.numIndex)}" />
+                                        <f:ajax execute="@this" render="@form" listener="#{orderController.deleteAction(item.id.numItem)}" />
                                     </h:commandLink>                                
                                     &nbsp;
                                     <h:commandLink >                                              
                                         <span class="glyphicon glyphicon-pencil"></span>
-                                        <f:ajax execute="@this" render="@form" listener="#{orderController.editAction(item.numIndex)}" />
+                                        <f:ajax execute="@this" render="@form" listener="#{orderController.editAction(item.id.numItem)}" />
                                     </h:commandLink>
                                 </h:panelGroup>                                
                             </h:column>
@@ -767,7 +764,7 @@
                             <tr>
                                 <td colspan="2" style="text-align: center; color: white">
                                     <h:panelGroup rendered="#{!orderController.flgIsSale}">
-                                        <h:selectBooleanCheckbox value="#{orderController.flgPrecioSinIGV}" disabled="#{!orderController.flgEditProducts}">
+                                        <h:selectBooleanCheckbox value="#{orderController.flgPrecioSinIGV}" disabled="#{!orderController.flgAgregarProductos}">
                                             <f:ajax execute="@this" event="change" render="form:pnTotals message" listener="#{orderController.recalculateTotals(false)}" />
                                         </h:selectBooleanCheckbox>
                                         <h:outputLabel value="PRECIO NO INCLUYE I.G.V." />

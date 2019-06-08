@@ -13,27 +13,29 @@ import java.util.Date;
 public class Sic3docuprod  implements java.io.Serializable {
 
 
-     private Sic3docuprodId id;
-     private Sic1prod sic1prod;
-     private BigDecimal idTreladocu;
-     private Date fecHasta;
-     private String desNotas;
-     private BigDecimal numValor;
-     private BigDecimal numMtodscto;
-     private BigDecimal numCantidad;
-     
-     /*Se agrega temporalmente*/
-     private BigDecimal numCantidadEMZA;
-     
-     
-      /*Agregado*/
-     private Integer numIndex;
-     private Sic1docu sic1docu;
-     private Boolean flgNuevo;
-     private Boolean flgSeleccionado;
+    private Sic3docuprodId id;
+    private Sic1prod sic1prod;
+    private BigDecimal idTreladocu;
+    private Date fecHasta;
+    private String desNotas;
+    private BigDecimal numValor;
+    private BigDecimal numMtodscto;
+    private BigDecimal numCantidad;
+
+    /*Se agrega temporalmente*/
+    private BigDecimal numCantidadEMZA;
+
+
+     /*Agregado*/
+    private Integer numIndex;
+    private Sic1docu sic1docu;
+    private Boolean flgNuevo;
+    private Boolean flgEditar;
+    private Boolean flgSeleccionado;
 
     public Sic3docuprod() {
         this.flgNuevo = false;
+        this.flgEditar = true;
         this.flgSeleccionado = false;
     }
 
@@ -134,6 +136,14 @@ public class Sic3docuprod  implements java.io.Serializable {
     public void setFlgNuevo(Boolean flgNuevo) {
         this.flgNuevo = flgNuevo;
     }
+
+    public Boolean getFlgEditar() {
+        return flgEditar;
+    }
+
+    public void setFlgEditar(Boolean flgEditar) {
+        this.flgEditar = flgEditar;
+    }    
 
     public BigDecimal getNumCantidadEMZA() {
         return numCantidadEMZA;

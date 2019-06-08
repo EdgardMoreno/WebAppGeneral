@@ -64,8 +64,10 @@ public class OrderController implements Serializable{
     /**/
     
     private Sic3docuprod sic3docuprod;
-    private List<Sic3docuprod> lstSic3docuprod;
-    private List<ViSicdocu> lstViSicdocus;
+    private List<Sic3docuprod> lstProductosRelacionados;    
+    
+    private List<ViSicdocu> lstDocusPadre;
+    private List<ViSicdocu> lstDocusHijo;
     
     private List<Sic1stipodocu> itemSTipoDocu   = new ArrayList();
     private List<Sic1general> itemsPayMode      = new ArrayList();
@@ -97,8 +99,8 @@ public class OrderController implements Serializable{
     private boolean flgPorRecoger;
     private boolean flgPrecioSinIGV;
     private boolean flgIsSale;
-    private boolean flgEditPerson;
-    private boolean flgEditProducts;
+    private boolean flgEditPerson;    
+    private boolean flgAgregarProductos;
     private boolean flgEditarFecha;
     private boolean flgEditarFormaPago;
     private boolean flgMostrarFormaPago;
@@ -118,8 +120,7 @@ public class OrderController implements Serializable{
         
         try{
             
-            this.flgEditPerson              = true;
-            this.flgEditProducts            = true;
+            this.flgEditPerson              = true;            
             this.flgEditarFecha             = true;
             this.flgEditarFormaPago         = true;
             this.flgMostrarFormaPago        = true;
@@ -129,7 +130,8 @@ public class OrderController implements Serializable{
             this.flgPorRecoger              = false;
             this.msjValidation              = "";
             this.lstProducts                = new ArrayList();
-            this.lstViSicdocus              = new ArrayList<>();
+            this.lstDocusHijo               = new ArrayList<>();
+            this.lstDocusPadre              = new ArrayList<>();
             this.objMaeCataService          = new MaestroCatalogoServiceImpl();
             this.orderServiceImpl           = new DocuOrderServiceImpl();
            
@@ -164,7 +166,7 @@ public class OrderController implements Serializable{
             this.numSumItemsDescuento       = new BigDecimal("0");            
             
             /*Data*/
-            this.lstSic3docuprod            = new ArrayList();
+            this.lstProductosRelacionados            = new ArrayList();
             
             this.loadCatalogs();
             
@@ -292,11 +294,11 @@ public class OrderController implements Serializable{
     }
 
     public List<Sic3docuprod> getLstSic3docuprod() {
-        return lstSic3docuprod;
+        return lstProductosRelacionados;
     }
 
     public void setLstSic3docuprod(List<Sic3docuprod> lstSic3docuprod) {
-        this.lstSic3docuprod = lstSic3docuprod;
+        this.lstProductosRelacionados = lstSic3docuprod;
     }
 
     public boolean isFlgPorRecoger() {
@@ -354,14 +356,16 @@ public class OrderController implements Serializable{
     public void setFlgEditPerson(boolean flgEditPerson) {
         this.flgEditPerson = flgEditPerson;
     }    
+    
 
-    public boolean isFlgEditProducts() {
-        return flgEditProducts;
+    public boolean isFlgAgregarProductos() {
+        return flgAgregarProductos;
     }
 
-    public void setFlgEditProducts(boolean flgEditProducts) {
-        this.flgEditProducts = flgEditProducts;
-    }
+    public void setFlgAgregarProductos(boolean flgAgregarProductos) {
+        this.flgAgregarProductos = flgAgregarProductos;
+    }    
+    
 
     public boolean isFlgEditarFecha() {
         return flgEditarFecha;
@@ -435,15 +439,7 @@ public class OrderController implements Serializable{
 
     public void setItemsSpend(List<Sic1sclaseeven> itemsSpend) {
         this.itemsSpend = itemsSpend;
-    }
-
-    public List<ViSicdocu> getLstViSicdocus() {
-        return lstViSicdocus;
-    }
-
-    public void setLstViSicdocus(List<ViSicdocu> lstViSicdocus) {
-        this.lstViSicdocus = lstViSicdocus;
-    }
+    }    
 
     public Double getNumMtoComiTarjeta() {
         return numMtoComiTarjeta;
@@ -468,7 +464,22 @@ public class OrderController implements Serializable{
     public void setFlgMostrarNumVoucher(boolean flgMostrarNumVoucher) {
         this.flgMostrarNumVoucher = flgMostrarNumVoucher;
     }
-    
+
+    public List<ViSicdocu> getLstDocusPadre() {
+        return lstDocusPadre;
+    }
+
+    public void setLstDocusPadre(List<ViSicdocu> lstDocusPadre) {
+        this.lstDocusPadre = lstDocusPadre;
+    }
+
+    public List<ViSicdocu> getLstDocusHijo() {
+        return lstDocusHijo;
+    }
+
+    public void setLstDocusHijo(List<ViSicdocu> lstDocusHijo) {
+        this.lstDocusHijo = lstDocusHijo;
+    }         
     
     /******************************************************************************/
     /****** METODOS ***************************************************************/
@@ -551,35 +562,26 @@ public class OrderController implements Serializable{
     
     public void deleteAction(int index) throws CustomizerException {
         System.out.println("Eliminar Producto");
-        lstSic3docuprod.remove(index-1);
+        this.lstProductosRelacionados.remove(index-1);
+        
         /*Recalculando el numero de la fila*/
-        for(int i=0 ; i < lstSic3docuprod.size() ; i++){
-            lstSic3docuprod.get(i).setNumIndex(i+1);
+        for(int i=0 ; i < this.lstProductosRelacionados.size() ; i++){
+            this.lstProductosRelacionados.get(i).getId().setNumItem(i+1);
         }
         this.indexTabla   = -1;        
        
         /*Calcular Footer de la tabla*/
-        this.numSumItemsPrice       = new BigDecimal("0.00");
-        this.numSumItemsAmount      = new BigDecimal("0");
-        this.numSumItemsDescuento   = new BigDecimal("0.00");
-        for(Sic3docuprod obj :  lstSic3docuprod){
-            if (obj.getNumValor() != null){
-                this.numSumItemsPrice       = this.numSumItemsPrice.add(obj.getNumValor().multiply(obj.getNumCantidad()));
-                this.numSumItemsAmount      = this.numSumItemsAmount.add(obj.getNumCantidad());
-                this.numSumItemsDescuento   = this.numSumItemsAmount.add(obj.getNumMtodscto());
-            }
-        }
+        this.calcularFooterTablaProductos(this.lstProductosRelacionados);
         
         this.sic1docu.setNumMtoefectivo(new BigDecimal("0.00"));
         this.sic1docu.setNumMtotarjeta(new BigDecimal("0.00"));
-        this.recalculateTotals(true);
-        
+        this.recalculateTotals(true);        
         
     }
     
     public void editAction(int index) {
         
-        this.sic3docuprod = lstSic3docuprod.get(index-1);        
+        this.sic3docuprod = lstProductosRelacionados.get(index-1);        
         this.sic1prod = this.sic3docuprod.getSic1prod();        
         this.indexTabla = index-1;
         
@@ -593,8 +595,8 @@ public class OrderController implements Serializable{
         if(this.indexTabla >= 0){
             
             int item = this.indexTabla + 1;
-            Sic3docuprod obj  = this.lstSic3docuprod.get(indexTabla);
-            this.lstSic3docuprod.remove(obj);
+            Sic3docuprod obj  = this.lstProductosRelacionados.get(indexTabla);
+            this.lstProductosRelacionados.remove(obj);
             
             Sic3docuprodId id = new Sic3docuprodId();
             id.setIdProd(this.sic1prod.getIdProd());
@@ -603,22 +605,21 @@ public class OrderController implements Serializable{
             this.sic3docuprod.setSic1prod(this.sic1prod);
             this.sic3docuprod.setId(id);
             
-            this.sic3docuprod.setNumIndex(item);
-            this.sic3docuprod.setFlgNuevo(true);
-            //this.sic3docuprod.getId().setNumItem(item);
+            //this.sic3docuprod.setNumIndex(item);
+            this.sic3docuprod.setFlgNuevo(true);            
             this.sic3docuprod.getNumValor().setScale(2,BigDecimal.ROUND_HALF_UP );
             
              if(this.sic3docuprod.getNumMtodscto() == null)
                 this.sic3docuprod.setNumMtodscto(new BigDecimal("0.00"));
             
-            this.lstSic3docuprod.add(this.indexTabla, sic3docuprod);
+            this.lstProductosRelacionados.add(this.indexTabla, sic3docuprod);
             
         }
         /*Se agrega un nuevo item*/
         else{
             /*AGREGAR ID*/
             
-            int item = this.lstSic3docuprod.size() + 1;
+            int item = this.lstProductosRelacionados.size() + 1;
             
             Sic3docuprodId id = new Sic3docuprodId();
             id.setIdProd(this.sic1prod.getIdProd());
@@ -626,25 +627,16 @@ public class OrderController implements Serializable{
 
             this.sic3docuprod.setSic1prod(this.sic1prod);
             this.sic3docuprod.setId(id);
-            this.sic3docuprod.setNumIndex(item);
+            //this.sic3docuprod.setNumIndex(item);
             this.sic3docuprod.setFlgNuevo(true);
             if(this.sic3docuprod.getNumMtodscto() == null)
                 this.sic3docuprod.setNumMtodscto(new BigDecimal("0.00"));
             
-            this.lstSic3docuprod.add(this.sic3docuprod);
+            this.lstProductosRelacionados.add(this.sic3docuprod);
         }
        
-        /*Calcular Footer de la tabla*/
-        this.numSumItemsPrice = new BigDecimal("0.00");
-        this.numSumItemsAmount = new BigDecimal("0");        
-        this.numSumItemsDescuento = new BigDecimal("0.00");
-        for(Sic3docuprod obj :  lstSic3docuprod){
-            if (obj.getNumValor()!=null){
-                this.numSumItemsPrice = this.numSumItemsPrice.add(obj.getNumValor().multiply(obj.getNumCantidad()));
-                this.numSumItemsAmount = this.numSumItemsAmount.add(obj.getNumCantidad());
-                this.numSumItemsDescuento.add(obj.getNumMtodscto());
-            }
-        }
+        /*Calcular Footer de la tabla*/        
+        this.calcularFooterTablaProductos(this.lstProductosRelacionados);
         
       
         this.sic1docu.setNumMtoefectivo(new BigDecimal("0.00"));
@@ -836,7 +828,7 @@ public class OrderController implements Serializable{
             this.sic1docu.setNumMtovuelto(new BigDecimal("0.00"));           
                                     
             /*Se obtiene el precio total: Sumando el precio * cantidad de cada producto*/
-            for(Sic3docuprod obj : this.lstSic3docuprod){
+            for(Sic3docuprod obj : this.lstProductosRelacionados){
                 
                 System.out.println("mtoDescuento:" + obj.getNumMtodscto());
                 System.out.println("Cantidad:" + obj.getNumCantidad());
@@ -1253,7 +1245,7 @@ public class OrderController implements Serializable{
             else {
             
                 BigDecimal idPers = this.sic1pers.getIdPers();
-                int numItems      = this.lstSic3docuprod.size();
+                int numItems      = this.lstProductosRelacionados.size();
                 
                 System.out.println("ID_PERS CLIENTE/PROVEEDOR: " + idPers);
 
@@ -1280,7 +1272,7 @@ public class OrderController implements Serializable{
                 /*VALIDACION: Excepto si es una NOTA DE CREDITO, se valida que documentos con el mismo tipo de comprobante 
                               de pago no se puedan relacionar */
                 if(!this.codSClaseeven.equals(Constantes.COD_SCLASEEVEN_NOTACREDITO)){
-                    for(ViSicdocu objVi : this.lstViSicdocus){
+                    for(ViSicdocu objVi : this.lstDocusPadre){
                         if(objVi.getCodStipodocu().equals(this.sic1docu.getSic1stipodocu().getCodStipodocu())){
                             strMessage = "No se puede relacionar una " + this.sic1docu.getSic1stipodocu().getDesStipodocu() + 
                                          " con otra " + objVi.getDesStipodocu().toUpperCase() + ".";
@@ -1374,14 +1366,12 @@ public class OrderController implements Serializable{
                 this.sic1docu.setNumMtoPagadoComiTarjeta(this.numMtoPagadoComiTarjeta);
                 
                 /* SETEANDO DOCUMENTO REFERENCIADO*/                
-                
-                
-                if(this.lstViSicdocus.size() > 0){
+                if(this.lstDocusPadre.size() > 0){
 
                     //this.sic1docu.setIdDocu(null);
 
                     Sic3docudocuId id = new Sic3docudocuId();
-                    id.setIdDocurel(this.lstViSicdocus.get(0).getIdDocu());
+                    id.setIdDocurel(this.lstDocusPadre.get(0).getIdDocu());
                     Sic3docudocu sic3docudocu = new Sic3docudocu();
                     sic3docudocu.setId(id);
                     this.sic1docu.setSic3docudocu(sic3docudocu);
@@ -1395,7 +1385,7 @@ public class OrderController implements Serializable{
                 }
 
                 /*Agregando lista de productos*/
-                this.sic1docu.setLstSic3docuprod(this.lstSic3docuprod);
+                this.sic1docu.setLstSic3docuprod(this.lstProductosRelacionados);
                 
                 /*Codigo del estado*/
                 if (this.flgPorRecoger){
@@ -1426,8 +1416,8 @@ public class OrderController implements Serializable{
                 this.sic1docu           = new Sic1docu();
                 this.sic1idenpersId     = new Sic1idenpersId();
                 this.sic1pers           = new Sic1pers();                
-                this.lstSic3docuprod.clear();
-                this.lstViSicdocus      = new ArrayList<>();
+                this.lstProductosRelacionados.clear();
+                this.lstDocusPadre      = new ArrayList<>();
                 this.sic3docuprod       = new Sic3docuprod();
                 this.sic1prod           = new Sic1prod();                    
                 this.desFecRegistro     = UtilClass.getCurrentDay();
@@ -1645,6 +1635,25 @@ public class OrderController implements Serializable{
     }
     
     /**
+     * Se calcula el footer para la tabla donde se listan los productos
+     * @param lstProductosRelacionados 
+     */
+    public void calcularFooterTablaProductos(List<Sic3docuprod> lstProductosRelacionados){
+        
+        this.numSumItemsPrice = new BigDecimal("0.00");
+        this.numSumItemsAmount = new BigDecimal("0");
+        this.numSumItemsDescuento = new BigDecimal("0.00");
+        for(Sic3docuprod obj :  lstProductosRelacionados){
+            if (obj.getNumValor()!=null){
+                this.numSumItemsPrice       = this.numSumItemsPrice.add(obj.getNumValor().multiply(obj.getNumCantidad()));
+                this.numSumItemsAmount      = this.numSumItemsAmount.add(obj.getNumCantidad());
+                this.numSumItemsDescuento   = this.numSumItemsDescuento.add(obj.getNumMtodscto());
+            }
+        }
+        
+    }
+    
+    /**
      * METODO QUE ES INVOCADO DESDE OTRA PAGINA, A TRAVES DE SU CONTROLADOR
      * @param idDocuPrinc Indica el identificador el documento principal
      * @param desTituloPagina Indica el titulo que se mostrará en la página.
@@ -1652,16 +1661,17 @@ public class OrderController implements Serializable{
      * @param idDocurel Indica el identificador el documento relacionado
      * @param lstProductosSeleccionados Indica la lista de productos seleccionados
      * @param flgNuevo 
-     * @param flgEditarProductos Indica si se podrá agregar productos
+     * @param flgAgregarProductos Indica si se podrá agregar productos
      * @throws CustomizerException 
      */    
-    public void loadOrderDetails( BigDecimal idDocuPrinc
+    public void loadOrderDetailsForEdit( BigDecimal idDocuPrinc
                                  ,String desTituloPagina
                                  ,String codSClaseevenTmp
                                  ,BigDecimal idDocurel
                                  ,List<Sic3docuprod> lstProductosSeleccionados
                                  ,boolean flgNuevo
-                                 ,boolean flgEditarProductos
+                                 ,boolean flgAgregarProductos /*Permite mostrar los contrales para agregar productos*/
+                                 ,boolean flgEditarItemProducto /*Permite editar cada item de los producto ya existentes*/
                                  ,boolean flgEditarPersona
                                  ,boolean flgEditarFecha
                                  ,boolean flgEditarFormaPago
@@ -1677,7 +1687,8 @@ public class OrderController implements Serializable{
             System.out.println("idDocurel:" + idDocurel);
             System.out.println("lstProductosSeleccionados:" + lstProductosSeleccionados.size());
             System.out.println("flgNuevo:" + flgNuevo);
-            System.out.println("flgEditarProductos:" + flgEditarProductos);
+            System.out.println("flgAgregarProductos:" + flgAgregarProductos);
+            System.out.println("flgEditarItemProducto:" + flgEditarItemProducto);
             System.out.println("flgEditarPersona:" + flgEditarPersona);
             System.out.println("flgEditarFecha:" + flgEditarFecha);
             System.out.println("flgEditarFormaPago:" + flgEditarFormaPago);
@@ -1685,10 +1696,11 @@ public class OrderController implements Serializable{
 
             this.desTituloPagina        = desTituloPagina;
             this.codSClaseeven          = codSClaseevenTmp;
+            this.lstDocusPadre          = new ArrayList<>();
 
             this.init();
 
-            this.flgEditProducts        = flgEditarProductos;
+            this.flgAgregarProductos    = flgAgregarProductos;
             this.flgEditPerson          = flgEditarPersona;
             this.flgEditarFecha         = flgEditarFecha;
             this.flgEditarFormaPago     = flgEditarFormaPago;
@@ -1701,8 +1713,7 @@ public class OrderController implements Serializable{
                 if (codSClaseevenTmp.equalsIgnoreCase(Constantes.COD_SCLASEEVEN_VENTA))
                     this.flgIsSale = true;
             }else
-                throw new CustomizerException("No se cargo la sub clase del evento.");                
-            
+                throw new CustomizerException("No se cargo la sub clase del evento.");
             
             BigDecimal idDocuLocal  = new BigDecimal(0);
             
@@ -1714,7 +1725,7 @@ public class OrderController implements Serializable{
             /*OBTENER LOS DATOS DE LA ORDEN*/
             if (idDocuLocal.intValue() > 0 ){
                 
-                this.idDocuImpresion = idDocuLocal;
+                //this.idDocuImpresion = idDocuLocal;
 
                 /*Se obtiene los datos de la orden*/
                 Sic1idendocu sic1idendocuLocal = orderServiceImpl.getOrderByIdDocu(idDocuLocal);
@@ -1730,80 +1741,59 @@ public class OrderController implements Serializable{
                 this.sic1pers           = sic1idenpers.getSic1pers();
                 this.sic1pers.setIdTipoiden(sic1idenpersId.getIdTipoiden());
                 
+                /*Para el caso de Registrar Compra desde NOTA DE PEDIDO y Registrar Nota de Crédito
+                  la lista de productos es enviado como parametro*/
                 if(lstProductosSeleccionados.size() > 0)
-                    this.lstSic3docuprod    = lstProductosSeleccionados;
+                    this.lstProductosRelacionados    = lstProductosSeleccionados;
                 else
-                    this.lstSic3docuprod    = sic1idendocuLocal.getSic1docu().getLstSic3docuprod();
+                    this.lstProductosRelacionados    = sic1idendocuLocal.getSic1docu().getLstSic3docuprod();
                 
                 /*Si se está editanto una ORDEN DE COMPRA se setea valor null a los items para que se puedan editar*/
-                if (flgEditarProductos && codSClaseevenTmp.equals(Constantes.COD_SCLASEEVEN_ORDENCOMPRA)){
-                    for(int i=0; i<lstSic3docuprod.size(); i++){
-                        lstSic3docuprod.get(i).getId().setIdDocu(null);
+                if (flgAgregarProductos && codSClaseevenTmp.equals(Constantes.COD_SCLASEEVEN_ORDENCOMPRA)){
+                    for(int i=0; i<lstProductosRelacionados.size(); i++){
+                        lstProductosRelacionados.get(i).getId().setIdDocu(null);
                     }
                 }
                 
-                /*Recalculando el Nro. item de la tabla detalle de productos*/
-                for(int i = 0; i < this.lstSic3docuprod.size(); i++){
-                    this.lstSic3docuprod.get(i).setNumIndex(i+1);
+                /*Indicar si el item del producto se podrá editar*/                
+                for(int i = 0; i < this.lstProductosRelacionados.size(); i++){
+                    this.lstProductosRelacionados.get(i).setFlgEditar(flgEditarItemProducto);
                 }
                 
-                 /*Calcular Footer de la tabla*/
-                this.numSumItemsPrice = new BigDecimal("0.00");
-                this.numSumItemsAmount = new BigDecimal("0");
-                this.numSumItemsDescuento = new BigDecimal("0.00");
-                for(Sic3docuprod obj :  lstSic3docuprod){
-                    if (obj.getNumValor()!=null){
-                        this.numSumItemsPrice       = this.numSumItemsPrice.add(obj.getNumValor().multiply(obj.getNumCantidad()));
-                        this.numSumItemsAmount      = this.numSumItemsAmount.add(obj.getNumCantidad());
-                        this.numSumItemsDescuento   = this.numSumItemsDescuento.add(obj.getNumMtodscto());
-                    }
-                }
-                
-                /*Formateando Montos*/
-                if (this.sic1docu.getNumMtodscto()!= null)
-                    this.sic1docu.getNumMtodscto().setScale(2,BigDecimal.ROUND_HALF_UP);
-                else
-                    this.sic1docu.setNumMtodscto(new BigDecimal("0.00"));
-                
-                if (this.sic1docu.getNumMtoefectivo()!= null)
-                    this.sic1docu.getNumMtoefectivo().setScale(2,BigDecimal.ROUND_HALF_UP);
-                else
-                    this.sic1docu.setNumMtoefectivo(new BigDecimal("0.00"));
-                
-                if (this.sic1docu.getNumMtotarjeta()!= null)
-                    this.sic1docu.getNumMtotarjeta().setScale(2,BigDecimal.ROUND_HALF_UP);
-                else
-                    this.sic1docu.setNumMtotarjeta(new BigDecimal("0.00"));
-                
+
+                /*Calcular Footer de la tabla*/
+                this.calcularFooterTablaProductos(lstProductosRelacionados);
+                               
                 /*Se obtiene si el precio incluye o no IGV*/
-                this.flgPrecioSinIGV = this.sic1docu.getFlgPrecsinIGV()==1?true:false;
+                this.flgPrecioSinIGV = this.sic1docu.getFlgPrecsinIGV()==1;
                 
                 /*Marcado el check PENDIENTE POR RECOGER*/
                 if(this.sic1docu.getCodEstadocu().equalsIgnoreCase(Constantes.CONS_COD_ESTAPORRECOGER))
                     this.flgPorRecoger = true;
 
-                if(flgNuevo)
-                    this.recalculateTotals(false);
-                else
-                    this.calculateTotals();//Cuando es solo para visualizar se hace un calculo simple de los totales
+                this.recalculateTotals(false);
                 
                 /*Cargar el catalogo de Tipo de Tarjeta*/
                 this.payModeValueChange();
                 
             }
+            
+            /*Cuando IdDocuRel > 0 significa que se genera un documento a partir de uno existente. 
+                Ejemplo: UNA VENTA -> a partir de ->  NOTA DE VENTA 
+                         UNA COMPRA -> a partir de ->  NOTA DE PEDIDO 
+                         UNA NOTA DE CREDITO -> a partir de -> UNA VENTA
+            */
+            if(idDocurel.intValue() > 0){
                 
-            /*Obteniendo la lista de los documentos relacionados al documento principal*/
-            if(idDocurel != null && idDocurel.intValue() > 0){
-
                 ViSicdocu viSicdocutmp = new ViSicdocu();
-                viSicdocutmp.setIdDocu(idDocurel);
-                this.lstViSicdocus = orderServiceImpl.listViSicdocu(viSicdocutmp);
+                viSicdocutmp.setIdDocu(idDocurel);                
+                this.lstDocusPadre = orderServiceImpl.listViSicdocu(viSicdocutmp);
+                
+                /*Si es una NOTA DE VENTA, Se obtiene los montos pagados por el cliente*/
+                if(this.sic1docu.getSic1stipodocu().getCodStipodocu().equals(Constantes.CONS_COD_STIPODOCU_NOTAVENTA)){
 
-                //Double numMtoTotalVenta = 0.00;
-                /*Se obtiene los montos pagados por el cliente*/
-                if(!codSClaseevenTmp.equals(Constantes.COD_SCLASEEVEN_NOTACREDITO)){
-                    for(ViSicdocu objVi : this.lstViSicdocus){
-                        
+                    for(ViSicdocu objVi : this.lstDocusPadre){
+
                         this.numMtoPagadoTarjeta        += objVi.getNumMtopagadotarjeta();
                         this.numMtoPagadoEfectivo       += objVi.getNumMtopagadoefectivo();
                         this.numTotalPagado             += objVi.getNumTotalpagado();
@@ -1811,48 +1801,126 @@ public class OrderController implements Serializable{
                         //numMtoTotalVenta +=  objVi.getNumMtototal();
                     }
                 }
-
-                //boolean flgOperacionPagada = false;
-                /*Validar si la operación ya ha sido PAGADA TOTALMENTE*/
-                /*if( (numMtoTotalVenta - this.numTotalPagado) == 0 )
-                    flgOperacionPagada = true;*/
-
-                /*Si es un nuevo documento se inicializan algunas variables*/
-                if(flgNuevo){
-                    
-                    /*Cuando es una NOTA DE CREDITO se mantiene el tipo de documento: FACTURA, BOLETA.*/
-                    if(!codSClaseevenTmp.equals(Constantes.COD_SCLASEEVEN_NOTACREDITO)){
-                        this.sic1docu.setIdStipodocu(new BigDecimal(-1));
-                    }
-                    
-                    /*Despues de haber cargado los datos del documento, el campo ID_DOCU se pone en NULL para especificar que se va crear un nuevo 
-                    documento el cual tendrá como referencia al anterior*/                   
-                    this.sic1docu.setIdDocu(null);
-                    this.sic1docu.setCodSerie(null);
-                    this.sic1docu.setNumDocu(null);
-                    this.sic1docu.setFecCreacion(null);
-                    this.desFecRegistro  = UtilClass.getCurrentDay();
-                    this.setNumMtoComiTarjeta(0.00);
-                    this.setNumMtoTotalComiTarjeta(0.00);
-
-                    /*Se limpian los datos*/
-                    if(flgMostrarFormaPago && flgEditarFormaPago){
-
-                        this.sic1docu.setNumMtotarjeta(null);
-                        this.sic1docu.setNumMtoefectivo(null);
-                        this.sic1docu.setNumMtovuelto(null);
-                        //this.sic1docu.setNumMtodscto(null);
-                        this.sic1docu.setNumMtocomi(null);
-                        this.sic1docu.setIdModapago(new BigDecimal(-1));
-                        this.sic1docu.setNumVoucher(null);
-                        this.sic1docu.setIdTipotarjeta(null);
-                        this.flgPorRecoger = false;
-
-                        /*Limpiar el catalogo de tipo de tarjea*/
-                        itemsTypeCard  = new ArrayList();
-                    }
-                    
+                
+            }else{
+                
+                /*Obteniendo la lista de los documentos relacionados al documento principal*/
+                /*Documentos Padre*/
+                for(Sic3docudocu objDocu : this.sic1docu.getLstDocusPadre()){
+                    ViSicdocu viSicdocutmp = new ViSicdocu();
+                    viSicdocutmp.setIdDocu(objDocu.getId().getIdDocu());
+                    this.lstDocusPadre.addAll(orderServiceImpl.listViSicdocu(viSicdocutmp));
                 }
-            }               
+            }
+
+            /*Si es un nuevo documento se inicializan algunas variables*/
+            if(flgNuevo){
+
+                /*Cuando es una NOTA DE CREDITO se mantiene el tipo de documento: FACTURA, BOLETA.*/
+                if(!codSClaseevenTmp.equals(Constantes.COD_SCLASEEVEN_NOTACREDITO)){
+                    this.sic1docu.setIdStipodocu(new BigDecimal(-1));
+                }
+
+                /*Despues de haber cargado los datos del documento, el campo ID_DOCU se pone en NULL para especificar que se va crear un nuevo 
+                documento el cual tendrá como referencia al anterior*/                   
+                this.sic1docu.setIdDocu(null);
+                this.sic1docu.setCodSerie(null);
+                this.sic1docu.setNumDocu(null);
+                this.sic1docu.setFecCreacion(null);
+                this.desFecRegistro  = UtilClass.getCurrentDay();
+                this.setNumMtoComiTarjeta(0.00);
+                this.setNumMtoTotalComiTarjeta(0.00);
+
+                /*Se limpian los datos*/
+                if(flgMostrarFormaPago && flgEditarFormaPago){
+
+                    this.sic1docu.setNumMtotarjeta(null);
+                    this.sic1docu.setNumMtoefectivo(null);
+                    this.sic1docu.setNumMtovuelto(null);                    
+                    this.sic1docu.setNumMtocomi(null);
+                    this.sic1docu.setIdModapago(new BigDecimal(-1));
+                    this.sic1docu.setNumVoucher(null);
+                    this.sic1docu.setIdTipotarjeta(null);
+                    this.flgPorRecoger = false;
+
+                    /*Limpiar el catalogo de tipo de tarjea*/
+                    itemsTypeCard  = new ArrayList();
+                }
+
+            }
+                    
+    }
+    
+    
+    /**
+     * METODO QUE ES INVOCADO DESDE LE CONTROLADOR DE OTRA PAGINA. PERMITE SOLO VER EL DETALLE DEL DOCUMENTO
+     * @param idDocuPrinc
+     * @param desTituloPagina
+     * @param codSClaseevenTmp
+     * @throws CustomizerException
+     * @throws Exception 
+     */
+     
+    public void loadOrderDetailsForView( BigDecimal idDocuPrinc
+                                        ,String desTituloPagina
+                                        ,String codSClaseevenTmp ) throws CustomizerException, Exception {
+                    
+            
+            System.out.println("idDocu:" + idDocuPrinc);
+            System.out.println("desTituloPagina:" + desTituloPagina);
+            System.out.println("codSClaseevenTmp:" + codSClaseevenTmp);            
+            
+            this.desTituloPagina        = desTituloPagina;
+            this.codSClaseeven          = codSClaseevenTmp;            
+            
+            if (codSClaseevenTmp == null)
+                throw new CustomizerException("No se cargo la sub clase del evento.");
+                
+            this.init();            
+            
+            if (idDocuPrinc.intValue() > 0 ){
+                
+                this.idDocuImpresion = idDocuPrinc;
+
+                /*Se obtiene los datos de la orden*/
+                Sic1idendocu sic1idendocuLocal = orderServiceImpl.getOrderByIdDocu(idDocuPrinc);
+
+                /*Se obtiene los datos del Cliente/Proveedor*/
+                PersonServiceImpl personServiceImpl = new PersonServiceImpl();
+                Sic1idenpers sic1idenpers           = personServiceImpl.getById(sic1idendocuLocal.getSic1docu().getIdPersexterno());
+
+                /*Seteando en las variables para que se visualice los datos en la pantalla*/
+                this.sic1idendocu               = sic1idendocuLocal;
+                this.sic1docu                   = sic1idendocuLocal.getSic1docu();
+                this.sic1idenpersId             = sic1idenpers.getId();
+                this.sic1pers                   = sic1idenpers.getSic1pers();                
+                this.lstProductosRelacionados   = this.sic1docu.getLstSic3docuprod();
+                this.sic1pers.setIdTipoiden(sic1idenpersId.getIdTipoiden());
+                
+                /*Calcular Footer de la tabla*/
+                this.calcularFooterTablaProductos(this.lstProductosRelacionados);
+                
+                /*Marcado el check PENDIENTE POR RECOGER*/
+                if(this.sic1docu.getCodEstadocu().equalsIgnoreCase(Constantes.CONS_COD_ESTAPORRECOGER))
+                    this.flgPorRecoger = true;
+
+                this.calculateTotals();//Cuando es solo para visualizar se hace un calculo simple de los totales
+                
+            }
+                
+            /*Obteniendo la lista de los documentos relacionados al documento principal*/
+            /*Documentos Padre*/
+            for(Sic3docudocu objDocu : this.sic1docu.getLstDocusPadre()){
+                ViSicdocu viSicdocutmp = new ViSicdocu();
+                viSicdocutmp.setIdDocu(objDocu.getId().getIdDocu());
+                this.lstDocusPadre.addAll(orderServiceImpl.listViSicdocu(viSicdocutmp));
+            }
+
+            /*Documentos Hijo*/
+            for(Sic3docudocu objDocu : this.sic1docu.getLstDocusHijo()){
+                ViSicdocu viSicdocutmp = new ViSicdocu();
+                viSicdocutmp.setIdDocu(objDocu.getId().getIdDocu());
+                this.lstDocusHijo.addAll(orderServiceImpl.listViSicdocu(viSicdocutmp));
+            }                       
     }
 }

@@ -38,7 +38,7 @@ import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
-import javax.faces.event.ValueChangeEvent;
+import javax.faces.event.ComponentSystemEvent;
 import javax.inject.Named;
 import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletResponse;
@@ -449,31 +449,12 @@ public class DocumentController implements Serializable{
         
         FacesContext context = FacesContext.getCurrentInstance();        
         context.getExternalContext().getSessionMap().put("orderController", null);        
-        OrderController objController = context.getApplication().evaluateExpressionGet(context, "#{orderController}", OrderController.class);        
+        OrderController objController = context.getApplication().evaluateExpressionGet(context, "#{orderController}", OrderController.class);
         
-        List<Sic3docuprod> lstProductosSeleccionados = new ArrayList<>(); 
-        boolean flgNuevo                = false;
-        boolean flgEditarProductos      = false;
-        boolean flgEditarPersona        = false;
-        boolean flgEditarFecha          = false;
-        boolean flgEditarFormaPago      = false;
-        boolean flgMostrarFormaPago     = true;
-        boolean flgEditarTipoDocumento  = false;
-        boolean flgEditarNroDocumento   = false;
         
-        objController.loadOrderDetails( viSicdocu.getIdDocu()
-                                        ,desTitulo
-                                        ,viSicdocu.getCodSclaseeven()
-                                        ,viSicdocu.getIdDocurel()
-                                        ,lstProductosSeleccionados
-                                        ,flgNuevo
-                                        ,flgEditarProductos
-                                        ,flgEditarPersona
-                                        ,flgEditarFecha
-                                        ,flgEditarFormaPago
-                                        ,flgMostrarFormaPago
-                                        ,flgEditarTipoDocumento
-                                        ,flgEditarNroDocumento );
+        objController.loadOrderDetailsForView(  viSicdocu.getIdDocu()
+                                               ,desTitulo
+                                               ,viSicdocu.getCodSclaseeven() );
         
         return "ordenDetalle?faces-redirect=true";
     }
@@ -493,7 +474,8 @@ public class DocumentController implements Serializable{
         OrderController objController = context.getApplication().evaluateExpressionGet(context, "#{orderController}", OrderController.class);
         
         boolean flgNuevo                = false;
-        boolean flgEditarProductos      = true;
+        boolean flgAgregarProductos     = true;
+        boolean flgEditarItemProducto   = true;
         boolean flgEditarPersona        = true;
         boolean flgEditarFecha          = true;
         boolean flgEditarFormaPago      = false;
@@ -501,13 +483,14 @@ public class DocumentController implements Serializable{
         boolean flgEditarTipoDocumento  = false;
         boolean flgEditarNroDocumento   = false;
         
-        objController.loadOrderDetails( viSicdocu.getIdDocu()
+        objController.loadOrderDetailsForEdit( viSicdocu.getIdDocu()
                                        ,desTitulo
                                        ,viSicdocu.getCodSclaseeven()
                                        ,new BigDecimal(0)
                                        ,new ArrayList<>()
                                        ,flgNuevo
-                                       ,flgEditarProductos
+                                       ,flgAgregarProductos
+                                       ,flgEditarItemProducto
                                        ,flgEditarPersona
                                        ,flgEditarFecha
                                        ,flgEditarFormaPago
@@ -694,28 +677,32 @@ public class DocumentController implements Serializable{
             context.getExternalContext().getSessionMap().put("orderController", null);            
             OrderController objController = context.getApplication().evaluateExpressionGet(context, "#{orderController}", OrderController.class);
             
-            boolean flgNuevo            = true;
-            boolean flgEditarProductos  = true;
-            boolean flgEditarPersona    = false;
-            boolean flgEditarFecha      = true;
-            boolean flgEditarFormaPago  = true;
-            boolean flgMostrarFormaPago = true;
-            boolean flgEditarTipoDocumento  = true;
-            boolean flgEditarNroDocumento   = true;
+            List<Sic3docuprod> lstProductosSeleccionados    = new ArrayList<>();            
+            BigDecimal idDocuPrinc                          = new BigDecimal(0);            
+            boolean flgNuevo                                = true;
+            boolean flgAgregarProductos                     = true;
+            boolean flgEditarItemProducto                   = false;
+            boolean flgEditarPersona                        = false;
+            boolean flgEditarFecha                          = true;
+            boolean flgEditarFormaPago                      = true;
+            boolean flgMostrarFormaPago                     = true;
+            boolean flgEditarTipoDocumento                  = true;
+            boolean flgEditarNroDocumento                   = true;
             
-            objController.loadOrderDetails(  viSicdocu.getIdDocu()
-                                            ,desTitulo
-                                            ,viSicdocu.getCodSclaseeven()
-                                            ,viSicdocu.getIdDocu()
-                                            ,new ArrayList<>()
-                                            ,flgNuevo
-                                            ,flgEditarProductos
-                                            ,flgEditarPersona
-                                            ,flgEditarFecha
-                                            ,flgEditarFormaPago
-                                            ,flgMostrarFormaPago
-                                            ,flgEditarTipoDocumento
-                                            ,flgEditarNroDocumento );
+            objController.loadOrderDetailsForEdit(   idDocuPrinc
+                                                    ,desTitulo
+                                                    ,viSicdocu.getCodSclaseeven()
+                                                    ,viSicdocu.getIdDocu()
+                                                    ,lstProductosSeleccionados
+                                                    ,flgNuevo
+                                                    ,flgAgregarProductos
+                                                    ,flgEditarItemProducto
+                                                    ,flgEditarPersona
+                                                    ,flgEditarFecha
+                                                    ,flgEditarFormaPago
+                                                    ,flgMostrarFormaPago
+                                                    ,flgEditarTipoDocumento
+                                                    ,flgEditarNroDocumento );
             
             
         }catch(ValidationException e){
@@ -821,25 +808,28 @@ public class DocumentController implements Serializable{
             context.getExternalContext().getSessionMap().put("orderController", null);            
             OrderController objController = context.getApplication().evaluateExpressionGet(context, "#{orderController}", OrderController.class);
             
-            boolean flgNuevo            = true;
-            boolean flgEditarProductos  = false;
-            boolean flgEditarPersona    = false;
-            boolean flgEditarFecha      = true;
+            BigDecimal idDocuPrinc          = new BigDecimal(0); 
+            boolean flgNuevo                = true;
+            boolean flgAgregarProductos     = false;
+            boolean flgEditarItemProducto   = false;
+            boolean flgEditarPersona        = false;
+            boolean flgEditarFecha          = true;
             
             
-            objController.loadOrderDetails(  new BigDecimal(0)
-                                            ,desTituloPaginaLocal
-                                            ,codSClaseevenlocal
-                                            ,idDocuLocal
-                                            ,lstProductosSeleccionados
-                                            ,flgNuevo
-                                            ,flgEditarProductos
-                                            ,flgEditarPersona
-                                            ,flgEditarFecha
-                                            ,flgEditarFormaPago
-                                            ,flgMostrarFormaPago
-                                            ,flgEditarTipoDocumento
-                                            ,flgEditarNroDocumento );
+            objController.loadOrderDetailsForEdit(   idDocuPrinc
+                                                    ,desTituloPaginaLocal
+                                                    ,codSClaseevenlocal
+                                                    ,idDocuLocal
+                                                    ,lstProductosSeleccionados
+                                                    ,flgNuevo
+                                                    ,flgAgregarProductos
+                                                    ,flgEditarItemProducto
+                                                    ,flgEditarPersona
+                                                    ,flgEditarFecha
+                                                    ,flgEditarFormaPago
+                                                    ,flgMostrarFormaPago
+                                                    ,flgEditarTipoDocumento
+                                                    ,flgEditarNroDocumento );
         }catch(ValidationException e){
             UtilClass.addErrorMessage(e.getMessage());
             return "";
@@ -1124,32 +1114,32 @@ public class DocumentController implements Serializable{
     }
      
       
-//    public void getParamsExternalPageAnularDocumento(ComponentSystemEvent event) throws CustomizerException, Exception{
-//        
-//        if(!FacesContext.getCurrentInstance().isPostback()){
-//            
-//            /*Metodo 1: Se obtiene los parametros que son enviados por la url con fancyBox. Por ejemplo cuando
-//            se quiere registrar una nueva persona desde la pantalla del Registro COMPRA/VENTA*/
-//            
-//            System.out.println("idDocu: " + this.paramPageIdDocu );
-//            
-//            /*Se obtiene los datos de la orden*/
-//            DocuOrderServiceImpl orderServiceImpl = new DocuOrderServiceImpl();
-//            Sic1idendocu sic1idendocu = orderServiceImpl.getOrderByIdDocu(new BigDecimal(this.paramPageIdDocu));
-//
-//            /*Se obtiene los datos del Cliente/Proveedor*/
-//            PersonServiceImpl personServiceImpl = new PersonServiceImpl();
-//            Sic1idenpers sic1idenpers           = personServiceImpl.getById(sic1idendocu.getSic1docu().getIdPersexterno());
-//
-//            /*Seteando en las variables para que se visualice los datos en la pantalla*/
-//            this.sic1docu           = sic1idendocu.getSic1docu();
-//            this.sic1pers           = sic1idenpers.getSic1pers();
-//            this.sic1idenpersId     = sic1idenpers.getId();
-//            //this.lstSic3docuprod    = sic1idendocu.getSic1docu().getLstSic3docuprod();
-//            
-//            //this.desTituloPagina = "ANULAR DOCUMENTO DE " + this.sic1docu.getSic1sclaseeven().getDesSclaseeven() + ": " + this.sic1docu.getSic1stipodocu().getDesStipodocu() + " " + this.sic1docu.getCodSerie() + " - " + this.sic1docu.getNumDocu();
-//            
-//        }
-//    }
+    public void getParamsExternalPageAnularDocumento(ComponentSystemEvent event) throws CustomizerException, Exception{
+        
+        if(!FacesContext.getCurrentInstance().isPostback()){
+            
+            /*Metodo 1: Se obtiene los parametros que son enviados por la url con fancyBox. Por ejemplo cuando
+            se quiere registrar una nueva persona desde la pantalla del Registro COMPRA/VENTA*/
+            
+            System.out.println("idDocu: " + this.paramPageIdDocu );
+            
+            /*Se obtiene los datos de la orden*/
+            DocuOrderServiceImpl orderServiceImpl = new DocuOrderServiceImpl();
+            Sic1idendocu sic1idendocu = orderServiceImpl.getOrderByIdDocu(new BigDecimal(this.paramPageIdDocu));
+
+            /*Se obtiene los datos del Cliente/Proveedor*/
+            PersonServiceImpl personServiceImpl = new PersonServiceImpl();
+            Sic1idenpers sic1idenpers           = personServiceImpl.getById(sic1idendocu.getSic1docu().getIdPersexterno());
+
+            /*Seteando en las variables para que se visualice los datos en la pantalla*/
+            this.sic1docu           = sic1idendocu.getSic1docu();
+            this.sic1pers           = sic1idenpers.getSic1pers();
+            this.sic1idenpersId     = sic1idenpers.getId();
+            //this.lstSic3docuprod    = sic1idendocu.getSic1docu().getLstSic3docuprod();
+            
+            //this.desTituloPagina = "ANULAR DOCUMENTO DE " + this.sic1docu.getSic1sclaseeven().getDesSclaseeven() + ": " + this.sic1docu.getSic1stipodocu().getDesStipodocu() + " " + this.sic1docu.getCodSerie() + " - " + this.sic1docu.getNumDocu();
+            
+        }
+    }
     
 }

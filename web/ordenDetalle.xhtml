@@ -106,69 +106,111 @@
 
                 <div class="panelIngresoDatosOrden">
                     
-                    <div class="form-group subtitulo" >
-                        <h:outputLabel value="DOCUMENTOS RELACIONADOS" rendered="#{not empty orderController.lstViSicdocus}"/>
-                    </div>
-                    
                     <!-- ********************************** -->
-                    <!-- LISTA DE DOCUMENTOS REFERENCIADOS -->
+                    <!-- LISTA DE DOCUMENTOS PADRE -->
                     <!-- *********************************** -->
                     
-                    <h:dataTable id="idTblDocuments"
-                                 var="item"
-                                 width="100%"
-                                 rendered="#{not empty orderController.lstViSicdocus}"
-                                 value="#{orderController.lstViSicdocus}"
-                                 styleClass="table-bordered"
-                                 columnClasses="table_style_id,
-                                                table_style_code,
-                                                table_style_date,
-                                                table_style_description_medium,
-                                                table_style_code_small,                                                
-                                                table_style_price_small_discount,
-                                                table_style_price_small,
-                                                table_style_code_small,
-                                                table_style_code_small" >
-
-                        <h:column>
-                            <f:facet name="header">No.</f:facet>#{orderController.lstViSicdocus.indexOf(item) + 1}
-                        </h:column>
-                        
-                        <h:column>
-                            <f:facet name="header">Evento</f:facet>#{item.desDocu}
-                        </h:column>
-                        
-                        <h:column>
-                            <f:facet name="header">Fec. Registro</f:facet>#{item.fecDesde}
-                        </h:column>
-                        
-                        <h:column>
-                            <f:facet name="header">Cliente/Proveedor</f:facet>#{item.desPersClieprov}
-                        </h:column>
-                        
-                        <h:column>
-                            <f:facet name="header">Estado</f:facet>#{item.desEstadocu}
-                        </h:column>                       
-                                                
-                        <h:column>
-                            <f:facet name="header">Mto. Pagado</f:facet>#{item.numTotalpagado}
-                        </h:column>
-                        
-                        <h:column>
-                            <f:facet name="header">Total</f:facet>#{item.numMtototal}
-                        </h:column>
-                        
-                        <h:column>
-                            <f:facet name="header">Modo Pago</f:facet>#{item.desModoPago}
-                        </h:column>
-                        
-                        <h:column>
-                            <f:facet name="header">Responsable</f:facet>#{item.desPersCreador}
-                        </h:column>
-                        
-                    </h:dataTable>                    
+                    <div class="subtitulo" >
+                        <h:outputLabel value="DOCUMENTOS PADRE" rendered="#{not empty orderController.lstDocusPadre}"/>
+                    </div>                   
                     
+                    <p:dataTable                                                        
+                        var="item" 
+                        rendered="#{not empty orderController.lstDocusPadre}"
+                        value="#{orderController.lstDocusPadre}" 
+                        style="margin-bottom:10px;padding: 0px; font-size: 11px">                                                        
+
+                        <p:column headerText="No." width="25" style="padding: 1px;text-align: center">
+                            <h:outputText value="#{orderController.lstDocusPadre.indexOf(item) + 1}" />
+                        </p:column>                            
+
+                        <p:column headerText="Evento" width="120" style="color: blue;text-align: center">
+                            <h:outputText value="#{item.desDocu}" />
+                        </p:column>
+
+                        <p:column headerText="Fec. Registro" width="90">
+                            <h:outputText value="#{item.fecDesde}" />
+                        </p:column>
+
+                        <p:column headerText="Cliente/Proveedor">
+                            <h:outputText value="#{item.desPersClieprov}" />
+                        </p:column>
+
+                        <p:column headerText="Estado" width="80">
+                            <h:outputText value="#{item.desEstadocu}" />
+                        </p:column>
+
+                        <p:column headerText="Mto. Pagado" width="75" style="text-align: right">
+                            <h:outputText value="S/.#{item.numTotalpagado}" />
+                        </p:column>
+
+                        <p:column headerText="Total" width="80" style="text-align: right">
+                            <h:outputText value="S/.#{item.numMtototal}" />
+                        </p:column>
+
+                        <p:column headerText="Modo Pago" width="110" style="text-align: center">
+                            <h:outputText value="#{item.desModoPago}" />
+                        </p:column>                        
+                        
+                        <p:column headerText="Responsable" width="100" style="text-align: center">
+                            <h:outputText value="#{item.desPersCreador}" />
+                        </p:column>                        
+                    </p:dataTable>
                     <br/>
+                    <!-- ********************************** -->
+                    <!-- LISTA DE DOCUMENTOS HIJO -->
+                    <!-- *********************************** -->
+                    
+                    <div class="subtitulo" >
+                        <h:outputLabel value="DOCUMENTOS HIJO" rendered="#{not empty orderController.lstDocusHijo}"/>
+                    </div>
+                    
+                    <p:dataTable                                                        
+                        var="item" 
+                        rendered="#{not empty orderController.lstDocusHijo}"
+                        value="#{orderController.lstDocusHijo}" 
+                        style="margin-bottom:10px;padding: 0px; font-size: 11px">                                                        
+
+                        <p:column headerText="No." width="25" style="padding: 1px;text-align: center">
+                            <h:outputText value="#{orderController.lstDocusHijo.indexOf(item) + 1}" />
+                        </p:column>                            
+
+                        <p:column headerText="Evento" width="120" style="color: blue; text-align: center">
+                            <h:outputText value="#{item.desDocu}" />
+                        </p:column>
+
+                        <p:column headerText="Fec. Registro" width="90">
+                            <h:outputText value="#{item.fecDesde}" />
+                        </p:column>
+
+                        <p:column headerText="Cliente/Proveedor">
+                            <h:outputText value="#{item.desPersClieprov}" />
+                        </p:column>
+
+                        <p:column headerText="Estado" width="80">
+                            <h:outputText value="#{item.desEstadocu}" />
+                        </p:column>
+
+                        <p:column headerText="Mto. Pagado" width="75" style="text-align: right">
+                            <h:outputText value="S/.#{item.numTotalpagado}" />
+                        </p:column>
+
+                        <p:column headerText="Total" width="80" style="text-align: right">
+                            <h:outputText value="S/.#{item.numMtototal}" />
+                        </p:column>
+
+                        <p:column headerText="Modo Pago" width="110" style="text-align: center">
+                            <h:outputText value="#{item.desModoPago}" />
+                        </p:column>                        
+                        
+                        <p:column headerText="Responsable" width="100" style="text-align: center">
+                            <h:outputText value="#{item.desPersCreador}" />
+                        </p:column>                        
+                    </p:dataTable>  
+                    
+                    <!-- ********************************** -->
+                    <!-- DETALLE DE LA OPERACION -->
+                    <!-- *********************************** -->
                     
                     <table >
                         <tr>
@@ -178,22 +220,18 @@
                             <td class="style_label">Fecha:</td>
                             <td class="style_content">${orderController.sic1docu.fecDesde}</td>
                         </tr>                        
-                        <tr>
-                            <td class="style_label">DNI/RUC:</td>
-                            <td class="style_content">#{orderController.sic1idenpersId.codIden}</td>
+                        <tr>                            
                             <td class="style_label">Nombre/R.Social:</td>
-                            <td class="style_content">#{orderController.sic1pers.desPers}</td>
-                        </tr>                        
-                        <tr>
+                            <td class="style_content">#{orderController.sic1idenpersId.codIden} - #{orderController.sic1pers.desPers}</td>
                             <td class="style_label">Por Recoger?:</td>
                             <td class="style_content">#{orderController.flgPorRecoger?'SI':'NO'}</td>
-                            <td class="style_label">Precio producto incluye IGV?:</td>
-                            <td class="style_content">#{orderController.flgPrecioSinIGV?'NO':'SI'}</td>
-                        </tr>
+                        </tr>                        
                         <tr>
                             <td class="style_label" style="color: blue">Declarado a SUNAT?:</td>
                             <td class="style_content" style="color: blue">#{orderController.sic1docu.flgDeclaradosunat==1?'SI':'NO'}</td>
-                        </tr>
+                            <td class="style_label">Precio con IGV?:</td>
+                            <td class="style_content">#{orderController.sic1docu.flgPrecsinIGV==1?'NO':'SI'}</td>
+                        </tr>                        
                         <tr>
                             <td class="style_label">Estado:</td>
                             <td class="style_content">#{orderController.sic1docu.sic3docuesta.desEsta}</td>
@@ -223,30 +261,38 @@
                                                       table_style_price_7x">
 
                             <h:column headerClass="table_style_id">
-                                <f:facet name="header">No.</f:facet>#{item.id.numItem}
+                                <f:facet name="header">Item</f:facet>#{item.id.numItem}
                             </h:column>                            
                             <h:column headerClass="table_style_code">
-                                <f:facet name="header">CODIGO</f:facet>#{item.sic1prod.codProd}
+                                <f:facet name="header">Código</f:facet>#{item.sic1prod.codProd}
                             </h:column>
                             <h:column headerClass="table_style_description_medium">
-                                <f:facet name="header">DESCRIPCION</f:facet>#{item.sic1prod.desProd}
+                                <f:facet name="header">Descripción</f:facet>#{item.sic1prod.desProd}
                             </h:column>
                             <h:column id="idTablePrice" headerClass="table_style_price">
                                 <div >
                                     <h:outputLabel value="S/." />
-                                    <f:facet name="header">PRECIO</f:facet>#{item.numValor}
+                                    <f:facet name="header">Precio</f:facet>#{item.numValor}
                                 </div>
                             </h:column>
                             
                             <h:column  headerClass="table_style_price_small_discount">
                                 <div >
                                     <h:outputLabel value="S/." />
-                                    <f:facet name="header">DSCTO</f:facet>#{item.numMtodscto}
+                                    <f:facet name="header">Dscto</f:facet>#{item.numMtodscto}
                                 </div>
+                                
+                                <f:facet name="footer">                                    
+                                    <div class="table_style_total_price" style="color: red">
+                                        <h:outputLabel value="S/." />
+                                        #{orderController.numSumItemsDescuento}
+                                    </div>
+                                </f:facet> 
+                                
                             </h:column>
                             
                             <h:column id="idTableAmount" headerClass="table_style_amount">
-                                <f:facet name="header">CANTIDAD</f:facet>#{item.numCantidad}
+                                <f:facet name="header">Cantidad</f:facet>#{item.numCantidad}
                                 
                                 <f:facet name="footer">
                                     <div class="table_style_total_amount">
@@ -259,7 +305,7 @@
                             <h:column headerClass="table_style_price_7x">
                                 <div>
                                     <h:outputLabel value="S/." />
-                                    <f:facet name="header">TOTAL</f:facet>#{item.numValor * item.numCantidad}
+                                    <f:facet name="header">Total</f:facet>#{item.numValor * item.numCantidad}
                                 </div>                                
                                 
                                 <f:facet name="footer">
@@ -315,43 +361,33 @@
                                 <td class="compra_totales_label">
                                     <h:outputLabel value="Forma de Pago:" />
                                 </td>
-                                <td class="compra_totales_text">
-                                    <h:selectOneMenu id="idPayMode" 
-                                                     disabled="true"
-                                                     value="#{orderController.sic1docu.idModapago}" 
-                                                     styleClass="form-control">
-                                        <f:selectItems value="#{orderController.itemsPayMode}" var="c" itemValue="#{c.idGeneral}" itemLabel="#{c.desGeneral}"/>                                        
-                                    </h:selectOneMenu>
+                                <td class="compra_totales_text">                                   
+                                    <h:outputLabel value="#{orderController.sic1docu.objFormaPago.desGeneral}" />
                                 </td>
                             </tr>
                             
                             <tr>
                                 <td class="compra_totales_label">
                                     <h:panelGroup id="idLabelNumVoucher" >
-                                        <h:outputLabel value="Número Voucher(s):" rendered="#{orderController.flgMostrarNumVoucher}"/>
+                                        <h:outputLabel value="Número Voucher(s):" rendered="#{not empty orderController.sic1docu.numVoucher}"/>
                                     </h:panelGroup>
                                 </td>
                                 <td class="compra_totales_text">
                                     <h:panelGroup id="idTextNumVoucher" >
-                                        <h:inputText disabled="true" value="#{orderController.sic1docu.numVoucher}" styleClass="form-control" rendered="#{orderController.flgMostrarNumVoucher}"/>
+                                        <h:inputText disabled="true" value="#{orderController.sic1docu.numVoucher}" styleClass="form-control" rendered="#{not empty orderController.sic1docu.numVoucher}"/>
                                     </h:panelGroup>
                                 </td>
                             </tr>
 
-                            <tr>
+                            <tr style="display: #{not empty orderController.sic1docu.objTipoTarjeta.desGeneral?'':'none'}">
                                 <td class="compra_totales_label">
                                     <h:panelGroup id="idLabelTipotarjeta" >
-                                        <h:outputLabel value="Tipo Tarjeta:" rendered="#{not empty orderController.itemsTypeCard}" />
+                                        <h:outputLabel value="Tipo Tarjeta:"/>
                                     </h:panelGroup>
                                 </td>
                                 <td class="compra_totales_text">
-                                    <h:panelGroup id="idTextTipotarjeta" >
-                                        <h:selectOneMenu  value="#{orderController.sic1docu.idTipotarjeta}"
-                                                          disabled="true"
-                                                          styleClass="form-control"
-                                                          rendered="#{not empty orderController.itemsTypeCard}">                                        
-                                            <f:selectItems value="#{orderController.itemsTypeCard}" />
-                                        </h:selectOneMenu>
+                                    <h:panelGroup id="idTextTipotarjeta" >                                        
+                                        <h:outputLabel value="#{orderController.sic1docu.objTipoTarjeta.desGeneral}" />
                                     </h:panelGroup>
                                 </td>
 

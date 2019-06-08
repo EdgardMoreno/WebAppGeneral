@@ -56,7 +56,8 @@ public class Sic1docu  implements java.io.Serializable {
      
      private Sic1docufacturadorsunat sic1docufacturadorsunat;
      private List<Sic3docuprod> lstSic3docuprod;
-     private List<Sic3docudocu> lstSic3docudocu;
+     private List<Sic3docudocu> lstDocusPadre;
+     private List<Sic3docudocu> lstDocusHijo;
      private List<Sic3docupers> lstPersRela;          
      
      private String codSerie;
@@ -371,13 +372,21 @@ public class Sic1docu  implements java.io.Serializable {
         this.desEstadocu = desEstadocu;
     }
 
-    public List<Sic3docudocu> getLstSic3docudocu() {
-        return lstSic3docudocu;
+    public List<Sic3docudocu> getLstDocusPadre() {
+        return lstDocusPadre;
     }
 
-    public void setLstSic3docudocu(List<Sic3docudocu> lstSic3docudocu) {
-        this.lstSic3docudocu = lstSic3docudocu;
+    public void setLstDocusPadre(List<Sic3docudocu> lstDocusPadre) {
+        this.lstDocusPadre = lstDocusPadre;
     }
+
+    public List<Sic3docudocu> getLstDocusHijo() {
+        return lstDocusHijo;
+    }
+
+    public void setLstDocusHijo(List<Sic3docudocu> lstDocusHijo) {
+        this.lstDocusHijo = lstDocusHijo;
+    }        
 
     public Sic3docudocu getSic3docudocu() {
         return sic3docudocu;

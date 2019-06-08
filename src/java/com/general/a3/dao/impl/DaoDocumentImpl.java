@@ -536,9 +536,9 @@ public class DaoDocumentImpl implements Serializable{
         
             cnConexion = ConexionBD.obtConexion();
             
-            String sql = " SELECT T1.*\n" +
-                            "   ,UPPER(V1.DES_STIPOPROD) AS DES_STIPOPROD" +
-                            "   ,UPPER(V1.COD_STIPOPROD) AS COD_STIPOPROD" + 
+            String sql = " SELECT    T1.*\n" +
+                            "       ,UPPER(V1.DES_STIPOPROD) AS DES_STIPOPROD" +
+                            "       ,UPPER(V1.COD_STIPOPROD) AS COD_STIPOPROD" + 
                     
                             "      ,T0.ID_DOCU\n" +
                             "      ,T0.ID_TRELADOCU\n" +
@@ -625,21 +625,20 @@ public class DaoDocumentImpl implements Serializable{
      * @throws Exception
      * @return 
      */
-    public List<Sic3docudocu> obtDocusRelXidDocu(Connection cnConexion, BigDecimal idDocu) throws Exception{
+    public List<Sic3docudocu> obtDocusRelXidDocu(BigDecimal idDocu) throws Exception{
         
         List<Sic3docudocu> list = new ArrayList();
         CallableStatement statement  = null;
         ResultSet rsConsulta = null;        
+        Connection cnConexion = null;
         
         try{            
             
+            cnConexion = ConexionBD.obtConexion();
+            
             String sql = "SELECT T0.* " +
                             " FROM SIC3DOCUDOCU T0 " +
-                            " WHERE T0.FEC_HASTA = PKG_SICCONSGENERAL.FNC_SICOBTFECINF AND T0.ID_DOCU = " + idDocu;
-                            /*" UNION " +
-                            " SELECT T0.* " +
-                            " FROM SIC3DOCUDOCU T0 " +
-                            " WHERE T0.FEC_HASTA = PKG_SICCONSGENERAL.FNC_SICOBTFECINF AND T0.ID_DOCUREL = " + idDocu;*/
+                            " WHERE T0.FEC_HASTA = PKG_SICCONSGENERAL.FNC_SICOBTFECINF AND T0.ID_DOCU = " + idDocu;                            
             
             statement = cnConexion.prepareCall(sql,
                                                ResultSet.TYPE_SCROLL_SENSITIVE,
@@ -672,6 +671,9 @@ public class DaoDocumentImpl implements Serializable{
             
             if(statement != null)
                 statement.close();
+            
+            if(cnConexion != null)
+                cnConexion.close();
         }
         
 
@@ -686,13 +688,16 @@ public class DaoDocumentImpl implements Serializable{
      * @throws Exception
      * @return 
      */
-    public List<Sic3docudocu> obtDocusRelXidDocuRel(Connection cnConexion, BigDecimal idDocu) throws Exception{
+    public List<Sic3docudocu> obtDocusRelXidDocuRel(BigDecimal idDocu) throws Exception{
         
-        List<Sic3docudocu> list = new ArrayList();
-        CallableStatement statement  = null;
-        ResultSet rsConsulta = null;        
-        
-        try{            
+        List<Sic3docudocu> list     = new ArrayList();
+        CallableStatement statement = null;
+        ResultSet rsConsulta    = null;
+        Connection cnConexion   = null;
+
+        try{
+            
+            cnConexion = ConexionBD.obtConexion();
             
             String sql = " SELECT T0.* " +
                          " FROM SIC3DOCUDOCU T0 " +                         
@@ -716,6 +721,8 @@ public class DaoDocumentImpl implements Serializable{
                 obj.setDesNotas(rsConsulta.getString("DES_NOTAS"));
                 obj.setFecHasta(rsConsulta.getDate("FEC_HASTA"));
                 obj.setId(id);
+                
+                list.add(obj);
             }
 
         }catch(SQLException ex){
@@ -727,8 +734,10 @@ public class DaoDocumentImpl implements Serializable{
             
             if(statement != null)
                 statement.close();
-        }
-        
+            
+            if(cnConexion != null)
+                cnConexion.close();
+        }        
 
         return list;        
     }
@@ -989,27 +998,27 @@ public class DaoDocumentImpl implements Serializable{
                 if(rsConsulta.getBigDecimal("NUM_MTOTARJETA") == null)
                     objDocu.setNumMtotarjeta(new BigDecimal(BigInteger.ZERO));
                 else
-                    objDocu.setNumMtotarjeta(rsConsulta.getBigDecimal("NUM_MTOTARJETA"));
+                    objDocu.setNumMtotarjeta(rsConsulta.getBigDecimal("NUM_MTOTARJETA").setScale(2,BigDecimal.ROUND_HALF_UP));
                 
                 if(rsConsulta.getBigDecimal("NUM_MTOCOMI") == null)
                     objDocu.setNumMtocomi(new BigDecimal(BigInteger.ZERO));
                 else
-                    objDocu.setNumMtocomi(rsConsulta.getBigDecimal("NUM_MTOCOMI"));
+                    objDocu.setNumMtocomi(rsConsulta.getBigDecimal("NUM_MTOCOMI").setScale(2,BigDecimal.ROUND_HALF_UP));
                 
                 if(rsConsulta.getBigDecimal("NUM_MTOEFECTIVO") == null)
                     objDocu.setNumMtoefectivo(new BigDecimal(BigInteger.ZERO));
                 else
-                    objDocu.setNumMtoefectivo(rsConsulta.getBigDecimal("NUM_MTOEFECTIVO"));
+                    objDocu.setNumMtoefectivo(rsConsulta.getBigDecimal("NUM_MTOEFECTIVO").setScale(2,BigDecimal.ROUND_HALF_UP));
                 
                 if(rsConsulta.getBigDecimal("NUM_MTODSCTO") == null)
                     objDocu.setNumMtodscto(new BigDecimal(BigInteger.ZERO));
                 else
-                    objDocu.setNumMtodscto(rsConsulta.getBigDecimal("NUM_MTODSCTO"));
+                    objDocu.setNumMtodscto(rsConsulta.getBigDecimal("NUM_MTODSCTO").setScale(2,BigDecimal.ROUND_HALF_UP));
                 
                 if(rsConsulta.getBigDecimal("NUM_MTOVUELTO") == null)
                     objDocu.setNumMtovuelto(new BigDecimal(BigInteger.ZERO));
                 else
-                    objDocu.setNumMtovuelto(rsConsulta.getBigDecimal("NUM_MTOVUELTO"));
+                    objDocu.setNumMtovuelto(rsConsulta.getBigDecimal("NUM_MTOVUELTO").setScale(2,BigDecimal.ROUND_HALF_UP));
                 
                 objDocu.setCodSerie(rsConsulta.getString("COD_SERIE"));
                 objDocu.setNumDocu(rsConsulta.getBigDecimal("NUM_DOCU"));

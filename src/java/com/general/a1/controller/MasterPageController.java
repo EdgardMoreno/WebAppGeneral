@@ -215,29 +215,31 @@ public class MasterPageController implements Serializable{
         context.getExternalContext().getSessionMap().put("orderController", null);            
         OrderController objController = context.getApplication().evaluateExpressionGet(context, "#{orderController}", OrderController.class);
 
-        boolean flgNuevo            = true;
-        boolean flgEditarProductos  = true;
-        boolean flgEditarPersona    = true;
-        boolean flgEditarFecha      = true;
-        boolean flgEditarFormaPago  = true;
-        boolean flgMostrarFormaPago = true;
-        boolean flgEditarTipoDocumento = true;
-        boolean flgEditarNroDocumento = true;
+        boolean flgNuevo                = true;
+        boolean flgAgregarProductos     = true;
+        boolean flgEditarItemProducto   = true;
+        boolean flgEditarPersona        = true;
+        boolean flgEditarFecha          = true;
+        boolean flgEditarFormaPago      = true;
+        boolean flgMostrarFormaPago     = true;
+        boolean flgEditarTipoDocumento  = true;
+        boolean flgEditarNroDocumento   = true;
 
 
-        objController.loadOrderDetails(  new BigDecimal(0)
-                                        ,this.desTituloPagina
-                                        ,this.codSClaseeven
-                                        ,new BigDecimal(0)
-                                        ,new ArrayList<>()
-                                        ,flgNuevo
-                                        ,flgEditarProductos
-                                        ,flgEditarPersona
-                                        ,flgEditarFecha
-                                        ,flgEditarFormaPago
-                                        ,flgMostrarFormaPago
-                                        ,flgEditarTipoDocumento
-                                        ,flgEditarNroDocumento);
+        objController.loadOrderDetailsForEdit(   new BigDecimal(0)
+                                                ,this.desTituloPagina
+                                                ,this.codSClaseeven
+                                                ,new BigDecimal(0)
+                                                ,new ArrayList<>()
+                                                ,flgNuevo
+                                                ,flgAgregarProductos
+                                                ,flgEditarItemProducto
+                                                ,flgEditarPersona
+                                                ,flgEditarFecha
+                                                ,flgEditarFormaPago
+                                                ,flgMostrarFormaPago
+                                                ,flgEditarTipoDocumento
+                                                ,flgEditarNroDocumento);
         
         return  desNombrePagina + "?faces-redirect=true";
     }

@@ -1143,28 +1143,9 @@ public class ReportController  implements Serializable{
         context.getExternalContext().getSessionMap().put("orderController", null);        
         OrderController objController = context.getApplication().evaluateExpressionGet(context, "#{orderController}", OrderController.class);
         
-        boolean flgNuevo            = false;
-        boolean flgEditarProductos  = false;
-        boolean flgEditarPersona    = false;
-        boolean flgEditarFecha      = false;
-        boolean flgEditarFormaPago  = false;
-        boolean flgMostrarFormaPago = true;
-        boolean flgEditarTipoDocumento = false;
-        boolean flgEditarNroDocumento = false;
-        
-        objController.loadOrderDetails(  objDocu.getIdDocu()
-                                        ,desTitulo
-                                        ,objDocu.getSic1sclaseeven().getCodSclaseeven()
-                                        ,objDocu.getSic3docudocu().getSic1docurel().getIdDocu()//new BigDecimal(0)
-                                        ,new ArrayList<>()
-                                        ,flgNuevo
-                                        ,flgEditarProductos
-                                        ,flgEditarPersona
-                                        ,flgEditarFecha
-                                        ,flgEditarFormaPago
-                                        ,flgMostrarFormaPago
-                                        ,flgEditarTipoDocumento
-                                        ,flgEditarNroDocumento );
+        objController.loadOrderDetailsForView(   objDocu.getIdDocu()
+                                                ,desTitulo
+                                                ,objDocu.getSic1sclaseeven().getCodSclaseeven() );
         
         return "ordenDetalle?faces-redirect=true";
         
