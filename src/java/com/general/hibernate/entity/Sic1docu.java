@@ -76,7 +76,9 @@ public class Sic1docu  implements java.io.Serializable {
      
 
     public Sic1docu() {        
-        lstSic3docuprod = new ArrayList<Sic3docuprod>();
+        this.lstSic3docuprod    = new ArrayList<>();
+        this.lstDocusPadre      = new ArrayList<>();
+        this.lstDocusHijo       = new ArrayList<>();
     }
 
 	

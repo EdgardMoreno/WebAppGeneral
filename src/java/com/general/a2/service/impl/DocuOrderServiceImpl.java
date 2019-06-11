@@ -99,11 +99,8 @@ public class DocuOrderServiceImpl implements Serializable, DocumentService{
             DaoMaestroCatalogoImpl objDaoMae = new DaoMaestroCatalogoImpl();
             Integer flgAutogen = objDaoMae.obtConfigComprobante(sic1docu.getIdSclaseeven().intValue(), sic1docu.getIdStipodocu().intValue());                        
             
-            if( flgAutogen == 1){
-                
+            if( flgAutogen == 1){                
                 flgComprobanteAutogenerado = true;
-//                sic1idendocu.getSic1docu().setCodSerie(null);
-//                sic1idendocu.getSic1docu().setNumDocu(null);
             }           
             
             

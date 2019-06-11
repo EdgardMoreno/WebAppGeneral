@@ -129,6 +129,8 @@ public class Constantes {
     public static String CONS_COD_CLASEEVEN                = "VI_SICCLASEEVEN";
         /*CODIGOS*/
         public static String COD_CLASEEVEN_GASTOS              = "VI_SICGASTOS";
+        public static String CLASEEVEN_OPERACIONESVENTA        = "VI_SICOPERACIONESVENTA";
+        
     
     /*CODIGO DE SUB CLASE DE EVENTO*/
     public static String CONS_COD_SCLASEEVEN            = "VI_SICSCLASEEVEN";
@@ -166,6 +168,7 @@ public class Constantes {
         public static String COD_MODOPAGO_EFECTIVO         = "VI_SICEFECTIVO";
         public static String COD_MODOPAGO_TARJDEBITO       = "VI_SICTARJDEBITO";
         public static String COD_MODOPAGO_TARJCREDITO      = "VI_SICTARJCREDITO";
+        public static String COD_MODOPAGO_NINGUNO          = "VI_SICNINGUNO";
     
     /*CODIGO MOTIVOS DE NOTA DE CREDITO*/
     public static String VI_SICTIPONOTACREDITO          = "VI_SICTIPONOTACREDITO";

@@ -476,6 +476,7 @@ public class DocumentController implements Serializable{
         boolean flgNuevo                = false;
         boolean flgAgregarProductos     = true;
         boolean flgEditarItemProducto   = true;
+        boolean flgObtenerProductosDocuPrinc = false;
         boolean flgEditarPersona        = true;
         boolean flgEditarFecha          = true;
         boolean flgEditarFormaPago      = false;
@@ -484,19 +485,20 @@ public class DocumentController implements Serializable{
         boolean flgEditarNroDocumento   = false;
         
         objController.loadOrderDetailsForEdit( viSicdocu.getIdDocu()
-                                       ,desTitulo
-                                       ,viSicdocu.getCodSclaseeven()
-                                       ,new BigDecimal(0)
-                                       ,new ArrayList<>()
-                                       ,flgNuevo
-                                       ,flgAgregarProductos
-                                       ,flgEditarItemProducto
-                                       ,flgEditarPersona
-                                       ,flgEditarFecha
-                                       ,flgEditarFormaPago
-                                       ,flgMostrarFormaPago
-                                       ,flgEditarTipoDocumento
-                                       ,flgEditarNroDocumento );
+                                                ,desTitulo
+                                                ,viSicdocu.getCodSclaseeven()
+                                                ,new BigDecimal(0)
+                                                ,new ArrayList<>()
+                                                ,flgNuevo
+                                                ,flgAgregarProductos
+                                                ,flgEditarItemProducto
+                                                ,flgObtenerProductosDocuPrinc
+                                                ,flgEditarPersona
+                                                ,flgEditarFecha
+                                                ,flgEditarFormaPago
+                                                ,flgMostrarFormaPago
+                                                ,flgEditarTipoDocumento
+                                                ,flgEditarNroDocumento );
         
         return "ordenRegistrar?faces-redirect=true";
     }
@@ -677,11 +679,14 @@ public class DocumentController implements Serializable{
             context.getExternalContext().getSessionMap().put("orderController", null);            
             OrderController objController = context.getApplication().evaluateExpressionGet(context, "#{orderController}", OrderController.class);
             
+            String codSClaseevenTemp                        = viSicdocu.getCodSclaseeven();
             List<Sic3docuprod> lstProductosSeleccionados    = new ArrayList<>();            
-            BigDecimal idDocuPrinc                          = new BigDecimal(0);            
+            BigDecimal idDocuPrinc                          = new BigDecimal(0);
+            BigDecimal idDocuRel                            = viSicdocu.getIdDocu();
             boolean flgNuevo                                = true;
             boolean flgAgregarProductos                     = true;
             boolean flgEditarItemProducto                   = false;
+            boolean flgObtenerProductosDocuPrinc            = false;
             boolean flgEditarPersona                        = false;
             boolean flgEditarFecha                          = true;
             boolean flgEditarFormaPago                      = true;
@@ -689,14 +694,25 @@ public class DocumentController implements Serializable{
             boolean flgEditarTipoDocumento                  = true;
             boolean flgEditarNroDocumento                   = true;
             
+            if(viSicdocu.getCodStipodocu().equals(Constantes.CONS_COD_STIPODOCU_NOTAVENTA)){
+                flgObtenerProductosDocuPrinc = true; 
+            }
+            
+            /*Se crea una VENTA a partir de una NOTA DE CREDITO*/
+            if(viSicdocu.getCodSclaseeven().equals(Constantes.COD_SCLASEEVEN_NOTACREDITO)){
+                codSClaseevenTemp = Constantes.COD_SCLASEEVEN_VENTA;
+            }
+                
+            
             objController.loadOrderDetailsForEdit(   idDocuPrinc
                                                     ,desTitulo
-                                                    ,viSicdocu.getCodSclaseeven()
-                                                    ,viSicdocu.getIdDocu()
+                                                    ,codSClaseevenTemp
+                                                    ,idDocuRel
                                                     ,lstProductosSeleccionados
                                                     ,flgNuevo
                                                     ,flgAgregarProductos
                                                     ,flgEditarItemProducto
+                                                    ,flgObtenerProductosDocuPrinc
                                                     ,flgEditarPersona
                                                     ,flgEditarFecha
                                                     ,flgEditarFormaPago
@@ -808,12 +824,14 @@ public class DocumentController implements Serializable{
             context.getExternalContext().getSessionMap().put("orderController", null);            
             OrderController objController = context.getApplication().evaluateExpressionGet(context, "#{orderController}", OrderController.class);
             
-            BigDecimal idDocuPrinc          = new BigDecimal(0); 
+            BigDecimal idDocuPrinc          = new BigDecimal(0);             
             boolean flgNuevo                = true;
             boolean flgAgregarProductos     = false;
-            boolean flgEditarItemProducto   = false;
+            boolean flgEditarItemProducto           = false;
+            boolean flgObtenerProductosDocuPrinc    = false;
             boolean flgEditarPersona        = false;
             boolean flgEditarFecha          = true;
+            
             
             
             objController.loadOrderDetailsForEdit(   idDocuPrinc
@@ -824,6 +842,7 @@ public class DocumentController implements Serializable{
                                                     ,flgNuevo
                                                     ,flgAgregarProductos
                                                     ,flgEditarItemProducto
+                                                    ,flgObtenerProductosDocuPrinc
                                                     ,flgEditarPersona
                                                     ,flgEditarFecha
                                                     ,flgEditarFormaPago

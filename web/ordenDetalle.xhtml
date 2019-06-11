@@ -124,11 +124,15 @@
                             <h:outputText value="#{orderController.lstDocusPadre.indexOf(item) + 1}" />
                         </p:column>                            
 
-                        <p:column headerText="Evento" width="120" style="color: blue;text-align: center">
+                        <p:column headerText="Operación" width="90" style="color: blue;text-align: center">
+                            <h:outputText value="#{item.desSclaseeven}" />
+                        </p:column>
+                        
+                        <p:column headerText="Tipo Operación" width="90" style="color: blue;text-align: center">
                             <h:outputText value="#{item.desDocu}" />
                         </p:column>
 
-                        <p:column headerText="Fec. Registro" width="90">
+                        <p:column headerText="Fec. Registro" width="80" style="text-align: center">
                             <h:outputText value="#{item.fecDesde}" />
                         </p:column>
 
@@ -144,69 +148,22 @@
                             <h:outputText value="S/.#{item.numTotalpagado}" />
                         </p:column>
 
-                        <p:column headerText="Total" width="80" style="text-align: right">
+                        <p:column headerText="Total" width="75" style="text-align: right">
                             <h:outputText value="S/.#{item.numMtototal}" />
                         </p:column>
 
-                        <p:column headerText="Modo Pago" width="110" style="text-align: center">
+                        <p:column headerText="Modo Pago" width="90" style="text-align: center">
                             <h:outputText value="#{item.desModoPago}" />
                         </p:column>                        
                         
-                        <p:column headerText="Responsable" width="100" style="text-align: center">
+                        <p:column headerText="Responsable" width="90" style="text-align: center">
                             <h:outputText value="#{item.desPersCreador}" />
                         </p:column>                        
-                    </p:dataTable>
-                    <br/>
-                    <!-- ********************************** -->
-                    <!-- LISTA DE DOCUMENTOS HIJO -->
-                    <!-- *********************************** -->
+                    </p:dataTable>                    
                     
-                    <div class="subtitulo" >
-                        <h:outputLabel value="DOCUMENTOS HIJO" rendered="#{not empty orderController.lstDocusHijo}"/>
+                    <div style="display:#{not empty orderController.lstDocusPadre?'':'none'}; text-align: center; padding-bottom: 0px">
+                        <img src="resources/img/flecha_abajo.png" height="40" width="60" alt="DocumentosHijo"/>
                     </div>
-                    
-                    <p:dataTable                                                        
-                        var="item" 
-                        rendered="#{not empty orderController.lstDocusHijo}"
-                        value="#{orderController.lstDocusHijo}" 
-                        style="margin-bottom:10px;padding: 0px; font-size: 11px">                                                        
-
-                        <p:column headerText="No." width="25" style="padding: 1px;text-align: center">
-                            <h:outputText value="#{orderController.lstDocusHijo.indexOf(item) + 1}" />
-                        </p:column>                            
-
-                        <p:column headerText="Evento" width="120" style="color: blue; text-align: center">
-                            <h:outputText value="#{item.desDocu}" />
-                        </p:column>
-
-                        <p:column headerText="Fec. Registro" width="90">
-                            <h:outputText value="#{item.fecDesde}" />
-                        </p:column>
-
-                        <p:column headerText="Cliente/Proveedor">
-                            <h:outputText value="#{item.desPersClieprov}" />
-                        </p:column>
-
-                        <p:column headerText="Estado" width="80">
-                            <h:outputText value="#{item.desEstadocu}" />
-                        </p:column>
-
-                        <p:column headerText="Mto. Pagado" width="75" style="text-align: right">
-                            <h:outputText value="S/.#{item.numTotalpagado}" />
-                        </p:column>
-
-                        <p:column headerText="Total" width="80" style="text-align: right">
-                            <h:outputText value="S/.#{item.numMtototal}" />
-                        </p:column>
-
-                        <p:column headerText="Modo Pago" width="110" style="text-align: center">
-                            <h:outputText value="#{item.desModoPago}" />
-                        </p:column>                        
-                        
-                        <p:column headerText="Responsable" width="100" style="text-align: center">
-                            <h:outputText value="#{item.desPersCreador}" />
-                        </p:column>                        
-                    </p:dataTable>  
                     
                     <!-- ********************************** -->
                     <!-- DETALLE DE LA OPERACION -->
@@ -250,10 +207,11 @@
                         <h:dataTable value="#{orderController.lstSic3docuprod}"
                                      var="item"
                                      id="idTableDetOrder"
+                                     style="font-size: 11px"
                                      width="100%"
                                      styleClass = "table-bordered"                                         
                                      columnClasses = "table_style_id,
-                                                      table_style_code,
+                                                      table_style_code_small,
                                                       table_style_description_medium,
                                                       table_style_price_small,
                                                       table_style_price_small_discount,
@@ -319,22 +277,76 @@
                         </h:dataTable>
                         
                         &nbsp;
-                        <table width="500">
+                        <table width="100%">
                             <tr>
                                 <td class="compra_panelGrid_4">
-                                    <h:outputLabel value="Nota:"/>
-                                </td>
-                                <td class="compra_panelGrid_2">
-                                    <h:inputTextarea id="idDescripcion"
-                                                     readonly="true"
-                                                     rows="5"
-                                                     cols="35"
-                                                     value="#{orderController.sic1docu.desNotas }" />
-                                </td>
+                                    <h:outputLabel value="Nota:"/> #{orderController.sic1docu.desNotas }
+                                </td>                               
                             </tr>
                         </table>  
-
                     </h:panelGrid>
+                    
+                                        
+                    <!-- ********************************** -->
+                    <!-- LISTA DE DOCUMENTOS HIJO -->
+                    <!-- *********************************** -->
+                    
+                    <div style="display:#{not empty orderController.lstDocusHijo?'':'none'}; text-align: center; padding-bottom: 5px">
+                        <img src="resources/img/flecha_abajo.png" height="40" width="60" alt="DocumentosHijo"/>
+                    </div>
+                    
+                    <div class="subtitulo" >
+                        <h:outputLabel value="DOCUMENTOS HIJO" rendered="#{not empty orderController.lstDocusHijo}"/>
+                    </div>
+                    
+                    <p:dataTable                                                        
+                        var="item" 
+                        rendered="#{not empty orderController.lstDocusHijo}"
+                        value="#{orderController.lstDocusHijo}" 
+                        style="margin-bottom:10px;padding: 0px; font-size: 11px">                                                        
+
+                        <p:column headerText="No." width="25" style="padding: 1px;text-align: center">
+                            <h:outputText value="#{orderController.lstDocusHijo.indexOf(item) + 1}" />
+                        </p:column>                            
+
+                        <p:column headerText="Operación" width="90" style="color: blue; text-align: center">
+                            <h:outputText value="#{item.desSclaseeven}" />
+                        </p:column>
+                        
+                        <p:column headerText="Tipo Operación" width="90" style="color: blue; text-align: center">
+                            <h:outputText value="#{item.desDocu}" />
+                        </p:column>
+
+                        <p:column headerText="Fec. Registro" width="80" style="text-align: center">
+                            <h:outputText value="#{item.fecDesde}" />
+                        </p:column>
+
+                        <p:column headerText="Cliente/Proveedor">
+                            <h:outputText value="#{item.desPersClieprov}" />
+                        </p:column>
+
+                        <p:column headerText="Estado" width="80">
+                            <h:outputText value="#{item.desEstadocu}" />
+                        </p:column>
+
+                        <p:column headerText="Mto. Pagado" width="75" style="text-align: right">
+                            <h:outputText value="S/.#{item.numTotalpagado}" />
+                        </p:column>
+
+                        <p:column headerText="Total" width="80" style="text-align: right">
+                            <h:outputText value="S/.#{item.numMtototal}" />
+                        </p:column>
+
+                        <p:column headerText="Forma Pago" width="90" style="text-align: center">
+                            <h:outputText value="#{item.desModoPago}" />
+                        </p:column>                        
+                        
+                        <p:column headerText="Responsable" width="90" style="text-align: center">
+                            <h:outputText value="#{item.desPersCreador}" />
+                        </p:column>                        
+                    </p:dataTable>  
+                    
+                    
                 </div>
 
 

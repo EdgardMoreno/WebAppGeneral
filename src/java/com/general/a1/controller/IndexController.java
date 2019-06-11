@@ -93,10 +93,8 @@ public class IndexController {
                     else if(obj.getCodStipoprod().equals("VI_SICPAPELTAPIZ"))
                         this.numPorcAlcanzadoPapel = obj.getNumPorclogrado().doubleValue();
                 }
-            }
+            }            
             
-
-            //this.numPorcAlcanzadoPapel = new BigDecimal((this.numTotalVentasMesPapel/Constantes.CONS_METAMESTOTALVENTAPAPEL) * 100).setScale(2,BigDecimal.ROUND_HALF_UP ).doubleValue();
             
         } catch (Exception ex) {
             throw new CustomizerException(ex.getMessage());

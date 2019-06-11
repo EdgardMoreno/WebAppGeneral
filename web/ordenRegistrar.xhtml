@@ -267,7 +267,7 @@
 
                 <div class="panelIngresoDatosOrden">
                     
-                    <div class="form-group subtitulo" >
+                    <div class="subtitulo" >
                         <h:outputLabel value="DOCUMENTOS RELACIONADOS" rendered="#{not empty orderController.lstDocusPadre}"/>
                     </div>                    
                     
@@ -285,11 +285,15 @@
                             <h:outputText value="#{orderController.lstDocusPadre.indexOf(item) + 1}" />
                         </p:column>                            
 
-                        <p:column headerText="Evento" width="120" style="color: blue;font-size: 12px;text-align: center">
+                        <p:column headerText="Operación" width="90" style="color: blue;text-align: center">
+                            <h:outputText value="#{item.desSclaseeven}" />
+                        </p:column>
+                        
+                        <p:column headerText="Evento" width="100" style="color: blue;text-align: center">
                             <h:outputText value="#{item.desDocu}" />
                         </p:column>
 
-                        <p:column headerText="Fec. Registro" width="90">
+                        <p:column headerText="Fec. Registro" width="80">
                             <h:outputText value="#{item.fecDesde}" />
                         </p:column>
 
@@ -301,19 +305,19 @@
                             <h:outputText value="#{item.desEstadocu}" />
                         </p:column>
 
-                        <p:column headerText="Mto. Pagado" width="75" style="text-align: right">
+                        <p:column headerText="Mto. Pagado" width="70" style="text-align: right">
                             <h:outputText value="S/.#{item.numTotalpagado}" />
                         </p:column>
 
-                        <p:column headerText="Total" width="80" style="text-align: right">
+                        <p:column headerText="Total" width="70" style="text-align: right">
                             <h:outputText value="S/.#{item.numMtototal}" />
                         </p:column>
 
-                        <p:column headerText="Modo Pago" width="110" style="text-align: center">
+                        <p:column headerText="Forma Pago" width="90" style="text-align: center">
                             <h:outputText value="#{item.desModoPago}" />
                         </p:column>                        
                         
-                        <p:column headerText="Responsable" width="100" style="text-align: center">
+                        <p:column headerText="Responsable" width="90" style="text-align: center">
                             <h:outputText value="#{item.desPersCreador}" />
                         </p:column>                        
                     </p:dataTable>                    

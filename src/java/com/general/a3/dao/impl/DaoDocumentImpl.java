@@ -116,9 +116,13 @@ public class DaoDocumentImpl implements Serializable{
                         if (sic1docu.getFecCreacion() != null){
                             strFecCreacion = UtilClass.convertDateToString(sic1docu.getFecCreacion());
                         }
-                        if (sic1docu.getFecDesde()!= null){
-                            strFecDesde = UtilClass.convertDateToString(sic1docu.getFecDesde());
+                        if (sic1docu.getFecDesde()!= null){                            
+                            if(sic1docu.getFecDesde().compareTo(UtilClass.getCurrentDate()) == 0)
+                                strFecDesde = UtilClass.getCurrentTime();
+                            else
+                                strFecDesde = UtilClass.convertDateToString(sic1docu.getFecDesde());
                         }
+                        
                         if (sic1docu.getFecHasta()!= null){
                             strFecHasta = UtilClass.convertDateToString(sic1docu.getFecHasta());
                         }
@@ -1117,9 +1121,8 @@ public class DaoDocumentImpl implements Serializable{
             if(obj.getCodClaseeven()!= null && obj.getCodClaseeven().length()> 0){
                 criteria.add(Restrictions.eq("codClaseeven",obj.getCodClaseeven()).ignoreCase());
                 flgFilter = 1;
-            }
-            
-            if(obj.getCodSclaseeven()!= null && obj.getCodSclaseeven().length()> 0){
+            }            
+            else if(obj.getCodSclaseeven()!= null && obj.getCodSclaseeven().length()> 0){
                 criteria.add(Restrictions.eq("codSclaseeven",obj.getCodSclaseeven()).ignoreCase());
                 flgFilter = 1;
             }
@@ -1193,7 +1196,7 @@ public class DaoDocumentImpl implements Serializable{
             }
 
             if(flgFilter == 1){
-                criteria.addOrder(Order.desc("fecDesde")).addOrder(Order.desc("codSerie")).addOrder(Order.desc("numDocu"));
+                criteria.addOrder(Order.desc("idDocu")).addOrder(Order.desc("codSerie")).addOrder(Order.desc("numDocu"));
                 lstResult = criteria.list();    
             }
 

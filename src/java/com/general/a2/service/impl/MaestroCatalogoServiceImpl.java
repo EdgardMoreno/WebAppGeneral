@@ -180,8 +180,9 @@ public class MaestroCatalogoServiceImpl implements Serializable{
         try{                
             
             List<String> list = new ArrayList<>();
-            list.add(Constantes.COD_MODOPAGO_TRANSFER);            
+            list.add(Constantes.COD_MODOPAGO_TRANSFER);
             list.add(Constantes.COD_MODOPAGO_EFECTIVO);
+            //list.add(Constantes.COD_MODOPAGO_NINGUNO);
             lstResult = daoSic1generalImp.listByCod_ValorGeneral(list);
         } catch(Exception ex){
             throw new CustomizerException(ex.getMessage());

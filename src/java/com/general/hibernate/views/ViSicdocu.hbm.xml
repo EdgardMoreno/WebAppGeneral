@@ -13,7 +13,7 @@
     <property name="desDocu" type="string">
       <column length="4000" name="DES_DOCU"/>
     </property>
-    <property name="fecCreacion" type="date">
+    <property name="fecCreacion" type="timestamp">
       <column length="7" name="FEC_CREACION"/>
     </property>
     
@@ -84,7 +84,7 @@
     <property name="desNotas" type="string">
       <column length="4000" name="DES_NOTAS"/>
     </property>
-    <property name="fecDesde" type="date">
+    <property name="fecDesde" type="timestamp">
       <column length="7" name="FEC_DESDE"/>
     </property>
     <property name="fecHasta" type="date">

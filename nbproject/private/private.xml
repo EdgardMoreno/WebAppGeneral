@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project-private xmlns="http://www.netbeans.org/ns/project-private/1">
-    <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="64">
+    <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="65">
         <file>
             <url>src/java/com/general/a2/service/impl/DocuOrderServiceImpl.java</url>
             <bookmark id="43">
@@ -41,32 +41,37 @@
             </bookmark>
             <bookmark id="57">
                 <name/>
-                <line>482</line>
+                <line>493</line>
                 <key/>
             </bookmark>
             <bookmark id="49">
                 <name/>
-                <line>1338</line>
+                <line>1330</line>
                 <key/>
             </bookmark>
             <bookmark id="58">
                 <name/>
-                <line>1495</line>
+                <line>1485</line>
                 <key/>
             </bookmark>
             <bookmark id="62">
                 <name/>
-                <line>1648</line>
+                <line>1657</line>
+                <key/>
+            </bookmark>
+            <bookmark id="65">
+                <name/>
+                <line>1745</line>
                 <key/>
             </bookmark>
             <bookmark id="64">
                 <name/>
-                <line>1735</line>
+                <line>1748</line>
                 <key/>
             </bookmark>
             <bookmark id="63">
                 <name/>
-                <line>1787</line>
+                <line>1773</line>
                 <key/>
             </bookmark>
         </file>
@@ -160,12 +165,12 @@
             </bookmark>
             <bookmark id="59">
                 <name/>
-                <line>518</line>
+                <line>501</line>
                 <key/>
             </bookmark>
             <bookmark id="61">
                 <name/>
-                <line>712</line>
+                <line>699</line>
                 <key/>
             </bookmark>
         </file>
@@ -226,7 +231,7 @@
             <url>web/ordenRegistrar.xhtml</url>
             <bookmark id="50">
                 <name/>
-                <line>831</line>
+                <line>828</line>
                 <key/>
             </bookmark>
         </file>
@@ -240,18 +245,6 @@
         </file>
     </editor-bookmarks>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
-        <group>
-            <file>file:/C:/ARCHIVOS/PRE_PRODUCCION/PROYECTOS_DESARROLLO_SOFTWARE/APLICACIONES/WEBAPPGENERAL/WebAppGeneral/src/java/com/general/a1/controller/OrderController.java</file>
-            <file>file:/C:/ARCHIVOS/PRE_PRODUCCION/PROYECTOS_DESARROLLO_SOFTWARE/APLICACIONES/WEBAPPGENERAL/WebAppGeneral/web/WEB-INF/facelets/templates/templatePrincipal.xhtml</file>
-            <file>file:/C:/ARCHIVOS/PRE_PRODUCCION/PROYECTOS_DESARROLLO_SOFTWARE/APLICACIONES/WEBAPPGENERAL/WebAppGeneral/src/java/com/general/a1/controller/MasterPageController.java</file>
-            <file>file:/C:/ARCHIVOS/PRE_PRODUCCION/PROYECTOS_DESARROLLO_SOFTWARE/APLICACIONES/WEBAPPGENERAL/WebAppGeneral/web/ordenRegistrarDesdeOtroDocumento.xhtml</file>
-            <file>file:/C:/ARCHIVOS/PRE_PRODUCCION/PROYECTOS_DESARROLLO_SOFTWARE/APLICACIONES/WEBAPPGENERAL/WebAppGeneral/web/ordenRegistrar.xhtml</file>
-            <file>file:/C:/ARCHIVOS/PRE_PRODUCCION/PROYECTOS_DESARROLLO_SOFTWARE/APLICACIONES/WEBAPPGENERAL/WebAppGeneral/web/rptOperacionesPorProducto.xhtml</file>
-            <file>file:/C:/ARCHIVOS/PRE_PRODUCCION/PROYECTOS_DESARROLLO_SOFTWARE/APLICACIONES/WEBAPPGENERAL/WebAppGeneral/src/java/com/general/a2/service/impl/DocuOrderServiceImpl.java</file>
-            <file>file:/C:/ARCHIVOS/PRE_PRODUCCION/PROYECTOS_DESARROLLO_SOFTWARE/APLICACIONES/WEBAPPGENERAL/WebAppGeneral/src/java/com/general/a1/controller/DocumentController.java</file>
-            <file>file:/C:/ARCHIVOS/PRE_PRODUCCION/PROYECTOS_DESARROLLO_SOFTWARE/APLICACIONES/WEBAPPGENERAL/WebAppGeneral/src/java/com/general/a1/controller/ReportController.java</file>
-            <file>file:/C:/ARCHIVOS/PRE_PRODUCCION/PROYECTOS_DESARROLLO_SOFTWARE/APLICACIONES/WEBAPPGENERAL/WebAppGeneral/src/java/com/general/a3/dao/impl/DaoDocumentImpl.java</file>
-            <file>file:/C:/ARCHIVOS/PRE_PRODUCCION/PROYECTOS_DESARROLLO_SOFTWARE/APLICACIONES/WEBAPPGENERAL/WebAppGeneral/web/ordenDetalle.xhtml</file>
-        </group>
+        <group/>
     </open-files>
 </project-private>

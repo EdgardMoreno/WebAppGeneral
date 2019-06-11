@@ -5,6 +5,7 @@
  */
 package com.general.a1.controller;
 
+import com.general.hibernate.relaentity.Sic3docuprod;
 import com.general.hibernate.views.ViSicdocu;
 import com.general.hibernate.views.ViSicpers;
 import com.general.security.SessionUtils;
@@ -15,6 +16,7 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import javax.el.ELException;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
@@ -44,17 +46,9 @@ public class MasterPageController implements Serializable{
     private Double numPorcAlcanzado;
     
 
-    public MasterPageController() throws CustomizerException{
+    public MasterPageController() throws CustomizerException{       
         
-        this.desLoginUser = SessionUtils.getUserCompleteName();
-        
-//            this.numTotalVentasMetaMes = Constantes.CONS_METAMESTOTALVENTAPAPEL;
-//
-//            Integer numPeri = UtilClass.getCurrentTime_YYYYMM();
-//            ReportServiceImpl objService = new ReportServiceImpl();
-//            this.numTotalVentasMes = objService.getTotalSales(numPeri, SessionUtils.getUserId().intValue());
-//
-//            this.numPorcAlcanzado = new BigDecimal((this.numTotalVentasMes/this.numTotalVentasMetaMes) * 100).setScale(2,BigDecimal.ROUND_HALF_UP ).doubleValue();
+        this.desLoginUser = SessionUtils.getUserCompleteName();        
         
     }
     
@@ -153,22 +147,21 @@ public class MasterPageController implements Serializable{
                             this.desMensajeError = "Para continuar se debe realizar la apertura de caja."; 
                     }
                 }
-            }else if (codRolesAsignados.contains(Constantes.CONS_COD_ADMINISTRADOR)){ 
+            }else if (codRolesAsignados.contains(Constantes.CONS_COD_ADMINISTRADOR)){
                 
                 if(desNombrePagina.equalsIgnoreCase("ordenRegistrar") ||                     
                                 desNombrePagina.equals("cajaCuadre")){
                     this.desMensajeError = "No tiene privilegios."; 
-                }
-                
+                }                
             }
             
             //Reportes contables        
-            if(desNombrePagina.equals("reportes") && !codRolesAsignados.contains(Constantes.CONS_COD_ADMINISTRADOR)){            
+            if(desNombrePagina.equals("reportes") && !codRolesAsignados.contains(Constantes.CONS_COD_ADMINISTRADOR)){
                 this.desMensajeError = "No tiene privilegios.";                
             }
                 
         }catch(Exception e){
-            UtilClass.addErrorMessage(e.getMessage());
+            UtilClass.addErrorMessage("ValidarDatos:" + e.getMessage());
         }
     }    
     
@@ -215,25 +208,30 @@ public class MasterPageController implements Serializable{
         context.getExternalContext().getSessionMap().put("orderController", null);            
         OrderController objController = context.getApplication().evaluateExpressionGet(context, "#{orderController}", OrderController.class);
 
-        boolean flgNuevo                = true;
-        boolean flgAgregarProductos     = true;
-        boolean flgEditarItemProducto   = true;
-        boolean flgEditarPersona        = true;
-        boolean flgEditarFecha          = true;
-        boolean flgEditarFormaPago      = true;
-        boolean flgMostrarFormaPago     = true;
-        boolean flgEditarTipoDocumento  = true;
-        boolean flgEditarNroDocumento   = true;
+        BigDecimal idDocuPrinc                          = new BigDecimal(0);
+        BigDecimal idDocuRel                            = new BigDecimal(0);
+        List<Sic3docuprod> lstProductosSeleccionados    = new ArrayList<>();
+        boolean flgNuevo                                = true;
+        boolean flgAgregarProductos                     = true;
+        boolean flgEditarItemProducto                   = true;
+        boolean flgObtenerProductosDocuPrinc            = true;
+        boolean flgEditarPersona                        = true;
+        boolean flgEditarFecha                          = true;
+        boolean flgEditarFormaPago                      = true;
+        boolean flgMostrarFormaPago                     = true;
+        boolean flgEditarTipoDocumento                  = true;
+        boolean flgEditarNroDocumento                   = true;
 
 
-        objController.loadOrderDetailsForEdit(   new BigDecimal(0)
+        objController.loadOrderDetailsForEdit(   idDocuPrinc
                                                 ,this.desTituloPagina
                                                 ,this.codSClaseeven
-                                                ,new BigDecimal(0)
-                                                ,new ArrayList<>()
+                                                ,idDocuRel
+                                                ,lstProductosSeleccionados
                                                 ,flgNuevo
                                                 ,flgAgregarProductos
                                                 ,flgEditarItemProducto
+                                                ,flgObtenerProductosDocuPrinc
                                                 ,flgEditarPersona
                                                 ,flgEditarFecha
                                                 ,flgEditarFormaPago

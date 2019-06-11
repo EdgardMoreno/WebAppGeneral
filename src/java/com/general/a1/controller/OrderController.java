@@ -38,6 +38,7 @@ import com.general.util.beans.Impresion;
 import com.general.util.beans.UtilClass;
 import com.general.util.exceptions.CustomizerException;
 import com.general.util.exceptions.ValidationException;
+
 import java.text.ParseException;
 import javax.faces.bean.SessionScoped;
 
@@ -72,7 +73,7 @@ public class OrderController implements Serializable{
     private List<Sic1stipodocu> itemSTipoDocu   = new ArrayList();
     private List<Sic1general> itemsPayMode      = new ArrayList();
     private List<SelectItem> itemsTypeCard      = new ArrayList();
-    private List<Sic1sclaseeven> itemsSpend         = new ArrayList(); /*Catalogo de Gastos*/
+    private List<Sic1sclaseeven> itemsSpend     = new ArrayList(); /*Catalogo de Gastos*/
     
     private String desFecRegistro;
     private Integer indexTabla;
@@ -109,6 +110,7 @@ public class OrderController implements Serializable{
     private BigDecimal idDocuImpresion;
     
     private boolean flgMostrarNumVoucher;
+    private boolean flgValidarMontosIngresados;
     
     
     public OrderController(){
@@ -120,12 +122,13 @@ public class OrderController implements Serializable{
         
         try{
             
-            this.flgEditPerson              = true;            
+            this.flgEditPerson              = true;
             this.flgEditarFecha             = true;
             this.flgEditarFormaPago         = true;
             this.flgMostrarFormaPago        = true;
             this.flgEditarTipoDocumento     = true;
             this.flgEditarNroDocumento      = true;
+            this.flgValidarMontosIngresados = true;
             
             this.flgPorRecoger              = false;
             this.msjValidation              = "";
@@ -821,7 +824,7 @@ public class OrderController implements Serializable{
         try{
             
             double numTotalPrice = 0;
-            double numTotalPagado = 0;
+            //double numTotalPagado = 0;
             
             boolean flgErrorDescuento = false;
             BigDecimal numDescuento = new BigDecimal(0);
@@ -869,14 +872,6 @@ public class OrderController implements Serializable{
                 }
             }
             
-            /*MODIFICADO 09/08/2018: SE MODIFICA PORQUE LA COMISION NO DEBE FORMAR PARTE DEL TOTAL DE LA VENTA NI DEL CALCULO DEL IGV.            
-            if(this.sic1docu.getNumMtotarjeta() != null && this.sic1docu.getNumMtotarjeta().intValue() > 0)
-                numTotalPrice = numTotalPrice + (this.sic1docu.getNumMtotarjeta().doubleValue() * numCargoTarjeta);
-            else
-                numTotalPrice = numTotalPrice + (numTotalPrice * numCargoTarjeta);*/
-            
-            
-            
             /***************************************/
             /**PRECIO DEL PRODUCTO NO INCLUYE  IGV*/
             /***************************************/
@@ -908,7 +903,7 @@ public class OrderController implements Serializable{
             
             //
             /*Calculando los campos de MTOEFECTIVO Y MTO TARJETA segun la forma de pago seleccionada*/
-            if (/*this.flgIsSale &&*/ numTotalPrice > 0){
+            if (numTotalPrice > 0){
                 for(Sic1general obj : this.itemsPayMode){
                     if (obj.getIdGeneral().compareTo(sic1docu.getIdModapago()) == 0){
                         
@@ -949,10 +944,9 @@ public class OrderController implements Serializable{
             /***CALCULAR VUELTO**/
             /********************/
             /*Solo si es efectivo*/
-            //if (sic1docu.getIdModapago() != null && sic1docu.getIdModapago().intValue() == 46103 ){
-                /*Si el importe total es igual a 0 no se realiza ningun calculo*/
+            
                 double numVuelto = 0.00;
-                if (/*this.flgIsSale && */numTotalPrice > 0){
+                if (numTotalPrice > 0){
                     /*Dando formato a 2 decimales*/
                     if (this.sic1docu.getNumMtotarjeta() == null){
                         this.sic1docu.setNumMtotarjeta(new BigDecimal("0.00").setScale(2,BigDecimal.ROUND_HALF_UP));
@@ -984,20 +978,8 @@ public class OrderController implements Serializable{
                if (numVuelto > 0)
                    this.sic1docu.setNumMtovuelto(new BigDecimal(numVuelto).setScale(2,BigDecimal.ROUND_HALF_UP));
                else
-                   this.sic1docu.setNumMtovuelto(new BigDecimal(0).setScale(2,BigDecimal.ROUND_HALF_UP)); 
-               
-
-            /*Solo se evalua cuando es un nuevo registro*/
-            /*if (this.sic1docu.getIdDocu() == null){
-                if(flgTarjeta){
-                    this.sic1docu.setNumMtotarjeta(this.sic1docu.getNumMtoTotal());
-                    this.sic1docu.setNumMtoefectivo(new BigDecimal("0.00"));
-                }
-                else{
-                    this.sic1docu.setNumMtoefectivo(this.sic1docu.getNumMtoTotal());
-                    this.sic1docu.setNumMtotarjeta(new BigDecimal("0.00"));
-                }
-            }*/
+                   this.sic1docu.setNumMtovuelto(new BigDecimal(0).setScale(2,BigDecimal.ROUND_HALF_UP));
+         
             
         }catch(ValidationException ex){
             UtilClass.addErrorMessage(ex.getMessage());
@@ -1070,18 +1052,21 @@ public class OrderController implements Serializable{
             if (this.sic1docu.getIdDocu() == null){
 
                 /*Limpiando los campos segun la FORMA DE PAGO seleccionada*/
-                if(this.flgIsSale){
-                    for(Sic1general obj : this.itemsPayMode){
-                       if (obj.getIdGeneral().compareTo(sic1docu.getIdModapago()) == 0)
-                           if(obj.getCodValorgeneral().equalsIgnoreCase("VI_SICEFECTIVO")){
-                               this.sic1docu.setNumMtotarjeta(new BigDecimal("0.00"));
-                               this.sic1docu.setNumMtoefectivo(new BigDecimal("0.00"));
-                           }
-                           else{
-                               this.sic1docu.setNumMtoefectivo(new BigDecimal("0.00"));
-                               this.sic1docu.setNumMtotarjeta(new BigDecimal("0.00"));
-                           }
-                   }
+                if(this.flgValidarMontosIngresados && this.itemsPayMode.size() > 0){
+                    
+                    this.sic1docu.setNumMtotarjeta(new BigDecimal("0.00"));
+                    this.sic1docu.setNumMtoefectivo(new BigDecimal("0.00"));
+//                    for(Sic1general obj : this.itemsPayMode){
+//                        if (obj.getIdGeneral().compareTo(sic1docu.getIdModapago()) == 0)
+//                            if(obj.getCodValorgeneral().equalsIgnoreCase(Constantes.COD_MODOPAGO_EFECTIVO)){
+//                               this.sic1docu.setNumMtotarjeta(new BigDecimal("0.00"));
+//                               this.sic1docu.setNumMtoefectivo(new BigDecimal("0.00"));
+//                            }
+//                           else{
+//                               this.sic1docu.setNumMtoefectivo(new BigDecimal("0.00"));
+//                               this.sic1docu.setNumMtotarjeta(new BigDecimal("0.00"));
+//                            }
+//                    }
                 }                
                 
                 if(this.codClaseeven != null && this.codClaseeven.equals(Constantes.COD_CLASEEVEN_GASTOS))
@@ -1271,18 +1256,35 @@ public class OrderController implements Serializable{
                 
                 /*VALIDACION: Excepto si es una NOTA DE CREDITO, se valida que documentos con el mismo tipo de comprobante 
                               de pago no se puedan relacionar */
+                String codSClaseevenDocuPadre = "";
+                Double numMtoPagadoPadre      = 0.0;
                 if(!this.codSClaseeven.equals(Constantes.COD_SCLASEEVEN_NOTACREDITO)){
                     for(ViSicdocu objVi : this.lstDocusPadre){
-                        if(objVi.getCodStipodocu().equals(this.sic1docu.getSic1stipodocu().getCodStipodocu())){
-                            strMessage = "No se puede relacionar una " + this.sic1docu.getSic1stipodocu().getDesStipodocu() + 
-                                         " con otra " + objVi.getDesStipodocu().toUpperCase() + ".";
-                            throw new ValidationException(strMessage);
+                        
+                        codSClaseevenDocuPadre  = objVi.getCodSclaseeven();
+                        numMtoPagadoPadre       = objVi.getNumTotalpagado();
+                        
+                        /*Si el documento PADRE es una NOTA DE CREDITO, no aplica la validación */
+                        if(!codSClaseevenDocuPadre.equals(Constantes.COD_SCLASEEVEN_NOTACREDITO)){
+
+                            if(objVi.getCodStipodocu().equals(this.sic1docu.getSic1stipodocu().getCodStipodocu())){
+                                strMessage = "No se puede relacionar una " + this.sic1docu.getSic1stipodocu().getDesStipodocu() + 
+                                             " con otra " + objVi.getDesStipodocu().toUpperCase() + ".";
+                                throw new ValidationException(strMessage);
+                            }
                         }
                     }
                 }
                 
+                /*Se valida que El Total de la venta sea mayor o igual al importe total de la NOTA DE CREDITO*/
+                if( this.codSClaseeven.equals(Constantes.COD_SCLASEEVEN_VENTA) && 
+                        codSClaseevenDocuPadre.equals(Constantes.COD_SCLASEEVEN_NOTACREDITO) && 
+                            this.sic1docu.getNumMtoTotal().doubleValue() < numMtoPagadoPadre ){
+                    throw new ValidationException("El Total de la venta debe ser mayor al importe total de la NOTA DE CREDITO.");
+                }
+                
                 /*REGISTRAR VENTA: Validando si los montos de pago cuadran con el importe Total calculado*/
-                if (this.flgIsSale){
+                if (this.flgValidarMontosIngresados){
                     
                     /*Dando formato a 2 decimales*/
                     if (this.sic1docu.getNumMtotarjeta() == null){
@@ -1297,44 +1299,37 @@ public class OrderController implements Serializable{
                         throw new ValidationException(strMessage);
                     }
                     
-                    /*VALIDACION: Cuando es una NOTA DE VENTA no es necesario que se pague el total de la venta*/
-                    if(this.sic1docu.getSic1stipodocu().getCodStipodocu().equals(Constantes.CONS_COD_STIPODOCU_NOTAVENTA)){
-                        System.out.println("Falta mas regla de negocio");                         
-                    }
-                    else {                        
-                       
-                        /*Se valida si la operación se pago completamente */
-                        //if(codModoPago.equals(Constantes.COD_MODOPAGO_EFECTIVO) || codModoPago.contains("VI_SICTARJ")){
-                            
-                            double mtoPagado = (sic1docu.getNumMtoefectivo().doubleValue() + 
-                                                this.numTotalPagado +
-                                                sic1docu.getNumMtotarjeta().doubleValue()) -
-                                                sic1docu.getNumMtovuelto().doubleValue();
-
-                            if(sic1docu.getNumMtoTotal().doubleValue() - mtoPagado != 0){
-                                strMessage = "Los montos ingresados no cubren el importe total de la venta.";
-                                throw new ValidationException(strMessage);
-                            }                            
-//                        }else{
-//                            this.sic1docu.setNumMtoefectivo(null);
-//                            this.sic1docu.setNumMtotarjeta(null);                            
-//                        }
-
-                        /*Se obtiene el codigo del MODO DE PAGO*/
-                        String codModoPago = "";
-                        for(Sic1general obj : this.itemsPayMode){
-                            if(this.sic1docu.getIdModapago().compareTo(obj.getIdGeneral())==0){
-                                codModoPago = obj.getCodValorgeneral();
-                                break;
-                            }
+                    /*Se obtiene el codigo del MODO DE PAGO*/
+                    String codModoPago = "";
+                    for(Sic1general obj : this.itemsPayMode){
+                        if(this.sic1docu.getIdModapago().compareTo(obj.getIdGeneral())==0){
+                            codModoPago = obj.getCodValorgeneral();
+                            break;
                         }
+                    }
+                    
+                    /*VALIDACION: no es necesario que se pague el total de la operacion Cuando:
+                            - Es una NOTA DE VENTA
+                            - El MODO DE PAGO seleccionado es NINGUNO (NOTA DE CREDITO)*/
+                    if(!this.sic1docu.getSic1stipodocu().getCodStipodocu().equals(Constantes.CONS_COD_STIPODOCU_NOTAVENTA)
+                            && !codModoPago.equals(Constantes.COD_MODOPAGO_NINGUNO)){
+                       
+                        /*Se valida si la operación se pago completamente */                            
+                        double mtoPagado = (sic1docu.getNumMtoefectivo().doubleValue() + 
+                                            this.numTotalPagado +
+                                            sic1docu.getNumMtotarjeta().doubleValue()) -
+                                            sic1docu.getNumMtovuelto().doubleValue();
+
+                        if(sic1docu.getNumMtoTotal().doubleValue() - mtoPagado != 0){
+                            strMessage = "Los montos ingresados no cubren el importe total de la operación.";
+                            throw new ValidationException(strMessage);
+                        }
+                        
                         //Se limpia el numero del voucher de pago
                         if(!codModoPago.equals(Constantes.COD_MODOPAGO_TRANSFER) && !codModoPago.equals(Constantes.COD_MODOPAGO_DEPOSITO)){
                             this.sic1docu.setNumVoucher(null);
                         }
-                    }                    
-                    
-                    /**/
+                    }
                 }
 
                 /**************** Guardar Documento ************************/
@@ -1367,9 +1362,7 @@ public class OrderController implements Serializable{
                 
                 /* SETEANDO DOCUMENTO REFERENCIADO*/                
                 if(this.lstDocusPadre.size() > 0){
-
-                    //this.sic1docu.setIdDocu(null);
-
+                    
                     Sic3docudocuId id = new Sic3docudocuId();
                     id.setIdDocurel(this.lstDocusPadre.get(0).getIdDocu());
                     Sic3docudocu sic3docudocu = new Sic3docudocu();
@@ -1391,8 +1384,8 @@ public class OrderController implements Serializable{
                 if (this.flgPorRecoger){
                     this.sic1docu.setCodEstadocu(Constantes.CONS_COD_ESTAPORRECOGER);
                 }
-                else if(this.sic1docu.getSic1stipodocu().getCodStipodocu().equals(Constantes.CONS_COD_STIPODOCU_NOTAVENTA)){
-                    //this.sic1docu.setCodEstadocu(Constantes.CONS_COD_ESTAPENDIENTE);
+                else if(this.sic1docu.getSic1stipodocu().getCodStipodocu().equals(Constantes.CONS_COD_STIPODOCU_NOTAVENTA) || 
+                        this.sic1docu.getSic1sclaseeven().getCodSclaseeven().equals(Constantes.COD_SCLASEEVEN_NOTACREDITO)){
                     this.sic1docu.setCodEstadocu(Constantes.CONS_COD_ESTAPORRECOGER);
                 }else if(this.sic1docu.getSic1stipodocu().getCodStipodocu().equals(Constantes.CONS_COD_STIPODOCU_NOTAPEDIDO)){
                     this.sic1docu.setCodEstadocu(Constantes.CONS_COD_ESTACREADO);                        
@@ -1645,9 +1638,9 @@ public class OrderController implements Serializable{
         this.numSumItemsDescuento = new BigDecimal("0.00");
         for(Sic3docuprod obj :  lstProductosRelacionados){
             if (obj.getNumValor()!=null){
-                this.numSumItemsPrice       = this.numSumItemsPrice.add(obj.getNumValor().multiply(obj.getNumCantidad()));
+                this.numSumItemsPrice       = this.numSumItemsPrice.add(obj.getNumValor().multiply(obj.getNumCantidad())).setScale(2, BigDecimal.ROUND_HALF_UP);
                 this.numSumItemsAmount      = this.numSumItemsAmount.add(obj.getNumCantidad());
-                this.numSumItemsDescuento   = this.numSumItemsDescuento.add(obj.getNumMtodscto());
+                this.numSumItemsDescuento   = this.numSumItemsDescuento.add(obj.getNumMtodscto().multiply(obj.getNumCantidad())).setScale(2, BigDecimal.ROUND_HALF_UP);
             }
         }
         
@@ -1670,8 +1663,9 @@ public class OrderController implements Serializable{
                                  ,BigDecimal idDocurel
                                  ,List<Sic3docuprod> lstProductosSeleccionados
                                  ,boolean flgNuevo
-                                 ,boolean flgAgregarProductos /*Permite mostrar los contrales para agregar productos*/
+                                 ,boolean flgAgregarProductos /*Permite mostrar los controles para agregar productos*/
                                  ,boolean flgEditarItemProducto /*Permite editar cada item de los producto ya existentes*/
+                                 ,boolean flgObtenerProductosDocuPrinc /*Permite que obtener los productos del DOCUMENTO PRINCIPAL*/
                                  ,boolean flgEditarPersona
                                  ,boolean flgEditarFecha
                                  ,boolean flgEditarFormaPago
@@ -1741,25 +1735,26 @@ public class OrderController implements Serializable{
                 this.sic1pers           = sic1idenpers.getSic1pers();
                 this.sic1pers.setIdTipoiden(sic1idenpersId.getIdTipoiden());
                 
+                    
                 /*Para el caso de Registrar Compra desde NOTA DE PEDIDO y Registrar Nota de Crédito
                   la lista de productos es enviado como parametro*/
                 if(lstProductosSeleccionados.size() > 0)
                     this.lstProductosRelacionados    = lstProductosSeleccionados;
-                else
+                else if(flgObtenerProductosDocuPrinc)
                     this.lstProductosRelacionados    = sic1idendocuLocal.getSic1docu().getLstSic3docuprod();
                 
+                
                 /*Si se está editanto una ORDEN DE COMPRA se setea valor null a los items para que se puedan editar*/
-                if (flgAgregarProductos && codSClaseevenTmp.equals(Constantes.COD_SCLASEEVEN_ORDENCOMPRA)){
-                    for(int i=0; i<lstProductosRelacionados.size(); i++){
-                        lstProductosRelacionados.get(i).getId().setIdDocu(null);
-                    }
-                }
+//                if (flgAgregarProductos && codSClaseevenTmp.equals(Constantes.COD_SCLASEEVEN_ORDENCOMPRA)){
+//                    for(int i=0; i<lstProductosRelacionados.size(); i++){
+//                        lstProductosRelacionados.get(i).getId().setIdDocu(null);
+//                    }
+//                }
                 
                 /*Indicar si el item del producto se podrá editar*/                
                 for(int i = 0; i < this.lstProductosRelacionados.size(); i++){
                     this.lstProductosRelacionados.get(i).setFlgEditar(flgEditarItemProducto);
                 }
-                
 
                 /*Calcular Footer de la tabla*/
                 this.calcularFooterTablaProductos(lstProductosRelacionados);
@@ -1826,6 +1821,7 @@ public class OrderController implements Serializable{
                 this.sic1docu.setIdDocu(null);
                 this.sic1docu.setCodSerie(null);
                 this.sic1docu.setNumDocu(null);
+                this.sic1docu.setDesNotas(null);
                 this.sic1docu.setFecCreacion(null);
                 this.desFecRegistro  = UtilClass.getCurrentDay();
                 this.setNumMtoComiTarjeta(0.00);
@@ -1912,7 +1908,7 @@ public class OrderController implements Serializable{
             /*Documentos Padre*/
             for(Sic3docudocu objDocu : this.sic1docu.getLstDocusPadre()){
                 ViSicdocu viSicdocutmp = new ViSicdocu();
-                viSicdocutmp.setIdDocu(objDocu.getId().getIdDocu());
+                viSicdocutmp.setIdDocu(objDocu.getId().getIdDocurel());
                 this.lstDocusPadre.addAll(orderServiceImpl.listViSicdocu(viSicdocutmp));
             }
 
@@ -1921,6 +1917,6 @@ public class OrderController implements Serializable{
                 ViSicdocu viSicdocutmp = new ViSicdocu();
                 viSicdocutmp.setIdDocu(objDocu.getId().getIdDocu());
                 this.lstDocusHijo.addAll(orderServiceImpl.listViSicdocu(viSicdocutmp));
-            }                       
+            }
     }
 }
