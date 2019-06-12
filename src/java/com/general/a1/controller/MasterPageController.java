@@ -165,15 +165,6 @@ public class MasterPageController implements Serializable{
         }
     }    
     
-    public String irRegistrarCompra() throws CustomizerException{
-              
-        FacesContext context = FacesContext.getCurrentInstance();
-        OrderController objController = context.getApplication().evaluateExpressionGet(context, "#{orderController}", OrderController.class);
-        objController.inicializarDatosRegistro(this.codSClaseeven, this.codTRolpers, this.desTituloPagina, false);
-        
-        return  desNombrePagina + "?faces-redirect=true";
-    }
-    
     public String irRegistrarNotaCreditoDebito() throws CustomizerException{
               
         FacesContext context = FacesContext.getCurrentInstance();
@@ -193,7 +184,7 @@ public class MasterPageController implements Serializable{
     }
     
     
-    public String irRegistrarVenta() throws CustomizerException, Exception{
+    public String irRegistrarOperacion() throws CustomizerException, Exception{
 
         if(this.desMensajeError != null){
             UtilClass.addErrorMessage(this.desMensajeError);
@@ -202,12 +193,13 @@ public class MasterPageController implements Serializable{
         
         FacesContext context = FacesContext.getCurrentInstance();
 //        OrderController objController = context.getApplication().evaluateExpressionGet(context, "#{orderController}", OrderController.class);
-//        objController.inicializarDatosRegistro(this.codSClaseeven, this.codTRolpers, this.desTituloPagina, true);        
-        
+//        objController.inicializarDatosRegistro(this.codSClaseeven, this.codTRolpers, this.desTituloPagina, true);
         
         context.getExternalContext().getSessionMap().put("orderController", null);            
         OrderController objController = context.getApplication().evaluateExpressionGet(context, "#{orderController}", OrderController.class);
 
+                
+        BigDecimal idTipoNotaCredDebi                   = null;        
         BigDecimal idDocuPrinc                          = new BigDecimal(0);
         BigDecimal idDocuRel                            = new BigDecimal(0);
         List<Sic3docuprod> lstProductosSeleccionados    = new ArrayList<>();
@@ -226,6 +218,8 @@ public class MasterPageController implements Serializable{
         objController.loadOrderDetailsForEdit(   idDocuPrinc
                                                 ,this.desTituloPagina
                                                 ,this.codSClaseeven
+                                                ,this.codTRolpers
+                                                ,idTipoNotaCredDebi
                                                 ,idDocuRel
                                                 ,lstProductosSeleccionados
                                                 ,flgNuevo

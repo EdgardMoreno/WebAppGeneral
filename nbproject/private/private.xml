@@ -2,80 +2,6 @@
 <project-private xmlns="http://www.netbeans.org/ns/project-private/1">
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="65">
         <file>
-            <url>src/java/com/general/a2/service/impl/DocuOrderServiceImpl.java</url>
-            <bookmark id="43">
-                <name/>
-                <line>172</line>
-                <key/>
-            </bookmark>
-        </file>
-        <file>
-            <url>src/java/com/general/a3/dao/impl/DaoDocumentImpl.java</url>
-            <bookmark id="9">
-                <name/>
-                <line>73</line>
-                <key/>
-            </bookmark>
-            <bookmark id="33">
-                <name/>
-                <line>554</line>
-                <key/>
-            </bookmark>
-        </file>
-        <file>
-            <url>src/java/com/general/a1/controller/OrderController.java</url>
-            <bookmark id="47">
-                <name/>
-                <line>0</line>
-                <key/>
-            </bookmark>
-            <bookmark id="46">
-                <name/>
-                <line>0</line>
-                <key/>
-            </bookmark>
-            <bookmark id="45">
-                <name/>
-                <line>0</line>
-                <key/>
-            </bookmark>
-            <bookmark id="57">
-                <name/>
-                <line>493</line>
-                <key/>
-            </bookmark>
-            <bookmark id="49">
-                <name/>
-                <line>1330</line>
-                <key/>
-            </bookmark>
-            <bookmark id="58">
-                <name/>
-                <line>1485</line>
-                <key/>
-            </bookmark>
-            <bookmark id="62">
-                <name/>
-                <line>1657</line>
-                <key/>
-            </bookmark>
-            <bookmark id="65">
-                <name/>
-                <line>1745</line>
-                <key/>
-            </bookmark>
-            <bookmark id="64">
-                <name/>
-                <line>1748</line>
-                <key/>
-            </bookmark>
-            <bookmark id="63">
-                <name/>
-                <line>1773</line>
-                <key/>
-            </bookmark>
-        </file>
-        <file>
             <url>src/java/com/general/a1/controller/KardexController.java</url>
             <bookmark id="40">
                 <name/>
@@ -101,6 +27,124 @@
             <bookmark id="10">
                 <name/>
                 <line>373</line>
+                <key/>
+            </bookmark>
+        </file>
+        <file>
+            <url>src/java/com/general/a1/controller/DocumentController.java</url>
+            <bookmark id="27">
+                <name/>
+                <line>268</line>
+                <key/>
+            </bookmark>
+            <bookmark id="28">
+                <name/>
+                <line>387</line>
+                <key/>
+            </bookmark>
+            <bookmark id="39">
+                <name/>
+                <line>407</line>
+                <key/>
+            </bookmark>
+            <bookmark id="59">
+                <name/>
+                <line>517</line>
+                <key/>
+            </bookmark>
+            <bookmark id="61">
+                <name/>
+                <line>732</line>
+                <key/>
+            </bookmark>
+        </file>
+        <file>
+            <url>web/ordenRegistrar.xhtml</url>
+            <bookmark id="50">
+                <name/>
+                <line>832</line>
+                <key/>
+            </bookmark>
+        </file>
+        <file>
+            <url>web/productoRegistrar.xhtml</url>
+            <bookmark id="1">
+                <name/>
+                <line>142</line>
+                <key/>
+            </bookmark>
+        </file>
+        <file>
+            <url>src/java/com/general/a2/service/impl/DocuOrderServiceImpl.java</url>
+            <bookmark id="43">
+                <name/>
+                <line>169</line>
+                <key/>
+            </bookmark>
+        </file>
+        <file>
+            <url>src/java/com/general/a3/dao/impl/DaoDocumentImpl.java</url>
+            <bookmark id="9">
+                <name/>
+                <line>73</line>
+                <key/>
+            </bookmark>
+            <bookmark id="33">
+                <name/>
+                <line>567</line>
+                <key/>
+            </bookmark>
+        </file>
+        <file>
+            <url>src/java/com/general/a1/controller/OrderController.java</url>
+            <bookmark id="47">
+                <name/>
+                <line>0</line>
+                <key/>
+            </bookmark>
+            <bookmark id="46">
+                <name/>
+                <line>0</line>
+                <key/>
+            </bookmark>
+            <bookmark id="45">
+                <name/>
+                <line>0</line>
+                <key/>
+            </bookmark>
+            <bookmark id="57">
+                <name/>
+                <line>498</line>
+                <key/>
+            </bookmark>
+            <bookmark id="49">
+                <name/>
+                <line>1329</line>
+                <key/>
+            </bookmark>
+            <bookmark id="58">
+                <name/>
+                <line>1485</line>
+                <key/>
+            </bookmark>
+            <bookmark id="62">
+                <name/>
+                <line>1657</line>
+                <key/>
+            </bookmark>
+            <bookmark id="65">
+                <name/>
+                <line>1750</line>
+                <key/>
+            </bookmark>
+            <bookmark id="64">
+                <name/>
+                <line>1753</line>
+                <key/>
+            </bookmark>
+            <bookmark id="63">
+                <name/>
+                <line>1778</line>
                 <key/>
             </bookmark>
         </file>
@@ -143,34 +187,6 @@
             <bookmark id="11">
                 <name/>
                 <line>332</line>
-                <key/>
-            </bookmark>
-        </file>
-        <file>
-            <url>src/java/com/general/a1/controller/DocumentController.java</url>
-            <bookmark id="27">
-                <name/>
-                <line>268</line>
-                <key/>
-            </bookmark>
-            <bookmark id="28">
-                <name/>
-                <line>377</line>
-                <key/>
-            </bookmark>
-            <bookmark id="39">
-                <name/>
-                <line>397</line>
-                <key/>
-            </bookmark>
-            <bookmark id="59">
-                <name/>
-                <line>501</line>
-                <key/>
-            </bookmark>
-            <bookmark id="61">
-                <name/>
-                <line>699</line>
                 <key/>
             </bookmark>
         </file>
@@ -224,22 +240,6 @@
             <bookmark id="17">
                 <name/>
                 <line>729</line>
-                <key/>
-            </bookmark>
-        </file>
-        <file>
-            <url>web/ordenRegistrar.xhtml</url>
-            <bookmark id="50">
-                <name/>
-                <line>828</line>
-                <key/>
-            </bookmark>
-        </file>
-        <file>
-            <url>web/productoRegistrar.xhtml</url>
-            <bookmark id="1">
-                <name/>
-                <line>142</line>
                 <key/>
             </bookmark>
         </file>

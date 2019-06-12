@@ -93,6 +93,7 @@ public class OrderController implements Serializable{
     private BigDecimal numSumItemsAmount;
     private BigDecimal numSumItemsDescuento;
     
+    private BigDecimal idTipoNotaCredDebi;
     
     private List<Sic1prod> lstProducts;
     
@@ -129,6 +130,7 @@ public class OrderController implements Serializable{
             this.flgEditarTipoDocumento     = true;
             this.flgEditarNroDocumento      = true;
             this.flgValidarMontosIngresados = true;
+            this.idTipoNotaCredDebi         = null;
             
             this.flgPorRecoger              = false;
             this.msjValidation              = "";
@@ -1391,15 +1393,20 @@ public class OrderController implements Serializable{
                     this.sic1docu.setCodEstadocu(Constantes.CONS_COD_ESTACREADO);                        
                 }else
                     this.sic1docu.setCodEstadocu(Constantes.CONS_COD_ESTAFINALIZADO);
+                
+                /*Seteando el TIPO DE NOTA CREDITO o DEBITO*/
+                if(this.sic1docu.getSic1sclaseeven().getCodSclaseeven().equals(Constantes.COD_SCLASEEVEN_NOTACREDITO) && this.idTipoNotaCredDebi.intValue() > 0){
+                    Sic1general objTipoNotaCredDebi = new Sic1general();
+                    objTipoNotaCredDebi.setIdGeneral(this.idTipoNotaCredDebi);
+                    this.sic1docu.setObjTipoNotaCredDebi(objTipoNotaCredDebi);
+                }                
 
-                /*Guardar Orden*/
-                System.out.println("Guardando Orden");
-                //orderServiceImpl = new DocuOrderServiceImpl();
+                /*****************************************/
+                /********** Guardando Orden ****************/
+                /*****************************************/
                 sic1idendocu.setSic1docu(sic1docu);
                 sic1idendocu.setCodIden(this.sic1idendocu.getCodIden());
                 strResult = orderServiceImpl.insert(sic1idendocu);
-                
-                System.out.println("Documento:" + strResult);
 
                 UtilClass.addInfoMessage(Constantes.CONS_SUCCESS_MESSAGE);
 
@@ -1658,21 +1665,22 @@ public class OrderController implements Serializable{
      * @throws CustomizerException 
      */    
     public void loadOrderDetailsForEdit( BigDecimal idDocuPrinc
-                                 ,String desTituloPagina
-                                 ,String codSClaseevenTmp
-                                 ,BigDecimal idDocurel
-                                 ,List<Sic3docuprod> lstProductosSeleccionados
-                                 ,boolean flgNuevo
-                                 ,boolean flgAgregarProductos /*Permite mostrar los controles para agregar productos*/
-                                 ,boolean flgEditarItemProducto /*Permite editar cada item de los producto ya existentes*/
-                                 ,boolean flgObtenerProductosDocuPrinc /*Permite que obtener los productos del DOCUMENTO PRINCIPAL*/
-                                 ,boolean flgEditarPersona
-                                 ,boolean flgEditarFecha
-                                 ,boolean flgEditarFormaPago
-                                 ,boolean flgMostrarFormaPago 
-                                 ,boolean flgEditarTipoDocumento /* Factura, Boleta, etc*/
-                                 ,boolean flgEditarNroDocumento  /* Serie - Correlativo */
-                                 /*,boolean flgMostrarMontosCalculadosFormaPago*/ ) throws CustomizerException, Exception {
+                                        ,String desTituloPagina
+                                        ,String codSClaseevenTmp
+                                        ,String codTRolpersExterno
+                                        ,BigDecimal idTipoNotaCredDebi 
+                                        ,BigDecimal idDocurel
+                                        ,List<Sic3docuprod> lstProductosSeleccionados
+                                        ,boolean flgNuevo
+                                        ,boolean flgAgregarProductos /*Permite mostrar los controles para agregar productos*/
+                                        ,boolean flgEditarItemProducto /*Permite editar cada item de los producto ya existentes*/
+                                        ,boolean flgObtenerProductosDocuPrinc /*Permite que obtener los productos del DOCUMENTO PRINCIPAL*/
+                                        ,boolean flgEditarPersona
+                                        ,boolean flgEditarFecha
+                                        ,boolean flgEditarFormaPago
+                                        ,boolean flgMostrarFormaPago 
+                                        ,boolean flgEditarTipoDocumento /* Factura, Boleta, etc*/
+                                        ,boolean flgEditarNroDocumento  /* Serie - Correlativo */ ) throws CustomizerException, Exception {
                     
             
             System.out.println("idDocu:" + idDocuPrinc);
@@ -1701,6 +1709,8 @@ public class OrderController implements Serializable{
             this.flgMostrarFormaPago    = flgMostrarFormaPago;
             this.flgEditarTipoDocumento = flgEditarTipoDocumento;
             this.flgEditarNroDocumento  = flgEditarNroDocumento;
+            this.idTipoNotaCredDebi     = idTipoNotaCredDebi;
+            this.codTRolpersExterno     = codTRolpersExterno;
 
             /*Se Verificar si es una venta*/
             if (codSClaseevenTmp != null) {
@@ -1823,6 +1833,7 @@ public class OrderController implements Serializable{
                 this.sic1docu.setNumDocu(null);
                 this.sic1docu.setDesNotas(null);
                 this.sic1docu.setFecCreacion(null);
+                
                 this.desFecRegistro  = UtilClass.getCurrentDay();
                 this.setNumMtoComiTarjeta(0.00);
                 this.setNumMtoTotalComiTarjeta(0.00);
@@ -1842,9 +1853,7 @@ public class OrderController implements Serializable{
                     /*Limpiar el catalogo de tipo de tarjea*/
                     itemsTypeCard  = new ArrayList();
                 }
-
-            }
-                    
+            }                   
     }
     
     

@@ -36,7 +36,7 @@ public class Sic1docu  implements java.io.Serializable {
      private BigDecimal numIgv;
      private BigDecimal numMtovuelto;
      private BigDecimal idSclaseeven;
-     private BigDecimal idPersexterno; //identificador del Proveedor o Cliente
+     private BigDecimal idPersexterno; //identificador del Proveedor o Cliente     
      
      private Integer flgPrecsinIGV;
      private Integer idSucursal;
@@ -73,6 +73,7 @@ public class Sic1docu  implements java.io.Serializable {
      
      private Sic1general objFormaPago;
      private Sic1general objTipoTarjeta;
+     private Sic1general objTipoNotaCredDebi;
      
 
     public Sic1docu() {        
@@ -230,8 +231,6 @@ public class Sic1docu  implements java.io.Serializable {
         this.numDocuunido = numDocuunido;
     }
     
-    
-    
     public BigDecimal getNumMtodscto() {
         return this.numMtodscto;
     }
@@ -308,15 +307,7 @@ public class Sic1docu  implements java.io.Serializable {
 
     public void setSic3docuesta(Sic3docuesta sic3docuesta) {
         this.sic3docuesta = sic3docuesta;
-    }   
-
-//    public String getCodSclaseeven() {
-//        return codSclaseeven;
-//    }
-//
-//    public void setCodSclaseeven(String codSclaseeven) {
-//        this.codSclaseeven = codSclaseeven;
-//    }    
+    }
     
     public String getCodEstadocu() {
         return codEstadocu;
@@ -453,6 +444,14 @@ public class Sic1docu  implements java.io.Serializable {
     public void setObjTipoTarjeta(Sic1general objTipoTarjeta) {
         this.objTipoTarjeta = objTipoTarjeta;
     }
+
+    public Sic1general getObjTipoNotaCredDebi() {
+        return objTipoNotaCredDebi;
+    }
+
+    public void setObjTipoNotaCredDebi(Sic1general objTipoNotaCredDebi) {
+        this.objTipoNotaCredDebi = objTipoNotaCredDebi;
+    }   
 
     public Integer getIdSucursal() {
         return idSucursal;

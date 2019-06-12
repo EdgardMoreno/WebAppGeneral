@@ -32,7 +32,6 @@ import org.hibernate.HibernateException;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.hibernate.jdbc.ReturningWork;
-import org.hibernate.jdbc.Work;
 
 /**
  *
@@ -188,7 +187,41 @@ public class DaoProductImpl implements Serializable{
             throw new Exception(ex.getMessage());
         }
         
-    }    
+    }        
+    
+    /**
+     * METODO QUE PERMITE BLOQUEAR UN PRODUCTO EN LA OPERACION DE VENTA ORIGINAL CUANDO ES DESCARGADO MEDIANTE UNA NOTA DE CREDITO
+     * @param cnConexion
+     * @param idDocu
+     * @param idProd
+     * @param numItem
+     * @throws Exception 
+     */
+    public void bloquearProducto( Connection cnConexion
+                                 ,BigDecimal idDocu
+                                 ,BigDecimal idProd
+                                 ,Integer numItem) throws ValidationException, Exception{
+        
+        try{
+
+            String sql = 
+                        " UPDATE SIC3DOCUPROD " +
+                            "       SET DES_NOTAS = 'X' " +
+                            " WHERE ID_DOCU = " + idDocu + " AND ID_PROD = " + idProd + " AND NUM_ITEM = " + numItem;
+            
+            CallableStatement statement = cnConexion.prepareCall(sql);
+            int filasActualizadas = statement.executeUpdate();
+            
+            if(filasActualizadas<=0)
+                throw new ValidationException("No se bloqueó ningun producto del orden de venta principal.");
+                 
+        } catch (ValidationException ex) {
+            throw new ValidationException(ex.getMessage());
+        } catch (SQLException ex) {
+            throw new Exception(ex.getMessage());
+        }
+        
+    }  
     
     
     public String relateProdDocu(Session session, List<Sic3proddocu> lstSic3proddocus) throws Exception {

@@ -346,6 +346,10 @@ public class DocumentController implements Serializable{
             if (obj.getIdGeneral().intValue() == idTipoNota.intValue()){
                 if(obj.getCodValorgeneral().equals(Constantes.TIPONOTACREDDEVOLXITEM)){
                     this.flgDeshabilitarSelecProdu = false;
+                    /*Se quita el check de todos los items*/
+                    for(int i=0; i<lstProducts.size(); i++){
+                        lstProducts.get(i).setFlgSeleccionado(false);
+                    }
                     break;
                 }
             }
@@ -354,7 +358,13 @@ public class DocumentController implements Serializable{
         los productos se consideran como parte de la nota de credito*/
         if(this.flgDeshabilitarSelecProdu){
             for(int i=0; i<lstProducts.size(); i++){
-                lstProducts.get(i).setFlgSeleccionado(true);
+                
+                /*Significa que el producto ya fue dado de baja en alguna otra NOTA DE CREDITO, por eso se deshabilita*/
+                String desNotas = lstProducts.get(i).getDesNotas();                
+                if(desNotas != null && desNotas.equalsIgnoreCase("X")){
+                    lstProducts.get(i).setFlgSeleccionado(false);
+                }else
+                    lstProducts.get(i).setFlgSeleccionado(true);
             }
         }        
     } 
@@ -473,20 +483,24 @@ public class DocumentController implements Serializable{
         context.getExternalContext().getSessionMap().put("orderController", null);        
         OrderController objController = context.getApplication().evaluateExpressionGet(context, "#{orderController}", OrderController.class);
         
-        boolean flgNuevo                = false;
-        boolean flgAgregarProductos     = true;
-        boolean flgEditarItemProducto   = true;
-        boolean flgObtenerProductosDocuPrinc = false;
-        boolean flgEditarPersona        = true;
-        boolean flgEditarFecha          = true;
-        boolean flgEditarFormaPago      = false;
-        boolean flgMostrarFormaPago     = true;
-        boolean flgEditarTipoDocumento  = false;
-        boolean flgEditarNroDocumento   = false;
+        String codTRolpersExterno               = null;
+        BigDecimal idTipoNotaCredDebi           = null;
+        boolean flgNuevo                        = false;
+        boolean flgAgregarProductos             = true;
+        boolean flgEditarItemProducto           = true;
+        boolean flgObtenerProductosDocuPrinc    = false;
+        boolean flgEditarPersona                = true;
+        boolean flgEditarFecha                  = true;
+        boolean flgEditarFormaPago              = false;
+        boolean flgMostrarFormaPago             = true;
+        boolean flgEditarTipoDocumento          = false;
+        boolean flgEditarNroDocumento           = false;
         
         objController.loadOrderDetailsForEdit( viSicdocu.getIdDocu()
                                                 ,desTitulo
                                                 ,viSicdocu.getCodSclaseeven()
+                                                ,codTRolpersExterno
+                                                ,idTipoNotaCredDebi
                                                 ,new BigDecimal(0)
                                                 ,new ArrayList<>()
                                                 ,flgNuevo
@@ -680,6 +694,8 @@ public class DocumentController implements Serializable{
             OrderController objController = context.getApplication().evaluateExpressionGet(context, "#{orderController}", OrderController.class);
             
             String codSClaseevenTemp                        = viSicdocu.getCodSclaseeven();
+            String codTRolpersExterno                       = null;
+            BigDecimal idTipoNotaCredDebi                   = null;
             List<Sic3docuprod> lstProductosSeleccionados    = new ArrayList<>();            
             BigDecimal idDocuPrinc                          = new BigDecimal(0);
             BigDecimal idDocuRel                            = viSicdocu.getIdDocu();
@@ -702,11 +718,12 @@ public class DocumentController implements Serializable{
             if(viSicdocu.getCodSclaseeven().equals(Constantes.COD_SCLASEEVEN_NOTACREDITO)){
                 codSClaseevenTemp = Constantes.COD_SCLASEEVEN_VENTA;
             }
-                
             
             objController.loadOrderDetailsForEdit(   idDocuPrinc
                                                     ,desTitulo
                                                     ,codSClaseevenTemp
+                                                    ,codTRolpersExterno
+                                                    ,idTipoNotaCredDebi
                                                     ,idDocuRel
                                                     ,lstProductosSeleccionados
                                                     ,flgNuevo
@@ -745,6 +762,7 @@ public class DocumentController implements Serializable{
         boolean flgEditarTipoDocumento      = true;
         boolean flgEditarNroDocumento       = true;
         String desTipoNota                  = null;
+        BigDecimal idTipoNotaCredDebi       = null;
         
         try {
             
@@ -799,6 +817,7 @@ public class DocumentController implements Serializable{
                 
                 desTituloPaginaLocal = "REGISTRAR NOTA DE CREDITO: " + desTipoNota;
                 codSClaseevenlocal = this.codSClaseeven;
+                idTipoNotaCredDebi = this.idTipoNota;
                 
             }else if(this.codSClaseeven.equals(Constantes.COD_SCLASEEVEN_ORDENCOMPRA)){
                 
@@ -823,20 +842,23 @@ public class DocumentController implements Serializable{
             
             context.getExternalContext().getSessionMap().put("orderController", null);            
             OrderController objController = context.getApplication().evaluateExpressionGet(context, "#{orderController}", OrderController.class);
+
+            String codTRolpersExterno               = null;
             
-            BigDecimal idDocuPrinc          = new BigDecimal(0);             
-            boolean flgNuevo                = true;
-            boolean flgAgregarProductos     = false;
+            BigDecimal idDocuPrinc                  = new BigDecimal(0);
+            boolean flgNuevo                        = true;
+            boolean flgAgregarProductos             = false;
             boolean flgEditarItemProducto           = false;
             boolean flgObtenerProductosDocuPrinc    = false;
-            boolean flgEditarPersona        = false;
-            boolean flgEditarFecha          = true;
-            
-            
+            boolean flgEditarPersona                = false;
+            boolean flgEditarFecha                  = true;
+
             
             objController.loadOrderDetailsForEdit(   idDocuPrinc
                                                     ,desTituloPaginaLocal
                                                     ,codSClaseevenlocal
+                                                    ,codTRolpersExterno
+                                                    ,idTipoNotaCredDebi
                                                     ,idDocuLocal
                                                     ,lstProductosSeleccionados
                                                     ,flgNuevo

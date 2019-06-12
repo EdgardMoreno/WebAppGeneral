@@ -6,11 +6,7 @@
       xmlns:a="http://xmlns.jcp.org/jsf/passthrough"
       xmlns:p="http://primefaces.org/ui"
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets"  >
-
-    <!--<f:metadata>        
-        <f:viewParam name="titulo" value="#{documentController.desTituloPagina}"/>
-        <f:event type="preRenderView" listener="#{documentController.getParamsExternalPage}"/>
-    </f:metadata>-->
+    
 
     <ui:composition template="./WEB-INF/facelets/templates/templatePrincipal.xhtml">
 
@@ -130,7 +126,7 @@
                         <p:commandLink actionListener="#{documentController.clearSearch()}" styleClass="btn btn-default" update="form">
                             <span class="glyphicon glyphicon-erase"></span> Limpiar
                         </p:commandLink>
-                        <p:commandLink styleClass="btn btn-default" action="#{documentController.registrarNuevaOrden()}">
+                        <p:commandLink styleClass="btn btn-default" action="#{documentController.registrarNuevaOrden()}" rendered="false">
                             <span class="glyphicon glyphicon-new-window"></span> Nuevo
                         </p:commandLink>
                         <h:commandLink styleClass="btn btn-default" actionListener="#{documentController.exportReport()}">

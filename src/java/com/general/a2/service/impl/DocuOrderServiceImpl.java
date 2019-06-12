@@ -241,6 +241,19 @@ public class DocuOrderServiceImpl implements Serializable, DocumentService{
                                    ,Constantes.CONS_COD_ESTAFINALIZADO
                                    ,null);
                     
+                    /*Bloquear los productos de la OPERACION ORIGINAL que han sido DESCARGADOS con la NOTA DE CREDITO*/                    
+                    if(sic1docu.getSic1sclaseeven().getCodSclaseeven().equals(Constantes.COD_SCLASEEVEN_NOTACREDITO)){
+                        DaoProductImpl objDaoProd = new DaoProductImpl();                       
+                        
+                        BigDecimal idDocuVentaPrinc = sic1docu.getSic3docudocu().getId().getIdDocurel();
+                        
+                        for(Sic3docuprod objDocuProd:  sic1docu.getLstSic3docuprod()){
+                            objDaoProd.bloquearProducto(((SessionImpl)session).connection()
+                                                        ,idDocuVentaPrinc
+                                                        ,objDocuProd.getId().getIdProd()
+                                                        ,objDocuProd.getId().getNumItem());
+                        }                            
+                    }
                 }
             
             /*GUARDAR RELACION DEL DOCUMENTO CON LA PERSONA(Cliente/Proveedor)*/

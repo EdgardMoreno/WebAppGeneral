@@ -69,6 +69,10 @@
                             <h:outputText value="#{documentController.lstViSicdocus.indexOf(item) + 1}" />
                         </p:column>                            
 
+                        <p:column headerText="Operación" width="100" style="text-align: center">
+                            <h:outputText value="#{item.desSclaseeven}" />
+                        </p:column>
+                        
                         <p:column headerText="Tipo Documento" width="100" style="text-align: center">
                             <h:outputText value="#{item.desStipodocu}" />
                         </p:column>
@@ -135,11 +139,15 @@
                                 <h:outputText value="#{documentController.lstViSicdocusTmp.indexOf(item) + 1}" />
                             </p:column>                            
 
-                            <p:column headerText="Tipo Documento" width="180" style="text-align: center">
+                            <p:column headerText="Operación" width="120" style="text-align: center">
+                                <h:outputText value="#{item.desSclaseeven}" />
+                            </p:column>
+                            
+                            <p:column headerText="Tipo Documento" width="100" style="text-align: center">
                                 <h:outputText value="#{item.desStipodocu}" />
                             </p:column>
 
-                            <p:column headerText="Nro. Documento" width="110" style="color: blue;font-size: 14px; text-align: center">
+                            <p:column headerText="Nro. Documento" width="100" style="color: blue;font-size: 14px; text-align: center">
                                 <h:outputLabel value="#{item.codSerie}-#{item.numDocu}" />
                             </p:column>                            
 
@@ -159,7 +167,7 @@
                                 <h:outputText value="#{item.desEstadocu}" />
                             </p:column>
 
-                            <p:column headerText="Sucursal" width="180" style="text-align: center">
+                            <p:column headerText="Sucursal" width="120" style="text-align: center">
                                 <h:outputText value="#{item.desSucursal}" />
                             </p:column>                        
                         </p:dataTable>                        
@@ -190,14 +198,14 @@
                             </p:column>                            
 
                             <p:column width="25" style="text-align: center">
-                                <h:selectBooleanCheckbox value="#{item.flgSeleccionado}" disabled="#{documentController.flgDeshabilitarSelecProdu}"/>
+                                <h:selectBooleanCheckbox value="#{item.flgSeleccionado}" disabled="#{documentController.flgDeshabilitarSelecProdu}" rendered="#{item.desNotas eq 'X'?false:true}"/>
                             </p:column>
                             
-                            <p:column headerText="Código" width="110" style="color: blue;font-size: 14px">
+                            <p:column headerText="Código" width="110" style="color: blue;font-size: 13px">
                                 <h:outputLabel value="#{item.sic1prod.codProd}" />
                             </p:column>
 
-                            <p:column headerText="Descripción" >
+                            <p:column headerText="Descripción" style="text-decoration:#{item.desNotas eq 'X'?'line-through':''}">
                                 <h:outputText value="#{item.sic1prod.desProd}" />
                             </p:column>
 
@@ -220,7 +228,7 @@
                                 
                             </p:column>
 
-                            <p:column headerText="Total" width="90" style="text-align: right">
+                            <p:column headerText="Total" width="90" style="text-align: right; text-decoration:#{item.desNotas eq 'X'?'line-through':''}">
                                 <h:outputText value="S/.#{(item.numValor - item.numMtodscto)  * item.numCantidad}" />
                                 
                                 <f:facet name="footer">

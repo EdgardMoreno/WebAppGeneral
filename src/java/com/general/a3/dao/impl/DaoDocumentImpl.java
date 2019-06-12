@@ -92,7 +92,8 @@ public class DaoDocumentImpl implements Serializable{
                     String valor = null;
                     Integer idModapago = null;
 
-                    BigDecimal intIdTipoIden;                    
+                    BigDecimal intIdTipoIden;
+                    BigDecimal idTipoNotaCredDebi = null;
 
                     try{
                     
@@ -110,7 +111,8 @@ public class DaoDocumentImpl implements Serializable{
                         System.out.println("intIdTRolEsta:" + sic1docu.getSic3docuesta().getId().getIdTrolestadocu());
                         System.out.println("idSclaseeven:" + sic1docu.getIdSclaseeven());
                         System.out.println("idSTipodocu:" + sic1docu.getIdStipodocu());
-                        System.out.println("idPersExterno:" + sic1docu.getIdPersexterno());
+                        System.out.println("idPersExterno:" + sic1docu.getIdPersexterno());                       
+                        
 
                         /*CONVERSION DE FECHAS*/            
                         if (sic1docu.getFecCreacion() != null){
@@ -139,6 +141,11 @@ public class DaoDocumentImpl implements Serializable{
                             }else {
                                 idModapago = sic1docu.getIdModapago().intValue();
                             }
+                        }
+                        
+                        if(sic1docu.getObjTipoNotaCredDebi() != null && 
+                                sic1docu.getObjTipoNotaCredDebi().getIdGeneral() != null){
+                            idTipoNotaCredDebi = sic1docu.getObjTipoNotaCredDebi().getIdGeneral();
                         }
 
                         System.out.println("FecCreacion: " + strFecCreacion);
@@ -193,13 +200,15 @@ public class DaoDocumentImpl implements Serializable{
                         sp.addParameter(new InParameter("X_ID_ESTAREL",         Types.INTEGER, sic1docu.getSic3docuesta().getId().getIdEstadocu()));
                         sp.addParameter(new InParameter("X_ID_TROLESTADOCU",    Types.INTEGER, sic1docu.getSic3docuesta().getId().getIdTrolestadocu()));
                         sp.addParameter(new InParameter("X_ID_TRELADOCUESTA",   Types.INTEGER, null));
-                        sp.addParameter(new InParameter("X_DES_NOTASESTA",      Types.VARCHAR, null));            
+                        sp.addParameter(new InParameter("X_DES_NOTASESTA",      Types.VARCHAR, null));
                         sp.addParameter(new InParameter("X_NUM_VOUCHER",        Types.VARCHAR, sic1docu.getNumVoucher()));
+                        
+                        sp.addParameter(new InParameter("X_ID_TIPONOTACREDDEBI",Types.NUMERIC, idTipoNotaCredDebi));
 
-                        sp.addParameter(new OutParameter("X_ID_DOCU", Types.INTEGER));
-                        sp.addParameter(new OutParameter("X_ID_ERROR", Types.INTEGER));
-                        sp.addParameter(new OutParameter("X_DES_ERROR", Types.VARCHAR));
-                        sp.addParameter(new OutParameter("X_FEC_ERROR", Types.DATE));
+                        sp.addParameter(new OutParameter("X_ID_DOCU",           Types.INTEGER));
+                        sp.addParameter(new OutParameter("X_ID_ERROR",          Types.INTEGER));
+                        sp.addParameter(new OutParameter("X_DES_ERROR",         Types.VARCHAR));
+                        sp.addParameter(new OutParameter("X_FEC_ERROR",         Types.DATE));
 
                         sp.ExecuteNonQuery(cnctn);
 
@@ -372,12 +381,12 @@ public class DaoDocumentImpl implements Serializable{
 //                                continue;
 
                             /*CONVERSION DE FECHAS*/
-                            if (sic3docuprod.getId().getFecDesde()!= null){
-                                strFecDesde = UtilClass.convertDateToString(sic3docuprod.getId().getFecDesde());
-                            }
-                            if (sic3docuprod.getFecHasta()!= null){
-                                strFecHasta = UtilClass.convertDateToString(sic3docuprod.getFecHasta());
-                            }
+//                            if (sic3docuprod.getId().getFecDesde()!= null){
+//                                strFecDesde = UtilClass.convertDateToString(sic3docuprod.getId().getFecDesde());
+//                            }
+//                            if (sic3docuprod.getFecHasta()!= null){
+//                                strFecHasta = UtilClass.convertDateToString(sic3docuprod.getFecHasta());
+//                            }
                             /**/
 
                             StoredProcedure sp = new StoredProcedure("PKG_SICMANTDOCU.PRC_SICRELADOCUPROD");

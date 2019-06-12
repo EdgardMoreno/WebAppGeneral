@@ -42,9 +42,8 @@
                 
                 .style_label{text-align: right; font-weight: bold; font-size: 12px; padding: 3px; width: 150px; }
                 .style_content{text-align: left; font-size: 13px; padding: 3px }
-
-               
-
+                
+                
             </style>
 
             <script>
@@ -116,6 +115,7 @@
                     
                     <p:dataTable                                                        
                         var="item" 
+                        id="lstDocusPadre"
                         rendered="#{not empty orderController.lstDocusPadre}"
                         value="#{orderController.lstDocusPadre}" 
                         style="margin-bottom:10px;padding: 0px; font-size: 11px">                                                        
@@ -208,8 +208,8 @@
                                      var="item"
                                      id="idTableDetOrder"
                                      style="font-size: 11px"
-                                     width="100%"
-                                     styleClass = "table-bordered"                                         
+                                     width="100%"                                     
+                                     styleClass = "table-bordered"
                                      columnClasses = "table_style_id,
                                                       table_style_code_small,
                                                       table_style_description_medium,
@@ -217,15 +217,16 @@
                                                       table_style_price_small_discount,
                                                       table_style_amount,
                                                       table_style_price_7x">
+                            
 
                             <h:column headerClass="table_style_id">
                                 <f:facet name="header">Item</f:facet>#{item.id.numItem}
                             </h:column>                            
                             <h:column headerClass="table_style_code">
-                                <f:facet name="header">Código</f:facet>#{item.sic1prod.codProd}
+                                <f:facet name="header">Código</f:facet><div style="text-decoration:#{item.desNotas eq 'X'?'line-through':''}">#{item.sic1prod.codProd}</div> 
                             </h:column>
                             <h:column headerClass="table_style_description_medium">
-                                <f:facet name="header">Descripción</f:facet>#{item.sic1prod.desProd}
+                                <f:facet name="header">Descripción</f:facet><div style="text-decoration:#{item.desNotas eq 'X'?'line-through':''}">#{item.sic1prod.desProd}</div>
                             </h:column>
                             <h:column id="idTablePrice" headerClass="table_style_price">
                                 <div >
@@ -235,15 +236,13 @@
                             </h:column>
                             
                             <h:column  headerClass="table_style_price_small_discount">
-                                <div >
-                                    <h:outputLabel value="S/." />
-                                    <f:facet name="header">Dscto</f:facet>#{item.numMtodscto}
+                                <div>                                    
+                                    S/.<f:facet name="header">Dscto</f:facet>#{item.numMtodscto}
                                 </div>
                                 
                                 <f:facet name="footer">                                    
-                                    <div class="table_style_total_price" style="color: red">
-                                        <h:outputLabel value="S/." />
-                                        #{orderController.numSumItemsDescuento}
+                                    <div class="table_style_total_price" style="color: red">                                        
+                                        S/.#{orderController.numSumItemsDescuento}
                                     </div>
                                 </f:facet> 
                                 
@@ -261,9 +260,8 @@
                             </h:column>
                             
                             <h:column headerClass="table_style_price_7x">
-                                <div>
-                                    <h:outputLabel value="S/." />
-                                    <f:facet name="header">Total</f:facet>#{item.numValor * item.numCantidad}
+                                <div>                                    
+                                    <f:facet name="header">Total</f:facet><div style="text-decoration:#{item.desNotas eq 'X'?'line-through':''}">S/.#{item.numValor * item.numCantidad}</div>
                                 </div>                                
                                 
                                 <f:facet name="footer">

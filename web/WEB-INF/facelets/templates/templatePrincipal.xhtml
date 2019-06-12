@@ -180,7 +180,7 @@
                         <li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="#">Compras<span class="caret"></span></a>
                             <ul class="dropdown-menu">                                                                                               
                                 <li>
-                                    <h:commandLink style="color:#0000FF" id="idMenuRegisterPurchase" value="Registrar Compra" actionListener="#{masterPageController.validarDatos()}" action="#{masterPageController.irRegistrarCompra()}" >
+                                    <h:commandLink style="color:#0000FF" id="idMenuRegisterPurchase" value="Registrar Compra" actionListener="#{masterPageController.validarDatos()}" action="#{masterPageController.irRegistrarOperacion()}" >
                                         <f:param name="paramTituloPagina" value="Registrar Compra" />
                                         <f:param name="paramNombrePagina" value="ordenRegistrar" />
                                         <f:param name="paramCodSClaseeven" value="VI_SICSCLASEEVENCOMPRA" />
@@ -188,7 +188,7 @@
                                     </h:commandLink>
                                 </li>
                                 <li>
-                                    <h:commandLink style="color:#0000FF" id="idMenuRegistrarCompraOC" value="Registrar Compra desde O.C." actionListener="#{masterPageController.validarDatos()}" action="#{masterPageController.irRegistrarCompra()}" >
+                                    <h:commandLink style="color:#0000FF" id="idMenuRegistrarCompraOC" value="Registrar Compra desde O.C." actionListener="#{masterPageController.validarDatos()}" action="#{masterPageController.irRegistrarOperacion()}" >
                                         <f:param name="paramTituloPagina" value="Registrar Compra desde Orden de Compra" />
                                         <f:param name="paramNombrePagina" value="ordenRegistrarDesdeOC" />
                                         <f:param name="paramCodSClaseeven" value="VI_SICSCLASEEVENCOMPRA" />
@@ -200,7 +200,7 @@
                                 </li>
                                 
                                 <li>
-                                    <h:commandLink style="color:#0000FF" id="idMenuRegistrarOrdenCompra" value="Registrar Orden de Compra" actionListener="#{masterPageController.validarDatos()}" action="#{masterPageController.irRegistrarCompra()}" >
+                                    <h:commandLink style="color:#0000FF" id="idMenuRegistrarOrdenCompra" value="Registrar Orden de Compra" actionListener="#{masterPageController.validarDatos()}" action="#{masterPageController.irRegistrarOperacion()}" >
                                         <f:param name="paramTituloPagina" value="Registrar Orden de Compra" />
                                         <f:param name="paramNombrePagina" value="ordenRegistrar" />
                                         <f:param name="paramCodSClaseeven" value="VI_SICSCLASEEVENORDENCOMPRA" />
@@ -233,7 +233,7 @@
                             <ul class="dropdown-menu">
                                 <li>
                                     <h:commandLink style="color:#0000FF" id="idMenuSaleRegist" value="Registrar Venta" 
-                                                   actionListener="#{masterPageController.validarDatos()}" action="#{masterPageController.irRegistrarVenta()}" >
+                                                   actionListener="#{masterPageController.validarDatos()}" action="#{masterPageController.irRegistrarOperacion()}" >
                                         <f:param name="paramTituloPagina" value="Registrar Venta" />
                                         <f:param name="paramNombrePagina" value="ordenRegistrar" />
                                         <f:param name="paramCodSClaseeven" value="VI_SICSCLASEEVENVENTA" />
