@@ -4,12 +4,17 @@ package com.general.a2.service.impl;
 
 import com.general.a3.dao.impl.DaoProductImpl;
 import com.general.hibernate.entity.HibernateUtil;
+import com.general.hibernate.entity.Sic1docu;
 import com.general.hibernate.entity.Sic1prod;
+import com.general.hibernate.relaentity.Sic3docuprod;
 import com.general.hibernate.relaentity.Sic3proddocu;
 import com.general.hibernate.views.ViSicprod;
+import com.general.util.beans.Constantes;
 import com.general.util.exceptions.CustomizerException;
 import com.general.util.exceptions.ValidationException;
 import java.io.Serializable;
+import java.math.BigDecimal;
+import java.sql.Connection;
 import java.util.List;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
@@ -133,10 +138,70 @@ public class ProductServiceImpl implements Serializable{
             session.close();
         }
         return result;
-    }  
+    }
+    
+    /**
+     * PROCEDIMIENTO PARA, SEGUN LA OPERACION, REVERTIR EL STOCK DEL PRODUCTO
+     * @param cnConexion
+     * @param objDocu
+     * @param lstProductos
+     * @throws Exception 
+     */
+    public void actualizarStockPorAnulacion(Connection cnConexion, Sic1docu objDocu, List<Sic3docuprod> lstProductos) throws Exception{
+        
+        try{
+            
+            DaoProductImpl objDaoProd = new DaoProductImpl();
+            BigDecimal numNuevaCantidad = new BigDecimal(0);
+            
+            for(Sic3docuprod objDocuProd : lstProductos){
+                /* - SI ES UNA VENTA, SE SUMA
+                   - SI ES UNA COMPRA, SE RESTA*/
+                if( objDocu.getSic1sclaseeven().getCodSclaseeven().equals(Constantes.COD_SCLASEEVEN_VENTA) &&
+                        !objDocu.getSic1stipodocu().getCodStipodocu().equals(Constantes.CONS_COD_STIPODOCU_NOTAVENTA)){
+                    numNuevaCantidad = objDocuProd.getNumCantidad();
+                }else if( objDocu.getSic1sclaseeven().getCodSclaseeven().equals(Constantes.COD_SCLASEEVEN_COMPRA)){
+                    numNuevaCantidad = objDocuProd.getNumCantidad().multiply(new BigDecimal(-1));
+                }
 
+                objDaoProd.updateStock(cnConexion,objDocuProd.getId().getIdProd(), numNuevaCantidad);
+            }
+            
+        } catch (Exception ex) {
+            throw new Exception(ex.getMessage());
+        }
+    } 
     
     
+    /**
+     * PROCEDIMIENTO PARA ACTUALIZAR EL STOCK DEL PRODUCTO
+     * @param cnConexion
+     * @param objDocu
+     * @param lstProductos
+     * @throws Exception 
+     */
+    public void actualizarStockPorRegistro(Connection cnConexion, Sic1docu objDocu, List<Sic3docuprod> lstProductos) throws Exception{
+        
+        try{
+            
+            DaoProductImpl objDaoProd = new DaoProductImpl();
+            BigDecimal numNuevaCantidad = new BigDecimal(0);
+            
+            for(Sic3docuprod objDocuProd : lstProductos){
+                
+                if(objDocu.getSic1sclaseeven().getCodSclaseeven().equals(Constantes.COD_SCLASEEVEN_VENTA) &&
+                        !objDocu.getSic1stipodocu().getCodStipodocu().equals(Constantes.CONS_COD_STIPODOCU_NOTAVENTA)){
+                    numNuevaCantidad = objDocuProd.getNumCantidad().multiply(new BigDecimal(-1));
+                }else if( objDocu.getSic1sclaseeven().getCodSclaseeven().equals(Constantes.COD_SCLASEEVEN_COMPRA) ||
+                          objDocu.getSic1sclaseeven().getCodSclaseeven().equals(Constantes.COD_SCLASEEVEN_NOTACREDITO )){
+                    numNuevaCantidad = objDocuProd.getNumCantidad();
+                }
 
-    
+                objDaoProd.updateStock(cnConexion,objDocuProd.getId().getIdProd(), numNuevaCantidad);
+            }
+            
+        } catch (Exception ex) {
+            throw new Exception(ex.getMessage());
+        }
+    } 
 }

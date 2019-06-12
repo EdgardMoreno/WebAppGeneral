@@ -188,7 +188,7 @@
                                     </h:commandLink>
                                 </li>
                                 <li>
-                                    <h:commandLink style="color:#0000FF" id="idMenuRegistrarCompraOC" value="Registrar Compra desde O.C." actionListener="#{masterPageController.validarDatos()}" action="#{masterPageController.irRegistrarOperacion()}" >
+                                    <h:commandLink rendered="false" style="color:#0000FF" id="idMenuRegistrarCompraOC" value="Registrar Compra desde O.C." actionListener="#{masterPageController.validarDatos()}" action="#{masterPageController.irRegistrarOperacion()}" >
                                         <f:param name="paramTituloPagina" value="Registrar Compra desde Orden de Compra" />
                                         <f:param name="paramNombrePagina" value="ordenRegistrarDesdeOC" />
                                         <f:param name="paramCodSClaseeven" value="VI_SICSCLASEEVENCOMPRA" />
@@ -200,7 +200,7 @@
                                 </li>
                                 
                                 <li>
-                                    <h:commandLink style="color:#0000FF" id="idMenuRegistrarOrdenCompra" value="Registrar Orden de Compra" actionListener="#{masterPageController.validarDatos()}" action="#{masterPageController.irRegistrarOperacion()}" >
+                                    <h:commandLink rendered="false" style="color:#0000FF" id="idMenuRegistrarOrdenCompra" value="Registrar Orden de Compra" actionListener="#{masterPageController.validarDatos()}" action="#{masterPageController.irRegistrarOperacion()}" >
                                         <f:param name="paramTituloPagina" value="Registrar Orden de Compra" />
                                         <f:param name="paramNombrePagina" value="ordenRegistrar" />
                                         <f:param name="paramCodSClaseeven" value="VI_SICSCLASEEVENORDENCOMPRA" />
@@ -211,7 +211,7 @@
                                     <hr style="margin: 0px;"/>
                                 </li>                                 
                                 <li>
-                                    <h:commandLink id="idMenuRptOrdenCompra" value="Reporte de Ordenes de Compra" actionListener="#{masterPageController.validarDatos()}" action="#{masterPageController.irRptComprasVentas()}" >
+                                    <h:commandLink  rendered="false" id="idMenuRptOrdenCompra" value="Reporte de Ordenes de Compra" actionListener="#{masterPageController.validarDatos()}" action="#{masterPageController.irRptComprasVentas()}" >
                                         <f:param name="paramTituloPagina" value="Reporte de Ordenes de Compra" />
                                         <f:param name="paramNombrePagina" value="documentosListar" />
                                         <f:param name="paramCodSClaseeven" value="VI_SICSCLASEEVENORDENCOMPRA" />

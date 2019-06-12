@@ -401,7 +401,7 @@ public class DaoDocumentImpl implements Serializable{
                             sp.addParameter(new InParameter("X_DES_NOTAS",      Types.VARCHAR, sic3docuprod.getDesNotas()));
                             sp.addParameter(new InParameter("X_NUM_VALOR",      Types.VARCHAR, sic3docuprod.getNumValor()));
                             sp.addParameter(new InParameter("X_NUM_MTODSCTO",   Types.NUMERIC, sic3docuprod.getNumMtodscto()));
-                            sp.addParameter(new InParameter("X_NUM_CANTIDAD",   Types.VARCHAR, sic3docuprod.getNumCantidad()));
+                            sp.addParameter(new InParameter("X_NUM_CANTIDAD",   Types.NUMERIC, sic3docuprod.getNumCantidad()));
 
                             sp.addParameter(new OutParameter("X_ID_ERROR",      Types.INTEGER));
                             sp.addParameter(new OutParameter("X_DES_ERROR",     Types.VARCHAR));
@@ -649,9 +649,14 @@ public class DaoDocumentImpl implements Serializable{
             
             cnConexion = ConexionBD.obtConexion();
             
-            String sql = "SELECT T0.* " +
-                            " FROM SIC3DOCUDOCU T0 " +
-                            " WHERE T0.FEC_HASTA = PKG_SICCONSGENERAL.FNC_SICOBTFECINF AND T0.ID_DOCU = " + idDocu;                            
+            String sql = " SELECT  T0.* " +
+                         "       ,T2.* " +
+                         "       ,T3.* " +
+                         " FROM SIC3DOCUDOCU T0 " +
+                         " JOIN SIC1DOCU T1 ON T1.ID_DOCU = T0.ID_DOCUREL " +
+                         " JOIN SIC1SCLASEEVEN T2 ON T2.ID_SCLASEEVEN = T1.ID_SCLASEEVEN " +
+                         " JOIN SIC1STIPODOCU T3 ON T3.ID_STIPODOCU = T1.ID_STIPODOCU " +
+                         " WHERE T0.FEC_HASTA = PKG_SICCONSGENERAL.FNC_SICOBTFECINF AND T0.ID_DOCU = " + idDocu;
             
             statement = cnConexion.prepareCall(sql,
                                                ResultSet.TYPE_SCROLL_SENSITIVE,
@@ -661,6 +666,7 @@ public class DaoDocumentImpl implements Serializable{
             rsConsulta = statement.executeQuery();
 
             while(rsConsulta.next()){
+                
                 Sic3docudocuId id = new Sic3docudocuId();
                 id.setIdDocu(rsConsulta.getBigDecimal("ID_DOCU"));
                 id.setIdDocurel(rsConsulta.getBigDecimal("ID_DOCUREL"));
@@ -671,6 +677,22 @@ public class DaoDocumentImpl implements Serializable{
                 obj.setDesNotas(rsConsulta.getString("DES_NOTAS"));
                 obj.setFecHasta(rsConsulta.getDate("FEC_HASTA"));
                 obj.setId(id);
+                
+                /*DATOS DEL DOCUMENTO RELACIONADO*/
+                Sic1sclaseeven objSClaseven = new Sic1sclaseeven();
+                objSClaseven.setIdSclaseeven(rsConsulta.getBigDecimal("ID_SCLASEEVEN"));
+                objSClaseven.setDesSclaseeven(rsConsulta.getString("DES_SCLASEEVEN"));
+                objSClaseven.setCodSclaseeven(rsConsulta.getString("COD_SCLASEEVEN"));
+                
+                Sic1stipodocu objSTipodocu = new Sic1stipodocu();
+                objSTipodocu.setIdStipodocu(rsConsulta.getBigDecimal("ID_STIPODOCU"));
+                objSTipodocu.setDesStipodocu(rsConsulta.getString("DES_STIPODOCU"));
+                objSTipodocu.setCodStipodocu(rsConsulta.getString("COD_STIPODOCU"));
+                
+                Sic1docu objDocuRel = new Sic1docu();
+                objDocuRel.setIdDocu(rsConsulta.getBigDecimal("ID_DOCUREL"));
+                objDocuRel.setSic1sclaseeven(objSClaseven);
+                objDocuRel.setSic1stipodocu(objSTipodocu);
                 
                 list.add(obj);
             }

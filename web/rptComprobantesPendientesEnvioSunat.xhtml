@@ -106,7 +106,8 @@
                             
                         <p:dataTable                            
                             id="dtOperaciones" var="item" 
-                            value="#{reporteSunatController.lstCompPago}" rows="30" style="margin-bottom:20px"
+                            value="#{reporteSunatController.lstCompPago}" rows="30" 
+                            style="margin-bottom:20px; font-size: 11px"
                             paginator="true"
                             paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown} {Exporters}"
                             rowsPerPageTemplate="30,50">
@@ -123,15 +124,19 @@
                                 <h:outputText value="#{reporteSunatController.lstCompPago.indexOf(item) + 1}" />
                             </p:column>
 
-                            <p:column headerText="Tipo Documento" width="110">
+                            <p:column headerText="Operación" width="100">
+                                <h:outputText value="#{item.sic1docu.sic1sclaseeven.desSclaseeven}" />                                        
+                            </p:column>
+                            
+                            <p:column headerText="Tipo Documento" width="100">
                                 <h:outputText value="#{item.sic1docu.sic1stipodocu.desStipodocu}" />                                        
                             </p:column>
 
-                            <p:column headerText="Fecha Operación" width="100">
+                            <p:column headerText="Fecha Operación" width="90">
                                 <h:outputText value="#{item.sic1docu.fecDesde}" />
                             </p:column>
                             
-                            <p:column headerText="Nro. Comprobante" width="100" style="text-align: center; color: blue">
+                            <p:column headerText="Nro. Comprobante" width="90" style="text-align: center; color: blue">
                                 <h:commandLink value="#{item.sic1docu.codSerie} - #{item.sic1docu.numDocu}" action="#{reportController.verDetalleComprobante2(item.sic1docu)}"/>
                             </p:column>
                             
@@ -147,7 +152,7 @@
                                 <h:outputText value="#{item.sic1docufactsunat.desObse}" />
                             </p:column>
                             
-                            <p:column headerText="" width="190" exportable="false">
+                            <p:column headerText="" width="190" exportable="false" rendered="false">
                                 <h:commandButton value="Generar y Env. Facturador." rendered="#{item.sic1docufactsunat.indSitu == '03'?false:true}" styleClass="btn btn-primary"  >
                                     <f:ajax execute="dtOperaciones" render="@form" listener="#{reporteSunatController.generarArchivosFacturacionElect(item)}"/>
                                 </h:commandButton>

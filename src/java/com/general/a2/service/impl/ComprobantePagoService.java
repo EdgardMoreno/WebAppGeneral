@@ -12,6 +12,7 @@ import com.general.util.beans.ComprobantePagoDet;
 import com.general.util.beans.ComunicacionBaja;
 import com.general.util.beans.Constantes;
 import com.general.util.beans.UtilClass;
+import com.general.util.exceptions.ValidationException;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -93,18 +94,20 @@ public class ComprobantePagoService {
                 /********************************************************************************/
                 /**** CABECERA ******/
                 /********************************************************************************/
-                
+                String codExtension = "";
                 String nomComprobante = Constantes.CONS_NUM_RUC + "-" + 
                                         objComprobante.getSic1docu().getSic1stipodocu().getCodSunat() + "-" + 
                                         objComprobante.getSic1docu().getCodSerie() + "-" + 
                                         objComprobante.getSic1docu().getNumDocu();
                 
-                if(objComprobante.getSic1docu().getSic1sclaseeven().getCodSclaseeven().equals("VI_SICSCLASEEVENNOTACREDITO"))
-                    nomComprobante = nomComprobante + ".NOT";
+                if(objComprobante.getSic1docu().getSic1sclaseeven().getCodSclaseeven().equals(Constantes.COD_SCLASEEVEN_NOTACREDITO))
+                    codExtension = ".NOT";
+                else if(objComprobante.getSic1docu().getSic1sclaseeven().getCodSclaseeven().equals(Constantes.COD_SCLASEEVEN_VENTA))
+                    codExtension = ".CAB";
                 else
-                    nomComprobante = nomComprobante + ".CAB";
+                    throw new ValidationException("No se permite el tipo: " + objComprobante.getSic1docu().getSic1sclaseeven().getCodSclaseeven());
 
-                File archivo = new File(strRuta + nomComprobante);
+                File archivo = new File(strRuta + nomComprobante + codExtension);
 
                 //Crear objeto FileWriter que sera el que nos ayude a escribir sobre archivo
                 FileWriter escribir = new FileWriter(archivo, false);
@@ -117,6 +120,16 @@ public class ComprobantePagoService {
                 escribir.write(objComprobante.getNumDocUsuario()+ "|");
                 escribir.write(objComprobante.getRznSocialUsuario()+ "|");
                 escribir.write(objComprobante.getTipMoneda()+ "|");
+                
+                /*CAMPOS PARA NOTA DE CREDITO*/
+                if(objComprobante.getSic1docu().getSic1sclaseeven().getCodSclaseeven().equals(Constantes.COD_SCLASEEVEN_NOTACREDITO)){
+                    escribir.write(objComprobante.getCodMotivo()+ "|");
+                    escribir.write(objComprobante.getDesMotivo()+ "|");
+                    escribir.write(objComprobante.getTipDocAfectado()+ "|");
+                    escribir.write(objComprobante.getNumDocAfectado()+ "|");
+                }
+                /**/
+                
                 escribir.write(objComprobante.getSumTotTributos() + "|");
                 escribir.write(objComprobante.getSumTotValVenta() + "|");
                 escribir.write(objComprobante.getSumPrecioVenta()+ "|");
@@ -224,6 +237,7 @@ public class ComprobantePagoService {
                     escribir.write(objDet.getCodTriIGV()+ "|");
                     escribir.write(objDet.getNomTributoIgvItem()+ "|");
                     escribir.write(objDet.getCodTipTributoIgvItem()+ "|");
+                    escribir.write(objDet.getMtoBaseIgvItem()+ "|");
                     escribir.write(objDet.getMtoIgvItem()+ "|");
                     
                     escribir.close();

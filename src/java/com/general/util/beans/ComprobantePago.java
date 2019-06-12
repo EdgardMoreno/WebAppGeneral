@@ -24,6 +24,15 @@ public class ComprobantePago {
     private String numDocUsuario;
     private String rznSocialUsuario;
     private String tipMoneda;
+    
+    /*CAMPOS PARA UNA NOTA DE CREDITO*/
+    private String codMotivo;
+    private String desMotivo;
+    private String tipDocAfectado;
+    private String numDocAfectado;
+    
+    /**/
+    
     private Double sumTotTributos;
     private Double sumTotValVenta;
     private Double sumPrecioVenta;
@@ -110,6 +119,38 @@ public class ComprobantePago {
     public void setTipMoneda(String tipMoneda) {
         this.tipMoneda = tipMoneda;
     }
+
+    public String getCodMotivo() {
+        return codMotivo;
+    }
+
+    public void setCodMotivo(String codMotivo) {
+        this.codMotivo = codMotivo;
+    }
+
+    public String getDesMotivo() {
+        return desMotivo;
+    }
+
+    public void setDesMotivo(String desMotivo) {
+        this.desMotivo = desMotivo;
+    }
+
+    public String getTipDocAfectado() {
+        return tipDocAfectado;
+    }
+
+    public void setTipDocAfectado(String tipDocAfectado) {
+        this.tipDocAfectado = tipDocAfectado;
+    }
+
+    public String getNumDocAfectado() {
+        return numDocAfectado;
+    }
+
+    public void setNumDocAfectado(String numDocAfectado) {
+        this.numDocAfectado = numDocAfectado;
+    }    
 
     public Double getSumTotTributos() {
         return sumTotTributos;

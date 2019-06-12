@@ -206,7 +206,7 @@
                     </p:column>
                     
                     <p:column headerText="" width="20" style="padding: 1px;text-align: center" exportable="false">
-                        <h:commandLink onclick="return fnShowPopupAnularDocumento(#{item.idDocu})" rendered="#{item.desEstadocu=='ANULADO'?false:true}">
+                        <h:commandLink onclick="return fnShowPopupAnularDocumento(#{item.idDocu})" rendered="#{item.desEstadocu=='ANULADO' or item.codSclaseeven eq 'VI_SICSCLASEEVENNOTACREDITO'?false:true}">
                             <span class="glyphicon glyphicon-trash" data-toggle="tooltip" title="Anular"></span>
                         </h:commandLink>
                     </p:column>

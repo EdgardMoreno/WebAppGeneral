@@ -129,6 +129,14 @@ public class DaoComprobantePagoImpl {
                 objComprobante.setNumDocUsuario(rsConsulta.getString("numDocUsuario"));
                 objComprobante.setRznSocialUsuario(rsConsulta.getString("rznSocialUsuario"));
                 objComprobante.setTipMoneda(rsConsulta.getString("tipMoneda"));
+                
+                /*CAMPOS PARA NOTA DE CREDITO*/
+                objComprobante.setCodMotivo(rsConsulta.getString("codMotivo"));
+                objComprobante.setDesMotivo(rsConsulta.getString("desMotivo"));
+                objComprobante.setTipDocAfectado(rsConsulta.getString("tipDocAfectado"));
+                objComprobante.setNumDocAfectado(rsConsulta.getString("numDocAfectado"));
+                /**/
+                
                 objComprobante.setSumTotTributos(rsConsulta.getDouble("sumTotTributos"));
                 objComprobante.setSumTotValVenta(rsConsulta.getDouble("sumTotValVenta"));
                 objComprobante.setSumPrecioVenta(rsConsulta.getDouble("sumPrecioVenta"));

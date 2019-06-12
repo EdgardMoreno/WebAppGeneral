@@ -131,20 +131,20 @@ public class DaoReportImpl {
                 "             FROM SIC3DOCUPROD T1\n" +
                 "             JOIN SIC1DOCU S1 ON T1.ID_DOCU = S1.ID_DOCU  \n" +
                 "             JOIN SIC1PROD T3 ON T3.ID_PROD = T1.ID_PROD  \n" +
-                "             JOIN VI_SICSTIPOPROD V2 ON V2.ID_STIPOPROD = T3.ID_STIPOPROD\n" +
-                "             JOIN SIC1STIPODOCU T6 ON T6.ID_STIPODOCU = S1.ID_STIPODOCU\n" +
-                "             JOIN SIC3DOCUESTA RELESTA ON RELESTA.ID_DOCU = S1.ID_DOCU\n" +
-                "                                         AND TO_CHAR(RELESTA.FEC_HASTA,'DD/MM/YYYY') = '31/12/2400'  \n" +
-                "             JOIN VI_SICESTA ESTA ON ESTA.ID_ESTA = RELESTA.ID_ESTADOCU\n" +
-                "                                    AND ((ESTA.COD_ESTA = 'VI_SICESTAFINALIZADO' AND T6.COD_STIPODOCU IN ('VI_SICFACTURA','VI_SICBOLETA','VI_SICSINDOCU')))\n" +
+                "             JOIN VI_SICSTIPOPROD V2 ON V2.ID_STIPOPROD = T3.ID_STIPOPROD " +
+                "             JOIN SIC1STIPODOCU T6 ON T6.ID_STIPODOCU = S1.ID_STIPODOCU " +
+                "             JOIN SIC3DOCUESTA RELESTA ON RELESTA.ID_DOCU = S1.ID_DOCU " +
+                "                                         AND TO_CHAR(RELESTA.FEC_HASTA,'DD/MM/YYYY') = '31/12/2400'  " +
+                "             JOIN VI_SICESTA ESTA ON ESTA.ID_ESTA = RELESTA.ID_ESTADOCU " +
+                "                                    AND ((ESTA.COD_ESTA IN ('VI_SICESTAFINALIZADO','VI_SICESTAPORRECOGER') AND T6.COD_STIPODOCU IN ('VI_SICFACTURA','VI_SICBOLETA','VI_SICSINDOCU'))) " +
                 "             JOIN SIC1USUARIO USU ON USU.ID_USUARIO = S1.ID_PERS " +
                 "             JOIN SIC1SCLASEEVEN SCLASEEVEN ON SCLASEEVEN.ID_SCLASEEVEN = S1.ID_SCLASEEVEN" +
                 "             WHERE SCLASEEVEN.COD_SCLASEEVEN IN ('VI_SICSCLASEEVENVENTA','VI_SICSCLASEEVENNOTACREDITO') " +                           
                 "                   AND TO_NUMBER(TO_CHAR(S1.FEC_DESDE,'YYYYMM')) = " + numPeri + strFiltro +
                 " GROUP BY   CASE WHEN COD_STIPOPROD =  'VI_SICVINILCORTE' THEN 'VI_SICVINILCORTE' ELSE 'VI_SICPAPELTAPIZ' END " +
                 "           ,CASE WHEN V2.COD_STIPOPROD =  'VI_SICVINILCORTE' THEN 'VINIL CORTE' ELSE 'PAPEL TAPIZ' END  " +
-                "                      ,USU.COD_USUARIO " +
-                "                      ,S1.ID_PERS";
+                "                     ,USU.COD_USUARIO " +
+                "                     ,S1.ID_PERS";
                         
             statement = cnConexion.prepareCall( sql,
                                                 ResultSet.TYPE_SCROLL_SENSITIVE,

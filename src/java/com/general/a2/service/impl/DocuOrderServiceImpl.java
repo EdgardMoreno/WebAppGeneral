@@ -70,8 +70,8 @@ public class DocuOrderServiceImpl implements Serializable, DocumentService{
             
             /*VALIDAR SI ESTA HACIENDO UNA FACTURA PARA UNA PERSONA NATURAL CON DNI*/            
             String codTipoidenpersLocal = DaoFuncionesUtil.FNC_SICOBTCODGEN(((SessionImpl) session).connection()
-                                                                                , Constantes.CONS_COD_TIPOIDEN
-                                                                                , sic1docu.getSic1persexterno().getIdTipoiden());
+                                                                            , Constantes.CONS_COD_TIPOIDEN
+                                                                            , sic1docu.getSic1persexterno().getIdTipoiden());
 
             if (codTipoidenpersLocal.equals(Constantes.CONS_COD_TIPOIDEN_DNI) &&
                     objTipoComp.getCodStipodocu().equals(Constantes.CONS_COD_STIPODOCU_FACTURA))
@@ -89,24 +89,23 @@ public class DocuOrderServiceImpl implements Serializable, DocumentService{
                 intIdSClaseEven = DaoFuncionesUtil.FNC_SICOBTIDGEN(((SessionImpl) session).connection()
                                                                                 , Constantes.CONS_COD_SCLASEEVEN
                                                                                 , sic1docu.getSic1sclaseeven().getCodSclaseeven());
-                
                 sic1idendocu.getSic1docu().setIdSclaseeven(intIdSClaseEven);
-            }else
+                
+            }else{
                 intIdSClaseEven = sic1docu.getIdSclaseeven();
-            
+            }            
             
             /*Se valida si el tipo de documento seleccionado está configurado para que se autogenere un correlativo*/
             DaoMaestroCatalogoImpl objDaoMae = new DaoMaestroCatalogoImpl();
-            Integer flgAutogen = objDaoMae.obtConfigComprobante(sic1docu.getIdSclaseeven().intValue(), sic1docu.getIdStipodocu().intValue());                        
+            Integer flgAutogen = objDaoMae.obtConfigComprobante(sic1docu.getIdSclaseeven().intValue(), sic1docu.getIdStipodocu().intValue());
             
-            if( flgAutogen == 1){                
+            if( flgAutogen == 1){
                 flgComprobanteAutogenerado = true;
-            }           
-            
+            }            
             
             /*VALIDAR si se ha ingresado SERIE o NUMERO DE COMPROBANTE para un tipo de comprobante está configurado para 
             que se autogenere un correlativo*/
-            if(flgComprobanteAutogenerado && flgNuevaOrden){                
+            if(flgComprobanteAutogenerado && flgNuevaOrden){
 
                 String msg = "No se debe especificar SERIE o NUMERO DE COMPROBANTE para un(a) " + sic1docu.getSic1stipodocu().getDesStipodocu() + " ya que se autogenera.";
 
@@ -133,11 +132,10 @@ public class DocuOrderServiceImpl implements Serializable, DocumentService{
                 
             }else{
                 
-                /*Se valida si el tipo de comprobante seleccionado requiere que se ingrese LA SERIE Y COMPROBANTE o solo UN NUMERO DE OPERACION*/
-                
-                if(objTipoComp.getCodStipodocu().equals(Constantes.CONS_COD_STIPODOCU_FACTURA) || 
+                /*Se valida si el tipo de comprobante seleccionado requiere que se ingrese LA SERIE Y COMPROBANTE o solo UN NUMERO DE OPERACION*/                
+                if(objTipoComp.getCodStipodocu().equals(Constantes.CONS_COD_STIPODOCU_FACTURA) ||
                         objTipoComp.getCodStipodocu().equals(Constantes.CONS_COD_STIPODOCU_BOLETA) ||
-                            objTipoComp.getCodStipodocu().equals(Constantes.CONS_COD_STIPODOCU_NOTAPEDIDO) || 
+                            objTipoComp.getCodStipodocu().equals(Constantes.CONS_COD_STIPODOCU_NOTAPEDIDO) ||
                                     objTipoComp.getCodStipodocu().equals(Constantes.CONS_COD_STIPODOCU_NOTAVENTA)){
 
                     if ( sic1docu.getCodSerie() == null || sic1docu.getCodSerie().isEmpty() )
@@ -219,9 +217,14 @@ public class DocuOrderServiceImpl implements Serializable, DocumentService{
                 if(sic1docu.getSic1sclaseeven().getCodSclaseeven() != null && sic1docu.getSic1sclaseeven().getCodSclaseeven().equals(Constantes.COD_SCLASEEVEN_ORDENCOMPRA))
                     daoDocumentImpl.eliminarProductosXidDocu(session, new BigDecimal(strIdDocuResult));                
 
-            /*GUARDAR DETALLE DE PRODUCTOS*/         
+            /*GUARDAR DETALLE DE PRODUCTOS*/
 
-                daoDocumentImpl.relateDocuProd(session, new BigDecimal(strIdDocuResult), sic1docu.getLstSic3docuprod());
+                daoDocumentImpl.relateDocuProd(session, new BigDecimal(strIdDocuResult), sic1docu.getLstSic3docuprod());                
+                
+            /*ACTUALIZAR STOCK PRODUCTOS*/
+            
+                ProductServiceImpl objService = new ProductServiceImpl();
+                objService.actualizarStockPorRegistro(((SessionImpl) session).connection(), sic1docu, sic1docu.getLstSic3docuprod());
                 
             /*GUARDAR DOCUMENTO RELACIONADO. EJEMPLO: NOTA DE VENTA*/
                 if(sic1docu.getSic3docudocu() != null){
@@ -232,14 +235,15 @@ public class DocuOrderServiceImpl implements Serializable, DocumentService{
                     
                     sic1docu.getSic3docudocu().getId().setIdDocu(new BigDecimal(strIdDocuResult));
                     sic1docu.getSic3docudocu().getId().setIdTreladocu(intIdTRelaDocu);
-                    daoDocumentImpl.relateDocuDocu(session, sic1docu.getSic3docudocu());
+                    daoDocumentImpl.relateDocuDocu(session, sic1docu.getSic3docudocu());                    
+                   
 
                     /*Cambiando de estado "FINALIZADO" al documento relacionado*/
-                    relateDocuEsta( ((SessionImpl)session).connection()
-                                   ,sic1docu.getSic3docudocu().getId().getIdDocurel()
-                                   ,Constantes.CONS_COD_ESTADOCU_COMPROBANTE
-                                   ,Constantes.CONS_COD_ESTAFINALIZADO
-                                   ,null);
+                    this.relateDocuEsta( ((SessionImpl)session).connection()
+                                        ,sic1docu.getSic3docudocu().getId().getIdDocurel()
+                                        ,Constantes.CONS_COD_ESTADOCU_COMPROBANTE
+                                        ,Constantes.CONS_COD_ESTAFINALIZADO
+                                        ,null);
                     
                     /*Bloquear los productos de la OPERACION ORIGINAL que han sido DESCARGADOS con la NOTA DE CREDITO*/                    
                     if(sic1docu.getSic1sclaseeven().getCodSclaseeven().equals(Constantes.COD_SCLASEEVEN_NOTACREDITO)){
@@ -254,7 +258,8 @@ public class DocuOrderServiceImpl implements Serializable, DocumentService{
                                                         ,objDocuProd.getId().getNumItem());
                         }                            
                     }
-                }
+                }               
+
             
             /*GUARDAR RELACION DEL DOCUMENTO CON LA PERSONA(Cliente/Proveedor)*/
 //                BigDecimal idTipoRela = DaoFuncionesUtil.FNC_SICOBTIDGEN(((SessionImpl)session).connection(), Constantes.CONS_COD_TIPORELA, Constantes.CONS_COD_RELADOCUPERS);
@@ -315,6 +320,15 @@ public class DocuOrderServiceImpl implements Serializable, DocumentService{
         return result;
     }
     
+    /**
+     * METODO QUE PERMITE ANULAR UN DOCUMENTO
+     * @param objDocu
+     * @param codTrolestadocu
+     * @param codEstadocu
+     * @param desMotivo
+     * @throws ValidationException
+     * @throws Exception 
+     */
     public void anularDocumento( Sic1docu objDocu
                                 ,String codTrolestadocu
                                 ,String codEstadocu
@@ -326,9 +340,12 @@ public class DocuOrderServiceImpl implements Serializable, DocumentService{
             
             BigDecimal idDocu = objDocu.getIdDocu();
             
+            if(objDocu.getSic1sclaseeven().getCodSclaseeven().equals(Constantes.COD_SCLASEEVEN_NOTACREDITO))
+                throw new ValidationException("No se puede anular una NOTA DE CREDITO.");
+            
             cnConexion = ConexionBD.obtConexion();
             
-            /*Se verifica si el documento en consulta es documento secundario de algun documento principal*/
+            /*Se verifica si el documento en consulta es PADRE de algun otro documento */
             List<Sic3docudocu> list = daoDocumentImpl.obtDocusRelXidDocuRel(idDocu);
             for (Sic3docudocu obj :list ){
                 String codEstaDocu = daoDocumentImpl.getLastCodEstaDocu(cnConexion, obj.getId().getIdDocu());
@@ -336,18 +353,23 @@ public class DocuOrderServiceImpl implements Serializable, DocumentService{
                     
                     ViSicdocu objDatosDocu  = daoDocumentImpl.obtViSicdocu(obj.getId().getIdDocu());
                     
-                    throw new ValidationException("No se puede anular, primero anule el documento principal: " + objDatosDocu.getDesDocu() );
+                    throw new ValidationException("No se puede anular, primero anule el documento principal: " + objDatosDocu.getDesDocu());
                 }
-            }           
+            }
                         
-            /*Se anula documento en consulta*/            
+            /*Se anula documento en consulta*/
             this.relateDocuEsta(cnConexion, idDocu, codTrolestadocu, codEstadocu, desMotivo );
             
-            /*Se libera los documentos secundarios relacionados al documento en consulta*/
+            /*Se actualiza el stock de los productos relacionados*/
+            List<Sic3docuprod> lstProducts = daoDocumentImpl.obtProductosXidDocu(idDocu);
+            ProductServiceImpl objServiceProdu = new ProductServiceImpl();
+            objServiceProdu.actualizarStockPorAnulacion(cnConexion, objDocu, lstProducts);
+            
+            /*Se libera los documentos PADRE relacionados al documento en consulta*/
             list = daoDocumentImpl.obtDocusRelXidDocu(idDocu);
-            for (Sic3docudocu obj :list ){                
+            for (Sic3docudocu obj :list ){
                 this.relateDocuEsta(cnConexion, obj.getId().getIdDocurel(), codTrolestadocu, Constantes.CONS_COD_ESTAPORRECOGER, desMotivo );
-            }            
+            }
             
             /*Registrar documento en tabla de pendientes de envío a Sunat*/
             if(objDocu.getSic1stipodocu().getCodStipodocu().equals(Constantes.CONS_COD_STIPODOCU_FACTURA)){
@@ -452,8 +474,8 @@ public class DocuOrderServiceImpl implements Serializable, DocumentService{
                         
             daoDocumentImpl.relateDocuEsta(cnConexion, sic3docuesta);
             
-            DaoProductImpl objDaoProd = new DaoProductImpl();
-            objDaoProd.updateStock(cnConexion, idDocu.intValue());
+//            DaoProductImpl objDaoProd = new DaoProductImpl();
+//            objDaoProd.updateStock(cnConexion, idDocu.intValue());
             
             cnConexion.commit();
                        
@@ -499,12 +521,9 @@ public class DocuOrderServiceImpl implements Serializable, DocumentService{
             id.setIdDocu(idDocu);
             Sic3docuesta sic3docuesta = new Sic3docuesta();
             sic3docuesta.setId(id);
-            sic3docuesta.setDesNotas(desMotivo);
-                        
+            sic3docuesta.setDesNotas(desMotivo);                        
+           
             daoDocumentImpl.relateDocuEsta(cnConexion, sic3docuesta);
-            
-            DaoProductImpl objDaoProd = new DaoProductImpl();
-            objDaoProd.updateStock(cnConexion, idDocu.intValue());
                        
         }catch(Exception ex){
             throw new Exception(ex.getMessage());

@@ -7,6 +7,7 @@ package com.general.a3.dao.impl;
 
 import com.general.util.dao.DaoFuncionesUtil;
 import com.general.hibernate.entity.Sic1prod;
+import com.general.hibernate.relaentity.Sic3docuprod;
 import com.general.hibernate.relaentity.Sic3proddocu;
 import com.general.hibernate.views.ViSicprod;
 import com.general.util.beans.Constantes;
@@ -161,33 +162,51 @@ public class DaoProductImpl implements Serializable{
      * @param idDocu
      * @throws Exception 
      */
-    public void updateStock(Connection cnConexion, Integer idDocu) throws Exception{
+//    public void updateStock(Connection cnConexion, Integer idDocu) throws Exception{
+//        
+//        try{
+//            
+//            /*Si es venta, se suma; si es compra, se resta; si no se suma 0*/
+//
+//            String sql = 
+//                        "UPDATE SIC1PROD T0 " +
+//                        "       SET T0.NUM_CANTSTOCK = NUM_CANTSTOCK + (SELECT SUM(TMP1.NUM_CANTIDAD) * DECODE(TMPDOC.ID_SCLASEEVEN,1,-1,2,1,0) " +
+//                        "                                               FROM SIC3DOCUPROD TMP1 " +
+//                        "                                               JOIN SIC1DOCU TMPDOC ON TMPDOC.ID_DOCU = TMP1.ID_DOCU " +
+//                        "                                               WHERE TMP1.ID_DOCU = " + idDocu +" AND TMP1.ID_PROD = T0.ID_PROD " +
+//                        "                                               GROUP BY TMPDOC.ID_SCLASEEVEN  ) " +
+//                        "WHERE T0.ID_PROD IN (SELECT ID_PROD " +
+//                                            " FROM SIC3DOCUPROD TMP1 "
+//                                            + " JOIN SIC1DOCU TMP2 ON TMP1.ID_DOCU = TMP2.ID_DOCU "
+//                                            + " WHERE TMP2.ID_STIPODOCU <> 4 AND TMP1.ID_DOCU = " + idDocu+ ")";
+//
+//            System.out.println("sql:" + sql);
+//            CallableStatement statement = cnConexion.prepareCall(sql);
+//            statement.executeUpdate();
+//                 
+//        } catch (SQLException ex) {
+//            throw new Exception(ex.getMessage());
+//        }
+//        
+//    }   
+    
+    public void updateStock(Connection cnConexion, BigDecimal idProd, BigDecimal numCantidad) throws Exception{
         
         try{
-            
-            /*Si es venta, se suma; si es compra, se resta; si no se suma 0*/
 
             String sql = 
                         "UPDATE SIC1PROD T0 " +
-                        "       SET T0.NUM_CANTSTOCK = NUM_CANTSTOCK + (SELECT SUM(TMP1.NUM_CANTIDAD) * DECODE(TMPDOC.ID_SCLASEEVEN,1,-1,2,1,0) " +
-                        "                                               FROM SIC3DOCUPROD TMP1 " +
-                        "                                               JOIN SIC1DOCU TMPDOC ON TMPDOC.ID_DOCU = TMP1.ID_DOCU " +
-                        "                                               WHERE TMP1.ID_DOCU = " + idDocu +" AND TMP1.ID_PROD = T0.ID_PROD " +
-                        "                                               GROUP BY TMPDOC.ID_SCLASEEVEN  ) " +
-                        "WHERE T0.ID_PROD IN (SELECT ID_PROD " +
-                                            " FROM SIC3DOCUPROD TMP1 "
-                                            + " JOIN SIC1DOCU TMP2 ON TMP1.ID_DOCU = TMP2.ID_DOCU "
-                                            + " WHERE TMP2.ID_STIPODOCU <> 4 AND TMP1.ID_DOCU = " + idDocu+ ")";
-
-            System.out.println("sql:" + sql);
+                        "       SET NUM_CANTSTOCK = NVL(NUM_CANTSTOCK,0) + " + numCantidad +
+                        "WHERE T0.ID_PROD = " + idProd;
+           
             CallableStatement statement = cnConexion.prepareCall(sql);
             statement.executeUpdate();
-                 
+            
         } catch (SQLException ex) {
             throw new Exception(ex.getMessage());
         }
         
-    }        
+    }   
     
     /**
      * METODO QUE PERMITE BLOQUEAR UN PRODUCTO EN LA OPERACION DE VENTA ORIGINAL CUANDO ES DESCARGADO MEDIANTE UNA NOTA DE CREDITO
