@@ -11,12 +11,15 @@ import com.general.hibernate.entity.Sic1docu;
 import com.general.hibernate.entity.Sic1general;
 import com.general.hibernate1.Sic1docufacturadorsunat;
 import com.general.hibernate1.Sic1docufacturadorsunatId;
+import com.general.util.beans.ComprobantePago;
+import com.general.util.beans.ComunicacionBaja;
 import com.general.util.beans.Constantes;
 import com.general.util.beans.UtilClass;
 import com.general.util.dao.ConexionBD;
 import com.general.util.exceptions.CustomizerException;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -223,22 +226,19 @@ public class FacturadorSunatServiceImpl {
      * METODO QUE PERMITE REGISTRAR LA OPERACION EN LA TABLA "SIC1DOCUFACTURADORSUNAT" PARA LUEGO ENVIARLA A LA SUNAT
      * @param cnConexion
      * @param objDocu
-     * @param codTipoOpeSunat
+     * @param codProc
      * @throws Exception 
      */
-    public void registrarDocuPendienteEnvioSunat(Connection cnConexion, Sic1docu objDocu, String codTipoOpeSunat) throws Exception{
+    public void registrarDocuPendienteEnvioSunat(Connection cnConexion, Sic1docu objDocu, String codProc) throws Exception{
         
         try{
             
             /*GRABAR EN TABLA DE LA SUNAT SOLO LAS OPERACIONES DE TIPO VENTA Y LAS QUE TENGAN CODIGO DE SUNAT*/
             if((objDocu.getSic1sclaseeven().getCodSclaseeven().equals(Constantes.COD_SCLASEEVEN_VENTA) || 
-                    objDocu.getSic1sclaseeven().getCodSclaseeven().equals(Constantes.COD_SCLASEEVEN_NOTACREDITO)) &&
-                        (objDocu.getSic1stipodocu().getCodStipodocu().equals(Constantes.CONS_COD_STIPODOCU_FACTURA) ||
-                            objDocu.getSic1stipodocu().getCodStipodocu().equals(Constantes.CONS_COD_STIPODOCU_BOLETA)) &&
+                    objDocu.getSic1sclaseeven().getCodSclaseeven().equals(Constantes.COD_SCLASEEVEN_NOTACREDITO)) &&                        
                                 objDocu.getSic1stipodocu().getCodSunat() != null && 
-                                    !objDocu.getSic1stipodocu().getCodSunat().isEmpty()){
-            
-                String codProc = codTipoOpeSunat;                
+                                    !objDocu.getSic1stipodocu().getCodSunat().isEmpty()){            
+                
                 
                 Sic1docufacturadorsunatId objIdFact = new Sic1docufacturadorsunatId();
                 objIdFact.setCodProc(codProc);
@@ -280,9 +280,10 @@ public class FacturadorSunatServiceImpl {
             cnConexion = ConexionBD.obtConexion();
             
             /*GRABAR EN TABLA DE LA SUNAT SOLO LAS OPERACIONES DE TIPO VENTA Y LAS QUE TENGAN CODIGO DE SUNAT*/
-            if(objDocu.getSic1sclaseeven().getCodSclaseeven().equals(Constantes.COD_SCLASEEVEN_VENTA) && 
-                    objDocu.getSic1stipodocu().getCodSunat() != null && 
-                        !objDocu.getSic1stipodocu().getCodSunat().isEmpty()){
+            if((objDocu.getSic1sclaseeven().getCodSclaseeven().equals(Constantes.COD_SCLASEEVEN_VENTA) || 
+                    objDocu.getSic1sclaseeven().getCodSclaseeven().equals(Constantes.COD_SCLASEEVEN_NOTACREDITO)) && 
+                        objDocu.getSic1stipodocu().getCodSunat() != null && 
+                            !objDocu.getSic1stipodocu().getCodSunat().isEmpty()){
             
                 String codProc = codTipoOpeSunat;                
                 
@@ -310,6 +311,125 @@ public class FacturadorSunatServiceImpl {
             if(cnConexion != null)
                 cnConexion.close();
         }
+    }
+    
+    /**
+     * PROCEDIMIENTO QUE SINCRONIZA LOS DATOS DEL FACTURADOR SUNAT CON EL FACTURADOR SIC.
+     * @param lstCompPago
+     * @param codProc
+     * @return
+     * @throws Exception 
+     */
+    public int sincronizarCompPagoFacturadorSunat_FacturadorSic(List<ComprobantePago> lstCompPago, String codProc) throws Exception{
+     
+        int contador = 0;
+        
+        try{
+            
+                FacturadorSunatServiceImpl objFacturadorService = new FacturadorSunatServiceImpl();
+
+                /*4 Verificar por cada archivo si ya terminó de enviarse a la sunat*/
+                for(ComprobantePago objCom : lstCompPago){
+                    
+                    String codTipoDocu  = null;
+                    String numDocu      = objCom.getSic1docu().getCodSerie() + "-" + objCom.getSic1docu().getNumDocu();
+                    String numRuc       = objCom.getSic1docu().getSic1perscontribuyente().getCodIden();
+                    
+                    if(objCom.getSic1docu().getSic1sclaseeven().getCodSclaseeven().equals(Constantes.COD_SCLASEEVEN_NOTACREDITO))
+                        codTipoDocu = "07";
+                    else
+                        codTipoDocu = objCom.getSic1docu().getSic1stipodocu().getCodSunat();
+                    
+                    //Se obtiene los datos del comprobante que tiene en las TABLAS del FACTURADOR SUNAT
+                    Sic1docufacturadorsunat objDocFacturador = this.obtDatosComprobanteFacturadorSunat(  numRuc
+                                                                                                        ,numDocu
+                                                                                                        ,codTipoDocu );
+                    
+                    if( objDocFacturador.getNumDocu() != null ){
+                        
+                        /*Completamos los datos faltantes en la tabla SIC1DOCUFACTURADORSUNAT*/
+                        Sic1docufacturadorsunatId idFacturador = new Sic1docufacturadorsunatId();
+                        idFacturador.setCodProc(codProc);
+                        idFacturador.setIdDocu(objCom.getSic1docu().getIdDocu());
+                        objDocFacturador.setId(idFacturador);
+                        
+                        //Actualizando los datos
+                        List<Sic1docufacturadorsunat> lsttemp = new ArrayList<>();
+                        lsttemp.add(objDocFacturador);
+                        objFacturadorService.creaDocuFacturadorSunat(lsttemp);
+                        
+                        contador++;
+                    }
+                }
+                
+                /*  01 -> Por Generar XML
+                    02 -> XML Generado
+                    03 -> Enviado y Aceptado SUNAT
+                    06 -> Con Errores
+                */
+                
+        }catch(Exception ex){
+            throw new Exception(ex.getMessage());
+        }
+        
+        return contador;
+    }
+    
+    /**
+     * PROCEDIMIENTO QUE SINCRONIZA LOS DATOS DEL FACTURADOR SUNAT CON EL FACTURADOR SIC.
+     * @param lstComunicBaja
+     * @param codProc
+     * @return
+     * @throws Exception 
+     */
+    public int sincronizarComunicBajaFacturadorSunat_FacturadorSic(List<ComunicacionBaja> lstComunicBaja, String codProc) throws Exception{
+     
+        int contador = 0;
+        
+        try{
+            
+                FacturadorSunatServiceImpl objFacturadorService = new FacturadorSunatServiceImpl();
+
+                /*4 Verificar por cada archivo si ya terminó de enviarse a la sunat*/
+                for(ComunicacionBaja objCom : lstComunicBaja){
+                    
+                    String numRuc       = objCom.getSic1docu().getSic1perscontribuyente().getCodIden();
+                    String numDocu      = objCom.getSic1docu().getCodSerie() + "-" + objCom.getSic1docu().getNumDocu();                    
+                    String codTipoDocu  = "RA";
+                    
+                    //Se obtiene los datos del comprobante que tiene en las TABLAS del FACTURADOR SUNAT
+                    Sic1docufacturadorsunat objDocFacturador = this.obtDatosComprobanteFacturadorSunat(  numRuc
+                                                                                                        ,numDocu
+                                                                                                        ,codTipoDocu );
+                    
+                    if( objDocFacturador.getNumDocu() != null ){
+                        
+                        /*Completamos los datos faltantes en la tabla SIC1DOCUFACTURADORSUNAT*/
+                        Sic1docufacturadorsunatId idFacturador = new Sic1docufacturadorsunatId();
+                        idFacturador.setCodProc(codProc);
+                        idFacturador.setIdDocu(objCom.getSic1docu().getIdDocu());
+                        objDocFacturador.setId(idFacturador);
+
+                        //Actualizando los datos
+                        List<Sic1docufacturadorsunat> lsttemp = new ArrayList<>();
+                        lsttemp.add(objDocFacturador);
+                        objFacturadorService.creaDocuFacturadorSunat(lsttemp);
+
+                        contador++;
+                    }
+                }
+                
+                /*  01 -> Por Generar XML
+                    02 -> XML Generado
+                    03 -> Enviado y Aceptado SUNAT
+                    06 -> Con Errores
+                */
+                
+        }catch(Exception ex){
+            throw new Exception(ex.getMessage());
+        }
+        
+        return contador;
     }
     
     

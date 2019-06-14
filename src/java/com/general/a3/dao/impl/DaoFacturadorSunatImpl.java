@@ -314,14 +314,17 @@ public class DaoFacturadorSunatImpl {
             if( objFacturador.getFecHasta()!= null && objFacturador.getFecHasta().length() > 0)
                 sql += " AND TO_NUMBER(TO_CHAR(TRUNC(FEC_ENVI),'YYYYMMDD')) <= " + UtilClass.convertSringToNumber_YYYYMMDD(objFacturador.getFecHasta());
                 
+            sql += " ORDER BY ID_DOCU DESC";
             
             PreparedStatement st = cnConexion.prepareStatement(sql);
             rsConsulta = st.executeQuery();
             
             while(rsConsulta.next()){
             
-                Sic1docufacturadorsunat obj = new Sic1docufacturadorsunat();
+                Sic1docufacturadorsunatId id = new Sic1docufacturadorsunatId();
+                id.setCodProc(rsConsulta.getString("COD_PROC"));
                 
+                Sic1docufacturadorsunat obj = new Sic1docufacturadorsunat();
                 obj.setNumRuc(rsConsulta.getString("NUM_RUC"));
                 obj.setTipDocu(rsConsulta.getString("DES_TIPDOCU"));
                 obj.setNumDocu(rsConsulta.getString("NUM_DOCU"));                
@@ -334,6 +337,8 @@ public class DaoFacturadorSunatImpl {
                 obj.setDesSitu(rsConsulta.getString("DES_SITU"));
                 obj.setTipArch(rsConsulta.getString("TIP_ARCH"));
                 obj.setFirmDigital(rsConsulta.getString("FIRM_DIGITAL"));
+                obj.setId(id);
+                
                 lstResult.add(obj);
                                  
              }

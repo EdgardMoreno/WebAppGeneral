@@ -342,6 +342,8 @@ public class DocuOrderServiceImpl implements Serializable, DocumentService{
             
             if(objDocu.getSic1sclaseeven().getCodSclaseeven().equals(Constantes.COD_SCLASEEVEN_NOTACREDITO))
                 throw new ValidationException("No se puede anular una NOTA DE CREDITO.");
+            if(objDocu.getSic1stipodocu().getCodStipodocu().equals(Constantes.CONS_COD_STIPODOCU_BOLETA))
+                throw new ValidationException("No se permite anular BOLETAS, registre una NOTA DE CREDITO.");
             
             cnConexion = ConexionBD.obtConexion();
             
@@ -372,10 +374,10 @@ public class DocuOrderServiceImpl implements Serializable, DocumentService{
             }
             
             /*Registrar documento en tabla de pendientes de envío a Sunat*/
-            if(objDocu.getSic1stipodocu().getCodStipodocu().equals(Constantes.CONS_COD_STIPODOCU_FACTURA)){
-                FacturadorSunatServiceImpl objFacturador = new FacturadorSunatServiceImpl();
-                objFacturador.registrarDocuPendienteEnvioSunat(cnConexion, objDocu, Constantes.CONS_COD_TIPO_OPE_SUNAT_COMUNIC_BAJA);
-            }
+//            if(objDocu.getSic1stipodocu().getCodStipodocu().equals(Constantes.CONS_COD_STIPODOCU_FACTURA)){
+//                FacturadorSunatServiceImpl objFacturador = new FacturadorSunatServiceImpl();
+//                objFacturador.registrarDocuPendienteEnvioSunat(cnConexion, objDocu, Constantes.CONS_COD_TIPO_OPE_SUNAT_COMUNIC_BAJA);
+//            }
             
             cnConexion.commit();
         

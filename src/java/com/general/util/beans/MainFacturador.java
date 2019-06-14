@@ -34,7 +34,7 @@ public class MainFacturador {
         if(false){
             
             ComprobantePagoService objService = new ComprobantePagoService();
-            List<ComprobantePago> lstCompPago = objService.listarComprobantesPendienteEnvio(null, null, null);            
+            List<ComprobantePago> lstCompPago = objService.listarComprobantesPendienteEnvio(null);            
             
             /*1) Limpia la BD y los Directorios del Facturador: DATA,ENVIO,FIRMA,RPTA*/
             FacturadorSunatServiceImpl objFacturador = new FacturadorSunatServiceImpl();
@@ -49,7 +49,7 @@ public class MainFacturador {
         if(false){
             
             ComprobantePagoService objService = new ComprobantePagoService();
-            List<ComprobantePago> lstCompPago = objService.listarComprobantesPendienteEnvio(null, null, null);
+            List<ComprobantePago> lstCompPago = objService.listarComprobantesPendienteEnvio(null);
             FacturadorSunatServiceImpl objServiceFacturador = new FacturadorSunatServiceImpl();
             objServiceFacturador.limpiarBDyDirectoriosFacturador();
         }
@@ -58,7 +58,7 @@ public class MainFacturador {
         if(false){
             
             ComprobantePagoService objService = new ComprobantePagoService();
-            List<ComprobantePago> lstCompPago = objService.listarComprobantesPendienteEnvio(null, null, null);            
+            List<ComprobantePago> lstCompPago = objService.listarComprobantesPendienteEnvio( null);            
             
             /*1) Limpia la BD y los Directorios del Facturador: DATA,ENVIO,FIRMA,RPTA*/
             FacturadorSunatServiceImpl objFacturador = new FacturadorSunatServiceImpl();
@@ -88,7 +88,7 @@ public class MainFacturador {
         try{
             
             ComprobantePagoService objService = new ComprobantePagoService();
-            List<ComprobantePago> lstCompPago = objService.listarComprobantesPendienteEnvio(null, null, null);
+            List<ComprobantePago> lstCompPago = objService.listarComprobantesPendienteEnvio(null);
             
             if(lstCompPago != null && lstCompPago.size() > 0){                              
                 

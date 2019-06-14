@@ -41,13 +41,15 @@ public class DaoComprobantePagoImpl {
      * @return 
      * @throws java.lang.Exception
      */
-    public List<ComprobantePago> objDatosFacturacion(String fecDesde, String fecHasta, Integer idDocu ) throws Exception{
+    public List<ComprobantePago> objDatosFacturacion(Integer idDocu ) throws Exception{
         
         StoredProcedure Sp = null;
         ResultSet rsConsulta = null;
         List<ComprobantePago> lstCompPagos = new ArrayList<>();
         boolean lSiguiente = false;
         Connection cnConexion = null;
+        String fecDesde = null;
+        String fecHasta = null;
 
         try{
             
@@ -219,13 +221,15 @@ public class DaoComprobantePagoImpl {
      * @return 
      * @throws java.lang.Exception
      */
-    public List<ComunicacionBaja> objDatosComunicacionBaja(Integer idDocu, Integer fecDesde, Integer fecHasta) throws Exception{
+    public List<ComunicacionBaja> objDatosComunicacionBaja(Integer idDocu) throws Exception{
         
-        StoredProcedure Sp = null;
+        StoredProcedure Sp   = null;
         ResultSet rsConsulta = null;
         List<ComunicacionBaja> lstComunicPagos = new ArrayList<>();        
         
         Connection cnConexion = null;
+        Integer fecDesde      = 0;
+        Integer fecHasta      = 0;
         
         try{
             

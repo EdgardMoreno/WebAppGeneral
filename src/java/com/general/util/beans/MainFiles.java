@@ -39,7 +39,7 @@ public class MainFiles {
             //Imprimir la factura electronica
             ComprobantePagoService objService = new ComprobantePagoService();
             //objService.generarArchivosFacturacion(2247,null,null);
-            objService.listarComprobantesPendienteEnvio(null, null, null);
+            objService.listarComprobantesPendienteEnvio(null);
             System.out.println("fin");
         }catch(Exception ex){
             System.out.println("Error:" + ex.getMessage());

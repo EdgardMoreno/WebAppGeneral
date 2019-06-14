@@ -136,7 +136,7 @@ public class ReporteSunatController implements Serializable{
         try{
             
             ComprobantePagoService objService = new ComprobantePagoService();
-            this.lstCompPago = objService.listarComprobantesPendienteEnvio(this.strFecDesde, this.strFecHasta, null);
+            this.lstCompPago = objService.listarComprobantesPendienteEnvio(null);
             
             if(lstCompPago.isEmpty())
                 UtilClass.addWarnMessage("No hay documentos pendientes de envío.");
@@ -151,7 +151,7 @@ public class ReporteSunatController implements Serializable{
         try{
             
             ComprobantePagoService objService = new ComprobantePagoService();
-            this.lstComunicBaja = objService.listarComunicBajaPendienteEnvio(null, null, null);
+            this.lstComunicBaja = objService.listarComunicBajaPendienteEnvio(null);
             
         }catch(Exception ex){
             throw new Exception(ex.getMessage());
@@ -175,51 +175,37 @@ public class ReporteSunatController implements Serializable{
      */
     public void generarArchivosFacturacionElect(ComprobantePago objComPago) throws Exception{
      
-        try{
+        List<ComprobantePago> lstCompPagoFiltrado = new ArrayList<>();
+        
+        try{            
             
-            int contadorBandeja = 0;
-            
-            /*Para procesar, se obtiene la información actualizada de los comprobantes.*/
-            this.obtenerResultadoDesdeFacturador();
-//            ComprobantePagoService objService = new ComprobantePagoService();
-//            this.lstCompPago = objService.listarComprobantesPendienteEnvio(this.strFecDesde, this.strFecHasta, null);
-            
-            List<ComprobantePago> lstComPagoTemp = new ArrayList<>();
-//            if(objComPago != null){
-//                lstComPagoTemp.add(objComPago);                
-//                contadorBandeja = 1; //Si un comprobante se ejecuta de manera individual, se setea valor 1 para evitar que se limpie toda la bandeja del FACTURADOR
-//            }
-//            else
-//                lstComPagoTemp = this.lstCompPago;
-            
-            lstComPagoTemp = this.lstCompPago;
-            
-            FacturadorSunatServiceImpl objFacturadorService = new FacturadorSunatServiceImpl();
-            int contador = 0;
-            
-            if(!lstComPagoTemp.isEmpty()){
+            if(!this.lstCompPago.isEmpty()){
                 
-                //Se limpia la bandeja del FACTURADOR siempre y cuando no se haya seleccionado un archivo en particular.
-                if(objComPago == null){
+                int contadorBandeja = 0;            
 
-                    /*Se evalúa si el listado de los documentos serán procesados por primera vez, si es asi, se limpia toda 
-                        la bandeja del FACTURADOR.
-                    */                
-                    for(ComprobantePago obj: lstComPagoTemp){
-                        if(obj.getSic1docufactsunat() != null && obj.getSic1docufactsunat().getIndSitu() != null){
-                            contadorBandeja++;
-                        }
+                /*Se obtiene nuevamente los datos actualizados*/
+                ComprobantePagoService objService = new ComprobantePagoService();
+                List<ComprobantePago> lstCompPagoLocal = objService.listarComprobantesPendienteEnvio(null);
+
+                /*Se actualiza la informacion en el FACTURADOR SIC*/
+                FacturadorSunatServiceImpl objFacturadorService = new FacturadorSunatServiceImpl();
+                int cantRegistradosActualizados = objFacturadorService.sincronizarCompPagoFacturadorSunat_FacturadorSic(lstCompPagoLocal, Constantes.CONS_COD_TIPO_OPE_SUNAT_GENE_COMPROB_ELECT);
+                
+                if(cantRegistradosActualizados > 0)
+                    lstCompPagoLocal = objService.listarComprobantesPendienteEnvio(null);                
+                
+                /*Se limpia la bandeja del facturador*/
+                for(ComprobantePago obj: lstCompPagoLocal){
+                    if(obj.getSic1docufactsunat() != null && obj.getSic1docufactsunat().getIndSitu() != null){
+                        contadorBandeja++;
                     }
-                    if(contadorBandeja==0)
-                        objFacturadorService.limpiarBDyDirectoriosFacturador();
-                    //
                 }
+                if(contadorBandeja==0)
+                    objFacturadorService.limpiarBDyDirectoriosFacturador();
+                /**/    
                 
-                List<Sic1docufacturadorsunat> lstFacturador = new ArrayList<>();                
-                
-                List<ComprobantePago> lstComPagoFiltrado = new ArrayList<>();
-                
-                for(ComprobantePago objItem : lstComPagoTemp){
+                int contador = 0;
+                for(ComprobantePago objItem : lstCompPagoLocal){
                     
                     Sic1docufacturadorsunat objFacturadorLocal = objItem.getSic1docufactsunat();
                     
@@ -232,39 +218,23 @@ public class ReporteSunatController implements Serializable{
                         if(objFacturadorLocal.getIndSitu() != null && contadorBandeja > 0)
                             objFacturadorService.limpiarBDyDirectoriosFacturador(objFacturadorLocal);
 
-                        /*2) Grabar archivos a procesar en en tabla SIC1DOCUFACTURADORSUNAT*/
-                        System.out.println("2) Grabar archivos a procesar en la tabla SIC1DOCUFACTURADORSUNAT");
-                        Sic1docufacturadorsunatId objIdFact = new Sic1docufacturadorsunatId();
-                        objIdFact.setCodProc(Constantes.CONS_COD_TIPO_OPE_SUNAT_GENE_COMPROB_ELECT);
-                        objIdFact.setIdDocu(objItem.getSic1docu().getIdDocu());
-
-                        Sic1docufacturadorsunat objFact = new Sic1docufacturadorsunat();
-                        objFact.setNumRuc(Constantes.CONS_NUM_RUC);
-                        objFact.setNumDocu(objItem.getSic1docu().getCodSerie() + "-" + objItem.getSic1docu().getNumDocu());
-                        //objFact.setFlgActivo(new BigDecimal(1));
-                        objFact.setId(objIdFact);
-
-                        lstFacturador.add(objFact);
-                        lstComPagoFiltrado.add(objItem);
-                        
+                        /*Se agrega solo los que aun no se han enviado a la SUNAT*/
+                        lstCompPagoFiltrado.add(objItem);                                
+                                
                         contador++;
-                    }                                        
-                }
-                
-                objFacturadorService.creaDocuFacturadorSunat(lstFacturador);
+                    }
+                }                
                 
                 /*3) Generar archivos de texto*/
-                if(!lstComPagoFiltrado.isEmpty()){
-                    System.out.println("3) Generar archivos de texto");
-                    ComprobantePagoService objService = new ComprobantePagoService();
-                    objService.generarArchivosFacturacion(lstComPagoFiltrado);
+                if(!lstCompPagoFiltrado.isEmpty()){
+                    objService.generarArchivosFacturacion(lstCompPagoFiltrado);
                 }
                                
                 if(contador == 0){
                     UtilClass.addInfoMessage("No hay archivos pendientes para procesar.");
                 }else{
+                    this.lstCompPago = objService.listarComprobantesPendienteEnvio(null);
                     UtilClass.addInfoMessage("Se envió " + contador + " archivo(s) para procesar.");
-                    this.listarComprobantesPendienteEnvio();
                 }
 
             }else
@@ -282,61 +252,24 @@ public class ReporteSunatController implements Serializable{
     public void obtenerResultadoDesdeFacturador() throws Exception{
      
         try{
-            
-            if(this.lstCompPago != null && this.lstCompPago.size() > 0){
-               
-                FacturadorSunatServiceImpl objFacturadorService = new FacturadorSunatServiceImpl();
-                int contador = 0;
+            if(!this.lstCompPago.isEmpty()){
                 
-                /*4 Verificar por cada archivo si ya terminó de enviarse a la sunat*/
-                for(ComprobantePago objCom : this.lstCompPago){
-                    
-                    String numDocu = objCom.getSic1docu().getCodSerie() + "-" + objCom.getSic1docu().getNumDocu();
-                    String numRuc = objCom.getSic1docu().getSic1perscontribuyente().getCodIden();
-                    
-                    //Se obtiene los datos del comprobante que tiene en las TABLAS del FACTURADOR SUNAT
-                    Sic1docufacturadorsunat objDocu = objFacturadorService.obtDatosComprobanteFacturadorSunat(numRuc
-                                                                                                             ,numDocu
-                                                                                                             ,objCom.getSic1docu().getSic1stipodocu().getCodSunat());
-                    
-                    System.out.println("Documento:" + objDocu.getNumDocu());
-                    
-                    if( objDocu.getNumDocu() != null ){
-                        
-                        /*Completamos los datos faltantes en la tabla SIC1DOCUFACTURADORSUNAT*/
-//                        Sic1docufacturadorsunatId idFacturador = new Sic1docufacturadorsunatId();
-//                        idFacturador.setCodProc(Constantes.CONS_COD_TIPO_OPE_SUNAT_GENE_COMPROB_ELECT);
-//                        idFacturador.setIdDocu(objCom.getSic1docu().getIdDocu());
-//                        objDocu.setId(idFacturador);
-//                        
-//                        //Actualizando los datos
-//                        List<Sic1docufacturadorsunat> lsttemp = new ArrayList<>();
-//                        lsttemp.add(objDocu);
-//                        objFacturadorService.creaDocuFacturadorSunat(lsttemp);
-                        
-                        FacturadorSunatServiceImpl objFacturadorServ = new FacturadorSunatServiceImpl();
-                        objFacturadorServ.registrarDocuPendienteEnvioSunat(objCom.getSic1docu(), Constantes.CONS_COD_TIPO_OPE_SUNAT_GENE_COMPROB_ELECT);
-                        
-                        contador++;
-                    }                                        
-                }
-                
-                /*  01 -> Por Generar XML
-                    02 -> XML Generado
-                    03 -> Enviado y Aceptado SUNAT
-                    06 -> Con Errores
-                */               
-                
-                /*Actualizando la pantalla*/
-                this.listarComprobantesPendienteEnvio();
-                
-                if(contador == 0)
+                /*Se obtiene nuevamente los datos actualizados*/
+                ComprobantePagoService objService = new ComprobantePagoService();
+                List<ComprobantePago> lstCompPagoLocal = objService.listarComprobantesPendienteEnvio(null);
+
+                FacturadorSunatServiceImpl objFacturadorService = new FacturadorSunatServiceImpl();                    
+                int cantRegistradosActualizados = objFacturadorService.sincronizarCompPagoFacturadorSunat_FacturadorSic(lstCompPagoLocal, Constantes.CONS_COD_TIPO_OPE_SUNAT_GENE_COMPROB_ELECT);
+
+                if(cantRegistradosActualizados == 0)
                     UtilClass.addInfoMessage("No se encontraron actualizaciones.");
                 else
                     UtilClass.addInfoMessage("Datos actualizados correctamente.");
 
+                this.lstCompPago = objService.listarComprobantesPendienteEnvio(null);
+                
             }else
-                UtilClass.addErrorMessage("No existen registros para procesar.");
+                UtilClass.addWarnMessage("No hay datos para procesar.");
             
         }catch(Exception ex){
             throw new Exception(ex.getMessage());
@@ -353,7 +286,7 @@ public class ReporteSunatController implements Serializable{
             int contador = 0;
             FacturadorSunatServiceImpl objFacturadorService = new FacturadorSunatServiceImpl();
             
-            if(!this.lstCompPago.isEmpty()){                
+            if(!this.lstCompPago.isEmpty()){
                 
                 for(ComprobantePago objCom : this.lstCompPago){
                     
@@ -370,7 +303,7 @@ public class ReporteSunatController implements Serializable{
                         
                         contador++;
                     }
-                }                
+                }
                 
                 if(contador == 0){
                     UtilClass.addWarnMessage("No hay archivos pendientes para generar copia de seguridad.");
@@ -378,9 +311,7 @@ public class ReporteSunatController implements Serializable{
                     UtilClass.addInfoMessage("Se generó COPIA DE SEGURIDAD de " + contador + " archivos.");  
                     this.listarComprobantesPendienteEnvio();
                 }
-                    
-                
-                
+                                
             }else
                 UtilClass.addErrorMessage("No existen registros para procesar.");
                         
@@ -484,50 +415,84 @@ public class ReporteSunatController implements Serializable{
             
             if(this.lstComunicBaja != null && this.lstComunicBaja.size() > 0){
                 
-                this.obtenerResultadoComunicBajaDesdeFacturador();
+                /*Se obtiene nuevamente los datos actualizados*/
+                ComprobantePagoService objService = new ComprobantePagoService();
+                List<ComunicacionBaja> lstComunicBajaLocal = objService.listarComunicBajaPendienteEnvio(null);
                 
-                 /*Se evalúa si el listado de los documentos serán procesados por primera vez, si es asi, se limpia toda 
-                        la bandeja del FACTURADOR.
-                */                
+                /*Se actualiza la informacion en el FACTURADOR SIC*/
+                FacturadorSunatServiceImpl objFacturadorService = new FacturadorSunatServiceImpl();                    
+                int cantRegistradosActualizados = objFacturadorService.sincronizarComunicBajaFacturadorSunat_FacturadorSic(lstComunicBajaLocal, Constantes.CONS_COD_TIPO_OPE_SUNAT_COMUNIC_BAJA);
+                
+                if (cantRegistradosActualizados > 0)
+                    lstComunicBajaLocal = objService.listarComunicBajaPendienteEnvio(null);
+
                 int contadorBandeja = 0;
-                
-                for(ComunicacionBaja obj: lstComunicBaja){
+                  /*Se limpia la bandeja del facturador*/
+                for(ComunicacionBaja obj: lstComunicBajaLocal){
                     if(obj.getSic1docufactsunat() != null && obj.getSic1docufactsunat().getIndSitu() != null){
                         contadorBandeja++;
                     }
                 }
-                if(contadorBandeja == 0){
-                    FacturadorSunatServiceImpl objFacturadorService = new FacturadorSunatServiceImpl();
+                if(contadorBandeja==0)
                     objFacturadorService.limpiarBDyDirectoriosFacturador();
-                }
-                //
+                /**/    
                 
-                List<ComunicacionBaja> lstComPagoFiltrado = new ArrayList<>();
                 int contador = 0;
-                for(ComunicacionBaja objItem : this.lstComunicBaja){
+                List<ComunicacionBaja> lstCompPagoFiltrado = new ArrayList<>();
+                for(ComunicacionBaja objItem : lstComunicBajaLocal){
                     
                     Sic1docufacturadorsunat objFacturadorLocal = objItem.getSic1docufactsunat();
                     
                     /*Solo se procesa los comprobantes pendientes de envío*/
-                    if( objFacturadorLocal.getIndSitu() == null || !objFacturadorLocal.getIndSitu().equals(Constantes.CONS_ESTA_SUNAT_IND_SITU_ENVIADO_ACEPTADO)){ //03 -> Enviado y Aceptado SUNAT
-                        lstComPagoFiltrado.add(objItem);
+                    if( objFacturadorLocal.getIndSitu() == null || 
+                            !objFacturadorLocal.getIndSitu().equals(Constantes.CONS_ESTA_SUNAT_IND_SITU_ENVIADO_ACEPTADO)){ //03 -> Enviado y Aceptado SUNAT
+
+                        /*1) Limpia la BD y los Directorios del Facturador: DATA,ENVIO,FIRMA,RPTA*/
+                        System.out.println("1) Limpia la BD y los Directorios del Facturador: DATA,ENVIO,FIRMA,RPTA");
+                        if(objFacturadorLocal.getIndSitu() != null && contadorBandeja > 0)
+                            objFacturadorService.limpiarBDyDirectoriosFacturador(objFacturadorLocal);
+
+                        /*Se agrega solo los que aun no se han enviado a la SUNAT*/
+                        lstCompPagoFiltrado.add(objItem);                                
+                                
                         contador++;
                     }
-                }
-            
-                ComprobantePagoService objService = new ComprobantePagoService();
-                objService.generarArchivoComunicBaja(lstComPagoFiltrado);                
+                }          
                 
-
+                List<Sic1docufacturadorsunat> lstFacturaSunat = new ArrayList<>();
+                for(ComunicacionBaja objItem : lstCompPagoFiltrado){                   
+                    
+                    Sic1docufacturadorsunatId idFacturador = new Sic1docufacturadorsunatId();
+                    idFacturador.setCodProc( Constantes.CONS_COD_TIPO_OPE_SUNAT_COMUNIC_BAJA);
+                    idFacturador.setIdDocu(objItem.getSic1docu().getIdDocu());
+                    
+                    Sic1docufacturadorsunat objFacturador = new Sic1docufacturadorsunat();
+                    objFacturador.setTipDocu("RA");
+                    objFacturador.setNumDocu("RA");
+                    
+                    lstFacturaSunat.add(objFacturador);
+                }
+                
+                /*Registrar documentos a anular*/
+                FacturadorSunatServiceImpl objFacturador = new FacturadorSunatServiceImpl();
+                objFacturador.creaDocuFacturadorSunat(lstFacturaSunat);                
+                
+                
+                /*3) Generar archivos de texto*/
+                if(!lstCompPagoFiltrado.isEmpty()){
+                    objService.generarArchivoComunicBaja(lstCompPagoFiltrado);
+                }
+                               
                 if(contador == 0){
                     UtilClass.addInfoMessage("No hay archivos pendientes para procesar.");
                 }else{
+                    this.lstComunicBaja = objService.listarComunicBajaPendienteEnvio(null);
                     UtilClass.addInfoMessage("Se envió " + contador + " archivo(s) para procesar.");
-                    this.listarComprobantesPendienteEnvio();
-                }
+                }              
                 
-            }else
-                UtilClass.addErrorMessage("No existen registros para procesar.");
+            }else{
+                UtilClass.addWarnMessage("No hay datos para procesar.");
+            }
             
         }catch(Exception ex){
             throw new Exception(ex.getMessage());
@@ -538,47 +503,20 @@ public class ReporteSunatController implements Serializable{
      * METODO QUE SINCRONIZA LA TABLA DEL FACTURADOR CON LA TABLA DEL SISTEMA DE VENTAS
      * @throws Exception 
      */
-    public void obtenerResultadoComunicBajaDesdeFacturador() throws Exception{
+    public void sincronizarComunicBajaFacturadorSunat_FacturadorSic() throws Exception{
      
         try{
             
             if(this.lstComunicBaja != null && this.lstComunicBaja.size() > 0){
                
-                FacturadorSunatServiceImpl objFacturadorService = new FacturadorSunatServiceImpl();
-                int contador = 0;
+                  /*Se obtiene nuevamente los datos actualizados*/
+                ComprobantePagoService objService = new ComprobantePagoService();
+                List<ComunicacionBaja> lstComunicBajaLocal = objService.listarComunicBajaPendienteEnvio(null);
                 
-                /*4 Verificar por cada archivo si ya terminó de enviarse a la sunat*/
-                for(ComunicacionBaja objCom : this.lstComunicBaja){
-                    
-                    String numDocu = objCom.getSic1docu().getCodSerie() + "-" + objCom.getSic1docu().getNumDocu();
-                    String numRuc = objCom.getSic1docu().getSic1perscontribuyente().getCodIden();
-                    
-                    //Se obtiene los datos del comprobante que tiene en las TABLAS del FACTURADOR SUNAT
-                    Sic1docufacturadorsunat objDocu = objFacturadorService.obtDatosComprobanteFacturadorSunat(numRuc
-                                                                                                             ,numDocu
-                                                                                                             ,objCom.getSic1docu().getSic1stipodocu().getCodSunat());
-                    
-                    System.out.println("Documento:" + objDocu.getNumDocu());
-                    
-                    if( objDocu.getNumDocu() != null ){
-                        
-                        /*Completamos los datos faltantes en la tabla SIC1DOCUFACTURADORSUNAT*/
-//                        Sic1docufacturadorsunatId idFacturador = new Sic1docufacturadorsunatId();
-//                        idFacturador.setCodProc(Constantes.CONS_COD_TIPO_OPE_SUNAT_COMUNIC_BAJA);
-//                        idFacturador.setIdDocu(objCom.getSic1docu().getIdDocu());
-//                        objDocu.setId(idFacturador);
-//                        
-//                        //Actualizando los datos
-//                        List<Sic1docufacturadorsunat> lsttemp = new ArrayList<>();
-//                        lsttemp.add(objDocu);
-//                        objFacturadorService.creaDocuFacturadorSunat(lsttemp);
-                        
-                        FacturadorSunatServiceImpl objFacturadorServ = new FacturadorSunatServiceImpl();
-                        objFacturadorServ.registrarDocuPendienteEnvioSunat(objCom.getSic1docu(), Constantes.CONS_COD_TIPO_OPE_SUNAT_GENE_COMPROB_ELECT);
-                        
-                        contador++;
-                    }                                        
-                }
+                /*Se actualiza la informacion en el FACTURADOR SIC*/
+                FacturadorSunatServiceImpl objFacturadorService = new FacturadorSunatServiceImpl();                    
+                int antRegistradosActualizados = objFacturadorService.sincronizarComunicBajaFacturadorSunat_FacturadorSic(lstComunicBajaLocal, Constantes.CONS_COD_TIPO_OPE_SUNAT_COMUNIC_BAJA);
+                
                 
                 /*  01 -> Por Generar XML
                     02 -> XML Generado
@@ -586,13 +524,13 @@ public class ReporteSunatController implements Serializable{
                     06 -> Con Errores
                 */               
                 
-                /*Actualizando la pantalla*/
-                this.listarComunicBajaPendienteEnvio();
-                
-                if(contador == 0)
+                if(antRegistradosActualizados == 0)
                     UtilClass.addInfoMessage("No se encontraron actualizaciones.");
-                else
+                else{
                     UtilClass.addInfoMessage("Datos actualizados correctamente.");
+                    this.lstComunicBaja = objService.listarComunicBajaPendienteEnvio(null);
+                }
+                    
 
             }else
                 UtilClass.addErrorMessage("No existen registros para procesar.");

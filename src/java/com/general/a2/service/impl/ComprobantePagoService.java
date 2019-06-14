@@ -35,13 +35,13 @@ public class ComprobantePagoService {
      * @return
      * @throws Exception 
      */
-    public List<ComprobantePago> listarComprobantesPendienteEnvio(String fecDesde, String fecHasta, Integer idDocu) throws Exception{
+    public List<ComprobantePago> listarComprobantesPendienteEnvio(Integer idDocu) throws Exception{
 
         List<ComprobantePago> objLstComPagos;
         try{
 
             DaoComprobantePagoImpl objDao = new DaoComprobantePagoImpl();
-            objLstComPagos = objDao.objDatosFacturacion(fecDesde, fecHasta, idDocu);
+            objLstComPagos = objDao.objDatosFacturacion(idDocu);
             
         }catch(Exception ex){
             throw new Exception(ex.getMessage());
@@ -58,13 +58,13 @@ public class ComprobantePagoService {
      * @return
      * @throws Exception 
      */
-    public List<ComunicacionBaja> listarComunicBajaPendienteEnvio(Integer idDocu, Integer fecDesde, Integer fecHasta ) throws Exception{
+    public List<ComunicacionBaja> listarComunicBajaPendienteEnvio(Integer idDocu) throws Exception{
 
         List<ComunicacionBaja> objLista;
         try{
 
             DaoComprobantePagoImpl objDao = new DaoComprobantePagoImpl();
-            objLista = objDao.objDatosComunicacionBaja(idDocu, fecDesde, fecHasta);
+            objLista = objDao.objDatosComunicacionBaja(idDocu);
             
         }catch(Exception ex){
             throw new Exception(ex.getMessage());
@@ -95,17 +95,24 @@ public class ComprobantePagoService {
                 /**** CABECERA ******/
                 /********************************************************************************/
                 String codExtension = "";
-                String nomComprobante = Constantes.CONS_NUM_RUC + "-" + 
+                String nomComprobante = Constantes.CONS_NUM_RUC + "-"; /*+ 
                                         objComprobante.getSic1docu().getSic1stipodocu().getCodSunat() + "-" + 
                                         objComprobante.getSic1docu().getCodSerie() + "-" + 
-                                        objComprobante.getSic1docu().getNumDocu();
+                                        objComprobante.getSic1docu().getNumDocu();*/
                 
-                if(objComprobante.getSic1docu().getSic1sclaseeven().getCodSclaseeven().equals(Constantes.COD_SCLASEEVEN_NOTACREDITO))
+                if(objComprobante.getSic1docu().getSic1sclaseeven().getCodSclaseeven().equals(Constantes.COD_SCLASEEVEN_NOTACREDITO)){
+                    nomComprobante += "07-";
                     codExtension = ".NOT";
-                else if(objComprobante.getSic1docu().getSic1sclaseeven().getCodSclaseeven().equals(Constantes.COD_SCLASEEVEN_VENTA))
+                }
+                else if(objComprobante.getSic1docu().getSic1sclaseeven().getCodSclaseeven().equals(Constantes.COD_SCLASEEVEN_VENTA)){
+                    nomComprobante += objComprobante.getSic1docu().getSic1stipodocu().getCodSunat() + "-";
                     codExtension = ".CAB";
+                }
                 else
                     throw new ValidationException("No se permite el tipo: " + objComprobante.getSic1docu().getSic1sclaseeven().getCodSclaseeven());
+                
+                nomComprobante += objComprobante.getSic1docu().getCodSerie() + "-" + objComprobante.getSic1docu().getNumDocu();
+                
 
                 File archivo = new File(strRuta + nomComprobante + codExtension);
 
@@ -114,7 +121,12 @@ public class ComprobantePagoService {
                 escribir.write(objComprobante.getTipOperacion() + "|");
                 escribir.write(objComprobante.getFecEmision()+ "|");
                 escribir.write(objComprobante.getHorEmision()+ "|");
-                escribir.write(objComprobante.getFecVencimiento()+ "|");
+                
+                /*No aplica para una NOTA DE CREDITO*/
+                if(!objComprobante.getSic1docu().getSic1sclaseeven().getCodSclaseeven().equals(Constantes.COD_SCLASEEVEN_NOTACREDITO)){
+                    escribir.write(objComprobante.getFecVencimiento()+ "|");
+                }                
+                
                 escribir.write(objComprobante.getCodLocalEmisor()+ "|");
                 escribir.write(objComprobante.getTipDocUsuario()+ "|");
                 escribir.write(objComprobante.getNumDocUsuario()+ "|");
@@ -270,12 +282,12 @@ public class ComprobantePagoService {
 
                 String nomComprobante = Constantes.CONS_NUM_RUC + "-RA" + "-"+ codFechaEnvio + "-" + String.format("%03d", contador);
 
-                File archivo = new File(strRuta + nomComprobante + ".CAB");
+                File archivo = new File(strRuta + nomComprobante + ".CBA");
 
                 //Crear objeto FileWriter que sera el que nos ayude a escribir sobre archivo
                 FileWriter escribir = new FileWriter(archivo, false);
                 escribir.write(objComunicBaja.getFecGeneracion()+ "|");
-                escribir.write(objComunicBaja.getFecComunicacion()+ "|");
+                escribir.write(codFechaEnvio + "|");
                 escribir.write(objComunicBaja.getTipDocBaja()+ "|");
                 escribir.write(objComunicBaja.getNumDocBaja()+ "|");
                 escribir.write(objComunicBaja.getDesMotivoBaja()+ "|");

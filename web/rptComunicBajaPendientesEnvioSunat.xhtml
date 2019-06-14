@@ -65,11 +65,11 @@
                         <div class="form-group col-md-2">
                             <label>&nbsp;&nbsp;</label>
                             <div>
-                                <h:commandButton styleClass="btn btn-warning" value="1. Generar Archivos y Enviar a Facturador SUNAT" onclick="setInterval('fnEjecutarActuaResultado()',30000);">
+                                <h:commandButton styleClass="btn btn-warning" value="1. Generar Archivos y Enviar a Facturador SUNAT" >
                                     <f:ajax render="@form" listener="#{reporteSunatController.generarArchivosComunicBaja()}" />
                                 </h:commandButton>
-                                <h:commandButton style="display: none" id="idBtnActuResu" styleClass="btn btn-success" value="2. Actualizar Resultado" >
-                                    <f:ajax render="@form" listener="#{reporteSunatController.obtenerResultadoComunicBajaDesdeFacturador()}" />
+                                <h:commandButton id="idBtnActuResu" styleClass="btn btn-success" value="2. Actualizar Resultado" >
+                                    <f:ajax render="@form" listener="#{reporteSunatController.sincronizarComunicBajaFacturadorSunat_FacturadorSic()}" />
                                 </h:commandButton>                                    
                                 <h:commandButton id="idPaso03" styleClass="btn btn-success" value="2. Finalizar Proceso" title="Genera Backup de archivos enviados" onclick="return fnEjecutarFinProceso()" />
                             </div>                            

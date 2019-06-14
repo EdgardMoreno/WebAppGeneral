@@ -1250,6 +1250,12 @@ public class OrderController implements Serializable{
                     throw new ValidationException(strMessage);
                 }
                 
+                if(this.sic1docu.getSic1sclaseeven().getCodSclaseeven().equals(Constantes.COD_SCLASEEVEN_NOTACREDITO) &&
+                        this.sic1docu.getDesNotas() == null || this.sic1docu.getDesNotas().isEmpty()){
+                    strMessage = "Debe especificar el motivo por el cual se realiza la NOTA DE CREDITO.";
+                    throw new ValidationException(strMessage);
+                }
+                
                 /*Se setea los datos del COMPROBANTE DE PAGO seleccionado*/
                 for(Sic1stipodocu s : this.itemSTipoDocu){
                     if(this.sic1docu.getIdStipodocu().intValue() == s.getIdStipodocu().intValue())

@@ -1,79 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project-private xmlns="http://www.netbeans.org/ns/project-private/1">
-    <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="66">
-        <file>
-            <url>src/java/com/general/a1/controller/KardexController.java</url>
-            <bookmark id="40">
-                <name/>
-                <line>282</line>
-                <key/>
-            </bookmark>
-        </file>
-        <file>
-            <url>web/personaMantenimiento.xhtml</url>
-            <bookmark id="13">
-                <name/>
-                <line>15</line>
-                <key/>
-            </bookmark>
-            <bookmark id="12">
-                <name/>
-                <line>161</line>
-                <key/>
-            </bookmark>
-        </file>
-        <file>
-            <url>src/java/com/general/a1/controller/CompraController.java</url>
-            <bookmark id="10">
-                <name/>
-                <line>373</line>
-                <key/>
-            </bookmark>
-        </file>
-        <file>
-            <url>src/java/com/general/a1/controller/DocumentController.java</url>
-            <bookmark id="27">
-                <name/>
-                <line>268</line>
-                <key/>
-            </bookmark>
-            <bookmark id="28">
-                <name/>
-                <line>387</line>
-                <key/>
-            </bookmark>
-            <bookmark id="39">
-                <name/>
-                <line>407</line>
-                <key/>
-            </bookmark>
-            <bookmark id="59">
-                <name/>
-                <line>517</line>
-                <key/>
-            </bookmark>
-            <bookmark id="61">
-                <name/>
-                <line>732</line>
-                <key/>
-            </bookmark>
-        </file>
-        <file>
-            <url>web/ordenRegistrar.xhtml</url>
-            <bookmark id="50">
-                <name/>
-                <line>832</line>
-                <key/>
-            </bookmark>
-        </file>
-        <file>
-            <url>web/productoRegistrar.xhtml</url>
-            <bookmark id="1">
-                <name/>
-                <line>142</line>
-                <key/>
-            </bookmark>
-        </file>
+    <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="67">
         <file>
             <url>src/java/com/general/a2/service/impl/DocuOrderServiceImpl.java</url>
             <bookmark id="43">
@@ -154,6 +81,43 @@
             </bookmark>
         </file>
         <file>
+            <url>src/java/com/general/a1/controller/KardexController.java</url>
+            <bookmark id="40">
+                <name/>
+                <line>282</line>
+                <key/>
+            </bookmark>
+        </file>
+        <file>
+            <url>web/personaMantenimiento.xhtml</url>
+            <bookmark id="13">
+                <name/>
+                <line>15</line>
+                <key/>
+            </bookmark>
+            <bookmark id="12">
+                <name/>
+                <line>161</line>
+                <key/>
+            </bookmark>
+        </file>
+        <file>
+            <url>src/java/com/general/a1/controller/CompraController.java</url>
+            <bookmark id="10">
+                <name/>
+                <line>373</line>
+                <key/>
+            </bookmark>
+        </file>
+        <file>
+            <url>src/java/com/general/a1/controller/ReporteSunatController.java</url>
+            <bookmark id="67">
+                <name/>
+                <line>187</line>
+                <key/>
+            </bookmark>
+        </file>
+        <file>
             <url>src/java/com/general/a1/controller/CashRegisterController.java</url>
             <bookmark id="51">
                 <name/>
@@ -192,6 +156,34 @@
             <bookmark id="11">
                 <name/>
                 <line>332</line>
+                <key/>
+            </bookmark>
+        </file>
+        <file>
+            <url>src/java/com/general/a1/controller/DocumentController.java</url>
+            <bookmark id="27">
+                <name/>
+                <line>268</line>
+                <key/>
+            </bookmark>
+            <bookmark id="28">
+                <name/>
+                <line>387</line>
+                <key/>
+            </bookmark>
+            <bookmark id="39">
+                <name/>
+                <line>407</line>
+                <key/>
+            </bookmark>
+            <bookmark id="59">
+                <name/>
+                <line>517</line>
+                <key/>
+            </bookmark>
+            <bookmark id="61">
+                <name/>
+                <line>732</line>
                 <key/>
             </bookmark>
         </file>
@@ -248,8 +240,26 @@
                 <key/>
             </bookmark>
         </file>
+        <file>
+            <url>web/ordenRegistrar.xhtml</url>
+            <bookmark id="50">
+                <name/>
+                <line>832</line>
+                <key/>
+            </bookmark>
+        </file>
+        <file>
+            <url>web/productoRegistrar.xhtml</url>
+            <bookmark id="1">
+                <name/>
+                <line>142</line>
+                <key/>
+            </bookmark>
+        </file>
     </editor-bookmarks>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
-        <group/>
+        <group>
+            <file>file:/C:/ARCHIVOS/PRE_PRODUCCION/PROYECTOS_DESARROLLO_SOFTWARE/APLICACIONES/WEBAPPGENERAL/WebAppGeneral/src/java/com/general/util/beans/ComprobantePago.java</file>
+        </group>
     </open-files>
 </project-private>
